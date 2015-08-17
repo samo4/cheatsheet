@@ -1,10 +1,17 @@
 
+export CLICOLOR=1
 
 alias gs='git status'
-alias ls='ls --color=auto --format=vertical'
-alias ll='ls -lh'
+alias cd..="cd .."
+alias cp='cp -iv'                           # Preferred 'cp' implementation
+alias mv='mv -iv'                           # Preferred 'mv' implementation
+alias mkdir='mkdir -pv'                     # Preferred 'mkdir' implementation
+alias ll='ls -FGlAhp'                       # Preferred 'ls' implementation
+alias ls="ls -G"
+alias less='less -FSRXc'                    # Preferred 'less' implementation
+alias which='type -all'                     # which:        Find executables
+alias ttop="top -R -F -s 10 -o rsize"
 
-export PS1='\w\[\033[01;32m\]$(__git_ps1)\[\033[00m\]\$ '
 
 function lazygit() {
     git add .
@@ -12,7 +19,12 @@ function lazygit() {
     git push
 }
 
-if [ -f ~/.git-prompt.sh ]; then
-  source ~/.git-prompt.sh
-  export PS1='Geoff[\W]$(__git_ps1 "(%s)"): '
+if [ -f /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash ]; then
+    . /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
 fi
+
+source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
+
+
+
+  export PS1='\w\[\033[01;32m\]$(__git_ps1)\[\033[00m\]\$ '
