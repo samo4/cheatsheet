@@ -39,3 +39,15 @@ git checkout – pot_do_datoteke
 git reset --hard HEAD
 ```
 
+###### Forgot to add .gitignore?
+Commit *all* pending changes, then run this command:
+```
+git rm -r --cached .
+```
+This removes everything from the index, then just run:
+```
+git add .
+git commit -m ".gitignore is now working"
+git push
+```
+
