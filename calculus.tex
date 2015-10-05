@@ -1,4 +1,6 @@
 \documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{parskip}% http://ctan.org/pkg/parskip
 %for bmatrix
 \usepackage{amsmath}
 % for Sarrus
@@ -78,9 +80,13 @@
 	\begin{equation}
 		A^* = (\overline{A})^\mathrm{T} = \overline{A^\mathrm{T}}
 	\end{equation}
-	multiply: 
+	Matrix addition: one by one.
+	
+	Scalar multiplication: all. 
+
+	Matrix "multiplication of rows into columns". Multiplication is not commutative.
 	\begin{equation}
-		A_{N \times K} * B_{K \times M} = M_{N \times M}
+		c_{jk} = \sum_{i=1}^{n} a_{ji}b_{ik}
 	\end{equation}
 	invert: 
 	\begin{equation}
@@ -95,6 +101,10 @@
 		\begin{bmatrix}
 			\,\,\,d & \!\!-b \\ -c & \,a \\ 
 		\end{bmatrix}
+	\end{equation}
+	Inner or dot product of Vectors
+	\begin{equation}
+		\langle a,b \rangle = \mathbf{a} \bullet \mathbf{b} = \textbf{a}^T\mathbf{b} 
 	\end{equation}
 
 	\subsection{Determinants}
@@ -150,7 +160,7 @@
 				(A^T)^T = A
 			\end{equation}
 			\begin{equation}
-				(AB)^T = A^TB^T
+				(AB)^T = B^TA^T %validated..
 			\end{equation}
 			\begin{equation}
 				det(A^T) = det(A)
