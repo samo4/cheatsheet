@@ -1,6 +1,8 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{parskip}% http://ctan.org/pkg/parskip
+%for degrees
+\usepackage{gensymb}
 %for bmatrix
 \usepackage{amsmath}
 % for Sarrus
@@ -177,7 +179,22 @@
 			\tan \theta = \frac{{{\rm{opposite}}}}{{{\rm{adjacent}}}}
 		\end{equation}
 	\subsection{Standard values}
-	
+	\bgroup
+	\def\arraystretch{2}
+		\begin{table}[hbp]
+		\centering
+		\begin{tabular}{cccccc}
+			\hline
+				$\Theta$	& $0\degree$ & $30\degree$ & $45\degree$ & $60\degree$ & $90\degree$ \\  
+				$sin \Theta$	& $0$ & $\frac{1}{2}$ & $\frac{1}{\sqrt{2}}$ & $\frac{\sqrt{3}}{2}$ & 1	\\  
+				$cos \Theta$	& $1$ & $\frac{\sqrt{3}}{2}$ & $\frac{1}{\sqrt{2}}$ & $\frac{1}{2}$	& 0 \\  
+				$tan \Theta$	& $0$ & $\frac{1}{\sqrt{3}}$ & $1$ & $\sqrt{3}$	& / \\  
+			\hline
+		\end{tabular}
+  		\caption{Trigonometric functions standard values}
+  		\label{tab:standard-values}
+		\end{table}
+	\egroup
 	\subsection{Formulas and Identities}
 		\begin{equation}
 			\tan \theta = \frac{\sin \theta}{\cos \theta}
