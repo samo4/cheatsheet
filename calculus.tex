@@ -222,6 +222,17 @@
 		\begin{equation}
 			\cos 2\theta = \cos ^2 \theta - \sin ^2 \theta = 2\cos ^2 \theta - 1
 		\end{equation}
+
+		\begin{equation}
+			\sin ^2 \theta = \frac{1-cos(2\theta)}{2}
+		\end{equation}		
+		\begin{equation}
+			\cos ^2 \theta = \frac{1+sin(2\theta)}{2}
+		\end{equation}
+		\begin{equation}
+			\tan \frac{\theta}{2} = \pm \sqrt{\frac{1-cos(\theta)}{1+cos(\theta)}}
+		\end{equation}
+		
 		Euler's formula		
 		\begin{equation}
 			e^{ \pm i\theta } = \cos \theta \pm i\sin \theta
@@ -265,7 +276,7 @@
 				\frac{d}{{dx}}\left(a^x\right)=a^x\ln(a)
 			\end{equation}
 			\begin{equation}
-				\frac{d}{{dx}}\ln \left( x \right) = \frac{1}{x}
+				\frac{d}{{dx}}\ln \left( x \right) = \frac{1}{x}, \ \ \ x > 0
 			\end{equation}
 			\begin{equation}
 				\frac{d}{{dx}}x^n = nx^{\left( {n - 1} \right)}
@@ -311,7 +322,11 @@
 			\begin{equation}
 				\int {u\frac{{dv}}{{dx}}} dx = uv - \int {\frac{{du}}{{dx}}} vdx
 			\end{equation}
-			See also substitution\ldots
+			Substitution Rule			
+			\begin{equation}
+				\int {f(u)\frac{du}{dx}} dx = f(u)du
+			\end{equation}
+			
 	\subsection{Laplace transforms}
 		\subsubsection{Definition}
 			\begin{equation}
@@ -355,6 +370,16 @@
 			\begin{equation}
 				\frac{{d^n x(t)}}{{dt^n }} \Leftrightarrow s^n X(s)			
 			\end{equation}
+			or with initial state
+			\begin{equation}
+				\mathcal{L}[\dot{x}] = sX(s)-x(0)
+			\end{equation}
+
+			Integral			
+			\begin{equation}
+				\int{x(t)dt} \Leftrightarrow \frac{X(s)}{s}
+			\end{equation}			
+			
 			Convolution
 			\begin{equation}
 			\int\limits_0^\infty {x_1 (\tau )x_2 (t - \tau )d\tau } \Leftrightarrow X_1 (s)X_2 (s)
