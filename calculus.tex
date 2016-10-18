@@ -1,4 +1,8 @@
 \documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{parskip}% http://ctan.org/pkg/parskip
+%for degrees
+\usepackage{gensymb}
 %for bmatrix
 \usepackage{amsmath}
 % for Sarrus
@@ -17,9 +21,6 @@
 		\end{equation}
 		\begin{equation}
 			x^{\left( {\frac{a}{b}} \right)} = \sqrt[b]{{x^a }}
-		\end{equation}
-		\begin{equation}
-			x^{\left( {a - b} \right)} = \frac{{x^a }}{{x^b }}
 		\end{equation}
 	\subsection{Properties of radicals}
 		\begin{equation}
@@ -74,15 +75,24 @@
 			x = \frac{{ - b \pm \sqrt {b^2 - 4ac} }}{{2a}} \ \ \mbox{when $ax^2 + bx + c = 0$}
 		\end{equation}
 \section{Linear Algebra}
-	conjungate transpose / adjugate 
+	Matrix addition: one by one. (commutative, associative)
+	
+	Scalar multiplication: all. 
+
+	Matrix "multiplication of rows into columns". Multiplication is not commutative ($AB\neq BA$).
+	
 	\begin{equation}
-		A^* = (\overline{A})^\mathrm{T} = \overline{A^\mathrm{T}}
+		c_{jk} = \sum_{i=1}^{n} a_{ji}b_{ik}
 	\end{equation}
-	multiply: 
+	
+	Inner or dot product of Vectors
 	\begin{equation}
-		A_{N \times K} * B_{K \times M} = M_{N \times M}
+		\langle a,b \rangle = \mathbf{a} \bullet \mathbf{b} = \textbf{a}^T\mathbf{b} 
 	\end{equation}
-	invert: 
+
+	Matrix to the power $A^0=I$
+
+	Inverse: 
 	\begin{equation}
 		\begin{bmatrix}
 			a & b \\ c & d \\ 
@@ -96,8 +106,24 @@
 			\,\,\,d & \!\!-b \\ -c & \,a \\ 
 		\end{bmatrix}
 	\end{equation}
-
-	\subsection{Determinants}
+	Identities
+	\begin{equation}
+		(AB)^T = B^TA^T
+	\end{equation}
+	\begin{equation}
+		(A+B)^T = A^T+B^T
+	\end{equation}
+	\begin{equation}
+		(AB)^{-1} = B^{-1}+A^{-1}
+	\end{equation}
+	\begin{equation}
+		A^kB^l = A^{k+l}
+	\end{equation}
+	Conjungate transpose / adjugate 
+	\begin{equation}
+		A^* = (\overline{A})^\mathrm{T} = \overline{A^\mathrm{T}}
+	\end{equation}
+	Determinants
 		\begin{equation}
 			\det(\mathbf{A}) = \sum_{\sigma \in S_n} \mbox{sgn}(\sigma) \prod_{i=1}^n A_{i,\sigma_i}
 		\end{equation}
@@ -142,6 +168,9 @@
 		\begin{equation}
 			\det\left(rA\right) = r^n\det(A)\ \ \ \ \mbox{for all $A^{n\times n}$ and scalars $r$}
 		\end{equation}
+		
+		The determinant of a triangular matrix equals the product of the diagonal entries. Since for any triangular matrix A the matrix ${\displaystyle \lambda I-A}$, whose determinant is the characteristic polynomial of A, is also triangular, the diagonal entries of A in fact give the multiset of eigenvalues of A (an eigenvalue with multiplicity m occurs exactly m times as diagonal entry)
+		
 		\subsection{Transpose}
 			\begin{equation}
 				[A^\mathrm{T}]_{ij} = [A]_{ji}
@@ -150,7 +179,7 @@
 				(A^T)^T = A
 			\end{equation}
 			\begin{equation}
-				(AB)^T = A^TB^T
+				(AB)^T = B^TA^T %validated..
 			\end{equation}
 			\begin{equation}
 				det(A^T) = det(A)
@@ -166,36 +195,71 @@
 		\begin{equation}
 			\tan \theta = \frac{{{\rm{opposite}}}}{{{\rm{adjacent}}}}
 		\end{equation}
+	\bgroup
+	\def\arraystretch{2}
+		\begin{table}[h]
+		\centering
+		\begin{tabular}{cccccc}
+			\hline
+				$\Theta$	& $0\degree$ & $30\degree$ & $45\degree$ & $60\degree$ & $90\degree$ \\  
+				$sin \Theta$	& $0$ & $\frac{1}{2}$ & $\frac{1}{\sqrt{2}}$ & $\frac{\sqrt{3}}{2}$ & 1	\\  
+				$cos \Theta$	& $1$ & $\frac{\sqrt{3}}{2}$ & $\frac{1}{\sqrt{2}}$ & $\frac{1}{2}$	& 0 \\  
+				$tan \Theta$	& $0$ & $\frac{1}{\sqrt{3}}$ & $1$ & $\sqrt{3}$	& / \\  
+			\hline
+		\end{tabular}
+  		\caption{Trigonometric functions standard values}
+  		\label{tab:standard-values}
+		\end{table}
+	\egroup
 	\subsection{Formulas and Identities}
 		\begin{equation}
 			\tan \theta = \frac{\sin \theta}{\cos \theta}
 		\end{equation}
+		Pythagorean identities
 		\begin{equation}
 			\sin^2 \theta + \cos^2 \theta = 1
 		\end{equation}
-		
+		Odd/Even formulas
 		\begin{equation}
 			\sin(-\theta) = - \sin \theta 
 		\end{equation}
 		\begin{equation}
 			\cos(-\theta) = \cos \theta 
 		\end{equation}
-		
+		Sum and difference formulas
 		\begin{equation}
 			\sin \left( {\alpha \pm \beta} \right) = \sin \alpha \cos \beta \pm \cos \alpha \sin \beta
 		\end{equation}
 		\begin{equation}
 			\cos \left( {\alpha \pm \beta } \right) = \cos \alpha \cos \beta \mp \sin \alpha \sin \beta
 		\end{equation}
+		Double angle formulas
 		\begin{equation}
 			\sin 2\theta = 2\sin \theta \cos \theta
 		\end{equation}
 		\begin{equation}
 			\cos 2\theta = \cos ^2 \theta - \sin ^2 \theta = 2\cos ^2 \theta - 1
 		\end{equation}
-		Euler's formula		
+		Half angle formulas
+		\begin{equation}
+			\tan \frac{\theta}{2} = \pm \sqrt{\frac{1-cos(\theta)}{1+cos(\theta)}}
+		\end{equation}
+		Euler's theorem
 		\begin{equation}
 			e^{ \pm i\theta } = \cos \theta \pm i\sin \theta
+		\end{equation}
+		\begin{equation}
+			\cos \theta = \frac{1}{2} (e^{i\theta} + e^{-i\theta})
+		\end{equation}
+		\begin{equation}
+			\sin \theta = \frac{1}{2i} (e^{i\theta} - e^{-i\theta})
+		\end{equation}
+		Miscellaneous formulas
+		\begin{equation}
+			\sin ^2 \theta = \frac{1-cos(2\theta)}{2}
+		\end{equation}		
+		\begin{equation}
+			\cos ^2 \theta = \frac{1+sin(2\theta)}{2}
 		\end{equation}
 \section{Calculus}
 	\subsection{Limits}
@@ -235,14 +299,14 @@
 		\subsubsection{Common Derivatives}
 			\begin{equation}
 				\frac{d}{{dx}}\left(a^x\right)=a^x\ln(a)
-			\end{equation}
+			\end{equation}      
 			\begin{equation}
-				\frac{d}{{dx}}\ln \left( x \right) = \frac{1}{x}
+				\frac{d}{{dx}}\ln \left( x \right) = \frac{1}{x}, \ \ \ x > 0
 			\end{equation}
 			Power rule
 			\begin{equation}
 				\frac{d}{{dx}}x^n = nx^{\left( {n - 1} \right)}
-			\end{equation}
+	       \end{equation}
 			\begin{equation}
 				\frac{d}{{dx}}\cos x = -\sin x
 			\end{equation}
@@ -284,7 +348,11 @@
 			\begin{equation}
 				\int {u\frac{{dv}}{{dx}}} dx = uv - \int {\frac{{du}}{{dx}}} vdx
 			\end{equation}
-			See also substitution\ldots
+			Substitution Rule			
+			\begin{equation}
+				\int {f(u)\frac{du}{dx}} dx = f(u)du
+			\end{equation}
+			
 	\subsection{Laplace transforms}
 		\subsubsection{Definition}
 			\begin{equation}
@@ -316,6 +384,11 @@
 			\begin{equation}
 				e^{ - at} \cos (\Omega t)u(t) \Leftrightarrow \frac{{s + a}}{{(s + a)^2 + \Omega ^2 }}
 			\end{equation}
+
+			\begin{equation}
+				e^{at} x(t) \Leftrightarrow X(s-a)
+			\end{equation}			
+			
 			Time domain scaling
 			\begin{equation}
 				x(at)u(t) \Leftrightarrow \frac{1}{a}X\left( {\frac{s}{a}} \right)
@@ -326,10 +399,44 @@
 			\end{equation}
 			Derivative
 			\begin{equation}
-				\frac{{d^n x(t)}}{{dt^n }} \Leftrightarrow s^n X(s)			
+				\frac{{d^n x(t)}}{{dt^n }} \Leftrightarrow s^n X(s) \ \ or \ \ \mathcal{L}[\dot{x}] = sX(s)-x(0+)
 			\end{equation}
+			Integral			
+			\begin{equation}
+				\int{x(t)dt} \Leftrightarrow \frac{X(s)}{s}
+			\end{equation}			
+			
 			Convolution
 			\begin{equation}
 			\int\limits_0^\infty {x_1 (\tau )x_2 (t - \tau )d\tau } \Leftrightarrow X_1 (s)X_2 (s)
 			\end{equation}
+\section{Greek letters}
+
+\bgroup
+\def\arraystretch{2}
+\begin{table}[hbp]
+  \centering
+  \begin{tabular}{cccc}
+  \hline
+  	$\alpha A$				& Alpha		& $\nu N$		& Nu	\\
+  	$\beta B$				& Beta		& $\xi \Xi$	&  Xi 		\\
+  	$\gamma \Gamma$			& Gamma		& $o O$	& Omicron		\\
+	$\delta \Delta$			& Delta 	& $\pi \Pi$	& Pi		\\
+	$\epsilon \varepsilon $	& Epsilon	& $\rho\varrho P$ & Rho   \\
+	$\zeta Z$				& Zeta		& $\sigma \Sigma$& Sigma  	\\
+	$\eta H$				& Eta		& $\tau T$	& Tau  		\\  
+	$\theta \vartheta \Theta$	& Theta & $\upsilon \Upsilon$ & Upsilon  \\
+	$\iota I$				& Iota		& $\phi \varphi \Phi$ & Phi    \\
+	$\kappa K$				& Kappa		& $\chi X$	& Chi  		\\
+	$\lambda \Lambda$		& Lambda	& $\psi \Psi$	& Psi  	\\
+	$\mu M$					& Mu 		& $\omega \Omega$ & Omega   \\
+  
+  \hline
+  \end{tabular}
+  \caption{Greek letters}
+  \label{tab:symbol-variants}
+\end{table}
+\egroup
+
+
 \end{document}
