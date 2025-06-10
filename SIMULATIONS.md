@@ -100,7 +100,7 @@ Let's illustrate the method using an example.
 3. All to the left side: $$s^2(Y - aU)  + s(dY  - bU) + (eY - cU) = 0 $$
 4. Only the highest order derivative of input to the left side: $$s^2Y = s^2aU - s(dY + bU) - (eY + cU)$$
 5. Move s variable to the right side: $$Y = aU - \frac{dY + bU}{s} - \frac{eY +cU}{s^2}$$
-6. Rearrange to nested form: $$Y = aU + \frac{1}{s} \left\{ (bU - dY) + \frac{1}{s}(cU - eY) \right\}$$
+6. Rearrange to nested form: $$Y = aU + \frac{1}{s} \left( (bU - dY) + \frac{1}{s}(cU - eY) \right)$$
 7. Add accessory variable $U_0$: $$U_0 = \frac{1}{s} (cU-eY) $$
 8. Add accessory variable $U_1$: $$U_1 = \frac{1}{s} (bU - dY + U_0)$$
 9. And we get: $$Y = aU + U_1$$
