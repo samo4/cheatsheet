@@ -12,11 +12,11 @@ $$y^{(n)} = -f(y^{(n-1)}, y^{(n-2)}, \ldots, y', y, u; t)$$
 
 ```mermaid
 graph LR
-    U[u(t)] --> F["-f"]
+    U["u(t)"] --> F["-f"]
     F --> I1["∫ dt"]
     I1 --> I2["∫ dt"]
     I2 --> I3["∫ dt"]
-    I3 --> Y[y(t)]
+    I3 --> Y["y(t)"]
 
     %% Labels for derivatives
     F -.-> |"y^(n)"| F
