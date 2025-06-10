@@ -1,5 +1,22 @@
 # Basic simulation methods
 
+### Some basic nonmenclature
+
+State space
+
+$$\dot{x} = Ax + Bu$$
+$$y = Cx + Du$$
+
+You can use `ss(A,B,C,D)` function.
+
+Transfer function in polynomial form: $$G(s) = \frac{B_1s^2 + B_2 S + B_3}{A_1s^2 + A_2 S + A_3}$$
+
+This one is also liked by MATLAB `tf(B,A)` function.
+
+Transfer function in factorized form: $$G(s) = k\frac{(s - z_1)(s - z_2)}{(s - p_1)(s - p_2)}$$
+
+And this one is liked by `zpk(z,p,k)` function.
+
 ## Indirect method
 
 Is useful when we can express the highest order derivative and when the input doesn't have any derivatives.
@@ -51,7 +68,7 @@ graph LR
     DIV --> Y("y(t)")
 ```
 
-## Implicit method
+## Implicit method (for generating signals)
 
 Implicit method is used when we want to generate a signal (analytical function). We try to find a differential equation whose solution is the signal we want to generate.
 
@@ -251,6 +268,21 @@ graph LR
 
 ```
 
+## Canonical forms
+
+State space representation is not unique. The selection of state variables and the order in which they are arranged leads to different representations of the same system. Depending of the requirements, we can rearrange the state space representation into canonical forms (depending on what we want to achieve).:
+
+- controllable canonical form (see above "Nested method")
+  - has coefficients of the transfer function in the last row of matrix A
+- observable canonical form (see above "delitvena metoda")
+  - has coefficients of the transfer function in the last column of matrix A
+- diagonal canonical form
+  - has eignevalues (poles) on the diagonal of matrix A
+
+The state space representation (matrices A, B, C, D) can be transformed to transfer function with:
+
+$$ G(s) = C(sI - A)^{-1}B + D $$
+
 ## Simluation of system with dead time
 
 Laplace tells us that the transfer function with dead time can be expressed as: $e^{-\tau s}$.
@@ -260,6 +292,20 @@ Typical simulation implementation is to delay the input signal by dead time and 
 Sometimes useful is Pade approximation, first order beeing:
 
 $$ e^{-\tau s} \approx \frac{2 - \tau s}{2 + \tau s} $$
+
+## Digital simulation
+
+All digital simulation tools are based on state space representation, which basicly transfers higher order differential equations into a system of first order differential equations.
+
+$$\dot{\mathbf{x}}(t) = \mathbf{f}(t, \mathbf{x}(t))$$
+
+We've see this before as indirect method, we just use vectors for state variables and output.
+
+![Osnovna simulacijska shema](docs/images/image.png)
+
+Because digital computers like to have all the numbers known before they calculate the result, we must break all the feedback loops (typically at the output of delay block). Instead of doing simultanous calculations, we feed the function with results (=state variables) from the previous step. Initial conditions are nice to have :-), too.
+
+The equations must be ordered in such a way that we always have all the numbers required to calculate the next step. If this is not possible we have a condition called **algebraic loop**.
 
 # References
 
