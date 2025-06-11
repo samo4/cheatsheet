@@ -1,4 +1,53 @@
+# Simulation of dynamic systems
+
+**Simulation** refers to the imitation or replication of a real-world process or system. It can be used in various fields, such as computer science, psychology, and philosophy, to model reality or predict outcomes.
+
+**Simulacra**, on the other hand, is an image or representation that has no true original. It’s often associated with Jean Baudrillard’s theory of hyperreality, where signs and symbols replace reality itself.
+
+Uses of simulation:
+
+- to improve knowledge and understanding of some mechanisms of the studied system,
+- to predict behavior in different situations,
+- to estimate process parameters that are not directly measurable,
+- to analyze sensitivity of real system parameters,
+- to enable experiments that would be expensive, risky or problematic in the real world, which is also important for simulators used for operator training,
+- for training operators, pilots, surgeons, etc. using simulators,
+- for designing control systems,
+- for discovering and understanding faults,
+- for safe startup and shutdown of processes,
+- for operator training and decision-making assistance,
+- for control system applications:
+  - for system optimization,
+  - for fault detection,
+  - for developing control methods (e.g., Ziegler-Nichols methods for PID controller tuning),
+  - for developing and evaluating control solutions
+
+## Monte carlo simulation
+
+Benefits:
+
+- can be used on very complex problems
+- additional dimension or nonlinearity can be added easily
+- it's possible to estimate uncertainty of the results
+
+Drawbacks:
+
+- has statistical uncertainty
+- uncertainty is not known in advance (e.g. how many samples to draw)
+- convergence is not guaranteed
+- requires adaptation of the algorithm to the problem
+
 # Basic simulation methods
+
+- indirect method (chain of integrators with feedback - most common in digital simulation)
+- direct method (algebraic equations)
+- implicit method (for generating signals)
+- transfer functions
+  - nested method (input applied to each one in a chain of integrators with their own feedback. We get observable canonical form)
+  - "Delitvena metoda" (input applied only to the first integrator, which has its own feedback. whereas output is constructed from all states. We get controllable canonical form)
+  - partial fraction expansion (decomposes transfer function into a sum of inverse lapalace-able transfer functions)
+  - series/cascade decomposition (decomposes transfer function into a product of transfer functions)
+- simulation of dead time (using zero order hold and delay block.. easy for simulation, but "not so easy" for reasoning about the system)
 
 ### Some basic nonmenclature
 
@@ -43,6 +92,8 @@ graph LR
     Y --> F
 ```
 
+![Indirektna metoda](docs/images/image-1.png)
+
 If input signal has derivatives, it's better to simulate the system using transfer functions.
 
 ## Direct method
@@ -67,6 +118,8 @@ graph LR
     I2 --> DIV
     DIV --> Y("y(t)")
 ```
+
+![Direktna metoda](docs/images/image-2.png)
 
 ## Implicit method (for generating signals)
 
@@ -123,6 +176,8 @@ graph LR
     A --> SUM2
     SUM2 --> Y(Y)
 ```
+
+![Nested method](docs/images/image-3.png)
 
 The final result is basicly a practical implementation of observable canonical form. where each $U_n$ represents one state variable.
 
@@ -183,6 +238,8 @@ graph LR
     SUM2(∑) --> Y(Y)
 
 ```
+
+![delitvena metoda](docs/images/image-4.png)
 
 The final result is controllable canonical form, where controllable means that the system can be controlled. See [Ogata, 2002, pp. 794]
 
@@ -301,11 +358,40 @@ $$\dot{\mathbf{x}}(t) = \mathbf{f}(t, \mathbf{x}(t))$$
 
 We've see this before as indirect method, we just use vectors for state variables and output.
 
+Digital computers also absolutely require **discretization**.
+
 ![Osnovna simulacijska shema](docs/images/image.png)
 
 Because digital computers like to have all the numbers known before they calculate the result, we must break all the feedback loops (typically at the output of delay block). Instead of doing simultanous calculations, we feed the function with results (=state variables) from the previous step. Initial conditions are nice to have :-), too.
 
 The equations must be ordered in such a way that we always have all the numbers required to calculate the next step. If this is not possible we have a condition called **algebraic loop**.
+
+# Numerical methods
+
+- enokoračne metode (implicitne in eksplicitne),
+- večkoračne metode (implicitne in eksplicitne),
+- ekstrapolacijske metode in
+- metode za simulacijo togih sistemov.
+
+## Errors
+
+- Običajno je globalna napaka večja od lokalne napake.
+- V določenih primerih lahko postane neskončna.
+- Globalne napake ni možno oceniti med simulacijo.
+- Omejena lokalna napaka tudi ne zagotavlja omejene globalne
+  napake.
+- Ocena lokalne napaka predstavlja edino možnost za nadzor točnosti med simulacijo
+
+- method error (proportional to method order)
+- roundoff error
+
+## Stability
+
+Similar to general dynamic systems, the system is stable if all eignevalues of Jacobi matrix are negative real numbers.
+
+## Methods predictor-corrector
+
+Predictor-corrector methods are used to improve the accuracy of numerical integration by predicting the next value and then correcting it based on the actual value.
 
 # References
 
