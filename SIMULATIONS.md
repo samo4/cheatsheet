@@ -22,7 +22,7 @@ Uses of simulation:
   - for developing control methods (e.g., Ziegler-Nichols methods for PID controller tuning),
   - for developing and evaluating control solutions
 
-## Monte carlo simulation
+## Monte Carlo simulation
 
 Benefits:
 
@@ -43,13 +43,12 @@ Drawbacks:
 - direct method (algebraic equations)
 - implicit method (for generating signals)
 - transfer functions
-  - nested method (input applied to each one in a chain of integrators with their own feedback. We get observable canonical form)
-  - "Delitvena metoda" (input applied only to the first integrator, which has its own feedback. whereas output is constructed from all states. We get controllable canonical form)
-  - partial fraction expansion (decomposes transfer function into a sum of inverse lapalace-able transfer functions)
+  - nested method (input applied to each one in a chain of integrators with their own feedback. We get observable canonical form) - "Delitvena metoda" (input applied only to the first integrator, which has its own feedback, where output is constructed from all states. We get controllable canonical form)
+  - partial fraction expansion (decomposes transfer function into a sum of inverse Laplace-transformable transfer functions)
   - series/cascade decomposition (decomposes transfer function into a product of transfer functions)
 - simulation of dead time (using zero order hold and delay block.. easy for simulation, but "not so easy" for reasoning about the system)
 
-### Some basic nonmenclature
+### Some basic nomenclature
 
 State space
 
@@ -68,7 +67,7 @@ And this one is liked by `zpk(z,p,k)` function.
 
 ## Indirect method
 
-Is useful when we can express the highest order derivative and when the input doesn't have any derivatives.
+It is useful when we can express the highest order derivative and when the input doesn't have any derivatives.
 
 $$y^{(n)} = -f(y^{(n-1)}, y^{(n-2)}, \ldots, y', y, u; t)$$
 
@@ -82,17 +81,15 @@ $$y^{(n)} = -f(y^{(n-1)}, y^{(n-2)}, \ldots, y', y, u; t)$$
 title: Canonical form
 ---
 graph LR
-    U("u(t)") --> F(("-f"))
+    U("u") --> F(("-f"))
     F --> I1["∫ dt"]
     I1 -->|"y''"| I2["∫ dt"]
     I2 -->|"y'"| I3["∫ dt"]
-    I3 -->|"y"| Y("y(t)")
-    I2 --> F
-    I3 --> F
-    Y --> F
+    I3 -->|"y"| Y("y")
+    I2 -->|"y'"| F
+    I1 -->|"y''"| F
+    I3 -->|"y"| F
 ```
-
-![Indirect method](docs/images/image-1.png)
 
 If input signal has derivatives, it's better to simulate the system using transfer functions.
 
@@ -118,8 +115,6 @@ graph LR
     I2 --> DIV
     DIV --> Y("y(t)")
 ```
-
-![Direktna metoda](docs/images/image-2.png)
 
 ## Implicit method (for generating signals)
 
@@ -158,34 +153,15 @@ Let's illustrate the method using an example.
 8. Add accessory variable $U_1$: $$U_1 = \frac{1}{s} (bU - dY + U_0)$$
 9. And we get: $$Y = aU + U_1$$
 
-```mermaid
----
-title: Nested method - Observable canonical form realization
----
-graph LR
-    U(U)
-    U --> A((a))
-    U -->B((b)) --> SUM1
-    U -->C((c)) --> SUM0
-    U -->D(("-d")) --> SUM1
-    I1["∫ dt"] -->|U0| SUM1(∑)
-    SUM1 --> I2
-    SUM0(∑) --> I1
-    U --> E(("-e")) --> SUM0
-    I2["∫ dt"] -->|U1| SUM2(∑)
-    A --> SUM2
-    SUM2 --> Y(Y)
-```
-
 ![Nested method](docs/images/image-3.png)
 
-The final result is basicly a practical implementation of observable canonical form. where each $U_n$ represents one state variable.
+The final result is basically a practical implementation of observable canonical form, where each $U_n$ represents one state variable.
 
 ### "Delitvena metoda" (canonical form realization)
 
 A direct form can be obtained by considering the transfer function H(s) as a cascade of two transfer functions (one for the numerator and one for the denominator).
 
-From this (note that in denominator s^2 has no coefficients!):
+From this (note that in denominator $$s^2$$ has no coefficients!):
 
 $$
 H(s) = \frac{as^2 + bs + c}{s^2 + ds + e}
@@ -212,32 +188,6 @@ And we rearrange Y(s) to
 $$
 Y = a s^2 W + b s W + c W
 $$
-
-```mermaid
----
-title: Delitvena metoda - Controllable canonical form realization
----
-graph LR
-
-    %% numerator (W realization)
-    SUM1 -->|s²W| I1["∫ dt"]
-    SUM1 -->|s²W| A((a))
-    I1 -->|sW| I2["∫ dt"]
-    I1 -->|sW| B((b))
-    I2 -->|W| C((c))
-    A --> SUM2
-    B --> SUM2
-    C --> SUM2
-
-    %% denominator (Y realization)
-    U(U) --> SUM1(∑)
-    D(("-d")) --> SUM1
-    E(("-e")) --> SUM1
-    I1 -->|sW| D
-    I2 -->|W| E
-    SUM2(∑) --> Y(Y)
-
-```
 
 ![delitvena metoda](docs/images/image-4.png)
 
@@ -327,46 +277,65 @@ graph LR
 
 ## Canonical forms
 
-State space representation is not unique. The selection of state variables and the order in which they are arranged leads to different representations of the same system. Depending of the requirements, we can rearrange the state space representation into canonical forms (depending on what we want to achieve).:
+State space representation is not unique. The selection of state variables and the order in which they are arranged leads to different representations of the same system. Depending on the requirements, we can rearrange the state space representation into canonical forms (depending on what we want to achieve):
 
-- controllable canonical form (see above "Nested method")
+- controllable canonical form (see above "nested method")
   - has coefficients of the transfer function in the last row of matrix A
 - observable canonical form (see above "delitvena metoda")
   - has coefficients of the transfer function in the last column of matrix A
 - diagonal canonical form
-  - has eignevalues (poles) on the diagonal of matrix A
+  - has eigenvalues (poles) on the diagonal of matrix A
 
 The state space representation (matrices A, B, C, D) can be transformed to transfer function with:
 
 $$ G(s) = C(sI - A)^{-1}B + D $$
 
-## Simluation of system with dead time
+## Simulation of system with dead time
 
-Laplace tells us that the transfer function with dead time can be expressed as: $e^{-\tau s}$.
+Laplace tells us that the transfer function with dead time is
+
+$$e^{-\tau s}$$
 
 Typical simulation implementation is to delay the input signal by dead time and use zero order hold (ZOH) to hold the input signal constant during each sampling period.
 
-Sometimes useful is Pade approximation, first order beeing:
+Sometimes useful is Pade approximation, first order being:
 
 $$ e^{-\tau s} \approx \frac{2 - \tau s}{2 + \tau s} $$
 
 ## Digital simulation
 
-All digital simulation tools are based on state space representation, which basicly transfers higher order differential equations into a system of first order differential equations.
+All digital simulation tools are based on state space representation, which basically transfers higher order differential equations into a system of first order differential equations.
 
-$$\dot{\mathbf{x}}(t) = \mathbf{f}(t, \mathbf{x}(t))$$
+$$\dot{\boldsymbol{x}}(t) = \boldsymbol{f}(t, \boldsymbol{x}(t))$$
 
-We've see this before as indirect method, we just use vectors for state variables and output.
+We've seen this before as indirect method, we just use vectors for state variables and output.
 
 Digital computers also absolutely require **discretization**.
 
 ![Basic simulation scheme](docs/images/image.png)
 
-Because digital computers like to have all the numbers known before they calculate the result, we must break all the feedback loops (typically at the output of delay block). Instead of doing simultanous calculations, we feed the function with results (=state variables) from the previous step. Initial conditions are nice to have :-), too.
+Because digital computers like to have all the numbers known before they calculate the result, we must break all the feedback loops (typically at the output of delay block). Instead of doing simultaneous calculations, we feed the function with results (=state variables) from the previous step. Initial conditions are nice to have :-), too.
 
 The equations must be ordered in such a way that we always have all the numbers required to calculate the next step. If this is not possible we have a condition called **algebraic loop**.
 
-### Cenilke
+# Dynamic systems simulation tools
+
+## Linearization
+
+So we want to linearize a nonlinear system around an operating point. Basicly we want to know A,B,C,D of state space:
+
+$$\dot{x} = Ax + Bu$$
+$$y = Cx + Du$$
+
+Analytically we can do this by expanding the nonlinear function into a Taylor series and keeping only the first order terms.
+
+We can also use perturbation method. The functions in the schematic below are nonlinear. We bring the system to the operating point and then perturb the states $$\boldsymbol{x_0}$$. We observe the effect on $$\dot{\boldsymbol{x}}_0$$ and construct matrices **A** and **C**. The we perturb the input $$\boldsymbol{u_0}$$ and observe the effect on $$\dot{\boldsymbol{x}}_0$$ and construct matrices **B** and **D**.
+
+![Perturbation method](docs/images/image-5.png)
+
+In practice we use MATLAB's `linmod` which uses magic to do the same thing.
+
+## Performance Indices
 
 - integral square error (ISE)
 - integral time square error (ITSE)
@@ -399,12 +368,14 @@ Inputs:
 - Limited local error also does not guarantee limited global error.
 - Local error estimation represents the only possibility for accuracy control during simulation (we calculate the result for h and 2h and compare the results).
 
-- method error (proportional: $\mathbf{e}_{k+1} \propto h^{m+1}$)
+Total error is the sum of:
+
+- method error (proportional: $$\mathbf{e}_{k+1} \propto h^{m+1}$$)
 - roundoff error
 
 ## Stability
 
-Similar to general dynamic systems, the system is stable if all eignevalues of Jacobi matrix are negative real numbers.
+Similar to general dynamic systems, the system is stable if all eigenvalues of Jacobi matrix are negative real numbers.
 
 For example Euler is stable in circle around -1 in $\lambda h$ plane (where lambda is eigenvalue of the function and h is step size).
 
@@ -418,3 +389,4 @@ Predictor-corrector methods are used to improve the accuracy of numerical integr
 
 - Župančič, 2017
 - https://cim.mcgill.ca/~boulet/304-501A/L23.pdf
+  $$
