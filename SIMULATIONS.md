@@ -92,7 +92,7 @@ graph LR
     Y --> F
 ```
 
-![Indirektna metoda](docs/images/image-1.png)
+![Indirect method](docs/images/image-1.png)
 
 If input signal has derivatives, it's better to simulate the system using transfer functions.
 
@@ -360,34 +360,55 @@ We've see this before as indirect method, we just use vectors for state variable
 
 Digital computers also absolutely require **discretization**.
 
-![Osnovna simulacijska shema](docs/images/image.png)
+![Basic simulation scheme](docs/images/image.png)
 
 Because digital computers like to have all the numbers known before they calculate the result, we must break all the feedback loops (typically at the output of delay block). Instead of doing simultanous calculations, we feed the function with results (=state variables) from the previous step. Initial conditions are nice to have :-), too.
 
 The equations must be ordered in such a way that we always have all the numbers required to calculate the next step. If this is not possible we have a condition called **algebraic loop**.
 
+### Cenilke
+
+- integral square error (ISE)
+- integral time square error (ITSE)
+- integral absolute error (IAE)
+- integral time absolute error (ITAE)
+
 # Numerical methods
 
-- enokoračne metode (implicitne in eksplicitne),
-- večkoračne metode (implicitne in eksplicitne),
-- ekstrapolacijske metode in
-- metode za simulacijo togih sistemov.
+- single-step methods (implicit and explicit),
+- multi-step methods (implicit and explicit),
+- extrapolation methods and
+- methods for simulation of stiff systems.
+
+## Selection of integration method
+
+Inputs:
+
+- accuracy requirements,
+  - higher required accuracy => higher order method
+- frequency of discontinuities
+- multistep methods need to recalculate initial conditions after each discontinuity
+- stiffness,
+- oscillatory nature
 
 ## Errors
 
-- Običajno je globalna napaka večja od lokalne napake.
-- V določenih primerih lahko postane neskončna.
-- Globalne napake ni možno oceniti med simulacijo.
-- Omejena lokalna napaka tudi ne zagotavlja omejene globalne
-  napake.
-- Ocena lokalne napaka predstavlja edino možnost za nadzor točnosti med simulacijo
+- Usually the global error is larger than the local error.
+- In certain cases it can become infinite.
+- Global error cannot be estimated during simulation.
+- Limited local error also does not guarantee limited global error.
+- Local error estimation represents the only possibility for accuracy control during simulation (we calculate the result for h and 2h and compare the results).
 
-- method error (proportional to method order)
+- method error (proportional: $\mathbf{e}_{k+1} \propto h^{m+1}$)
 - roundoff error
 
 ## Stability
 
 Similar to general dynamic systems, the system is stable if all eignevalues of Jacobi matrix are negative real numbers.
+
+For example Euler is stable in circle around -1 in $\lambda h$ plane (where lambda is eigenvalue of the function and h is step size).
+
+RK methods are stable in larger area (typically higher order methods are stable in larger area).
 
 ## Methods predictor-corrector
 
