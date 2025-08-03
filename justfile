@@ -3,6 +3,6 @@
 
 build: 
     pandoc pandoc.md -o pandoc.pdf --pdf-engine=xelatex -V geometry:margin=1in --number-sections --toc --filter pandoc-crossref --citeproc
-    pandoc SIMULATIONS.md -o simulations.pdf --pdf-engine=xelatex -V geometry:margin=1in --number-sections
+    pandoc SIMULATIONS.md -o simulations.pdf --pdf-engine=xelatex -V geometry:margin=1in
 	
 # --filter pandoc-crossref -V colorlinks=true -V linkcolor=blue -V citecolor=blue

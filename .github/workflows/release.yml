@@ -25,13 +25,14 @@ jobs:
       - name: Install additional LaTeX packages
         run: |
           tlmgr update --self
-          tlmgr install mdframed pgf pgfplots || true
+          tlmgr install mdframed pgf pgfplots zref xcolor fancyhdr booktabs longtable || true
 
       # - name: Build PDF using Just
       #   run: just full
       - name: Build PDF
         run: |
           pandoc pandoc.md -o pandoc.pdf --pdf-engine=xelatex -V geometry:margin=1in --number-sections --toc --filter pandoc-crossref --citeproc -V colorlinks=true -V linkcolor=blue -V citecolor=blue -V urlcolor=blue
+          pandoc SIMULATIONS.md -o simulations.pdf --pdf-engine=xelatex -V geometry:margin=1in
 
       - name: Upload PDF as artifact
         uses: actions/upload-artifact@v4
