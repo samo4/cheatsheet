@@ -22,10 +22,10 @@ jobs:
       #     mv pandoc-crossref /usr/local/bin/
       #     chmod +x /usr/local/bin/pandoc-crossref
 
-      # - name: Install additional LaTeX packages
-      #   run: |
-      #     tlmgr update --self
-      #     tlmgr install mdframed tikz pgfplots
+      - name: Install additional LaTeX packages
+        run: |
+          tlmgr update --self
+          tlmgr install mdframed tikz pgfplots
 
       # - name: Build PDF using Just
       #   run: just full
