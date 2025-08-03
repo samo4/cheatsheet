@@ -19,10 +19,7 @@ jobs:
       - name: Install packages
         run: |
           apk add --no-cache curl librsvg
-          - name: Install packages
-            run: |
-              apk add --no-cache curl librsvg
-              curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sh -s -- --to /usr/local/bin
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sh -s -- --to /usr/local/bin
 
       - name: Install additional LaTeX packages
         run: |
