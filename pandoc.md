@@ -14,8 +14,6 @@ extensions:
   - +auto_identifiers
 ---
 
-% joze
-
 # install
 
 - [Pandoc](https://pandoc.org/)

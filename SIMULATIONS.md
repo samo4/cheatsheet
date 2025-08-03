@@ -1,3 +1,11 @@
+---
+title: "Simulations notes"
+author: "Samo F."
+header-includes:
+  - |
+    \usepackage[leftline,framemethod=TikZ]{mdframed}
+---
+
 # Simulation of dynamic systems
 
 **Simulation** refers to the imitation or replication of a real-world process or system. It can be used in various fields, such as computer science, psychology, and philosophy, to model reality or predict outcomes.
@@ -82,9 +90,9 @@ title: Canonical form
 ---
 graph LR
     U("u") --> F(("-f"))
-    F --> I1["∫ dt"]
-    I1 -->|"y''"| I2["∫ dt"]
-    I2 -->|"y'"| I3["∫ dt"]
+    F --> I1["INTG dt"]
+    I1 -->|"y''"| I2["INTG dt"]
+    I2 -->|"y'"| I3["INTG dt"]
     I3 -->|"y"| Y("y")
     I2 -->|"y'"| F
     I1 -->|"y''"| F
@@ -104,12 +112,12 @@ $$y(t) = \frac{\displaystyle\int f_1(t) \cdot f_2(t) \, dt}{\displaystyle\int f_
 title: Direct method - Quotient example
 ---
 graph LR
-    F1("f₁(t)") --> M1[×]
-    F2("f₂(t)") --> M1
+    F1("f1(t)") --> M1[×]
+    F2("f2(t)") --> M1
     F2 --> M2[×]
     F2 --> M2[×]
-    M1 -->|"f₁*f₂"| I1["∫ dt"]
-    M2 -->|"f₂²"| I2["∫ dt"]
+    M1 -->|"f1*f2"| I1["INTG dt"]
+    M2 -->|"f2²"| I2["INTG dt"]
     A("A") -->|init| I2
     I1 --> DIV[÷]
     I2 --> DIV
@@ -132,7 +140,7 @@ We take the analytical function and differentiate once or more times. At each st
 title: Implicit method - Exponential function
 ---
 graph LR
-    I1["∫ dt"] -->|y| F1("f(t)")
+    I1["INTG dt"] -->|y| F1("f(t)")
     I1 -->|y| A(("a"))
     A -->|y'| I1
 ```
@@ -215,15 +223,15 @@ graph LR
     U(U)
     U --> A((3))
     U --> B((1))
-    I1["∫ dt"] --> C(("-4"))
-    I2["∫ dt"] --> D(("-2"))
-    A --> SUM1(∑)
+    I1["INTG dt"] --> C(("-4"))
+    I2["INTG dt"] --> D(("-2"))
+    A --> SUM1(SUM)
     C --> SUM1 --> I1
-    B --> SUM2(∑)
+    B --> SUM2(SUM)
     D --> SUM2 --> I2
     I1 --> SUM3
     I2 --> SUM3
-    SUM3(∑) --> Y
+    SUM3(SUM) --> Y
 
 ```
 
@@ -261,18 +269,66 @@ title: Series/Cascade Decomposition
 graph LR
     U(U)
     U --> A((4))
-    I1["∫ dt"] --> B(("-4"))
+    I1["INTG dt"] --> B(("-4"))
     I1 --> C(("-2.5"))
-    I3["∫ dt"] --> D(("-2"))
-    A --> SUM1(∑)
+    I3["INTG dt"] --> D(("-2"))
+    A --> SUM1(SUM)
     B --> SUM1 --> I1
     SUM2 --> SUM3
-    D --> SUM3(∑)
+    D --> SUM3(SUM)
     C --> SUM2
-    SUM1 --> SUM2(∑)
+    SUM1 --> SUM2(SUM)
     SUM3 --> I3
     I3 --> Y
 
+```
+
+```{=latex}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    block/.style={rectangle, draw, minimum width=1cm, minimum height=0.8cm},
+    sum/.style={circle, draw, minimum size=0.8cm},
+    gain/.style={circle, draw, minimum size=0.8cm},
+    integrator/.style={rectangle, draw, minimum width=1.2cm, minimum height=0.8cm}
+]
+
+% Nodes
+\node[gain] (U) {U};
+\node[gain, right of=U, node distance=2cm] (A) {4};
+\node[sum, right of=A, node distance=2cm] (SUM1) {$\sum$};
+\node[integrator, right of=SUM1, node distance=2cm] (I1) {$\int dt$};
+\node[sum, right of=I1, node distance=2cm] (SUM2) {$\sum$};
+\node[sum, right of=SUM2, node distance=2cm] (SUM3) {$\sum$};
+\node[integrator, right of=SUM3, node distance=2cm] (I3) {$\int dt$};
+\node[gain, right of=I3, node distance=2cm] (Y) {Y};
+
+% Feedback gains
+\node[gain, below of=I1, node distance=1.5cm] (B) {-4};
+\node[gain, below of=SUM2, node distance=1.5cm] (C) {-2.5};
+\node[gain, below of=I3, node distance=1.5cm] (D) {-2};
+
+% Connections
+\draw[->] (U) -- (A);
+\draw[->] (A) -- (SUM1);
+\draw[->] (SUM1) -- (I1);
+\draw[->] (I1) -- (SUM2);
+\draw[->] (SUM2) -- (SUM3);
+\draw[->] (SUM3) -- (I3);
+\draw[->] (I3) -- (Y);
+
+% Feedback connections
+\draw[->] (I1) |- (B);
+\draw[->] (B) -| (SUM1);
+\draw[->] (I1) |- (C);
+\draw[->] (C) -- (SUM2);
+\draw[->] (I3) |- (D);
+\draw[->] (D) -| (SUM3);
+
+\end{tikzpicture}
+\caption{Series/Cascade Decomposition (incomplete conversion from mermaid above! TODO)}
+\end{figure}
 ```
 
 ## Canonical forms
