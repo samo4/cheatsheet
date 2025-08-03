@@ -18,7 +18,8 @@ jobs:
 
       - name: Install packages
         run: |
-          apt install -y just librsvg2-bin
+          apk add --no-cache curl librsvg
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
 
       - name: Install additional LaTeX packages
         run: |
