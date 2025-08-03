@@ -7,6 +7,8 @@ link-citations: true
 nocite: "@*"
 ---
 
+reread: https://floooh.github.io/2019/09/27/modern-c-for-cpp-peeps.html
+
 # Pointers
 
 When used for a declaration, a star indicates a pointer; when not used as a declaration, a star indicates the value of the pointer.
