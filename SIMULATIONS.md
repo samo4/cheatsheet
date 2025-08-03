@@ -223,7 +223,7 @@ graph LR
     U(U)
     U --> A((3))
     U --> B((1))
-    I1["INTG dt"] --> C(("-4"))
+    I1["INT dt"] --> C(("-4"))
     I2["INTG dt"] --> D(("-2"))
     A --> SUM1(SUM)
     C --> SUM1 --> I1
