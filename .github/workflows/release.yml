@@ -10,7 +10,7 @@ jobs:
   build-pdf:
     runs-on: ubuntu-22.04
     container:
-      image: pandoc/latex:3.5
+      image: pandoc/latex:3
 
     steps:
       - name: Checkout repository
