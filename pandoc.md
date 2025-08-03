@@ -179,7 +179,7 @@ bla.foo();
 Here's an example of a two-pulley system drawn with TikZ:
 
 ```{=latex}
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[scale=1.2]
     % Define coordinates

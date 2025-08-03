@@ -284,7 +284,7 @@ graph LR
 ```
 
 ```{=latex}
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[
     node distance=1.5cm,
