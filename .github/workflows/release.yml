@@ -16,9 +16,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install just command runner
+      - name: Install packages
         run: |
-          apt-get install -y just
+          apt-get update
+          apt-get install -y just librsvg2-bin
 
       - name: Install additional LaTeX packages
         run: |
@@ -26,9 +27,7 @@ jobs:
           tlmgr install mdframed pgf pgfplots zref xcolor fancyhdr booktabs longtable needspace || true
 
       - name: Convert SVG to PDF
-        run: |
-          apt-get update && apt-get install -y librsvg2-bin
-          find . -name "*.svg" -exec rsvg-convert -f pdf -o {}.pdf {} \;
+        run: find . -name "*.svg" -exec rsvg-convert -f pdf -o {}.pdf {} \;
 
       - name: Build PDFs
         run: just build
