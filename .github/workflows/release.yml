@@ -18,8 +18,7 @@ jobs:
 
       - name: Install packages
         run: |
-          apt-get update
-          apt-get install -y just librsvg2-bin
+          apt install -y just librsvg2-bin
 
       - name: Install additional LaTeX packages
         run: |
