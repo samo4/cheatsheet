@@ -26,9 +26,6 @@ jobs:
           tlmgr update --self
           tlmgr install mdframed pgf pgfplots zref xcolor fancyhdr booktabs longtable needspace || true
 
-      - name: Convert SVG to PDF
-        run: find . -name "*.svg" -exec rsvg-convert -f pdf -o {}.pdf {} \;
-
       - name: Build PDFs
         run: just build
 
@@ -48,6 +45,8 @@ jobs:
           files: |
             pandoc.pdf
             simulations.pdf
+            calculus.pdf
+            modern-c.pdf
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
