@@ -1,0 +1,52 @@
+name: Build and Release PDF
+
+on:
+  push:
+    tags:
+      - "v*" # Trigger on version tags like v1.0.0
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-22.04
+    container:
+      image: pandoc/latex:3.5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # - name: Install pandoc-crossref
+      #   run: |
+      #     wget -qO- https://github.com/lierdakil/pandoc-crossref/releases/latest/download/pandoc-crossref-Linux.tar.xz | tar -xJ
+      #     mv pandoc-crossref /usr/local/bin/
+      #     chmod +x /usr/local/bin/pandoc-crossref
+
+      # - name: Install additional LaTeX packages
+      #   run: |
+      #     tlmgr update --self
+      #     tlmgr install mdframed tikz pgfplots
+
+      # - name: Build PDF using Just
+      #   run: just full
+      - name: Build PDF
+        run: |
+          pandoc pandoc.md -o pandoc.pdf --pdf-engine=xelatex -V geometry:margin=1in --number-sections --toc --filter pandoc-crossref --citeproc -V colorlinks=true -V linkcolor=blue -V citecolor=blue -V urlcolor=blue
+
+      - name: Upload PDF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pandoc-pdf-${{ github.run_number }}
+          path: pandoc.pdf
+          retention-days: 30
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: pandoc.pdf
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
