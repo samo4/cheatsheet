@@ -25,7 +25,7 @@ jobs:
       - name: Install additional LaTeX packages
         run: |
           tlmgr update --self
-          tlmgr install mdframed pgf pgfplots zref xcolor fancyhdr booktabs longtable || true
+          tlmgr install mdframed pgf pgfplots zref xcolor fancyhdr booktabs longtable needspace || true
 
       # - name: Build PDF using Just
       #   run: just full
