@@ -26,7 +26,6 @@ jobs:
         run: |
           tlmgr update --self
           tlmgr install mdframed pgf pgfplots || true
-          tlmgr list --installed | grep -E "(mdframed|pgf|pgfplots)"
 
       # - name: Build PDF using Just
       #   run: just full
