@@ -298,7 +298,7 @@ $$\int_{}^{}\cos x dx = \sin x+C$$
 Per partes (Integration by parts)
 $$\int {u\frac{{dv}}{{dx}}} dx = uv - \int {\frac{{du}}{{dx}}} vdx$$
 
-Substitution Rule
+Substitution (or chain) Rule
 $$\int {f(u)\frac{du}{dx}} dx = \int f(u)du$$
 
 ## Laplace transforms

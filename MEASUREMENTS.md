@@ -13,9 +13,63 @@ extensions:
   - +auto_identifiers
 ---
 
-# Intro
+# Things you can't live without
 
-Some kind of introduction to measurements is a common course for physics, engineering, etc. students. The usual presentation starts at the bottom, namely with the definition of basic SI units and proceeds to quickly add concepts until students are unclear about what will be a part of the exam and what not. These notes try to go top down, starting with a seemingly simple measurement task and then adding concepts as needed.
+## Basics of math
+
+Calculate undefined integral of $x^n$ (yes, I know, I know...):
+
+$$\int x^n dx = \frac{x^{n+1}}{n+1} + C \quad , \quad n \neq -1$$
+
+Take out the logarithm of a power:
+
+$$\ln(x^n) = n \cdot \ln(x)$$
+
+## Basics of electrotechnics
+
+Calculate effective value of a periodic signal (RMS):
+
+$$V_{rms} = \sqrt{\frac{1}{T}\int_0^T v(t)^2 dt}$$
+
+Calculate average value of a periodic signal (AVG):
+
+$$\bar{V} = \frac{1}{T}\int_0^T v(t) dt$$
+
+Calculate combined resistance of two resistors in parallel:
+
+$$R_{{\mathbin{\|}}} = \frac{R_1 R_2}{R_1 + R_2}$$
+
+Shanon's amount of information:
+
+$$S = \log_2(N)$$
+
+First order response time constant:
+
+$$ percentage = 1 - e^{-\frac{t}{\tau}} $$
+
+Log scale conversion (voltage):
+
+$$L_{dB} = 20 \cdot \log_{10}\left(\frac{V}{V_{ref}}\right)$$
+
+Series connection of 1st order systems:
+
+$$t_{rs}^2 =  t_1^2 + t_2^2 + ... $$
+
+$$1/{f^2} = 1/{f_1^2} + 1/{f_2^2} + ... $$
+
+## List of basic SI units
+
+| Quantity            | Unit name | Unit symbol |
+| ------------------- | --------- | ----------- |
+| Length              | meter     | m           |
+| Mass                | kilogram  | kg          |
+| Time                | second    | s           |
+| Electric current    | ampere    | A           |
+| Temperature         | kelvin    | K           |
+| Amount of substance | mole      | mol         |
+| Luminous intensity  | candela   | cd          |
+
+# Intro
 
 # Just looking at it
 
