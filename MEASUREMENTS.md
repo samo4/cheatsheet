@@ -13,6 +13,36 @@ extensions:
   - +auto_identifiers
 ---
 
+# Measurements - a night time story
+
+<!---
+Plan for this chapter: Introduce basic concepts of measurements using an example of measuring resistance with a DMM:
+- introduce the concept of +- resolution (quantization) by simply observing the DMM display. Start by observing that "technically" the display is saying that basicly any value between one down and one up is possible (so almost 2 digits)
+- improve on the previous obvservation by noting that well-behaved ADC are rounding, so the width of the possible values is actually equal to the resolution (quantization step) 1 digit
+- by moving from first to second observation we notice that there's a certain element of trust involved (we need to trust the rounding behavior of the ADC, which is not directly observable, at least now)
+- introduce the concept of trust (a special version of mechanistic and not psychological trust):
+  - common context and norms (language)
+  - reliablility in the past
+- do you trust a stranger to show up on time? You must first agree on the time (common language), then you can trust them based on their past behavior (reliability)
+- in measurements artially resolve the first requirement for trust by introducing GUM (the second part of common language would be the SI units)
+- GUM says that the uncertainty of our measurements should be expressed as standard deviation
+- introduce uniform distribution using dice analogy
+- and state that math says that standard deviation of uniform distribution is half_width/sqrt(3)
+- manfuacturer of the instrument gave as a specification of limit of error (LOE)
+- we assume uniform distribution of error within the LOE bounds (and we can convert it to standard uncertainty using the same formula as before)
+- now we have two sources of uncertainty: quantization and instrument error
+- since they are independent (one can point up and one down, thereby reducing the overall unceratinty) we can combine them using geometric sum
+- the final uncertainty defines the precision of our measurement
+- there are more sources of uncertainty but we will ignore them for now. Actually the quantization uncertainty is probably already included in the instrument error uncertainty.
+- the elephant in the room is that manufacturer said someting and we trusted them. We also trusted that the instrument on the table was not tampered with or damaged in transport.
+- it should be obvious now that we have a measured value with a certain uncertainty, but we don't know the "true" value.
+- GUM dislikes the term "true value" because in real‑world measurement, the true value is unknowable, unobservable, and perhaps not even well‑defined.
+- this is a philosophical point, but the point is that uncertainty is not an error bar around the true value, but a reflection of our knowledge about the value.
+- so "accuracy" is closeness to the true value (which we can't know), and "error" is difference between measured value and true value
+- so we can never know the result accurately, but we can know how precise our knowledge is (the uncertainty)
+
+-->
+
 # Things you can't live without
 
 ## Basics of math
@@ -71,15 +101,19 @@ $$1/{f^2} = 1/{f_1^2} + 1/{f_2^2} + ... $$
 
 # Intro
 
+Picture this: it's late evening, you're in the lab, and you need to measure a resistor. The building is quiet, the coffee is cold, and the only company you have is a digital multimeter with a display that blinks at you expectantly. What follows is a story about what that blinking display is really telling you - and what it isn't.
+
 # Just looking at it
 
 The measurement task we will consider is measuring the resistance of a resistor using a digital multimeter (DMM). It doesn't get simpler than that: take the DMM, set it to resistance measurement mode, connect the two wires and read the value on the display. As a matter of fact, for a lot of purposes this is all you need - many practical electrical circuits are not very sensitive to variations in resistance values - they will work just fine even if the resistance is off by 50%.
 
 However, you can think of many situations where you need to really know the value. Here I am deliberately avoiding the two big measurement words: accuracy and precision. We will return to them soon. For now, consider examples where precise knowledge matters: a pilot verifying fuel quantity before takeoff, or a pharmaceutical company measuring drug concentrations. In such cases, the measurement must be trustworthy enough to guarantee safety.
 
-Our measurement task is now more complex: we need a value and a "guarantee" that the value is within certain bounds. Our DMM reads a number 10.0 kΩ. The is DMM can only show us 9.9kΩ, 10.0kΩ and 10.1kΩ. We physically can't read any more detail that, so the reading is only known within ±½ of the least significant digit (LSD). This is the first element of our "guarantee". The concept can also be applied to analog displays, and it is called **resolution** of the display (represneted by Q as "quant").
+Our measurement task is now more complex: we need a value and a "guarantee" that the value is within certain bounds. Our DMM reads a number 10.0 kΩ. The is DMM can only show us 9.9kΩ, 10.0kΩ and 10.1kΩ. We physically can't read any more detail that, so the reading is only known within ±1 of the least significant digit (LSD). This is the first element of our "guarantee". The concept can also be applied to analog displays, and it is called **resolution** of the display (represneted by Q as "quant").
 
-The measurement can fall in the range from 9.95 kΩ to 10.05 kΩ - all values in between are possible and indistinguishable by our DMM. More importantly, all values in that range are equally possible. This is different from the most famous distribution, the normal distribution, where values near the mean are more probable than values further away. Here we have equal probability for all values in the range. This is called a uniform or rectangular distribution.
+The measurement can fall in the range from 9.9 kΩ and 10.1 kΩ - all values in between are possible and indistinguishable by our DMM. More importantly, all values in that range are equally possible. This is different from the most famous distribution, the normal distribution, where values near the mean are more probable than values further away. Here we have equal probability for all values in the range. This is called a uniform or rectangular distribution.
+
+But wait - are we being too pessimistic? A well-designed ADC (analog-to-digital converter) inside the DMM doesn't just truncate the value, it rounds it. When the display shows 10.0 kΩ, the actual value is very likely to be between 9.95 kΩ and 10.05 kΩ, not between 9.9 kΩ and 10.1 kΩ. This subtle improvement in our knowledge comes at a cost: we had to trust that the ADC is well-behaved. And trust, as we shall see, is the currency of measurement.
 
 The gap between what we measure and what we know is called **uncertainty**. In this case, uncertainty stems from the limited resolution of the display. Other sources - temperature drift, electrical noise,... exist, but we cannot detect them by "just looking at it". At this stage, the resolution defines the boundary of our knowledge.
 
@@ -89,11 +123,13 @@ In order to communicate the measurement we now need four pieces of information: 
 
 You may recall that standard deviation is closely related to normal (Gaussian) distribution. And that in turn implies that we need to take multiple samples (measurements) before we can say anything about standard deviation. In our case we have single measurement. How to reconcile that? The ISO standards body figured that out too. They defined something called "Type B evaluation of uncertainty" which deals with any situation where you don't have repeated measurements to calculate standard deviation from.
 
-In short, they decided to use "scientific judgement" to estimate the standard deviation for different types of distributions even if you have only a single measurement. In our case we have uniform distribution with range of 0.1 kΩ to convert it into **standard uncertainty** we use the formula:
+In short, they decided to use "scientific judgement" to estimate the standard deviation for different types of distributions even if you have only a single measurement. In our case we have uniform distribution with range of 0.1 kΩ. But what does a uniform distribution look like? Think of a fair die: when you roll it, each face (1 through 6) has equal probability. Our measurement is similar - any value between 9.95 kΩ and 10.05 kΩ is equally likely.
+
+To convert it into **standard uncertainty** we use the formula:
 
 $$u(G)_q = \frac{Q_g}{2\sqrt{3}}$$
 
-In this formula the number 2 follows from the fact that Q is the full-width of the distribution (from one edge to the other). The factor of 1/√3 comes directly from calculating the standard deviation of a rectangular distribution.
+In this formula the number 2 follows from the fact that Q is the full-width of the distribution (from one edge to the other). The factor of 1/√3 comes directly from calculating the standard deviation of a rectangular distribution - this is what mathematics tells us about the "spread" of a uniform distribution.
 
 So, at this early stage, our result of a measurement can be provisionally expressed as:
 
@@ -107,9 +143,13 @@ But, is it really that simple? Would you trust this result? Let's step back a li
 
 # Trust
 
-Trust is uniquely human concept. You could say that human civilization is built on trust supported by a whole lot of data. Stated as famous russian proverb: "Trust, but verify".
+While we often think of trust as a psychological concept, at its core it has a mechanical basis: **shared context** and **consistent behavior**.
 
-Looking at the picture of our little measurment, you probably don't recognize the DMM brand. Is it a good DMM? Is it calibrated? Did it ever fell off the table? How old is it? All these questions are relevant, because they affect the uncertainty of the measurement.
+Consider this analogy: if you and I need to coordinate meeting at 14:00, we first need to agree on what "14:00" means - do we use UTC? Local time? This is shared context or common language. Then, assuming we both show up on time as expected (based on past experience), we can coordinate reliably. These two mechanical elements - shared context and consistent behavior history - form the foundation of trust. Without shared context, communication fails. Without consistent behavior, predictions fail. Together, they enable prediction and coordination.
+
+In measurements, we operationalize these two elements through standards. The SI units provide shared context for quantities. ISO GUM (Guide to the Expression of Uncertainty in Measurement) provides shared context for how to express uncertainty. Calibration and verification provide evidence of consistent behavior - that the instrument performs as expected and according to its specification.
+
+Looking at the picture of our little measurement, you probably don't recognize the DMM brand. Is it a good DMM? Is it calibrated? Did it ever fall off the table? How old is it? All these questions are relevant, because they affect the uncertainty of the measurement.
 
 Even if you buy your instrument from a reputable vendor, they don't expect you to trust them blindly. They provide a calibration certificate issued by an accredited calibration laboratory, where "accredited" means that the lab has been audited by another body and found competent to perform the calibration tasks they offer. It's all a chain of paper or a chain of trust.
 
@@ -154,6 +194,8 @@ Since we don't know the true value, we can't calculate the error directly. Howev
 At our stage we assume that the true value is within the uncertainty bounds defined by our measurement. The smaller the uncertainty, the closer we are to the true value. The close we are to the true value, the more **accurate** our measurement is.
 
 I'll spare you the target analogy, but do know that accuracy is closeness to the true value, in other words, absolute error.
+
+Here's a philosophical point worth pondering: GUM deliberately avoids the term "true value" because in real-world measurement, the true value is unknowable, unobservable, and perhaps not even well-defined. The uncertainty is not an error bar around the true value - it is a reflection of our knowledge about the value. We can never know the result accurately (closeness to the unknowable true value), but we can know precisely how imprecise our knowledge is.
 
 # Summing up uncertainties & precision
 
