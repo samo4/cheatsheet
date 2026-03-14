@@ -65,7 +65,7 @@ You shout to colleague across the lab: "Hey, it 10!". What follows depends on th
 
 What is **uncertainty** you say? It is the gap between what we measure and what we know. In our case, we know that the value is between 9.95 kΩ and 10.05 kΩ, but we don't know where exactly. The uncertainty is a way to express this gap in a standardized way. GUM says that the standard way to express uncertainty is to use standard deviation, and luckly for us, mathematicians tell us that we can convert the width of a uniform distribution into standard deviation using the formula:
 
-$$u(G)_q = \frac{Q}{2\sqrt{3}}$$0
+$$u(G)_q = \frac{Q}{2\sqrt{3}}$$
 
 To express what we know about our particular measurement so far, we need to communicate the value, the resolution, the distribution type (uniform) and the number of measurements like so:
 
@@ -75,7 +75,7 @@ The gap between what we measure and what we know is called **uncertainty**. In t
 
 The result as written above, although technically correct and standard, leaves a lot of information out.
 
-## Trust & process
+## The nightmare scenario aka "the outliers"
 
 The instrument that you are using to measure the resistor was on the table when you arrived. You didn't see it being manufactured, you didn't see it being calibrated, you don't know if it was dropped or tampered with by a jester collegue. You just trust that it's working as expected.
 
@@ -92,6 +92,39 @@ The DMM has a manufacturer specification for its MPE - Maximum Permissible Error
 Another problem that you might have noticed is that you need to trust the known resistor as well. In principle you can use any resistor to verify that nothing dramatic happened to your DMM from the last time you were using it. In practice you will most likely be using a special calibration resistor with a **calibration certificate**. The calibration certificate is a document issued by another party that states the value of the resistor and its uncertainty. And you might have guessed, you need to trust this other party (commonly an accredited calibration laboratory) as well.
 
 Depending on the application, the consequences of a "bad" measurement can be more or less severe. Depending on your the application you must decide how much trust you need to put into the measurement. And trust in measurment is a collection of as many uncertainties as you can find.
+
+Since you can't always know if an instrument is damaged, metrologists use Statistical Process Control (SPC). You measure a "known" object every morning. If the result jumps by 5%, you know the instrument is compromised before you start the day's work. Measuring the same part with two different instruments or two different operators. If they don't "overlap" within their stated uncertainties, you have a consistency error, signaling a hidden systematic problem.
+
+In GUM language, this is part of Type B uncertainty evaluation:
+
+You use your knowledge and experience to judge whether the instrument is behaving normally. If the check passes, you assume the calibration and uncertainty budget are still valid. If it fails, you stop and investigate.
+
+But GUM usually doesn't care about such outliers - it assumes that the instrument is working as expected and that the uncertainty budget is valid. In other words, GUM assumes that the measurement is under statistical control. Uncertainty is only valid for a validated process. If the instrument is broken, the uncertainty statement is no longer a measurement; it is a fiction.
+
+You don't "calculate" for a dropped tool; you discard the data. This is why "Quality Assurance" (the process) is as important as "Metrology" (the math).
+
+### statistical control
+
+Has this instrument demonstrated stable, predictable behavior over time?
+
+The Philosophical Truth: Uncertainty is a statement of current knowledge. If your knowledge is wrong (because you didn't know the tool fell), your uncertainty statement is also wrong. The GUM isn't a magic wand; it's a "best-case" logic for an honest, well-maintained experiment
+
+## PEBKAC
+
+If you don't know that the leads have resistance, you've missed a systematic effect in your measurement model. In the eyes of the GUM, your measurement is "wrong" not because of a math error, but because your state-of-knowledge was incomplete.
+
+Here is how the GUM reconciles that "unknown" uncertainty:
+
+- The Responsibility of the Analyst: The GUM places the burden on the person making the measurement to identify all significant influence quantities. If you are unaware of lead resistance, your reported uncertainty will be underestimated because you haven't included that variance component.
+- The "Incomplete Model" Problem: A measurement starts with a model (image.gif
+  ). If you don't know leads have resistance, your model is simply image.gif
+  . GUM-6 notes that an inadequate model is a major source of uncertainty.
+- Discovery via Intercomparison: Often, these "unknown" systematic errors are only discovered when your results are compared to another laboratory or a Certified Reference Standard. If your result differs significantly from the reference beyond your stated uncertainty, it proves there is an uncorrected systematic effect you didn't account for.
+- Transitioning to Type B: Once you do realize leads have resistance (even if you haven't measured them specifically), you can no longer ignore them. You would use a Type B evaluation—using "professional judgment" or "manufacturer specs"—to assign a probability distribution to that lead resistance and add it to your Uncertainty Budget.
+
+The Philosophy of Doubt: The GUM defines uncertainty as "the doubt about the measurement result". If there are factors you are "ignorant" of, your uncertainty statement is technically invalid for traceability purposes until those factors are identified and quantified.
+
+In short: If you don't know it exists, you can't reconcile it. The GUM’s "reconciliation" only begins once you acknowledge a possible source of error—at which point it stops being an "unknown error" and becomes a "quantifiable uncertainty"
 
 ## Uncertainties
 
@@ -143,6 +176,26 @@ First remember how we found a way to translate from manufacturer's limit of erro
 
 So when you compare two measurements with standard uncertainties, no matter how different are the values and how big the uncertainty, you're always alowing for the situation where the "true" value is exactly the same. Just this is enough to reconcile any two measurements. However, the more different the values are, the less probable this situation is.
 
+# The dreams of one true value
+
+GUM...
+lie vs trust
+
+In the context of the ISO GUM (Guide to the Expression of Uncertainty in Measurement), the concept of a "true value" is treated as an unknowable ideal rather than a practical reality. The GUM shifts the focus from finding a single "true" number to establishing a range of values that can reasonably be attributed to the thing being measured (the measurand).
+
+The GUM argues that since no measurement is perfect, the "true" value remains forever unknown. Even with the most advanced instruments, there is always some level of uncertainty that prevents us from reaching an absolute, exact value.
+
+Instead of trying to calculate "error" (the difference between a measurement and an unknown truth), the GUM focuses on uncertainty, which is a parameter characterizing the dispersion of values you can justify based on your observations.
+
+## Realist vs. Instrumentalist Perspectives
+
+There is an ongoing philosophical debate within metrology regarding this:
+
+- Realist View: Believes that a unique true value exists in nature independently, but we are just incapable of seeing it perfectly.
+- Instrumentalist View: Argues that "true values" are just mental constructs or models used to describe results, and what matters is the consistency of the measurement procedure. Bayesian statistics can be seen as a way to formalize the instrumentalist perspective, where we update our beliefs about the value based on evidence and uncertainty.
+
+In short, the GUM doesn't necessarily say a true value doesn't exist in a physical sense, but it asserts that it is operationally useless because we can never actually know it.
+
 # Work in progress ------------------------------------------------ NOTES
 
 Measurements are a way to communicate information about the real world and are dependent on the common language and common understanding. That's why most introductions to this topic start with SI units, but the agreement about how long a meters is is only a part of the story. Here we need to agree on how to express uncertainty as well. Some smart people have worked on this and there are international standards about it. The most widely used is ISO GUM. They decided that the standard way to express uncertainty is to use standard deviation (no pun intended).
@@ -162,6 +215,8 @@ The calibration certificate is valid only for a certain period of time. In that 
 Here we have two options: we can have a manfacturer stated specification about the performance of the instrument when it leaves the factory. Or we can have a detailed calibration certificate[^1], with actual calibration results - deviations from true values.
 
 LEARN TO NOT TRUST AND POKE HOLES!
+
+If you didn't develop the habit of questioning and critically evaluating information, now is the last time to cross this rubicon. You were conditioned to trust whatever "the authority" said, but now you need to learn to doubt everything, critically evaluate all the available information and poke holes in the information you receive. This is a skill that will serve you well in all aspects of life, not just in measurements. You need to learn to ask questions like: "How do I know this is true?", "What is the evidence?", "What are the assumptions?", "What are the limitations?", "What are the alternatives?".
 
 # Error & accuracy
 
