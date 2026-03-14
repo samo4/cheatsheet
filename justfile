@@ -23,7 +23,7 @@ as:
     pandoc AS.md -o AS.pdf --pdf-engine=xelatex -V geometry:margin=1in
 
 meas:
-    pandoc MEASUREMENTS.md -o MEASUREMENTS.pdf --pdf-engine=xelatex -V geometry:margin=1in --filter pandoc-crossref \
+    pandoc measurements-a-nigh-time-story.md -o MEASUREMENTS.pdf --pdf-engine=xelatex -V geometry:margin=1in --filter pandoc-crossref \
     --number-sections -V colorlinks=true -V linkcolor=blue -V citecolor=blue -V urlcolor=blue
 
 # --filter pandoc-crossref -V colorlinks=true -V linkcolor=blue -V citecolor=blue

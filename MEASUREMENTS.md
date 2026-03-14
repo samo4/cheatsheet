@@ -243,6 +243,22 @@ can trust->confidence
   - doubt
 -->
 
+# Putting it all together
+
+1. Assume the instrument is in statistical control  
+   (because it has a valid calibration certificate, passes self-tests, or has known performance).
+
+2. Assign uncertainties from calibration and specs  
+   These already account for manufacturing imperfections, drift, and typical handling.
+
+3. Perform repeatability tests (Type A)  
+   This checks whether the instrument behaves normally today.
+
+4. Combine uncertainties  
+   Using the GUM law of propagation.
+
+You don’t need to know whether the instrument was dropped — if it had been dropped, it would likely fail repeatability tests or be out of calibration.
+
 # Things you can't live without
 
 ## Basics of math
