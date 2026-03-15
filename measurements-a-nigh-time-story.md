@@ -15,27 +15,27 @@ extensions:
 
 # When is a measurement more than just a number?
 
-Picture this: it is late evening, you are in the lab, the coffee is cold, and the only thing still blinking with enthusiasm is a digital multimeter on the bench. You clip it across a resistor, it says 10.0 kOhm, and for a moment the matter appears settled. In a lot of practical work that really is the end of the story. Many circuits are so forgiving that even a wildly wrong resistor will not stop them from doing their job.
+Picture this: it is late evening, you are in the lab, the coffee is cold, and the only thing still blinking with enthusiasm is a digital multimeter on the bench. You set it to $\Omega$ mode, clip two wires across a resistor, it says 10.0 kOhm, and for a moment the matter appears settled. In a lot of practical work that really is the end of the story. Many (if not most) circuits are so forgiving that even a wildly wrong resistor will not stop them from doing their job.
 
-But not all measurements live in such friendly territory. If that same resistor is being used as a temperature sensor, then a large error in resistance may translate into a completely wrong temperature. In that setting, reading a number is not enough. The real question is not just what the display says, but how well we know what lies behind it.
+But not all measurements live in such a friendly territory. If that same resistor is being used as a temperature sensor, then a even a relatively reasonable error in resistance (say 5%) may be the difference between wearing shorts and freezing. In that setting, reading a number is not enough. The real question is what that blinking display is telling you - and what it isn't.
 
-That is the thread running through the whole chapter: a displayed number is not the same thing as justified knowledge.
+That is the thread running through this article: a displayed number is not the same thing as justified knowledge.
 
 # One reading, one DMM
 
 To keep the problem honest, start with the smallest possible measurement model. There is one measurand, the resistance of the resistor. There is one instrument, the DMM. There is one reading, so $n=1$. No repeated trials, no fancy statistics, no uncertainty budget spreadsheet yet. Just you, the resistor, and whatever the display is willing to confess.
 
-The display shows 10.0 kOhm. The least significant digit is 0.1 kOhm, which means the display resolution is:
+We will start with a very simple observation: the display of the DMM can only show a certain number of digits. In our case, it shows as three digits, for a total value of 10.0 kΩ. The resolution of this display is 0.1 kΩ - it can't show us any more detail than that:
 
 $$Q = 0.1\,k\Omega$$
 
-If you only stare at the display and refuse to assume anything about what happens inside the meter, then 10.0 kOhm seems to mean that the actual value could be somewhere in a small neighborhood around that indication - if you're really pessimistic then the range is from 9.9 kΩ to 10.1 kΩ. With a sensible ADC and a more realistic model, though, the meter does not merely chop values off; it rounds them. So a displayed value of 10.0 kOhm corresponds more naturally to:
+If you only stare at the display and refuse to assume anything about what happens inside the meter, then 10.0 kOhm seems to mean that the actual value could be somewhere in a small neighborhood around that indication - if you're really pessimistic then the range is from 9.9 kΩ to 10.1 kΩ - a range of full 0.2 kΩ. If the DMM contains a well behaved ADC, then the meter does not merely chop values off; it rounds them. So a displayed value of 10.0 kOhm corresponds more naturally to:
 
 $$9.95\,k\Omega \le R < 10.05\,k\Omega$$
 
 Already there is something interesting hiding here. The move from the crude interval to the rounded interval is not something you observed directly. You accepted it because you trust the instrument to behave like a competent measuring device. Even in this toy example, _trust_ has entered the room.
 
-Within that interval we usually assume that all values are equally likely, so the quantization effect is modeled with a uniform distribution (think throwing the dice, not measuring height). That gives us a model of what we do not know, but not yet a standard language for communicating it.
+Beyond this small concession we made to trust, we are still in the dark about where exactly the value is within that interval. Resistors are not magically obliged to be exactly 10.0 kOhm and we're not even asking the resistor, we're asking our instrument. Within that interval, the "real" value could be anywhere and all values are equally likely - similar to throwing a dice. We call this uniform (or rectangular) distribution.
 
 # Language of uncertainty
 
@@ -45,7 +45,7 @@ This is why metrology needs conventions.
 
 If you're reading this, you probably already know what a meter is and you likely remember that it was conceived as an arbitrarily defined fraction of the Earth's meridian. It replaced a previous system where almost every village had its own definition of length. Today meter is a member of the _SI family of units_ on which basically the entire world agrees - giving us a shared language for quantities.
 
-And then there is _the unknown_ as intuited when looking at the display. We can say "the resistor is somewhere between 9.95 and 10.05 kOhm," but that is not a very good way to talk about what we know. To prevent shouting and confusion, the metrology community has invented the Guide to the Expression of Uncertainty in Measurement (GUM) to give us a shared language for uncertainty. The GUM is not a law of nature; it is a convention.
+And then there is _the unknown_ as intuited when looking at the display. We can say "the resistor is somewhere between 9.95 and 10.05 kOhm," but that is not a very good way to talk about what we know. To prevent shouting and confusion, the metrology community has invented the [ISO GUM](https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf) (Guide to the Expression of Uncertainty in Measurement) to give us a shared language for uncertainty. The GUM is not a law of nature; it is a convention.
 
 The point of SI units and GUM is to make measurements transportable. A result should mean roughly the same thing to the person who made it, the person who reads it tomorrow, and the laboratory on the other side of the planet.
 

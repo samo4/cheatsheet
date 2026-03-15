@@ -16,10 +16,7 @@ extensions:
 # Measurements - a night time story
 
 <!---
-Plan for this chapter: Introduce basic concepts of measurements using an example of measuring resistance with a DMM:
-- introduce the concept of +- resolution (quantization) by simply observing the DMM display. Start by observing that "technically" the display is saying that basicly any value between one down and one up is possible (so almost 2 digits)
-- improve on the previous obvservation by noting that well-behaved ADC are rounding, so the width of the possible values is actually equal to the resolution (quantization step) 1 digit
-- by moving from first to second observation we notice that there's a certain element of trust involved (we need to trust the rounding behavior of the ADC, which is not directly observable, at least now)
+
 - introduce the concept of trust (a special version of mechanistic and not psychological trust):
   - common context and norms (language)
   - reliablility in the past
@@ -45,23 +42,11 @@ Plan for this chapter: Introduce basic concepts of measurements using an example
 
 ## Intro
 
-Picture this: it's late evening, you're in the lab, and you need to measure a resistor. The building is quiet, the coffee is cold, and the only company you have is a colleague and a digital multimeter with a display that blinks at you expectantly. What follows is a story about what that blinking display is really telling you - and what it isn't.
-
 ## Just looking at it
 
-The measurement task we will consider is measuring the resistance of a resistor using a digital multimeter (DMM). It doesn't get simpler than that: take the DMM, set it to resistance measurement mode, connect the two wires and read the value on the display. As a matter of fact, for a lot of purposes this is all you need - many practical electrical circuits are not very sensitive to variations in component values - they will work just fine even if the resistance is off by 50%. But not for all purposes. For example you might be reading a special type of resistor intended for measuring temperature. A resistor in this application might read 10kΩ at 25°C and will read 5kΩ at 100°C. As it's plainly obvious, off by 50% in this application makes the measurment completely useless.
+[^1]. Where the value of resistor will fall within the range defined by the resolution is random, but the type of distribution is a usefull piece of information. In our case, all values in range are equally likely, so we have a uniform **distribution**.
 
-How "well" you need to know the result depends on why you need the measurement. Let's quantify the "well" part. We will start with a very simple observation: the display of the DMM can only show a certain number of digits. In our case, it shows 10.0 kΩ. The resolution of the display is 0.1 kΩ - it can't show us any more detail than that. So 10.0 kΩ written on display is telling us that the resistance is greater than 9.9 kΩ and less than 10.1 kΩ., but we don't know where exactly. This is the first element of our "well": the value is within ±1 of the least significant digit (LSD). We call this the **resolution** of the display (represented by Q as "quant").
-
-The resistor that we're measuring is a completely random resistor that we picked up from the box, where for all you know, it could contain just about any value. In other words there's a single source of randomness. This is different for example to randomness of height of people, which is influenced by many factors: genetics, nutrition, health,... When you have multiple sources of randomness, the resulting distribution is usually normal (Gaussian)[^1]. Where the value of resistor will fall within the range defined by the resolution is random, but the type of distribution is a usefull piece of information. In our case, all values in range are equally likely, so we have a uniform **distribution**.
-
-But wait - are we being too pessimistic? A well-designed ADC (analog-to-digital converter) inside the DMM doesn't just truncate the value, it rounds it. When the display shows 10.0 kΩ, the actual value is very likely to be between 9.95 kΩ and 10.05 kΩ, not between 9.9 kΩ and 10.1 kΩ. This subtle improvement in our knowledge comes at a cost: we had to trust that the ADC is well-behaved. And trust, as we shall see, is the currency of measurement.
-
-## Communication
-
-You shout to colleague across the lab: "Hey, it 10!". What follows depends on the shared context between you and your colleague. If you just discussed that you need a 12kΩ resistor for your circuit, your colleague will understand that you measured a 10kΩ resistor. Even if you have the shared context, the colleague might be in a different train of thought and reply with a sarcastic "ten peaches?".
-
-"10" might work for certain contexts, but out of necessity, people have developed a more formal way to communicate measurements. One of the most widely used is [ISO GUM](https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf) (Guide to the Expression of Uncertainty in Measurement).
+## This subtle improvement in our knowledge comes at a cost: we had to trust that the ADC is well-behaved. And trust, as we shall see, is the currency of measurement.
 
 What is **uncertainty** you say? It is the gap between what we measure and what we know. In our case, we know that the value is between 9.95 kΩ and 10.05 kΩ, but we don't know where exactly. The uncertainty is a way to express this gap in a standardized way. GUM says that the standard way to express uncertainty is to use standard deviation, and luckly for us, mathematicians tell us that we can convert the width of a uniform distribution into standard deviation using the formula:
 
