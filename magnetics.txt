@@ -1,0 +1,176 @@
+```{=latex}
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+	% Front face of the core
+	\coordinate (A) at (0,0);
+	\coordinate (B) at (4.8,0);
+	\coordinate (C) at (4.8,4.2);
+	\coordinate (D) at (0,4.2);
+
+	% Inner window
+	\coordinate (E) at (1.3,1.1);
+	\coordinate (F) at (3.5,1.1);
+	\coordinate (G) at (3.5,3.1);
+	\coordinate (H) at (1.3,3.1);
+
+	% Core body
+	\filldraw[fill=gray!18, draw=black, thick] (A) -- (B) -- (C) -- (D) -- cycle;
+	\filldraw[fill=white, draw=black, thick] (E) -- (F) -- (G) -- (H) -- cycle;
+	\filldraw[fill=gray!10, draw=black, thick] (D) -- (C) -- cycle;
+	\filldraw[fill=gray!12, draw=black, thick] (B) -- (C) -- cycle;
+	\filldraw[fill=gray!6, draw=black, thick] (H) -- (G) -- cycle;
+	\filldraw[fill=gray!8, draw=black, thick] (F) -- (G) -- cycle;
+
+    % H loop
+	\draw[very thick, red!75!black, -{Latex[length=3mm]}, rounded corners=8pt]
+		(0.7,0.7) -- (4.1,0.7) -- (4.1,3.45) -- (0.7,3.45) -- cycle;
+	\node[red!75!black, fill=white, inner sep=1pt] at (2.45,3.75) {$\oint \vec{H}\cdot d\vec{l}$};
+	\draw[thick, -{Latex[length=3mm]}, red!75!black] (4.1,1.95) -- (4.1,2.95);
+
+	% I loop
+	\draw[very thick, rounded corners=4pt, blue!65!black]
+		(-1.0,2.4) -- (0,2.4);
+	\draw[very thick, rounded corners=4pt, blue!65!black]
+		(1.3,2.4) -- (2.2,2.4) -- (2.2,1.8) -- (-1.0,1.8);
+	\draw[thick, -{Latex[length=3mm]}, blue!65!black] (-0.95,2.4) -- (-0.15,2.4);
+	\node[above, blue!65!black] at (-0.55,2.4) {$i(t)$};
+
+\end{tikzpicture}
+\caption{A single turn drives current $i(t)$ around a magnetic core, while the magnetic field intensity $\vec{H}$ finds the path of least reluctance in the core.}
+\label{fig:core-h-loop}
+\end{figure}
+```
+
+If in electricity the voltage is the driving force, in magnetics it is the current. This analogy is beaten to death in just about every textbook, but it really works if you combine it with the _density_ part of the discussion above. So my take is: replace current with volagage and vice versa; then just don't forget that everything in magentics is a density.
+
+Now let's use this analogy:
+
+> Voltage $U$ drives current $I$ and current always flows through the least resistance $R$ path.
+
+Transletes to:
+
+> Magnetic field intensity $\vec{H}$ drives magnetic flux $\Phi$ and magnetic flux always flows through the least reluctance $\mathcal{R}$ path.
+
+---
+
+Current creates magnetic field intensity over a magnetic path, and the magnetic field intensity is what drives the magnetic flux through the core. Like so:
+
+$$
+i(t)
+\;\longrightarrow\;
+Ni
+\;\longrightarrow\;
+H = \frac{Ni}{l}
+\;\longrightarrow\;
+B = \mu H
+\;\longrightarrow\;
+\Phi = BA
+$$
+
+So the current does the bullying, $H$ is the shove around the magnetic path, and the material decides how much flux density $B$ and flux $\Phi$ you get out of that shove.
+
+
+
+So my take is: magnetics is what electricity looks like when relativity barges into the room [^1].
+
+And now for one important element that's not included in the equation: the material and geometry of the space through which the magnetic field is flowing. Depending on the material and geometry, it can be "easy" or "difficult" for the magnetic field to flow. In other words, depending on the material and geometry, you need more or less current to create the same field.
+
+The more "difficult" the path for the magnetic field, more current you need to create the same field.
+
+The equation (Ampere's law) also omits any kind of reference to a material - magnetic field intensity is independent of properties of the space trough which it is flowing.
+
+Keyword here is **density**: compared to all the talking in the electricity department about **total** of something, magnetics is all about density. Just as mass becomes density when you divide it by volume, magnetic flux becomes flux density when you divide it by area.
+
+The electricity department sometimes dables in densities (current density J in units of $A/m²$), but magnetics department can't live without densities. If you really paid attention to the Ampere's law above you might notice that the right hand can be express as integral of curre density over area.
+
+## TLDR
+
+In DC environment magnetic field is the consequence of current. Current creates magnetic field intensity, which circles
+the current. Depending on \mju in each particular location in space, the density of magnetic field is defined.
+
+In AC environment the ultimate source of the magnetic field still the same. But because the field is changing, the
+induction comes into play. Induced voltage is trying to nullify the original field by creating the opposite field.
+Or you can say that induced voltage is subtracting from the applied voltage, reducing the effective voltage and therefore the current.
+Either way, the result is the same - the flux in AC excited magnetic circuit is defined by the applied voltage.
+
+The matter and geometry of the magnetic field then define how "hard" it is to create the field. In other words, how
+much current is needed. When you have a magnetic circuit with a low magnetic reluctance (analogous to electric resistance),
+it's easy to create the field.
+
+## DC Magnetic Fields
+
+In a direct current (DC) environment, the relationship between current and magnetic field is governed by Ampere's Law:
+
+$$\oint \vec{H} \cdot d\vec{l} = I_{enclosed}$$
+
+This equation states that the line integral of the magnetic field intensity $\vec{H}$ around a closed path equals the current enclosed by that path.
+
+The magnetic field intensity $\vec{H}$ (measured in A/m) relates to the magnetic flux density $\vec{B}$ (measured in Tesla) through the magnetic permeability $\mu$:
+
+$$\vec{B} = \mu\vec{H} = \mu_0\mu_r\vec{H}$$
+
+Where:
+
+- $\mu_0 = 4\pi \times 10^{-7}$ H/m (the permeability of free space)
+- $\mu_r$ is the relative permeability of the material (dimensionless)
+
+The total magnetic flux $\Phi$ through a surface is given by:
+
+$$\Phi = \int \vec{B} \cdot d\vec{A}$$
+
+## AC Magnetic Fields and Induction
+
+In alternating current (AC) environments, Faraday's law of induction becomes critical:
+
+$$E = -N\frac{d\Phi}{dt}$$
+
+For a sinusoidal AC current, the induced voltage in a coil is:
+
+$$U_{rms} = 4.44 \times f \times N \times \hat{\Phi}$$
+
+Where:
+
+- $U_{rms}$ is the root mean square (effective) value of the voltage
+- $\hat{\Phi}$ is the peak (maximum) value of the magnetic flux
+
+## Magnetic Circuits
+
+Similar to electrical circuits, magnetic circuits follow the principle:
+
+$$\mathcal{F} = \Phi \times \mathcal{R}$$
+
+Where:
+
+- $\mathcal{F}$ is the magnetomotive force (MMF) = $NI$ (ampere-turns)
+- $\Phi$ is the magnetic flux
+- $\mathcal{R}$ is the magnetic reluctance
+
+The magnetic reluctance of a uniform material section with length $l$, cross-sectional area $A$, and permeability $\mu$ is:
+
+$$\mathcal{R} = \frac{l}{\mu A}$$
+
+For a composite magnetic circuit (like a transformer with core and air gap):
+
+$$\mathcal{R}_{total} = \mathcal{R}_{core} + \mathcal{R}_{gap} + ...$$
+
+In AC magnetic circuits, we must also consider the core losses:
+
+- Hysteresis loss: $P_h = k_h f B_{max}^n V$
+- Eddy current loss: $P_e = k_e f^2 B_{max}^2 t^2 V$
+
+Where $k_h$ and $k_e$ are constants, $t$ is the lamination thickness, and $V$ is the volume.
+
+## Energy and Inductance
+
+The energy stored in a magnetic field is:
+
+$$W = \frac{1}{2}LI^2 = \frac{1}{2}\int \vec{H} \cdot \vec{B} \, dV$$
+
+The inductance of a coil with $N$ turns and flux $\Phi$ when carrying current $I$ is:
+
+$$L = \frac{N\Phi}{I} = \frac{N^2}{\mathcal{R}}$$
+
+This fundamental relationship shows how the geometry and material properties directly affect the inductance of a component.
+
+[^1]. All that follows is just a fancy math that takes care of the one defining principle of the world: that energy cannot be created or destroyed.

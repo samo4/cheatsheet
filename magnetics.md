@@ -1,90 +1,47 @@
+---
+title: "Magnetics"
+author: "Samo F."
+date: "2025"
+header-includes:
+	- |
+		\usepackage{tikz}
+		\usetikzlibrary{arrows.meta,calc,positioning}
+---
+
 # Magnetics
 
-## TLDR
+Hey, you fellow electric engineering student! Did you pass the basics of electrotechnics course and still the mere mention of magnetics makes you shiver? Don't worry, you're not alone. The trick is that, depending on the area of specialization, even a seasoned engineer might rarely encounter magnetics in their day-to-day work (making a living on a diet of Ohm's law). I wrote this article to remind myself of the basics each time I forget them.
 
-In DC environment magnetic field is the consequence of current. Current creates magnetic field intensity, which circles
-the current. Depending on \mju in each particular location in space, the density of magnetic field is defined.
+There are two ways to read this. Either follow my slightly idiosyncratic way of explaining, or just jump to the nice TLDR picture, curtuesy of [E. Maksimovič].
 
-In AC environment the ultimate source of the magnetic field still the same. But because the field is changing, the
-induction comes into play. Induced voltage is trying to nullify the original field by creating the opposite field.
-Or you can say that induced voltage is subtracting from the applied voltage, reducing the effective voltage and therefore the current.
-Either way, the result is the same - the flux in AC excited magnetic circuit is defined by the applied voltage.
+Imagine a spaceship traveling close to the speed of light. (Yes, yes, I assume that you also passed the physics course.) From the perspective of an observer on Earth, the spaceship contracts in the direction of motion due to relativistic effects. That same special-relativity machinery does not switch off just because the electrons in a wire move at a pedestrian speed. In fact, one useful way to think about magnetism is that electric and magnetic fields are two faces of the same relativistic story. Depending on the reference frame, what looks mostly electric in one frame picks up a magnetic component in another.
 
-The matter and geometry of the magnetic field then define how "hard" it is to create the field. In other words, how
-much current is needed. When you have a magnetic circuit with a low magnetic reluctance (analogous to electric resistance),
-it's easy to create the field.
+So my take is: magnetics is what electricity looks like when relativity shows up to the party.
 
-## DC Magnetic Fields
-
-In a direct current (DC) environment, the relationship between current and magnetic field is governed by Ampere's Law:
+For ordinary electrotechnics, only one consequence matters: currents create magnetic field intensity:
 
 $$\oint \vec{H} \cdot d\vec{l} = I_{enclosed}$$
 
-This equation states that the line integral of the magnetic field intensity $\vec{H}$ around a closed path equals the current enclosed by that path.
+What the equation (Ampere's law) tells us is this: more current means more magnetic field intensity. If you want to push the same field around a longer magnetic path, you need more ampere-turns. Since you're already adept at extracting units from equations, you also plainly see that the unit of magnetic field intensity $\vec{H}$ is A/m. Field intensity is not a lump like total mass; it is already a quantity spread out along length. And one more useful observation: the equation does not contain the any material properties. Only the current and geometry set $\vec{H}$.
 
-The magnetic field intensity $\vec{H}$ (measured in A/m) relates to the magnetic flux density $\vec{B}$ (measured in Tesla) through the magnetic permeability $\mu$:
+What the current gives us directly is not yet the whole story. Ampere's law gives us the field intensity $\vec{H}$: it tells us how hard we are pushing magnetically around the path. But engineers usually care about what actually ends up inside the material. That is the magnetic flux density $\vec{B}$. The bridge between the two is the material itself:
 
 $$\vec{B} = \mu\vec{H} = \mu_0\mu_r\vec{H}$$
 
-Where:
-
-- $\mu_0 = 4\pi \times 10^{-7}$ H/m (the permeability of free space)
-- $\mu_r$ is the relative permeability of the material (dimensionless)
-
-The total magnetic flux $\Phi$ through a surface is given by:
+And once you have $\vec{B}$, the total magnetic flux $\Phi$ is just that density spread over area:
 
 $$\Phi = \int \vec{B} \cdot d\vec{A}$$
 
-## AC Magnetic Fields and Induction
+Now the causal chain is complete:
 
-In alternating current (AC) environments, Faraday's law of induction becomes critical:
-
-$$E = -N\frac{d\Phi}{dt}$$
-
-For a sinusoidal AC current, the induced voltage in a coil is:
-
-$$U_{rms} = 4.44 \times f \times N \times \hat{\Phi}$$
-
-Where:
-
-- $U_{rms}$ is the root mean square (effective) value of the voltage
-- $\hat{\Phi}$ is the peak (maximum) value of the magnetic flux
-
-## Magnetic Circuits
-
-Similar to electrical circuits, magnetic circuits follow the principle:
-
-$$\mathcal{F} = \Phi \times \mathcal{R}$$
-
-Where:
-
-- $\mathcal{F}$ is the magnetomotive force (MMF) = $NI$ (ampere-turns)
-- $\Phi$ is the magnetic flux
-- $\mathcal{R}$ is the magnetic reluctance
-
-The magnetic reluctance of a uniform material section with length $l$, cross-sectional area $A$, and permeability $\mu$ is:
-
-$$\mathcal{R} = \frac{l}{\mu A}$$
-
-For a composite magnetic circuit (like a transformer with core and air gap):
-
-$$\mathcal{R}_{total} = \mathcal{R}_{core} + \mathcal{R}_{gap} + ...$$
-
-In AC magnetic circuits, we must also consider the core losses:
-
-- Hysteresis loss: $P_h = k_h f B_{max}^n V$
-- Eddy current loss: $P_e = k_e f^2 B_{max}^2 t^2 V$
-
-Where $k_h$ and $k_e$ are constants, $t$ is the lamination thickness, and $V$ is the volume.
-
-## Energy and Inductance
-
-The energy stored in a magnetic field is:
-
-$$W = \frac{1}{2}LI^2 = \frac{1}{2}\int \vec{H} \cdot \vec{B} \, dV$$
-
-The inductance of a coil with $N$ turns and flux $\Phi$ when carrying current $I$ is:
-
-$$L = \frac{N\Phi}{I} = \frac{N^2}{\mathcal{R}}$$
-
-This fundamental relationship shows how the geometry and material properties directly affect the inductance of a component.
+$$
+i(t)
+\;\longrightarrow\;
+Ni
+\;\longrightarrow\;
+H = \frac{Ni}{l}
+\;\longrightarrow\;
+B = \mu H
+\;\longrightarrow\;
+\Phi = BA
+$$
