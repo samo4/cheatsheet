@@ -27,7 +27,7 @@ meas:
     --number-sections -V colorlinks=true -V linkcolor=blue -V citecolor=blue -V urlcolor=blue
 
 magnetics:
-    pandoc magnetics.md -o MAGNETICS.pdf  --pdf-engine=xelatex -V geometry:margin=1in --filter pandoc-crossref \
-    --number-sections -V colorlinks=true -V linkcolor=blue -V citecolor=blue -V urlcolor=blue
+    pandoc magnetics.md -o MAGNETICS.pdf  --pdf-engine=xelatex -V geometry:margin=1in --number-sections \
+    --filter pandoc-crossref --citeproc -V colorlinks=true -V linkcolor=red -V citecolor=blue -V urlcolor=red
 
 # --filter pandoc-crossref -V colorlinks=true -V linkcolor=blue -V citecolor=blue
