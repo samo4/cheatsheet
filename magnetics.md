@@ -157,7 +157,7 @@ In the real world, the material is not just a passive medium. It has its own int
 \end{figure}
 ```
 
-Materials also exhibit other quantum effects such as Larmor precession (used in NMR), diamagnetism, and paramagnetism.
+Materials also exhibit other quantum effects such as Larmor precession (used in NMR), paragdism, diamagnetism and the ultimate magic of superconductivity (aka perfect diamagnetism).
 
 # AC magnetics
 
@@ -175,9 +175,9 @@ To make the chain complete we need a way to link the H-side and the B-side. The 
 
 $$\mathcal{R}_m = \frac{l}{\mu A} \quad [\mathrm{A/Vs}]$$
 
-where $l$ is the length of the magnetic path, $A$ is its cross-sectional area, and $\mu = \mu_0\mu_r$ is the permeability of the material. With reluctance in hand, the magneto-motive force (MMF) obeys a direct analogue of Ohm's law:
+where $l$ is the length of the magnetic path, $A$ is its cross-sectional area, and $\mu = \mu_0\mu_r$ is the permeability of the material. With reluctance in hand, this is a direct analogue of Ohm's law:
 
-$$\mathcal{F} = \Phi \cdot \mathcal{R}_m$$
+$$NI = \Phi \cdot \mathcal{R}_m$$
 
 Compare this to the Ampere-law expression $\mathcal{F} = NI$ and you get the magnetic circuit equation:
 
