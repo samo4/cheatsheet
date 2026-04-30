@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+    \begin{axis}[very thick,
+        domain=-7:7,
+        samples=200,
+        xlabel={$H$},
+        ylabel={$B$},
+        xmin=-7,xmax=7,ymin=-4,ymax=4,
+        axis x line=middle,axis y line=middle,
+        ticks=none]
+        \addplot[red, name path=A] {5/(1 + exp(-1.7*x+1.5))-2.5};
+        \addplot[red, name path=B] {5/(1 + exp(-1.7*x-1.5))-2.5};
+    \end{axis}
+\end{tikzpicture}

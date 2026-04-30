@@ -1,0 +1,33 @@
+\begin{tikzpicture}[node distance=2cm, auto]
+  \node[bignode] (current) {$i(t)$};
+
+  \node[right=of current] (ampere) {};
+
+  \node[center-style, above=of ampere] (permeability) {
+    $\mu_0 = 4\pi \times 10^{-7}\ [\mathrm{Vs/Am}]$
+  };
+
+  \node[bignode, right=of ampere] (mmf) {
+    $H(t)\ [\mathrm{A/m}]$\\[4pt]
+    $\mathcal{F} = \sum Hl = IN\ [\mathrm{A}]$
+  }
+  edge[pil] node[above] {Ampere's law} (current.east);
+
+  \node[above=of permeability] (faraday) {};
+
+  \node[bignode, left=of faraday] (voltage) {
+    $v(t) = -N\dfrac{d\Phi(t)}{dt}$
+  };
+
+  \node[bignode, right=of faraday] (flux) {
+    $B(t)\ [\mathrm{Vs/m^2}]$\\[4pt]
+    $\Phi(t) = A \cdot B(t)\ [\mathrm{Vs}]$
+  }
+  edge[pil] node[above] {Faraday's law} (voltage.east)
+  edge[pil] node[right, text width=2cm] {
+    $B=f(H)$\\
+    $\mathcal{F}=\Phi \cdot R_m$\\
+    $\Phi=\frac{IN}{R_\mathrm{air}}$
+  } (mmf.north);
+
+\end{tikzpicture}
