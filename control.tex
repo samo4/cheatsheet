@@ -1,0 +1,189 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Classical Control Theory notes},
+  pdfauthor={Samo F.},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Classical Control Theory notes}
+\author{Samo F.}
+\date{2025}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}\label{introduction}
+
+Control system is mechanism that alters the future state of a system.
+Control theory is a strategy to select the approriate inputs.
+
+You could just try out all the values, but that's not a particulary
+efficient method.
+
+Control theory is converting unstable open loop systems to stable closed
+loop systems, which are really just open loop systems again :). Common
+definition of control theory includes expected/target value of the
+output, but that's not really the case - control theory is modifying the
+behaviour of the system so that expected value is achievable under given
+constraints.
+
+Inputs to the process of designing a control system are:
+
+\begin{itemize}
+\tightlist
+\item
+  objective
+\item
+  criteria (goals)
+\item
+  information about the system
+\item
+  current state of the system
+\item
+  constraints
+\end{itemize}
+
+\section{Systems and signals}\label{systems-and-signals}
+
+Processes:
+
+\begin{itemize}
+\tightlist
+\item
+  continuous
+\item
+  discrete
+\item
+  batch
+\end{itemize}
+
+Energy of signal:
+
+\[ E = \int\limits\_{t_1}^{t_2} |x(t)|^2\, dt \]
+
+(Average) power of signal:
+
+\[ P = \frac{1}{t*2 - t_1} \int\limits*{t_1}^{t_2} |x(t)|^2\, dt \]
+
+Shannon:
+
+\[ f > 2f_m \]
+
+Signals:
+
+\begin{itemize}
+\tightlist
+\item
+  constant
+\item
+  linearly increasing
+\item
+  step \(1(t) = u(t)\)
+\item
+  exponential
+\item
+  sinusoidal
+\item
+  exponentially damped sinusoidal
+\item
+  square impulse
+\item
+  Dirac delta \(\int_{-\infty}^{\infty} \delta(t)\, dt = 1\)
+\item
+  impulse train
+\end{itemize}
+
+\section{Modeling}\label{modeling}
+
+All models are wrong, but some are useful; most commonly for prediction,
+control, optimization and training.
+
+Best model should cover only the essential aspects of the system,
+depending on the objective of the modelling.
+
+Models usually start from LTI (linear time invariant) descriptions and
+then are extended to include nonlinearities, time variance,
+stochasticity, etc. And event then we try to get back to LTI usually by
+linearization around the operating point (small signal response).
+
+Conditions for LTI are:
+
+\begin{itemize}
+\tightlist
+\item
+  superposition
+
+  \begin{itemize}
+  \tightlist
+  \item
+    additivity \(T(x_1 + x_2) = T(x_1) + T(x_2)\)
+  \item
+    homogeneity \(T(ax) = aT(x)\)
+  \end{itemize}
+\item
+  time invariance
+\end{itemize}
+
+Model can be made from purely theoritical first principles, from data
+(system identification) or from a combination of the two.
+
+.. see \href{AS.md}{AS notes}.. see book pp.~86 (Primer 3.1 Modeliranje
+avtomobilskega vzmetenja)
+
+\subsection{Laplace transform}\label{laplace-transform}
+
+LTI systems can be described by linear differential equations, which can
+be solved either painfully or with Laplace transform.
+
+\[ \mathcal{L}\{f(t)\} = F(s) = \int\limits\_{0}^{\infty} e^{-st} f(t)\, dt \]
+
+\section{Sources}\label{sources}
+
+https://www.youtube.com/playlist?list=PLUMWjy5jgHK1NC52DXXrriwihVrYZKqjk
+
+\end{document}
