@@ -108,7 +108,7 @@ Inverse laplace transform:
 
 $$ y(t) = Ae^{-t} + Be^{-2t} $$
 
-# Transfer function
+## Transfer function
 
 $$ G(s) = \frac{Y_{out}(s)}{U_{in}(s)} $$
 
@@ -124,6 +124,104 @@ or second factor form (showing time constants):
 
 $$ G(s) = K \frac{(1 + sT_1)(1 + sT_2)\cdots(1 + sT_m)}{(1 + s\tau_1)(1 + s\tau_2)\cdots(1 + s\tau_n)} $$
 
+## Block diagrams
+
+Nothing interesting here.
+
+# Computer analysis and simulation
+
+God created statespace repesentation:
+
+$$ \begin{bmatrix} \dot{\mathbf{x}} \\ \mathbf{y} \end{bmatrix} = \begin{bmatrix} \mathbf{A} & \mathbf{B} \\ \mathbf{C} & \mathbf{D} \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ \mathbf{u} \end{bmatrix} $$
+
+## Indirect realization
+
+No good for systems that have derivatives of the input. We rewrite the equation to have the highest derivative of the output on the left hand side, then we chain the integrators, sum feedbacks to get the output variable. Easy to include initial conditions.
+
+## Canonical controllable form realization
+
+A direct form can be obtained by considering the transfer function H(s) as a cascade of two transfer functions (one for the numerator and one for the denominator).
+
+![delitvena metoda](docs/images/image-4.png)
+
+# System analysis in time domain
+
+$$ y_{ss} =  \lim_{t \to \infty} y(t) = \lim_{s \to 0} sY(s) $$
+
+We can use many different signals (see list above) to identify the system, but the most common ones are step and impulse response.
+
+Although typically impractical, Dirac delta response directly gives us the transfer function, since $Y(s) = H(s)U(s) = H(s)$.
+
+Then with a known model and known input signal we can predict the output signal.
+
+## Poles and zeros
+
+![Infulence of poles and zeros to natural response](docs/images/image-1.png)
+
+If ratio of real part of the poles is larger than 4 and there are no nearby zeros, then the pole closest to the imaginary axis dominates the response.
+
+Poles in the right half plane, when inverse Laplace transform is taken, will give us an exponentially increasing response - we call this unstable system.
+
+System is absolutely stable if all poles are in the left half plane.
+
+## Types of systems
+
+- proportional (aka type 0 system, where 0 means zero poles at the origin)
+- integral (have a pole at the origin, depending on number of poles at the origin, we can have a type 1, type 2, etc. system)
+- derivative (have a zero at the origin)
+
+Bonus:
+
+- dead time (have a delay term $e^{-sT}$ in the TF, which all of the above can have as well)
+
+System order (not to be confused with type) is the highest derivative of the output function as well as the number of variables in the state-space representation.
+
+## Proportional systems
+
+The garden variety of systems - proportional system of 1st order: the output is proportional to the input. 
+
+$ \frac{Y(s)}{U(s)} = \frac{k}{\tau s + 1} $
+
+If we anylze the step reponse (muliply by $1/s$) & inverse Laplace transform, we get exponential response, that in its steady state reaches $k$.
+
+If we excite this system with a ramp input, we get a reponse with fixed stady state error.
+
+More interisting are 2nd order proportional systems, which have many common examples, such as:
+
+- DC motor with intertial load
+- mass-spring-damper system
+- RLC circuit
+
+For all of these you can easily get to this transfer function:
+
+$$ \frac{Y(s)}{U(s)} = \frac{\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2} $$
+
+$\zeta$ influences the time response of the system with four cases:
+
+- overdamped $\zeta > 1$: two real poles, no oscillations
+- critically damped $\zeta = 1$: two real poles, no oscillations,
+- underdamped $0 < \zeta < 1$: two complex conjugate poles, oscillations
+- undamped $\zeta = 0$: two imaginary poles, pure oscillations
+
+## Integral systems
+
+Think position. In steady state, the speed might be fixed, but the position will keep increasing. This is a type 1 system, which has a pole at the origin.
+
+## Derivative systems
+
+Example: nerve response to pressue (rapid firing when pressure is applied, not much when pressue is constant).
+
+## Dead time systems
+
+$$ G(s) = e^{-sT} $$
+
+## Stability
+
+Our (simplest) criteria for stability is BIBO (bounded input, bounded output). And it can be shown that for LTI systems, BIBO stability is strictly equivalent to all poles being in the left half plane.
+
+If you live in the stone age, you can use Routh-Hurwitz criterion to quickly find all the poles of the system without actually calculating them.
+
+# Control systems
 
 
 
@@ -137,6 +235,20 @@ $$ G(s) = K \frac{(1 + sT_1)(1 + sT_2)\cdots(1 + sT_m)}{(1 + s\tau_1)(1 + s\tau_
 
 
 
+
+
+
+
+
+# Appendix: Summary Matrix of Controller Types
+
+| Controller Type | Signal Target | Mathematical Core | Common Real-World Example |
+| :--- | :--- | :--- | :--- |
+| **PID** | DC / Constant | Integrator ($1/s$) | Everything |
+| **PR / PR+Sum** | AC / Sinusoids | Resonator ($s / [s^2 + \omega^2]$) | Grid-tied solar inverters, motor drives |
+| **PII²** | Ramps / Linear acceleration | Double Integrator ($1/s^2$) | High-precision CNC laser cutters |
+| **Repetitive (RC)** | Any repeating waveform | Delay Loop ($e^{-sT}$) | Active noise cancellation, UPS systems |
+| **State-Space (LQR)** | Multi-variable paths | Matrix Mathematics | Aerospace, robotics, active suspension |
 
 
 # Sources
