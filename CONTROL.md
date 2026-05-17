@@ -90,6 +90,53 @@ Each time you use Laplace transform, you'll be likely handed a table. But you sh
 - final value theorem: $\lim_{t \to \infty} f(t) = \lim_{s \to 0} sF(s)$
 - initial value theorem: $\lim_{t \to 0^+} f(t) = \lim_{s \to \infty} sF(s)$
 
+Example with zero $y(0) = a$ and $\dot{y}(0) = b$ initial conditions:
+
+$$ \ddot{y} + 3\dot{y} + 2y = 0 $$
+
+$$ s^2Y(s) + 3sY(s) + 2Y(s) = as + b + 3a $$
+
+Divide and parital fraction expansion:
+
+$$ Y(s) = \frac{as + b + 3a}{s^2 + 3s + 2} = \frac{as + b + 3a}{(s+1)(s+2)} $$
+
+$$ Y(s) = \frac{A}{s+1} + \frac{B}{s+2} $$
+
+$$ A(s+2) + B(s+1) = as + b + 3a $$
+
+Inverse laplace transform:
+
+$$ y(t) = Ae^{-t} + Be^{-2t} $$
+
+# Transfer function
+
+$$ G(s) = \frac{Y_{out}(s)}{U_{in}(s)} $$
+
+For proportional system we can find a steady-state gain by taking the limit:
+
+$$ K = \lim_{s \to 0} G(s) = \frac{b_m}{a_n} $$
+
+Other than in polynomial form we can also represnet it as first factor form (showing zeros and poles; PS: $k$ is not the same as $K$ - you can still get it by taking the limit):
+
+$$ G(s) = k \frac{(s + z_1)(s + z_2)\cdots(s + z_m)}{(s + p_1)(s + p_2)\cdots(s + p_n)} $$
+
+or second factor form (showing time constants):
+
+$$ G(s) = K \frac{(1 + sT_1)(1 + sT_2)\cdots(1 + sT_m)}{(1 + s\tau_1)(1 + s\tau_2)\cdots(1 + s\tau_n)} $$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Sources
