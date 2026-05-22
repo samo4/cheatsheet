@@ -2,7 +2,9 @@
   "[markdown]": {
     "editor.formatOnSave": false,
     "editor.defaultFormatter": null,
-    "editor.codeActionsOnSave": {}
+    "editor.codeActionsOnSave": {
+      "source.fixAll.markdownlint": "explicit"
+    }
   },
   "runOnSave.commands": [
     {

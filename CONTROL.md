@@ -1,14 +1,16 @@
 ---
 title: "Classical Control Theory notes"
 author: "Samo F."
-date: "2025"
+date: "2026"
 header-includes:
 	- |
 		\usepackage{tikz}
 		\usetikzlibrary{arrows.meta,calc,positioning}
 		\usepackage{float}
 		\floatplacement{figure}{H}
-		\setkeys{Gin}{width=0.75\linewidth}
+		\setkeys{Gin}{width=0.6\linewidth}
+		\widowpenalty=10000
+		\clubpenalty=10000
 ---
 
 # Introduction
@@ -88,7 +90,7 @@ Each time you use Laplace transform, you'll be likely handed a table. But you sh
 
 - linearity
 - addition
-- nth derivative with 0 initial state: $\mathcal{L}\{f^{(n)}(t)\} = s^nF(s)$
+- n^th^ derivative with 0 initial state: $\mathcal{L}\{f^{(n)}(t)\} = s^nF(s)$
 - integral: $\mathcal{L}\{\int_0^t f(\tau)\, d\tau\} = \frac{1}{s}F(s)$ a.k.a $\mathcal{L}\{1(t)\} = \frac{1}{s}$
 - final value theorem: $\lim_{t \to \infty} f(t) = \lim_{s \to 0} sF(s)$
 - initial value theorem: $\lim_{t \to 0^+} f(t) = \lim_{s \to \infty} sF(s)$
@@ -245,8 +247,6 @@ These indicators are directly dependant on the poles of the system:
 
 ## Steady state error of closed loop system for step reference signal
 
-
-
 $$ e_{ss} = \lim_{s \to 0} sE(s) = \lim_{s \to 0} \frac{sR(s)}{1 + G(s)H(s)} $$
 
 If we replace $R(s)$ with $\frac{1}{s}$, we get:
@@ -263,7 +263,37 @@ For higher type systems ($j \ge 1$), the limit goes to infinity, so the steady s
 
 $$ e_{ss} = \frac{1}{1 + \lim_{s \to 0} \frac{K B(s)}{s^j A(s)}} =  0 $$
 
-Note: This can be easily calculated for other types of reference signals as well (where type is $j$ in $\frac{1}{s^j}$). Step, of course, is $j=1$ a.k.a. $\frac{1}{s}$.
+Note: This can be easily calculated for other types of reference signals as well (where type is $j$ in $\frac{1}{s^j}$). Step, of course, is $j=1$ a.k.a. $\frac{1}{s}$. Ramp is $j=2$ a.k.a. $\frac{1}{s^2}$, etc.
+
+It's worth emphasizing that the steady state error depends on the type (= number of integrators) of the system and the type of the reference signal. For our regulator to chase a ramp reference signal, we need a "faster" regulator. You can also think about it traditionaly as in position-speed-acceleration terms: it's obviously much "harder" to chase acceleration than position.
+
+## Stability of closed loop systems
+
+Almost without exceptions, the goal of the design of regulators is to get a stable system. 
+
+A system (acutally any system, not just closed loop systems) is stable if for any bounded input, the output is also bounded (BIBO stability).
+
+$$ G_r(s) = \frac{G(s)}{1+ G(s)H(s)} $$
+
+For LTI systems the stability is determined by the poles of the closed loop transfer function. This is required and sufficent condition - it works both ways.
+
+Stability of the system is independent of the reference signal.
+
+## Notes on the effect of feedback
+
+The system is by $1 + K_mK_p$ less sensitive to changes in the process gain $K_m$ than the open loop system. This is called **gain margin**. The same factor also reduces the effect of disturbances. And lastly, the same factor also reducuces the time constant of the system.
+
+This holds for LTI systems in the linear unity‑feedback configuration. Nonunity feedback, disturbances, nonlinearities, or actuator limits change the conclusions.
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -286,6 +316,8 @@ Note: This can be easily calculated for other types of reference signals as well
 
 
 # Appendix: Summary Matrix of Controller Types
+
+Just to hint the future: PID controller run the world, but they are not the only ones.
 
 | Controller Type | Signal Target | Mathematical Core | Common Real-World Example |
 | :--- | :--- | :--- | :--- |
