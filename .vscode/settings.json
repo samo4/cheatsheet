@@ -3,5 +3,12 @@
     "editor.formatOnSave": false,
     "editor.defaultFormatter": null,
     "editor.codeActionsOnSave": {}
-  }
+  },
+  "runOnSave.commands": [
+    {
+      "match": "CONTROL\\.md$",
+      "command": "just control",
+      "runIn": "terminal"
+    }
+  ]
 }

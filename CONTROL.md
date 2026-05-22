@@ -6,6 +6,9 @@ header-includes:
 	- |
 		\usepackage{tikz}
 		\usetikzlibrary{arrows.meta,calc,positioning}
+		\usepackage{float}
+		\floatplacement{figure}{H}
+		\setkeys{Gin}{width=0.75\linewidth}
 ---
 
 # Introduction
@@ -180,7 +183,7 @@ System order (not to be confused with type) is the highest derivative of the out
 
 The garden variety of systems - proportional system of 1st order: the output is proportional to the input. 
 
-$ \frac{Y(s)}{U(s)} = \frac{k}{\tau s + 1} $
+$$ \frac{Y(s)}{U(s)} = \frac{k}{\tau s + 1} $$
 
 If we anylze the step reponse (muliply by $1/s$) & inverse Laplace transform, we get exponential response, that in its steady state reaches $k$.
 
@@ -223,6 +226,48 @@ If you live in the stone age, you can use Routh-Hurwitz criterion to quickly fin
 
 # Control systems
 
+- Open vs. closed loop
+- Tracking vs. regulation
+
+Engineering indicators of performance for tracking are:
+
+- dead time $T_d$ (time to 50%)
+- rise time $T_r$ (time from 10% to 90% for overdamped systems, time to 100% for underdamped systems[^1])
+- settling time $T_s$ (time to $\pm 2\%$)
+- overshoot $M_p$
+- steady state error $e_{ss}$
+
+These indicators are directly dependant on the poles of the system:
+
+- $T_r$ is proportional to the magnitude of the dominant pole (circle)
+- $T_s$ is proportional to the real part of the dominant pole (vertical line)
+- $M_p$ is proportional to the angle of the dominant pole (line from origin)
+
+## Steady state error of closed loop system for step reference signal
+
+
+
+$$ e_{ss} = \lim_{s \to 0} sE(s) = \lim_{s \to 0} \frac{sR(s)}{1 + G(s)H(s)} $$
+
+If we replace $R(s)$ with $\frac{1}{s}$, we get:
+
+$$ e_{ss} = \lim_{s \to 0} \frac{1}{1 + G(s)H(s)} = \frac{1}{1 + \lim_{s \to 0} G(s)H(s)} $$
+
+For proportional system ($G(s)H(s)$ doesn't have any poles at the origin a.k.a. $j=0$), only the DC gain is left:
+
+$$ e_{ss} = \frac{1}{1 + K} $$
+
+![error for step response proportional closed loop system](docs/images/image-2.png)
+
+For higher type systems ($j \ge 1$), the limit goes to infinity, so the steady state error is zero:
+
+$$ e_{ss} = \frac{1}{1 + \lim_{s \to 0} \frac{K B(s)}{s^j A(s)}} =  0 $$
+
+Note: This can be easily calculated for other types of reference signals as well (where type is $j$ in $\frac{1}{s^j}$). Step, of course, is $j=1$ a.k.a. $\frac{1}{s}$.
+
+
+
+
 
 
 
@@ -254,3 +299,7 @@ If you live in the stone age, you can use Routh-Hurwitz criterion to quickly fin
 # Sources
 
 https://www.youtube.com/playlist?list=PLUMWjy5jgHK1NC52DXXrriwihVrYZKqjk
+
+# Footnotes
+
+[^1]: if you think about it you'll know why two definitions are needed
