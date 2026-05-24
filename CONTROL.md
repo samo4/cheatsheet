@@ -78,7 +78,15 @@ Conditions for LTI are:
   - homogeneity $T(ax) = aT(x)$
 - time invariance
 
-Model can be made from purely theoritical first principles, from data (system identification) or from a combination of the two.
+For almost all practical signals, when you consider a small enough time window, the system can be approximated as LTI. Example of exception: stiction.
+
+Models can be lumpled or distributed, depending on whether the system has spatially distributed parameters (e.g. temperature distribution in a rod) or not (e.g. mass-spring-damper system).
+
+Modeling can be theoretical (from first principles), empirical (system identification from experimental data) or a combination of the two (build model from first principles and assign parameters from data).
+
+It really helps if you actually understand the physics of the system, because with enough parameters you can fit any data, but that doesn't make it useful in any way.
+
+> All models are wrong, but some are useful. - George E. P. Box
 
 .. see [AS notes](AS.md).. see book pp. 86 (Primer 3.1 Modeliranje avtomobilskega vzmetenja)
 
@@ -155,29 +163,41 @@ And let's not forget that the Fourier transform is just a special case of the La
 
 ## Transfer function
 
+Classical definition says:
+
 $$ G(s) = \frac{Y_{out}(s)}{U_{in}(s)} $$
+
+But we can also just say that transfer function is system response to a Dirac delta input ($\mathcal{L}\{\delta(t)\} = 1$):
+
+$$ u_{in}(t) = \delta(t) \implies G(s) = Y_{out}(s) $$
 
 For proportional system we can find a steady-state gain by taking the limit:
 
 $$ K = \lim_{s \to 0} G(s) = \frac{b_m}{a_n} $$
 
-Other than in polynomial form we can also represnet it as first factor form (showing zeros and poles; PS: $k$ is not the same as $K$ - you can still get it by taking the limit):
+Other than in polynomial form we can also represnet it as first factor form (showing zeros and poles:
 
 $$ G(s) = k \frac{(s + z_1)(s + z_2)\cdots(s + z_m)}{(s + p_1)(s + p_2)\cdots(s + p_n)} $$
 
 or second factor form (showing time constants):
 
-$$ G(s) = K \frac{(1 + sT_1)(1 + sT_2)\cdots(1 + sT_m)}{(1 + s\tau_1)(1 + s\tau_2)\cdots(1 + s\tau_n)} $$
+$$ G(s) = K_{ss} \frac{(1 + sT_1)(1 + sT_2)\cdots(1 + sT_m)}{(1 + s\tau_1)(1 + s\tau_2)\cdots(1 + s\tau_n)} $$
+
+PS: $k$ is not the same as $K_{ss}$ - you can still get it by taking the limit.
 
 ## Block diagrams
 
-Nothing interesting here.
+Block diagrams are sometimes used to represent the system. Usefull mostly for design after the causality of the system is established. (Remember ohm's law: you can rearrange it anyway you like, but block diagram can only be drawn once you decide which variable is input and which is output).
+
+This is the distinction between causal (signal-oriented) modeling versus acausal (physical/equation-based) modeling. The latter being just a soup of equations, which a helpful tool [OpenModelica](https://www.openmodelica.org/) will rearrange for you.
 
 # Computer analysis and simulation
 
-God created statespace repesentation:
+God[^2] created statespace representation:
 
 $$ \begin{bmatrix} \dot{\mathbf{x}} \\ \mathbf{y} \end{bmatrix} = \begin{bmatrix} \mathbf{A} & \mathbf{B} \\ \mathbf{C} & \mathbf{D} \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ \mathbf{u} \end{bmatrix} $$
+
+This is basicly an universal form of representation of any MIMO LTI system, which can be easily simulated on a computer.
 
 ## Indirect realization
 
@@ -375,3 +395,4 @@ https://www.youtube.com/playlist?list=PLUMWjy5jgHK1NC52DXXrriwihVrYZKqjk
 # Footnotes
 
 [^1]: if you think about it you'll know why two definitions are needed
+[^2]: Rudolf E. Kalman to be precise, although not exactly in this form
