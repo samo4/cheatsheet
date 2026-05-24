@@ -1,0 +1,53 @@
+\begin{tikzpicture}[>=Stealth]
+
+    % --- Magnitude Plot ---
+    \begin{axis}[
+        name=ft_mag,
+        at={(0,0cm)},
+        width=6.5cm, height=3.5cm,
+        axis lines=middle,
+        xmin=-150, xmax=150,
+        ymin=0, ymax=1.3,
+        xtick={-100, 100},
+        xticklabels={$-100\text{Hz}$, $100\text{Hz}$},
+        ytick={1},
+        yticklabels={$A/2$},
+        xlabel={$\omega$}, ylabel={$|X(i\omega)|$},
+        every axis x label/.style={at={(current axis.right of origin)},anchor=west},
+        every axis y label/.style={at={(current axis.above origin)},anchor=south},
+        axis line style={->}
+    ]
+        % Dirac Impulses at -100 and 100
+        \draw[blue, ultra thick, ->] (axis cs:-100,0) -- (axis cs:-100,1);
+        \draw[blue, ultra thick, ->] (axis cs:100,0) -- (axis cs:100,1);
+    \end{axis}
+
+    % --- Phase Plot ---
+    \begin{axis}[
+        name=ft_phase,
+        at={(7cm,0cm)},
+        width=6.5cm, height=3.5cm,
+        axis lines=middle,
+        axis on top=true,
+        xmin=-150, xmax=150,
+        ymin=-2, ymax=2,
+        xtick={-100, 100},
+        xticklabels={$-100\text{Hz}$, $100\text{Hz}$},
+        ytick={-1.57, 1.57},
+        yticklabels={$-\pi/2$, $\pi/2$},
+        xlabel={$\omega$}, ylabel={$\angle X(i\omega)$},
+        every axis x label/.style={at={(current axis.right of origin)},anchor=west},
+        every axis y label/.style={at={(current axis.above origin)},anchor=south},
+        axis line style={->}
+    ]
+        % undefined regions (atan(0/0) is undefined)
+        \fill[gray!20] (axis cs:-145,-1.57) rectangle (axis cs:-101, 1.57);
+        \fill[gray!20] (axis cs: -99,-1.57) rectangle (axis cs:  99, 1.57);
+        \fill[gray!20] (axis cs:  101,-1.57) rectangle (axis cs: 145, 1.57);
+
+        % Defined Phase Points
+        \fill[blue] (axis cs:-100, 1.57) circle (2pt);
+        \fill[blue] (axis cs:100, -1.57) circle (2pt);
+    \end{axis}
+
+\end{tikzpicture}

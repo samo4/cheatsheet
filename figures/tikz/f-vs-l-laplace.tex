@@ -1,0 +1,54 @@
+\begin{tikzpicture}[>=Stealth]
+
+    \begin{axis}[
+        name=lt_plane,
+        at={(0,0)}, anchor=center,
+        width=7.5cm, height=6.5cm,
+        view={60}{30},
+        axis lines=center,
+        xmin=-2, xmax=2,
+        ymin=-150, ymax=150,
+        zmin=0, zmax=4,
+        xtick={0}, xticklabels={},
+        ytick={-100, 100}, yticklabels={$-100$, $100$},
+        ztick=\empty,
+        xlabel={$\sigma$}, ylabel={$if$ [Hz]}, zlabel={$|X(s)|$},
+        xlabel style={at={(ticklabel* cs:1.05)}, anchor=north west},
+        ylabel style={at={(ticklabel* cs:1.05)}, anchor=north west},
+        axis line style={->}
+    ]
+        % Highlight the Fourier 1D Axis line along the surface valley (sigma = 0)
+        \draw[orange!80!black, dashed, thick] (axis cs:0,-150,0) -- (axis cs:0,150,0);
+
+        % Pole 1: +100i
+        \addplot3[
+            surf,
+            mesh/rows=15,
+            domain=-1.5:1.5,
+            domain y=60:140,
+            samples=15,
+            colormap/cool,
+            opacity=0.75,
+            restrict z to domain=0:4,
+            unbounded coords=jump
+        ] {1 / sqrt(x^2 + (y-100)^2/400 + 0.1)};
+
+        % Pole 2: -100i
+        \addplot3[
+            surf,
+            mesh/rows=15,
+            domain=-1.5:1.5,
+            domain y=-140:-60,
+            samples=15,
+            colormap/cool,
+            opacity=0.75,
+            restrict z to domain=0:4,
+            unbounded coords=jump
+        ] {1 / sqrt(x^2 + (y+100)^2/400 + 0.1)};
+
+        % Explicit 'X' marks on the floor plane to indicate Poles
+        \node[red, font=\bfseries] at (axis cs:0,100,0) {$\mathbf{\times}$};
+        \node[red, font=\bfseries] at (axis cs:0,-100,0) {$\mathbf{\times}$};
+    \end{axis}
+
+\end{tikzpicture}

@@ -6,6 +6,8 @@ header-includes:
 	- |
 		\usepackage{tikz}
 		\usetikzlibrary{arrows.meta,calc,positioning}
+		\usepackage{pgfplots}
+		\pgfplotsset{compat=1.18}
 		\usepackage{float}
 		\floatplacement{figure}{H}
 		\setkeys{Gin}{width=0.6\linewidth}
@@ -112,6 +114,44 @@ $$ A(s+2) + B(s+1) = as + b + 3a $$
 Inverse laplace transform:
 
 $$ y(t) = Ae^{-t} + Be^{-2t} $$
+
+
+### Note: Laplace transform vs. Fourier transform
+
+And don't forget the distinction between Fourier series and Fourier transform:
+
+- Fourier Series: Used for periodic signals (patterns that repeat forever, like a perfect square wave). It decomposes the signal into a discrete sum of harmonically related frequencies (\(1f, 2f, 3f\dots\)).
+- Fourier Transform: Used for aperiodic signals (one-time events, like a handclap or a transient pulse). Because the signal doesn't repeat, the frequencies blur together into a continuous spectrum rather than distinct, spaced-out notes.
+
+| Feature | Fourier Transform | Laplace Transform  |
+| :--- | :--- | :--- |
+| Formula | $X(i\omega) = \int_{-\infty}^{\infty} e^{-i\omega t} x(t)\, dt$ | $X(s) = \int_0^{\infty} e^{-st} x(t)\, dt$ |
+| Domain | $\omega$ (frequency) | $s = \sigma + i\omega$ (complex frequency) |
+| Output | Amplitude and phase vs. $\omega$ | Amplitude and phase vs. $s$ | 
+| Limits | $-\infty$ to $\infty$ | $0$ to $\infty$ |
+| Kernel | $e^{-i\omega t}$ (oscillatory) | $e^{-st} = e^{-\sigma t} e^{-i\omega t}$ (exponential) |
+| Sampling Space | line (The Imaginary Axis). | plane (The $s$-plane). |
+| Variable | $\sigma = 0$, so variable is just $i\omega$. | $s = \sigma + i\omega$ (decay + rotation). |
+| Components | Pure cosine waves | Exponential sine waves |
+| Can handle (Stability) | Finite energy signals | Up to expon. growing signals |
+| | (Fig.\ \ref{fig:f-vs-l-fourier}) |  |
+
+Both transforms are bijective, meaning you can perfectly reconstruct the original signal from either transform.
+
+And let's not forget that the Fourier transform is just a special case of the Laplace transform evaluated along the imaginary axis. 
+
+```{=latex}
+\begin{figure}[H]
+\centering
+\input{figures/tikz/f-vs-l-fourier.tex}
+\caption{Fourier Transform of $x(t) = A\sin(2\pi \cdot 100\,\text{Hz} \cdot t)$: magnitude and phase spectrum. Light gray is undefined.}
+\label{fig:f-vs-l-fourier}
+\end{figure}
+```
+
+![Numerical FT of $A\sin(2\pi\cdot100\,\text{Hz}\cdot t)$ with noise (generated)](figures/fourier_sin.png)
+
+![Analytical $|X(s)|$ surface for $A\sin(2\pi\cdot100\, \text{Hz}\cdot t)$ (generated). Orange dashed line is the Fourier slice ($\sigma = 0$).](figures/laplace_sin.png)
 
 ## Transfer function
 
