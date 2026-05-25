@@ -209,6 +209,19 @@ A direct form can be obtained by considering the transfer function H(s) as a cas
 
 ![delitvena metoda](docs/images/image-4.png)
 
+## System type and order
+
+Order:
+
+- order of highest derivative of the output variable
+- order of the polynomial in the denominator of the transfer function
+- number of poles of the system or eigenvalues
+- number of state variables in the state-space representation
+
+Type:
+
+- number of poles at the origin in the transfer function
+
 # System analysis in time domain
 
 $$ y_{ss} =  \lim_{t \to \infty} y(t) = \lim_{s \to 0} sY(s) $$
@@ -327,6 +340,18 @@ Note: This can be easily calculated for other types of reference signals as well
 
 It's worth emphasizing that the steady state error depends on the type (= number of integrators) of the system and the type of the reference signal. For our regulator to chase a ramp reference signal, we need a "faster" regulator. You can also think about it traditionaly as in position-speed-acceleration terms: it's obviously much "harder" to chase acceleration than position.
 
+## Ziegler - Nichols method
+
+### Step response method
+
+We measure step response, find the point of inflection, draw a tangent, and then we can get the delay and time constant of the system, as well as the gain. We plug these values into the Ziegler-Nichols table to get the parameters of the PID controller.
+
+Similar method: Chien-Hrones-Reswick method.
+
+### Ultimate gain method
+
+We increase the gain of the proportional controller until we get sustained oscillations. This gain is called ultimate gain $K_u$, and the period of oscillations is called ultimate period $T_u$. We can then plug these values into the Ziegler-Nichols table to get the parameters of the PID controller.
+
 ## Stability of closed loop systems
 
 Almost without exceptions, the goal of the design of regulators is to get a stable system. 
@@ -341,7 +366,7 @@ Stability of the system is independent of the reference signal.
 
 ## Notes on the effect of feedback
 
-The system is by $1 + K_mK_p$ less sensitive to changes in the process gain $K_m$ than the open loop system. This is called **gain margin**. The same factor also reduces the effect of disturbances. And lastly, the same factor also reducuces the time constant of the system.
+The system is by $1 + K_mK_p$ less sensitive to changes in the process gain $K_m$ than the open loop system. This is called **gain margin**. The same factor also reduces the effect of disturbances as well as parameter changes. And lastly, the same factor also reducuces the time constant of the system.
 
 This holds for LTI systems in the linear unity‑feedback configuration. Nonunity feedback, disturbances, nonlinearities, or actuator limits change the conclusions.
 
