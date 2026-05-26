@@ -352,6 +352,24 @@ Similar method: Chien-Hrones-Reswick method.
 
 We increase the gain of the proportional controller until we get sustained oscillations. This gain is called ultimate gain $K_u$, and the period of oscillations is called ultimate period $T_u$. We can then plug these values into the Ziegler-Nichols table to get the parameters of the PID controller.
 
+### Rule of thumb
+
+In many controllers, the $K_{i}$ is defined as the $K_{p}$ divided by the $T_{i}$. By setting $T_{i}$ equal to the process $\tau$, you perfectly cancel out the dominant slow lag of your system.
+
+Remember how ideal PID looks like:
+
+$$ G_c(s) = K_p ( 1 + \frac{1}{T_i s} + T_d s ) $$
+
+and real one:
+
+$$ G_c(s) = K_p ( 1 + \frac{1}{T_i s} + \frac{T_d s}{\alpha T_d s + 1} ) $$
+
+Where:
+
+- $K_p$ leads to faster response
+- $T_i$ leads to smaller steady state error
+- $T_d$ ensures damping of the system, helps with stability and reduces overshoot
+
 ## Stability of closed loop systems
 
 Almost without exceptions, the goal of the design of regulators is to get a stable system. 
