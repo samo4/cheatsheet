@@ -65,11 +65,13 @@ Signals:
 
 # Modeling
 
-All models are wrong, but some are useful; most commonly for prediction, control, optimization and training.
+> All models are wrong, but some are useful. - George E. P. Box
+
+Most commonly useful for prediction, control, optimization and training.
 
 Best model should cover only the essential aspects of the system, depending on the objective of the modelling.
 
-Models usually start from LTI (linear time invariant) descriptions and then are extended to include nonlinearities, time variance, stochasticity, etc. And event then we try to get back to LTI usually by linearization around the operating point (small signal response).
+Models usually start from LTI (linear time invariant) descriptions and then are extended to include nonlinearities, time variance, stochasticity, etc. And even then we try to get back to LTI; usually by linearization around the operating point (small signal response).
 
 Conditions for LTI are:
 
@@ -83,12 +85,6 @@ For almost all practical signals, when you consider a small enough time window, 
 Models can be lumpled or distributed, depending on whether the system has spatially distributed parameters (e.g. temperature distribution in a rod) or not (e.g. mass-spring-damper system).
 
 Modeling can be theoretical (from first principles), empirical (system identification from experimental data) or a combination of the two (build model from first principles and assign parameters from data).
-
-It really helps if you actually understand the physics of the system, because with enough parameters you can fit any data, but that doesn't make it useful in any way.
-
-> All models are wrong, but some are useful. - George E. P. Box
-
-.. see [AS notes](AS.md).. see book pp. 86 (Primer 3.1 Modeliranje avtomobilskega vzmetenja)
 
 ## Laplace transform
 
@@ -396,34 +392,6 @@ This holds for LTI systems in the linear unity‑feedback configuration. Nonunit
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Appendix: Summary Matrix of Controller Types
 
 Just to hint the future: PID controller run the world, but they are not the only ones.
@@ -440,8 +408,6 @@ Just to hint the future: PID controller run the world, but they are not the only
 # Sources
 
 https://www.youtube.com/playlist?list=PLUMWjy5jgHK1NC52DXXrriwihVrYZKqjk
-
-# Footnotes
 
 [^1]: if you think about it you'll know why two definitions are needed
 [^2]: Rudolf E. Kalman to be precise, although not exactly in this form
