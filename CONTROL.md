@@ -67,11 +67,11 @@ Signals:
 
 > All models are wrong, but some are useful. - George E. P. Box
 
-Most commonly useful for prediction, control, optimization and training.
+Most commonly for prediction, control, optimization and training.
 
 Best model should cover only the essential aspects of the system, depending on the objective of the modelling.
 
-Models usually start from LTI (linear time invariant) descriptions and then are extended to include nonlinearities, time variance, stochasticity, etc. And even then we try to get back to LTI; usually by linearization around the operating point (small signal response).
+Models usually start from LTI (linear time invariant) descriptions and then are extended to include nonlinearities, time variance, stochasticity, etc. And event then we try to get back to LTI usually by linearization around the operating point (small signal response).
 
 Conditions for LTI are:
 
@@ -383,6 +383,7 @@ $$ G_r(s) = \frac{G(s)}{1+ G(s)H(s)} $$
 For LTI systems the stability is determined by the poles of the closed loop transfer function. This is required and sufficent condition - it works both ways.
 
 Stability of the system is independent of the reference signal.
+Feedback is also decreasing the time constant of the system.
 
 ## Notes on the effect of feedback
 
