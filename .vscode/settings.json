@@ -11,6 +11,11 @@
       "match": "CONTROL\\.md$",
       "command": "just control",
       "runIn": "terminal"
+    },
+    {
+      "match": "AS\\.md$",
+      "command": "just as",
+      "runIn": "terminal"
     }
   ]
 }
