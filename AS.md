@@ -5,6 +5,23 @@ header-includes:
   - |
     \usepackage[leftline,framemethod=TikZ]{mdframed}
     \usepackage{circuitikz}
+    \newmdenv[
+      linecolor=gray!55, linewidth=0.7pt,
+      backgroundcolor=gray!6,
+      innertopmargin=0.6em, innerbottommargin=0.6em,
+      innerleftmargin=1em, innerrightmargin=1em,
+      skipabove=0.8em, skipbelow=0.8em,
+      frametitlefont=\bfseries\small,
+      frametitlerule=true, frametitlerulewidth=0.3pt,
+      frametitlebackgroundcolor=gray!15,
+      frametitleaboveskip=0.3em, frametitlebelowskip=0.3em
+    ]{example}
+    \usepackage{xcolor}
+    \usepackage{pifont}
+    \makeatletter
+    \renewcommand{\paragraph}{\@startsection{paragraph}{4}{\z@}{1.0em \@plus 0.3em \@minus 0.2em}{0.5em}{\normalfont\normalsize\bfseries\color{black!70}}}
+    \renewcommand{\subparagraph}{\@startsection{subparagraph}{5}{\z@}{1.0em \@plus 0.3em \@minus 0.2em}{0.5em}{\normalfont\normalsize\bfseries\color{black!70}}}
+    \makeatother
 ---
 
 # Example of state-space modeling
@@ -233,7 +250,11 @@ $$
 
 ### $\Phi$ via the Taylor series
 
-Example: $\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$. First compute the powers of $\mathbf{A}$:
+```{=latex}
+\begin{example}[frametitle={Example 2 - obtaining $\Phi$ via Taylor series}]
+```
+
+$\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$. First compute the powers of $\mathbf{A}$:
 
 $$
 \mathbf{A}^2 = \mathbf{A}\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}\begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}
@@ -276,6 +297,10 @@ e^{-t} - e^{-2t} & e^{-t}
 \end{bmatrix}
 $$
 
+```{=latex}
+\end{example}
+```
+
 ### $\Phi$ via the Laplace transform
 
 Transform the whole ODE instead of guessing exponentials. Apply $\mathcal{L}$ to both sides of
@@ -314,7 +339,11 @@ $$
 \mathcal{L}^{-1}\left\{(s\mathbf{I} - \mathbf{A})^{-1}\right\} = e^{\mathbf{A}t} = \Phi(t)
 $$
 
-Example: same $\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$:
+```{=latex}
+\begin{example}[frametitle={Example 3 - obtaining $\Phi$ via Laplace transform}]
+```
+
+Same $\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$:
 
 $$
 s\mathbf{I} - \mathbf{A} = \begin{bmatrix} s+2 & 0 \\ -1 & s+1 \end{bmatrix}, \qquad
@@ -336,6 +365,10 @@ e^{-t} - e^{-2t} & e^{-t}
 $$
 
 which (shockingly, I know!) matches the Taylor result.
+
+```{=latex}
+\end{example}
+```
 
 ### $\Phi$ via eigenvalues and diagonalization
 
@@ -385,11 +418,211 @@ In practice:
 
 $\mathbf{A}$ is diagonalizable iff $\gamma_i = \alpha_i$ for every $i$. This is always the case when all eigenvalues are distinct, since then $\gamma_i = \alpha_i = 1$.
 
+```{=latex}
+\begin{example}[frametitle={Example 4 - eigenvalues and eigenvectors}]
+```
 
+Find the eigenvalues and eigenvectors of $\mathbf{A} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 2 & 1 \\ 0 & 0 & 2 \end{bmatrix}$.
 
+The characteristic polynomial (upper-triangular, so the eigenvalues sit on the diagonal):
 
+$$
+\det(\mathbf{A} - \lambda\mathbf{I}) = \begin{vmatrix} 1-\lambda & 0 & 0 \\ 0 & 2-\lambda & 1 \\ 0 & 0 & 2-\lambda \end{vmatrix} = (1-\lambda)(2-\lambda)^2 = 0
+$$
+
+so $\lambda_1 = 1$ with $\alpha_1 = 1$, and $\lambda_2 = 2$ with $\alpha_2 = 2$.
+
+For $\lambda_1 = 1$, solve $(\mathbf{A} - \mathbf{I})\vec{v} = 0$:
+
+$$
+\begin{bmatrix} 0 & 0 & 0 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix}\vec{v} = 0
+\quad\Longrightarrow\quad
+v_3 = 0,\ v_2 = 0,\ v_1 \text{ free}
+\quad\Longrightarrow\quad
+\vec{v}_1 = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}
+$$
+
+For $\lambda_2 = 2$, solve $(\mathbf{A} - 2\mathbf{I})\vec{v} = 0$:
+
+$$
+\begin{bmatrix} -1 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix}\vec{v} = 0
+\quad\Longrightarrow\quad
+v_1 = 0,\ v_3 = 0,\ v_2 \text{ free}
+\quad\Longrightarrow\quad
+\vec{v}_2 = \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}
+$$
+
+Here $\gamma_2 = 1 < \alpha_2 = 2$: only two linearly independent eigenvectors exist, so $\mathbf{A}$ is defective and **not** diagonalizable.
+
+```{=latex}
+\end{example}
+```
+
+#### Diagonalization
+
+When $\gamma_i = \alpha_i$ for every eigenvalue, there are exactly $n$ linearly independent eigenvectors $\vec{v}_1, \dots, \vec{v}_n$. Stack them as columns:
+
+$$
+\mathbf{V} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}
+$$
+
+Each eigenpair satisfies $\mathbf{A}\vec{v}_i = \lambda_i \vec{v}_i$, so all of them at once read
+
+$$
+\mathbf{A}\mathbf{V} = \mathbf{V}\mathbf{D}, \qquad
+\mathbf{D} = \begin{bmatrix}
+\lambda_1 & & \\
+& \ddots & \\
+& & \lambda_n
+\end{bmatrix}
+$$
+
+Independence makes $\mathbf{V}$ invertible, so multiplying by $\mathbf{V}^{-1}$ from the right gives the factorization
+
+$$
+\mathbf{A} = \mathbf{V}\mathbf{D}\mathbf{V}^{-1}
+$$
+
+This is the whole trick: $\mathbf{A}$ is just a diagonal matrix in a different basis. Powers pass through the same similarity ($\mathbf{A}^k = \mathbf{V}\mathbf{D}^k\mathbf{V}^{-1}$), so the Taylor series telescopes into
+
+$$
+e^{\mathbf{A}t} = \sum_{k=0}^{\infty} \frac{(\mathbf{A}t)^k}{k!}
+= \mathbf{V} \left( \sum_{k=0}^{\infty} \frac{(\mathbf{D}t)^k}{k!} \right) \mathbf{V}^{-1}
+= \mathbf{V} e^{\mathbf{D}t} \mathbf{V}^{-1}
+$$
+
+and since $e^{\mathbf{D}t}$ is the diagonal of scalar exponentials,
+
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+\Phi(t) = e^{\mathbf{A}t} = \mathbf{V} e^{\mathbf{D}t} \mathbf{V}^{-1} = \mathbf{V} \begin{bmatrix}
+e^{\lambda_1 t} & & \\
+& \ddots & \\
+& & e^{\lambda_n t}
+\end{bmatrix} \mathbf{V}^{-1}
+$}
+\endgroup
+\]
+```
+
+```{=latex}
+\begin{example}[frametitle={Example 5 - obtaining $\Phi$ via diagonalization}]
+```
+
+$\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$. The characteristic equation $\det(\mathbf{A} - \lambda\mathbf{I}) = (-2-\lambda)(-1-\lambda) = 0$ gives distinct eigenvalues $\lambda_1 = -2$, $\lambda_2 = -1$, so $\gamma_i = \alpha_i = 1$ and $\mathbf{A}$ is diagonalizable.
+
+Eigenvectors from $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v}_i = 0$, one eigenvalue at a time.
+
+For $\lambda_1 = -2$: $(\mathbf{A} - (-2)\mathbf{I}) = \mathbf{A} + 2\mathbf{I}$, so
+
+$$
+(\mathbf{A} + 2\mathbf{I}) = \begin{bmatrix} 0 & 0 \\ 1 & 1 \end{bmatrix}, \qquad
+\begin{bmatrix} 0 & 0 \\ 1 & 1 \end{bmatrix}\vec{v}_1 = 0
+\quad\Longrightarrow\quad
+v_1 + v_2 = 0,\ v_1 \text{ free}
+\quad\Longrightarrow\quad
+\vec{v}_1 = \begin{bmatrix} 1 \\ -1 \end{bmatrix}
+$$
+
+For $\lambda_2 = -1$: $(\mathbf{A} - (-1)\mathbf{I}) = \mathbf{A} + \mathbf{I}$, so
+
+$$
+(\mathbf{A} + \mathbf{I}) = \begin{bmatrix} -1 & 0 \\ 1 & 0 \end{bmatrix}, \qquad
+\begin{bmatrix} -1 & 0 \\ 1 & 0 \end{bmatrix}\vec{v}_2 = 0
+\quad\Longrightarrow\quad
+v_1 = 0,\ v_2 \text{ free}
+\quad\Longrightarrow\quad
+\vec{v}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}
+$$
+
+Assemble the pieces ($\det\mathbf{V} = 1$, so inversion is trivial):
+
+$$
+\mathbf{V} = \begin{bmatrix} 1 & 0 \\ -1 & 1 \end{bmatrix}, \qquad
+\mathbf{V}^{-1} = \begin{bmatrix} 1 & 0 \\ 1 & 1 \end{bmatrix}, \qquad
+\mathbf{D} = \begin{bmatrix} -2 & 0 \\ 0 & -1 \end{bmatrix}
+$$
+
+Putting it together,
+
+$$
+\Phi(t) = e^{\mathbf{A}t} = \mathbf{V} e^{\mathbf{D}t} \mathbf{V}^{-1}
+= \begin{bmatrix} 1 & 0 \\ -1 & 1 \end{bmatrix}\begin{bmatrix} e^{-2t} & 0 \\ 0 & e^{-t} \end{bmatrix}\begin{bmatrix} 1 & 0 \\ 1 & 1 \end{bmatrix}
+= \begin{bmatrix} e^{-2t} & 0 \\ e^{-t} - e^{-2t} & e^{-t} \end{bmatrix}
+$$
+
+which (surprise, surprise) matches the Taylor and Laplace results. 
+
+```{=latex}
+\end{example}
+```
 
 ### $\Phi$ via Cayley–Hamilton
+
+The Cayley–Hamilton theorem states that every matrix satisfies its own characteristic equation. If
+
+$$
+\det(\lambda\mathbf{I} - \mathbf{A}) = \lambda^n + c_{n-1}\lambda^{n-1} + \cdots + c_0
+$$
+
+substituting the matrix for the scalar gives the zero matrix:
+
+$$
+\mathbf{A}^n + c_{n-1}\mathbf{A}^{n-1} + \cdots + c_0\mathbf{I} = \mathbf{0}
+$$
+
+So every power $\mathbf{A}^k$ with $k \ge n$ reduces to a combination of $\mathbf{I}, \mathbf{A}, \dots, \mathbf{A}^{n-1}$, and the matrix exponential must have the form
+
+$$
+e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A} + \cdots + \alpha_{n-1}(t)\mathbf{A}^{n-1}
+$$
+
+The coefficients follow from the key observation that $\mathbf{A}$ and its eigenvalues satisfy the same polynomial relation, so the same equation holds at each $\lambda_i$:
+
+$$
+e^{\lambda_i t} = \alpha_0(t) + \alpha_1(t)\lambda_i + \cdots + \alpha_{n-1}(t)\lambda_i^{n-1}, \qquad i = 1, \dots, n
+$$
+
+Solving this Vandermonde system gives the $\alpha_j(t)$. Unlike diagonalization, this works even for defective matrices (see Example 4).
+
+```{=latex}
+\begin{example}[frametitle={Example 6 - obtaining $\Phi$ via Cayley–Hamilton}]
+```
+
+Same $\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$. Characteristic equation:
+
+$$
+\det(\lambda\mathbf{I} - \mathbf{A}) = (\lambda+2)(\lambda+1) = \lambda^2 + 3\lambda + 2 = 0
+$$
+
+so $\mathbf{A}^2 + 3\mathbf{A} + 2\mathbf{I} = \mathbf{0}$, and with $n = 2$:
+
+$$
+e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A}
+$$
+
+Evaluate at the eigenvalues:
+
+$$
+\lambda_1 = -2: \quad e^{-2t} = \alpha_0 - 2\alpha_1, \qquad
+\lambda_2 = -1: \quad e^{-t} = \alpha_0 - \alpha_1
+$$
+
+Subtracting gives $\alpha_1 = e^{-t} - e^{-2t}$, and then $\alpha_0 = 2e^{-t} - e^{-2t}$. Substituting back:
+
+$$
+\Phi(t) = e^{\mathbf{A}t} = (2e^{-t} - e^{-2t})\mathbf{I} + (e^{-t} - e^{-2t})\mathbf{A}
+= \begin{bmatrix} e^{-2t} & 0 \\ e^{-t} - e^{-2t} & e^{-t} \end{bmatrix}
+$$
+
+which (you guessed it) matches all previous methods. 
+
+```{=latex}
+\end{example}
+```
 
 
 
