@@ -89,7 +89,7 @@ The number of states equals the order of the ODE — the same "one state per ene
 
 For this example we want to write down the state-space equations of the circuit in matrix form
 $\dot{\vec{x}} = \mathbf{A} \vec{x} + \mathbf{B} \vec{u}$ and $\vec{y} = \mathbf{C} \vec{x} + \mathbf{D} \vec{u}$,
-where $\vec{x} = \begin{bmatrix} i_L \\ v_c \end{bmatrix}$ and $\vec{u} = \begin{bmatrix} v_g \end{bmatrix}$ and $\vec{y} = \begin{bmatrix} v_{R_1} \\ v_L \end{bmatrix}$.
+where $\vec{x} = \begin{bmatrix} i_L \\ v_C \end{bmatrix}$ and $\vec{u} = \begin{bmatrix} v_g \end{bmatrix}$ and $\vec{y} = \begin{bmatrix} v_{R_1} \\ v_L \end{bmatrix}$.
 
 ```{=latex}
 \begin{center}
@@ -103,7 +103,7 @@ where $\vec{x} = \begin{bmatrix} i_L \\ v_c \end{bmatrix}$ and $\vec{u} = \begin
               to[short] (0,0);
   \node[left=14pt] at (6,1.5) {$C$};
   \node at (6.25,1.9) {$+$};
-  \node[right=14pt] at (6,1.5) {$v_c$};
+  \node[right=14pt] at (6,1.5) {$v_C$};
 \end{circuitikz}
 \end{center}
 ```
@@ -112,7 +112,7 @@ Let's select one node as ground. Although any node can be ground, we try to choo
 
 Then we proceed to mark the remaining nodes.
 
-Passive sign convention (PSC) defines an element’s voltage positive at the terminal where the reference current enters; then power is positive when the element absorbs energy. For voltage source, according to PSC, we must mark the reference current in such a way that current entering the element will absorb power and when leaving (minus sign) give power to the rest of the circuit. That means that arrow should point into the + of voltage source. For capacitor we have defined polarity: we apply the PSC convention to $i_c$ (arrow into +). And for the inductor we have defined the current $i_L$. Although $v_L$ is not required here, we could define its polarity according to PSC as well ($V_2$ is positive in relation to $V_3$).
+Passive sign convention (PSC) defines an element’s voltage positive at the terminal where the reference current enters; then power is positive when the element absorbs energy. For voltage source, according to PSC, we must mark the reference current in such a way that current entering the element will absorb power and when leaving (minus sign) give power to the rest of the circuit. That means that arrow should point into the + of voltage source. For capacitor we have defined polarity: we apply the PSC convention to $i_C$ (arrow into +). And for the inductor we have defined the current $i_L$. Although $v_L$ is not required here, we could define its polarity according to PSC as well ($V_2$ is positive in relation to $V_3$).
 
 ```{=latex}
 \begin{center}
@@ -124,14 +124,14 @@ Passive sign convention (PSC) defines an element’s voltage positive at the ter
   \draw (6,3) to[C, i>^=$i_C$ ] (6,0);
   \node[left=14pt] at (6,1.5) {$C$};
   \node at (6.25,1.9) {$+$};
-  \node[right=14pt] at (6,1.5) {$v_c$};
+  \node[right=14pt] at (6,1.5) {$v_C$};
 \end{circuitikz}
 \end{center}
 ```
 
 Common approaches for deriving state-space equations include node-voltage and mesh-current methods. Here we apply a combination of both. It might be described as node-voltage formulation with selected element state variables.
 
-First we observe the $V_1 = v_g$ and $v_c = V_3$.
+First we observe the $V_1 = v_g$ and $v_C = V_3$.
 
 We write down the equations for each node using Kirchhoff's current law. When expressing currents through resistors, we start with the current node voltage (so currents are taken as leaving the node: plus sign in our equations).
 
@@ -141,7 +141,7 @@ When node is connected to an inductor, we express the current through the induct
 
 $$\frac{V_2 - V_1}{R_1} + i_L = 0$$
 
-And the same for capacitors: we express the current through the capacitor as a state variable. For the capacitor we take its voltage $v_c$ as the state variable (more standard); current follows $i_C = C\,\dot{v}_c$ under PSC.
+And the same for capacitors: we express the current through the capacitor as a state variable. For the capacitor we take its voltage $v_C$ as the state variable (more standard); current follows $i_C = C\,\dot{v}_C$ under PSC.
 
 Next, we write down the equations for the energy-storing elements using their constitutive relations. Note that $i_L$ is chosen from $V_2$ to $V_3$. Lenz’s law is not ignored; its effect was already built into the sign of the inductor’s voltage when we adopted PSC. Faraday’s law gives $v = L\,\dot{i}$ for the chosen polarity (voltage drop in the direction of the reference current). If you had defined the voltage polarity opposite to the current reference, the relation would appear as $v = -L\,\dot{i}$. Thus no extra minus is added later - the orientation choices at the start encode it.
 
@@ -149,17 +149,17 @@ $$ v_L = L \frac{di_L}{dt} = V_2 - V_3 $$
 
 And for the capacitor:
 
-$$ i_C = C \frac{dv_c}{dt} = i_L - \frac{V_3}{R_2} $$
+$$ i_C = C \frac{dv_C}{dt} = i_L - \frac{V_3}{R_2} $$
 
-Since $V_1 = v_g$ and $v_c = V_3$ we get the state-space form
+Since $V_1 = v_g$ and $v_C = V_3$ we get the state-space form
 
 $$
-\frac{d}{dt}\begin{bmatrix} i_L \\ v_c \end{bmatrix} =
+\frac{d}{dt}\begin{bmatrix} i_L \\ v_C \end{bmatrix} =
 \begin{bmatrix}
 -\frac{R_1}{L} & -\frac{1}{L} \\
 \frac{1}{C} & -\frac{1}{C R_2}
 \end{bmatrix}
-\begin{bmatrix} i_L \\ v_c \end{bmatrix} +
+\begin{bmatrix} i_L \\ v_C \end{bmatrix} +
 \begin{bmatrix} \frac{1}{L} \\ 0 \end{bmatrix} v_g.
 $$
 
@@ -171,7 +171,7 @@ $$
 R_1 & 0 \\
 L\,\frac{d}{dt} & 0
 \end{bmatrix}
-\begin{bmatrix} i_L \\ v_c \end{bmatrix} +
+\begin{bmatrix} i_L \\ v_C \end{bmatrix} +
 \begin{bmatrix} -1 \\ 0 \end{bmatrix} v_g,
 $$
 
@@ -195,12 +195,13 @@ $v_{R_1}=R_1 i_L - v_g$, $v_L = L\,\dfrac{di_L}{dt}$.
   \draw (3,0) -- (4,0);
   \draw (3,0) to[open, i>^=$i_L$] (4,0);
   \draw (4,0) -- (8,0);
-  \node at (3.3,1.5) {$v_c$};
+  \node at (3.3,1.5) {$v_C$};
+  \node at (3.75,1.85) {$+$};
 \end{circuitikz}
 \end{center}
 ```
 
-For the circuit above, we want to write down the state-space equations  in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where the state vector $\vec{x} = [i_L, v_c]^T$ and $\vec{u} = [v_g, i_g]^T$.
+For the circuit above, we want to write down the state-space equations  in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where the state vector $\vec{x} = [i_L, v_C]^T$ and $\vec{u} = [v_g, i_g]^T$.
 
 **Step 1** Decide on nodes.
 
@@ -216,7 +217,7 @@ For the circuit above, we want to write down the state-space equations  in the f
   \draw (3,0) -- (4,0);
   \draw (3,0) to[open, i>^=$i_L$] (4,0);
   \draw (4,0) node[circ,label=below:$V_3$]{} -- (8,0);
-  \node at (3.3,1.5) {$v_c$};
+  \node at (3.3,1.5) {$v_C$};
   \node at (3.75,1.85) {$+$};
   \node at (4,3) [circ,label=above:$V_2$]{};
 \end{circuitikz}
@@ -225,39 +226,73 @@ For the circuit above, we want to write down the state-space equations  in the f
 
 **Step 2** Node and element equations. From the annotated circuit above we write the equations.
 
-Node $V_1$: $\; i_{g'} + \dfrac{V_1 - V_2}{R_1} = 0$
+Node–$V_1$: $\; i_{g'} + \dfrac{V_1 - V_2}{R_1} = 0$
 
-Node $V_2$: $\; i_c + \dfrac{V_2 - V_1}{R_1} - i_g + \dfrac{V_2 - V_3}{R_2} = 0$
+Node–$V_2$: $\; i_C + \dfrac{V_2 - V_1}{R_1} - i_g + \dfrac{V_2 - V_3}{R_2} = 0$
 
-Node $V_3$: $\; -i_c + \dfrac{V_3 - V_2}{R_2} + i_g - i_L = 0$
+Node–$V_3$: $\; -i_C + \dfrac{V_3 - V_2}{R_2} + i_g - i_L = 0$
 
-Capacitor: $\; i_c = C\dot{v}_c, \quad v_c = V_2 - V_3$
+Capacitor: $\; i_C = C\dot{v}_C, \quad v_C = V_2 - V_3$
 
 Inductor: $\; v_L = L\dot{i}_L, \quad v_L = -V_3$
 
 And we note that $V_1 = v_g$ and $i_{g'} = i_L$ (the current through the source $v_g$ equals the inductor current). 
-Substituting into $\dot{v}_c = i_c/C$ and $\dot{i}_L = v_L/L$:
 
+Instead of trying to rearrange the node equations from the start, start with the equations that already contain the derivatives — the constitutive relations of the two energy-storing elements, $i_C = C\dot{v}_C$ and $v_L = L\dot{i}_L$. They give the state derivatives directly; the node equations are only used to fill in whatever current or voltage they still need.
 
-**Step 3** 
+**Step 4 — Capacitor** What we need is: **$\dot{v}_C$** expressed as a function of the states and the inputs.
 
+To get it from $i_C = C\dot{v}_C$ we need the capacitor current $i_C$:
 
-**Step 4** collect the equations into matrix form.
+$i_C$ appears in both the node-$V_2$ and node-$V_3$ equations — the capacitor sits between $V_2$ and $V_3$, so its current shows up in both. Either one works; the node-$V_3$ equation is the quicker pick because all its other terms are already known: $V_3 - V_2 = -v_C$ (a state), $i_g$ (an input) and $i_L$ (a state). (The node-$V_2$ equation also contains $\frac{V_2 - V_1}{R_1} = i_{g'}$, which we'd have to swap for $i_L$ first.) Solve it for $i_C$:
+
+$$i_C = \frac{V_3 - V_2}{R_2} + i_g - i_L = -\frac{v_C}{R_2} + i_g - i_L$$
+
+Insert the capacitor equation $i_C = C\dot{v}_C$:
+
+$$C\,\dot{v}_C = - \frac{v_C}{R_2} + i_g - i_L
+\quad\Longrightarrow\quad
+\dot{v}_C = -\frac{1}{C}\,i_L - \frac{1}{CR_2}\,v_C + \frac{1}{C}\,i_g$$
+
+**Step 5 — Inductor** What we need is: **$\dot{i}_L$**.
+
+From $v_L = L\dot{i}_L$ we need $v_L$, and the inductor relation already tells us $v_L = -V_3$ — so we need the node voltage $V_3$.
+
+How to get $V_3$? The capacitor relation $v_C = V_2 - V_3$ gives $V_3 = V_2 - v_C$, and $v_C$ is a state we already have. So it remains to find $V_2$:
+
+The node-$V_1$ equation is the best bet — it contains $V_2$ together with only known quantities: $V_1 = v_g$ (an input) and $i_{g'}$ (which we showed equals the state $i_L$). (The node-$V_2$ equation could work too, but it also drags in $i_C$ — and hence $\dot{v}_C$ — so it is messier.) With $i_{g'} = i_L$ and $V_1 = v_g$:
+
+$$\frac{V_2 - V_1}{R_1} = i_{g'} = i_L
+\quad\Longrightarrow\quad
+V_2 = v_g + R_1 i_L$$
+
+Then back to $V_3$ via $v_C = V_2 - V_3$:
+
+$$V_3 = V_2 - v_C = v_g + R_1 i_L - v_C$$
+
+Finally use $v_L = L\dot{i}_L = -V_3$:
+
+$$L\,\dot{i}_L = -v_g - R_1 i_L + v_C
+\quad\Longrightarrow\quad
+\dot{i}_L = -\frac{R_1}{L}\,i_L + \frac{1}{L}\,v_C - \frac{1}{L}\,v_g$$
+
+**Step 6** Collect the equations into matrix form.
+
+The two scalar equations from Steps 4 and 5 are exactly the two rows of $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$. Written out in full, the left-hand side is the derivative of the state vector, so both state derivatives appear explicitly:
 
 $$
-\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}, \qquad
-\mathbf{A} = \begin{bmatrix}
+\frac{d}{dt}\begin{bmatrix} i_L \\ v_C \end{bmatrix} =
+\begin{bmatrix}
 -\frac{R_1}{L} & \frac{1}{L} \\[2pt]
 -\frac{1}{C} & -\frac{1}{CR_2}
-\end{bmatrix}, \quad
-\mathbf{B} = \begin{bmatrix}
+\end{bmatrix}
+\begin{bmatrix} i_L \\ v_C \end{bmatrix} +
+\begin{bmatrix}
 -\frac{1}{L} & 0 \\[2pt]
 0 & \frac{1}{C}
 \end{bmatrix}
+\begin{bmatrix} v_g \\ i_g \end{bmatrix}
 $$
-
-
-
 
 ```{=latex}
 \end{example}
