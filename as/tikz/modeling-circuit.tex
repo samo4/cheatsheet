@@ -1,0 +1,14 @@
+\begin{center}
+\begin{circuitikz}[scale=1.2, european resistors, american voltages]
+  \draw (0,3) to[V=$v_g$] (0,0)
+              (0,3) to[R=$R_1$, v>=$v_{R_1}$] (3,3)
+              to[L=$L$, i>^=$i_L$] (6,3)
+              (6,3) to[C] (6,0)
+              (6,3) -- (8,3)
+              to[R=$R_2$] (8,0)
+              to[short] (0,0);
+  \node[left=14pt] at (6,1.5) {$C$};
+  \node at (6.25,1.9) {$+$};
+  \node[right=14pt] at (6,1.5) {$v_C$};
+\end{circuitikz}
+\end{center}

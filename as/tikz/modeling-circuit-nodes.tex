@@ -1,0 +1,12 @@
+\begin{center}
+\begin{circuitikz}[scale=1.2, european resistors, american voltages]
+  \draw (0,3) node[circ,label=above:$V_1$]{} to[V=$v_g$, i>^=$i_g$] (0,0) node[ground]{};
+  \draw (0,3) to[R=$R_1$, v>=$v_{R_1}$] (3,3) node[circ,label=above:$V_2$]{}
+              to[L=$L$, i>^=$i_L$] (6,3) node[circ,label=above:$V_3$]{}
+              -- (8,3) to[R=$R_2$] (8,0) to[short] (0,0);
+  \draw (6,3) to[C, i>^=$i_C$ ] (6,0);
+  \node[left=14pt] at (6,1.5) {$C$};
+  \node at (6.25,1.9) {$+$};
+  \node[right=14pt] at (6,1.5) {$v_C$};
+\end{circuitikz}
+\end{center}

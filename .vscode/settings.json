@@ -9,12 +9,57 @@
   "runOnSave.commands": [
     {
       "match": "CONTROL\\.md$",
-      "command": "just control",
+      "command": "cd \"$(git rev-parse --show-toplevel)\" && just control",
       "runIn": "terminal"
     },
     {
-      "match": "AS\\.md$",
-      "command": "just as",
+      "match": "as[\\\\/]AS\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just as",
+      "runIn": "terminal"
+    },
+    {
+      "match": "as[\\\\/]01-modeling\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch1",
+      "runIn": "terminal"
+    },
+    {
+      "match": "as[\\\\/]02-state-space\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch2",
+      "runIn": "terminal"
+    },
+    {
+      "match": "as[\\\\/]03-properties\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch3",
+      "runIn": "terminal"
+    },
+    {
+      "match": "as[\\\\/]04-transfer-functions\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch4",
+      "runIn": "terminal"
+    },
+    {
+      "match": "as[\\\\/]05-linearization\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch5",
+      "runIn": "terminal"
+    },
+    {
+      "match": "as[\\\\/]06-discrete\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch6",
+      "runIn": "terminal"
+    },
+    {
+      "match": "as[\\\\/]07-appendix\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch7",
+      "runIn": "terminal"
+    },
+    {
+      "match": "as[\\\\/]AS-kolokvij-2023-11-24\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ko23",
+      "runIn": "terminal"
+    },
+    {
+      "match": "as[\\\\/]AS-kolokvij-2024-11-22\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ko24",
       "runIn": "terminal"
     }
   ]

@@ -1,0 +1,33 @@
+\begin{center}
+\begin{circuitikz}[scale=1.2, european resistors, american voltages, american currents]
+  % bottom rail
+  \draw (0,0) -- (9.5,0);
+  \node[ground] at (0,0) {};
+
+  % i_g current source (arrow up into node A)
+  \draw (0,0) to[I, l=$i_g$] (0,5);
+
+  % R1: node A to node B
+  \draw (0,5) to[R=$R_1$] (5,5);
+
+  % top rail (node B)
+  \draw (5,5) -- (9.5,5);
+
+  % branch L + R2
+  \draw (6,5) to[L, l=$L$, i>^=$i_L$] (6,3);
+  \draw (6,3) to[R=$R_2$] (6,0);
+  \node at (6.45,2.8) {$+$};
+  \node at (6.45,2.35) {$v_{R_2}$};
+
+  % branch C
+  \draw (7.5,5) to[C, l=$C$] (7.5,0);
+  \node at (7.9,4.4) {$+$};
+  \node at (7.9,3.95) {$v_C$};
+
+  % branch v_g + R3
+  \draw (9,5) to[V, l=$v_g$] (9,3);
+  \draw (9,3) to[R=$R_3$] (9,0);
+  \node at (9.45,2.8) {$+$};
+  \node at (9.45,2.35) {$v$};
+\end{circuitikz}
+\end{center}

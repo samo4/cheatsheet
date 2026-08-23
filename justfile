@@ -20,7 +20,7 @@ modern:
     pandoc modern-c.md -o modern-c.pdf --pdf-engine=xelatex --citeproc -V geometry:margin=1in -V colorlinks=true -V linkcolor=blue -V citecolor=blue -V urlcolor=blue
 
 as:
-    pandoc AS.md -o AS.pdf --pdf-engine=xelatex -V geometry:margin=1in --toc
+    cd as && just as
 
 control:
     pandoc control.md -o control.pdf --pdf-engine=xelatex -V geometry:margin=1in

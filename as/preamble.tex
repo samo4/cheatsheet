@@ -1,0 +1,39 @@
+\usepackage[leftline,framemethod=TikZ]{mdframed}
+\usepackage{circuitikz}
+\usetikzlibrary{decorations.pathmorphing}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\pgfplotsset{
+  spane/.style={
+    width=0.30\linewidth, height=0.30\linewidth,
+    xlabel={$\operatorname{Re}\lambda$}, ylabel={$j\operatorname{Im}\lambda$},
+    axis lines=center,
+    axis line style={gray},
+    xmin=-3, xmax=3, ymin=-3, ymax=3,
+    xtick={-2,-1,0,1,2}, ytick={-2,-1,0,1,2},
+  }
+}
+\renewcommand{\arraystretch}{1.4}
+\usepackage{titlesec}
+\newcommand{\sectionbreak}{\clearpage}
+\widowpenalty=10000
+\clubpenalty=10000
+\displaywidowpenalty=10000
+\newmdenv[
+  linecolor=gray!55, linewidth=0.7pt,
+  backgroundcolor=gray!6,
+  innertopmargin=0.6em, innerbottommargin=0.6em,
+  innerleftmargin=1em, innerrightmargin=1em,
+  skipabove=0.8em, skipbelow=0.8em,
+  needspace=4\baselineskip,
+  frametitlefont=\bfseries\small,
+  frametitlerule=true, frametitlerulewidth=0.3pt,
+  frametitlebackgroundcolor=gray!15,
+  frametitleaboveskip=0.3em, frametitlebelowskip=0.3em
+]{example}
+\usepackage{xcolor}
+\usepackage{pifont}
+\makeatletter
+\renewcommand{\paragraph}{\@startsection{paragraph}{4}{\z@}{1.0em \@plus 0.3em \@minus 0.2em}{0.5em}{\normalfont\normalsize\bfseries\color{black!70}}}
+\renewcommand{\subparagraph}{\@startsection{subparagraph}{5}{\z@}{1.0em \@plus 0.3em \@minus 0.2em}{0.5em}{\normalfont\normalsize\bfseries\color{black!70}}}
+\makeatother
