@@ -486,17 +486,17 @@ which (surprise, surprise) matches the Taylor and Laplace results.
 \end{example}
 ```
 
-The diagonalization method is perhaps the most elegant, but it fails for defective matrices. The Laplace method above and Cayley–Hamilton method below both work even for defective matrices.
+The diagonalization method is perhaps the most elegant, but it fails for defective matrices. The Laplace method above and Cayley–Hamilton\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} method below both work even for defective matrices.
 
 ### $\Phi$ via Cayley–Hamilton
 
-The Cayley–Hamilton theorem states that every matrix satisfies its own characteristic equation. If
+The Cayley–Hamilton theorem states that every matrix satisfies its own characteristic equation.
 
 $$
 \det(\lambda\mathbf{I} - \mathbf{A}) = \lambda^n + c_{n-1}\lambda^{n-1} + \cdots + c_0
 $$
 
-substituting the matrix for the scalar gives the zero matrix:
+Substituting the matrix for the scalar gives the zero matrix:
 
 $$
 \mathbf{A}^n + c_{n-1}\mathbf{A}^{n-1} + \cdots + c_0\mathbf{I} = \mathbf{0}
@@ -514,13 +514,21 @@ $$
 p(\mathbf{A}) = r(\mathbf{A})
 $$
 
-For an analytic function (e.g. $e^{\mathbf{A}t}$ or $\sin\mathbf{A}$) the same holds after expanding it in a Taylor series and reducing term by term.
+For an analytic function\footnote{An analytic function has derivatives of all orders and can be represented by a convergent power series (e.g. $e^{\mathbf{A}t}$ or $\sin\mathbf{A}$)} the same holds after expanding it in a Taylor series and reducing term by term.
 
-The coefficients follow from the key observation that $\mathbf{A}$ and its eigenvalues satisfy the same polynomial relation, so the same equation holds at each $\lambda_i$:
+Two ideas just came together: (1) $e^{\mathbf{A}t}$ collapses to the low-degree polynomial above because Cayley–Hamilton folds every power $\mathbf{A}^k$, $k \ge n$, back into $\mathbf{I}, \dots, \mathbf{A}^{n-1}$; (2) the coefficients are found by applying the same remainder trick to the *scalar* function $e^{\lambda t}$. Dividing $e^{\lambda t}$ by the characteristic polynomial $g(\lambda) = \det(\lambda\mathbf{I}-\mathbf{A})$ leaves a remainder of degree at most $n-1$,
+
+$$
+e^{\lambda t} = q(\lambda)\,g(\lambda) + \alpha_0(t) + \alpha_1(t)\lambda + \cdots + \alpha_{n-1}(t)\lambda^{n-1}
+$$
+
+whose coefficients are exactly the $\alpha_j(t)$ above — because $g(\mathbf{A}) = \mathbf{0}$ kills the $q(\mathbf{A})g(\mathbf{A})$ term the same way. At an eigenvalue, $g(\lambda_i) = 0$ by definition, so the $q(\lambda)g(\lambda)$ term drops out and each eigenvalue yields one scalar equation:
 
 $$
 e^{\lambda_i t} = \alpha_0(t) + \alpha_1(t)\lambda_i + \cdots + \alpha_{n-1}(t)\lambda_i^{n-1}, \qquad i = 1, \dots, n
 $$
+
+Think of it as interpolation: $r(\lambda) = \alpha_0 + \alpha_1\lambda + \cdots$ is the unique degree-$(n-1)$ polynomial whose graph passes through $(\lambda_i,\, e^{\lambda_i t})$ at every eigenvalue. Matching there fixes all $n$ unknowns $\alpha_j(t)$ — no infinite series needed.
 
 Solving this Vandermonde system gives the $\alpha_j(t)$. If an eigenvalue $\lambda_i$ has algebraic multiplicity $k$, evaluating at $\lambda_i$ yields only one equation; the missing $k-1$ come from differentiating $f(\lambda) = r(\lambda)$ with respect to $\lambda$, $k-1$ times — each eigenvalue contributes exactly as many equations as its multiplicity. Unlike diagonalization, this works even for defective matrices (see the eigenvalues example).
 
@@ -540,14 +548,22 @@ $$
 e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A}
 $$
 
-Evaluate at the eigenvalues:
+Evaluate at the eigenvalues — a $2\times2$ linear system in the unknowns $(\alpha_0, \alpha_1)$ (the $t$ lives only in the known right-hand sides):
 
 $$
-\lambda_1 = -2: \quad e^{-2t} = \alpha_0 - 2\alpha_1, \qquad
+\lambda_1 = -2: \quad e^{-2t} = \alpha_0 - 2\alpha_1
+$$
+$$
 \lambda_2 = -1: \quad e^{-t} = \alpha_0 - \alpha_1
 $$
 
-Subtracting gives $\alpha_1 = e^{-t} - e^{-2t}$, and then $\alpha_0 = 2e^{-t} - e^{-2t}$. Substituting back:
+Subtract the two equations to eliminate $\alpha_0$:
+
+$$
+e^{-2t} - e^{-t} = -\alpha_1 \quad\Longrightarrow\quad \alpha_1 = e^{-t} - e^{-2t}
+$$
+
+Back-substitute: $\alpha_0 = e^{-t} + \alpha_1 = 2e^{-t} - e^{-2t}$. Put the coefficients back into the matrix form $e^{\mathbf{A}t} = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}$ and multiply out:
 
 $$
 \Phi(t) = e^{\mathbf{A}t} = (2e^{-t} - e^{-2t})\mathbf{I} + (e^{-t} - e^{-2t})\mathbf{A}

@@ -48,8 +48,13 @@
       "runIn": "terminal"
     },
     {
-      "match": "as[\\\\/]07-appendix\\.md$",
+      "match": "as[\\\\/]07-appendix-A\\.md$",
       "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch7",
+      "runIn": "terminal"
+    },
+    {
+      "match": "as[\\\\/]08-appendix-B\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch8",
       "runIn": "terminal"
     },
     {
