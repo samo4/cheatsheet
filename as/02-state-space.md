@@ -575,27 +575,57 @@ which (you guessed it) matches all previous methods.
 ```{=latex}
 \end{example}
 ```
-
 ```{=latex}
-\begin{example}[frametitle={Example - computing $\sin\mathbf{A}$ via Cayley–Hamilton}]
+\begin{example}[frametitle={Example - obtaining $\Phi$ for non-diagonalizable A via Cayley–Hamilton}]
 ```
+If we calculate eigenvalues for the following matrix:
+$$
+\mathbf{A} = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & -3 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+we find that it's not diagonalizable:
+$$
+\det(\mathbf{A} - \lambda\mathbf{I}) = \det\begin{bmatrix} 1-\lambda & 0 & 0 \\ 1 & 1-\lambda & -3 \\ 0 & 0 & 1-\lambda \end{bmatrix} = (1-\lambda)^3
+$$
+so the only eigenvalue is $\lambda = 1$ with algebraic multiplicity $3$, and geometric multiplicity $\gamma = n - \operatorname{rank}(\mathbf{A} - \mathbf{I}) = 3 - 1 = 2 < 3$ — defective, so diagonalization is out. We could use Laplace, but we're in the mood for Cayley–Hamilton.
 
-The theorem is not limited to the exponential. $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}$ has characteristic polynomial $g(\lambda) = \lambda^2 + 1$ (eigenvalues $\pm j$), so $\sin\mathbf{A} = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}$ with
+**Step 1: set up the ansatz.** With $n = 3$ the exponential reduces to a degree-2 polynomial in $\mathbf{A}$:
 
 $$
-\sin\lambda = \alpha_0 + \alpha_1\lambda \quad \text{at } \lambda = \pm j:
-\qquad
-\alpha_0 + \alpha_1 j = \sin(j) = j\sinh 1, \qquad
-\alpha_0 - \alpha_1 j = -j\sinh 1
+e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A} + \alpha_2(t)\mathbf{A}^2, \qquad
+e^{\lambda t} = \alpha_0(t) + \alpha_1(t)\lambda + \alpha_2(t)\lambda^2
 $$
 
-giving $\alpha_0 = 0$, $\alpha_1 = \sinh 1$, hence
+**Step 2: handle the repeated eigenvalue by differentiating.** Evaluating the scalar equation at $\lambda = 1$ gives only one equation for three unknowns. The missing two come from differentiating with respect to $\lambda$ — the $\alpha_j$ depend on $t$, not on $\lambda$, so their $\lambda$-derivatives vanish:
 
 $$
-\sin\mathbf{A} = \sinh(1)\,\mathbf{A} = \begin{bmatrix} 0 & \sinh 1 \\ -\sinh 1 & 0 \end{bmatrix}
+\frac{d}{d\lambda}:\quad t e^{\lambda t} = \alpha_1(t) + 2\alpha_2(t)\lambda
+$$
+$$
+\frac{d^2}{d\lambda^2}:\quad t^2 e^{\lambda t} = 2\alpha_2(t)
 $$
 
-(consistent with the Taylor series: $\mathbf{A}^2 = -\mathbf{I}$, $\mathbf{A}^3 = -\mathbf{A}$, $\dots$, so $\sin\mathbf{A} = (1 + \frac{1}{3!} + \frac{1}{5!} + \cdots)\mathbf{A} = \sinh(1)\,\mathbf{A}$).
+**Step 3: evaluate at $\lambda = 1$.** The single repeated eigenvalue contributes three equations, one per derivative order:
+
+$$
+e^{t} = \alpha_0 + \alpha_1 + \alpha_2, \qquad
+t e^{t} = \alpha_1 + 2\alpha_2, \qquad
+t^2 e^{t} = 2\alpha_2
+$$
+
+This triangular system solves bottom-up: $\alpha_2 = \frac{t^2}{2}e^t$, then $\alpha_1 = t e^t - 2\alpha_2 = e^t(t - t^2)$, and finally $\alpha_0 = e^t - \alpha_1 - \alpha_2 = e^t\!\left(1 - t + \frac{t^2}{2}\right)$.
+
+**Step 4: assemble $\Phi(t)$.** First the needed power of $\mathbf{A}$:
+
+$$
+\mathbf{A}^2 = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & -3 \\ 0 & 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & -3 \\ 0 & 0 & 1 \end{bmatrix}
+= \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & -6 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+Substituting into $\Phi(t) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \alpha_2\mathbf{A}^2$ and adding elementwise: every diagonal entry is $\alpha_0 + \alpha_1 + \alpha_2 = e^t$, while the only nonzero off-diagonals are $(2,1) = \alpha_1 + 2\alpha_2 = t e^t$ and $(2,3) = -3\alpha_1 - 6\alpha_2 = -3t e^t$. Hence
+
+$$
+\Phi(t) = e^{\mathbf{A}t} = \begin{bmatrix} e^t & 0 & 0 \\ t e^t & e^t & -3t e^t \\ 0 & 0 & e^t \end{bmatrix}
+$$
 
 ```{=latex}
 \end{example}
