@@ -217,7 +217,7 @@ Sanity check: $\mathbf{A}\vec{x}_1 = \vec{x}_1$, $\mathbf{A}\vec{x}_2 = 2\vec{x}
 \end{example}
 ```
 
-This is the exact machinery used later to obtain the state-transition matrix $\Phi(t) = e^{\mathbf{A}t}$ via diagonalization.
+Obviously a single eigenvalue can occur multiple times. We call this algebraic multiplicity and denote it as $m_a$. The number of linearly independent eigenvectors belonging to it is the geometric multiplicity $m_g$, always $1 \le m_g \le m_a$.
 
 ## Continuous-time math
 

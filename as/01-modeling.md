@@ -27,9 +27,17 @@ Building a model is not always a paper exercise — it often needs data. A car s
 
 ## Higher-order ODEs as first-order systems
 
-State-space form only contains first derivatives, so a higher-order ODE must first be rewritten as a system. The trick is to promote the lower-order derivatives to state variables.
+State-space form only contains first derivatives, so a higher-order ODE must first be rewritten as a system. The trick is to promote the lower-order derivatives to state variables. Formally we would write something like this:
 
-Take the second-order ODE
+$$
+\dot{x}_n = f_n(x_1, x_2, \dots, x_n, u), \qquad
+\dot{x}_{n-1} = x_n, \qquad
+\dot{x}_{n-2} = x_{n-1}, \qquad
+\dots, \qquad
+\dot{x}_1 = x_2
+$$
+
+But just looking the the example it's easer: take the second-order ODE
 
 $$
 \ddot{y} + 2\dot{y} + 3y = 4u

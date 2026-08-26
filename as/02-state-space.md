@@ -332,17 +332,17 @@ $$
 
 So eigenvalues are the roots of the characteristic polynomial $\det(\mathbf{A} - \lambda\mathbf{I})$. For an $n \times n$ matrix this is a polynomial of degree $n$, so by the fundamental theorem of algebra there are $n$ eigenvalues counting multiplicity. Each eigenvalue carries two numbers:
 
-- **Algebraic multiplicity** $\alpha_i$ — how many times $\lambda_i$ occurs as a root of the characteristic polynomial. These sum to the matrix dimension: $\sum_i \alpha_i = n$.
-- **Geometric multiplicity** $\gamma_i$ — the dimension of the eigenspace $\ker(\mathbf{A} - \lambda_i\mathbf{I})$, i.e. the number of linearly independent eigenvectors belonging to $\lambda_i$. Computed as the nullity $\gamma_i = n - \operatorname{rank}(\mathbf{A} - \lambda_i\mathbf{I})$.
+- **Algebraic multiplicity** $m_{a,i}$ — how many times $\lambda_i$ occurs as a root of the characteristic polynomial. These sum to the matrix dimension: $\sum_i m_{a,i} = n$.
+- **Geometric multiplicity** $m_{g,i}$ — the dimension of the eigenspace $\ker(\mathbf{A} - \lambda_i\mathbf{I})$, i.e. the number of linearly independent eigenvectors belonging to $\lambda_i$. Computed as the nullity $m_{g,i} = n - \operatorname{rank}(\mathbf{A} - \lambda_i\mathbf{I})$.
 
-They are always related by $1 \le \gamma_i \le \alpha_i$. The gap $\alpha_i - \gamma_i$ measures how "defective" $\mathbf{A}$ is at $\lambda_i$: if $\gamma_i < \alpha_i$ there are not enough eigenvectors, and diagonalization fails.
+They are always related by $1 \le m_{g,i} \le m_{a,i}$. The gap $m_{a,i} - m_{g,i}$ measures how "defective" $\mathbf{A}$ is at $\lambda_i$: if $m_{g,i} < m_{a,i}$ there are not enough eigenvectors, and diagonalization fails.
 
 In practice:
 
 1. Solve $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$ for the eigenvalues — factor the polynomial, use the quadratic formula for $2\times 2$, or numerical methods for larger matrices.
-2. For each $\lambda_i$, solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = 0$; the number of free parameters in the solution is $\gamma_i$.
+2. For each $\lambda_i$, solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = 0$; the number of free parameters in the solution is $m_{g,i}$.
 
-$\mathbf{A}$ is diagonalizable iff $\gamma_i = \alpha_i$ for every $i$. This is always the case when all eigenvalues are distinct, since then $\gamma_i = \alpha_i = 1$.
+$\mathbf{A}$ is diagonalizable iff $m_{g,i} = m_{a,i}$ for every $i$. This is always the case when all eigenvalues are distinct, since then $m_{g,i} = m_{a,i} = 1$.
 
 ```{=latex}
 \begin{example}[frametitle={Example - eigenvalues and eigenvectors}]
@@ -386,7 +386,7 @@ Here $\gamma_2 = 1 < \alpha_2 = 2$: only two linearly independent eigenvectors e
 
 #### Diagonalization
 
-When $\gamma_i = \alpha_i$ for every eigenvalue, there are exactly $n$ linearly independent eigenvectors $\vec{v}_1, \dots, \vec{v}_n$. Stack them as columns:
+When $m_{g,i} = m_{a,i}$ for every eigenvalue, there are exactly $n$ linearly independent eigenvectors $\vec{v}_1, \dots, \vec{v}_n$. Stack them as columns:
 
 $$
 \mathbf{V} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}
@@ -438,7 +438,7 @@ $}
 \begin{example}[frametitle={Example - obtaining $\Phi$ via diagonalization}]
 ```
 
-$\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$. The characteristic equation $\det(\mathbf{A} - \lambda\mathbf{I}) = (-2-\lambda)(-1-\lambda) = 0$ gives distinct eigenvalues $\lambda_1 = -2$, $\lambda_2 = -1$, so $\gamma_i = \alpha_i = 1$ and $\mathbf{A}$ is diagonalizable.
+$\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$. The characteristic equation $\det(\mathbf{A} - \lambda\mathbf{I}) = (-2-\lambda)(-1-\lambda) = 0$ gives distinct eigenvalues $\lambda_1 = -2$, $\lambda_2 = -1$, so $m_{g,i} = m_{a,i} = 1$ and $\mathbf{A}$ is diagonalizable.
 
 Eigenvectors from $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v}_i = 0$, one eigenvalue at a time.
 
@@ -530,7 +530,7 @@ $$
 
 Think of it as interpolation: $r(\lambda) = \alpha_0 + \alpha_1\lambda + \cdots$ is the unique degree-$(n-1)$ polynomial whose graph passes through $(\lambda_i,\, e^{\lambda_i t})$ at every eigenvalue. Matching there fixes all $n$ unknowns $\alpha_j(t)$ — no infinite series needed.
 
-Solving this Vandermonde system gives the $\alpha_j(t)$. If an eigenvalue $\lambda_i$ has algebraic multiplicity $k$, evaluating at $\lambda_i$ yields only one equation; the missing $k-1$ come from differentiating $f(\lambda) = r(\lambda)$ with respect to $\lambda$, $k-1$ times — each eigenvalue contributes exactly as many equations as its multiplicity. Unlike diagonalization, this works even for defective matrices (see the eigenvalues example).
+Solving this Vandermonde system gives the $\alpha_j(t)$. If an eigenvalue $\lambda_i$ has algebraic multiplicity $m_{a,i}$, evaluating at $\lambda_i$ yields only one equation; the missing $m_{a,i}-1$ come from differentiating $f(\lambda) = r(\lambda)$ with respect to $\lambda$, $m_{a,i}-1$ times — each eigenvalue contributes exactly as many equations as its multiplicity. Unlike diagonalization, this works even for defective matrices (see the eigenvalues example).
 
 ```{=latex}
 \begin{example}[frametitle={Example - obtaining $\Phi$ via Cayley–Hamilton}]
@@ -586,7 +586,7 @@ we find that it's not diagonalizable:
 $$
 \det(\mathbf{A} - \lambda\mathbf{I}) = \det\begin{bmatrix} 1-\lambda & 0 & 0 \\ 1 & 1-\lambda & -3 \\ 0 & 0 & 1-\lambda \end{bmatrix} = (1-\lambda)^3
 $$
-so the only eigenvalue is $\lambda = 1$ with algebraic multiplicity $3$, and geometric multiplicity $\gamma = n - \operatorname{rank}(\mathbf{A} - \mathbf{I}) = 3 - 1 = 2 < 3$ — defective, so diagonalization is out. We could use Laplace, but we're in the mood for Cayley–Hamilton.
+so the only eigenvalue is $\lambda = 1$ with algebraic multiplicity $m_a = 3$, and geometric multiplicity $m_g = n - \operatorname{rank}(\mathbf{A} - \mathbf{I}) = 3 - 1 = 2 < 3 = m_a$ — defective, so diagonalization is out. We could use Laplace, but we're in the mood for Cayley–Hamilton.
 
 **Step 1: set up the ansatz.** With $n = 3$ the exponential reduces to a degree-2 polynomial in $\mathbf{A}$:
 
