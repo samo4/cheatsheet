@@ -1,0 +1,18 @@
+\begin{center}
+\begin{tikzpicture}[>=stealth,
+  block/.style={draw, thick, minimum width=1.8cm, minimum height=1cm, align=center},
+  dot/.style={circle, fill=black, inner sep=0pt, minimum size=2pt}]
+  \node[draw, circle, thick, inner sep=0pt, minimum size=0.6cm] (sum) at (0,0) {};
+  \node[font=\small] at ([xshift=4pt]sum.west) {$+$};
+  \node[font=\small] at ([yshift=4pt]sum.south) {$-$};
+  \node[block] (I) at (2.8,0) {$\frac{1}{s}$};
+  \node[dot] (p) at (4.6,0) {};
+  \node (u) at (-2.2,0) {$u$};
+  \node (y) at (6.0,0) {$y$};
+  \draw[->] (u) -- (sum);
+  \draw[->] (sum) -- node[above]{$\dot{x}$} (I);
+  \draw[->] (I) -- (y);
+  \draw[->] (p) -- (4.6,-1.8) -- node[below]{$a$} (0,-1.8) -- (sum.south);
+  \node[above, font=\small] at (p) {$x$};
+\end{tikzpicture}
+\end{center}

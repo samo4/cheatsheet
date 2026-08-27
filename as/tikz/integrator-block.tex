@@ -1,0 +1,10 @@
+\begin{center}
+\begin{tikzpicture}[>=stealth,
+  block/.style={draw, thick, minimum width=1.8cm, minimum height=1cm, align=center}]
+  \node (dx) at (-2,0) {$\dot{x}$};
+  \node[block] (I) at (0,0) {$\frac{1}{s}$};
+  \node (x) at (2.4,0) {$x$};
+  \draw[->] (dx) -- (I);
+  \draw[->] (I) -- (x);
+\end{tikzpicture}
+\end{center}

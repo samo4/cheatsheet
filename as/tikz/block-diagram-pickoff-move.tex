@@ -1,0 +1,27 @@
+\begin{center}
+\begin{tikzpicture}[>=stealth,
+  block/.style={draw, thick, minimum width=1.7cm, minimum height=1cm, align=center},
+  dot/.style={circle, fill=black, inner sep=0pt, minimum size=2pt}]
+  % --- left: pickoff point after G ---
+  \node (uL) at (-1.8,0) {$u$};
+  \node[block] (GL) at (0,0) {$G$};
+  \node[dot] (pL) at (2.0,0) {};
+  \node (yL) at (3.4,0) {$y$};
+  \draw[->] (uL) -- (GL);
+  \draw[->] (GL) -- (yL);
+  \draw[->] (pL) -- (2.0,-1.0) node[below] {$y$};
+  % --- equivalence ---
+  \node at (4.2,0) {$\;\Longleftrightarrow\;$};
+  % --- right: pickoff point before G ---
+  \node (uR) at (4.9,0) {$u$};
+  \node[dot] (pR) at (5.9,0) {};
+  \node[block] (GR) at (7.6,0) {$G$};
+  \node (yR) at (9.3,0) {$y$};
+  \node[block] (GiR) at (5.9,-1.8) {$\frac{1}{G}$};
+  \node (yR2) at (5.9,-2.9) {$y$};
+  \draw[->] (uR) -- (GR);
+  \draw[->] (GR) -- (yR);
+  \draw[->] (pR) -- (GiR);
+  \draw[->] (GiR) -- (yR2);
+\end{tikzpicture}
+\end{center}

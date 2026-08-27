@@ -1,0 +1,33 @@
+\begin{center}
+\begin{tikzpicture}[>=stealth,
+  block/.style={draw, thick, minimum width=1.7cm, minimum height=0.9cm, align=center}]
+  % --- left: summing junction before G ---
+  \node[draw, circle, thick, inner sep=0pt, minimum size=0.6cm] (sumL) at (0,0) {};
+  \node[font=\small] at ([xshift=4pt]sumL.west) {$+$};
+  \node[font=\small] at ([yshift=4pt]sumL.south) {$+$};
+  \node (u1L) at (-1.8,0) {$u_1$};
+  \node (u2L) at (0,-1.5) {$u_2$};
+  \node[block] (GL) at (2.4,0) {$G$};
+  \node (yL) at (4.2,0) {$y$};
+  \draw[->] (u1L) -- (sumL);
+  \draw[->] (u2L) -- (sumL);
+  \draw[->] (sumL) -- (GL);
+  \draw[->] (GL) -- (yL);
+  % --- equivalence ---
+  \node at (4.85,0) {$\;\Longleftrightarrow\;$};
+  % --- right: summing junction after G ---
+  \node (u1R) at (5.6,0) {$u_1$};
+  \node[block] (GR) at (7.3,0) {$G$};
+  \node[draw, circle, thick, inner sep=0pt, minimum size=0.6cm] (sumR) at (9.7,0) {};
+  \node[font=\small] at ([xshift=4pt]sumR.west) {$+$};
+  \node[font=\small] at ([yshift=4pt]sumR.south) {$+$};
+  \node (yR) at (11.5,0) {$y$};
+  \node (u2R) at (5.6,-1.5) {$u_2$};
+  \node[block] (G2R) at (7.3,-1.5) {$G$};
+  \draw[->] (u1R) -- (GR);
+  \draw[->] (GR) -- (sumR);
+  \draw[->] (u2R) -- (G2R);
+  \draw[->] (G2R.east) -| (sumR.south);
+  \draw[->] (sumR) -- (yR);
+\end{tikzpicture}
+\end{center}

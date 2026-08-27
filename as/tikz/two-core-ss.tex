@@ -1,0 +1,52 @@
+\begin{center}
+\begin{tikzpicture}[>=stealth,
+  block/.style={draw, thick, minimum width=1.8cm, minimum height=1cm, align=center},
+  gain/.style={draw, thick, minimum width=1cm, minimum height=0.7cm, align=center},
+  dot/.style={circle, fill=black, inner sep=0pt, minimum size=2pt}]
+  % --- summing junctions ---
+  \node[draw, circle, thick, inner sep=0pt, minimum size=0.6cm] (S1) at (-4.3,2.4) {};
+  \node[font=\small] at ([xshift=4pt]S1.west) {$+$};
+  \node[font=\small] at ([yshift=4pt]S1.south) {$-$};
+  \node[draw, circle, thick, inner sep=0pt, minimum size=0.6cm] (S2) at (-4.3,-2.4) {};
+  \node[font=\small] at ([xshift=4pt]S2.west) {$+$};
+  \node[font=\small] at ([yshift=-4pt]S2.north) {$+$};
+  \node[draw, circle, thick, inner sep=0pt, minimum size=0.6cm] (Sy) at (3.8,2.4) {};
+  \node[font=\small] at ([xshift=4pt]Sy.west) {$+$};
+  \node[font=\small] at ([yshift=-4pt]Sy.north) {$+$};
+  \node[font=\small] at ([yshift=4pt]Sy.south) {$+$};
+  % --- cores (first-order blocks) ---
+  \node[block] (B1) at (-2.0,2.4) {$\frac{1}{s}$};
+  \node[block] (B2) at (-2.0,-2.4) {$\frac{1}{s+4}$};
+  % --- gain blocks ---
+  \node[gain] (G3) at (-1.7,-0.7) {$3$};
+  \node[gain] (Gfb) at (-2.3,1.0) {$3$};
+  % --- inputs / outputs ---
+  \node (u2) at (-6.5,2.4) {$u_2$};
+  \node (u1) at (-6.5,-2.4) {$u_1$};
+  \node (y1) at (5.3,2.4) {$y_1$};
+  \node (y2) at (5.3,1.0) {$y_2$};
+  % --- pickoff points ---
+  \node[dot] (pfb) at (-0.3,2.4) {};
+  \node[dot] (P1) at (0.8,2.4) {};
+  \node[dot] (y2t) at (2.2,2.4) {};
+  \node[dot] (u2t) at (-5.6,2.4) {};
+  % --- core 1 path ---
+  \draw[->] (u2) -- (S1);
+  \draw[->] (S1) -- (B1);
+  \draw[->] (B1) -- (Sy);
+  \draw[->] (Sy) -- (y1);
+  % --- core 2 path ---
+  \draw[->] (u1) -- (S2);
+  \draw[->] (S2) -- (B2);
+  \draw[->] (B2) -- node[above]{$x_2$} (3.8,-2.4) -- (Sy.south);
+  % --- taps: feedback, coupling, outputs ---
+  \draw[->] (pfb) -- (-0.3,1.0) -- (Gfb.east);
+  \draw[->] (Gfb.west) -- (-4.3,1.0) -- (S1.south);
+  \draw[->] (P1) -- (0.8,-0.7) -- (G3.east);
+  \draw[->] (G3.west) -- (-4.3,-0.7) -- (S2.north);
+  \draw[->] (y2t) -- (2.2,1.0) -- (y2);
+  \draw[->] (u2t) -- (-5.6,3.8) -- (3.8,3.8) -- (Sy.north);
+  % --- state label ---
+  \node[above, font=\small] at (P1) {$x_1$};
+\end{tikzpicture}
+\end{center}

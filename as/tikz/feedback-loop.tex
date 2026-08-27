@@ -1,0 +1,19 @@
+\begin{center}
+\begin{tikzpicture}[>=stealth,
+  block/.style={draw, thick, minimum width=2cm, minimum height=1cm, align=center},
+  dot/.style={circle, fill=black, inner sep=0pt, minimum size=2pt}]
+  \node[draw, circle, thick, inner sep=0pt, minimum size=0.6cm] (sum) at (0,0) {};
+  \node[font=\small] at ([xshift=4pt]sum.west) {$+$};
+  \node[font=\small] at ([yshift=4pt]sum.south) {$-$};
+  \node[block] (G) at (3,0) {$G(s)$};
+  \node[block] (H) at (3,-2.5) {$H(s)$};
+  \node (u) at (-2.2,0) {$u$};
+  \node[dot] (p) at (5.2,0) {};
+  \node (y) at (6.4,0) {$y$};
+  \draw[->] (u) -- (sum);
+  \draw[->] (sum) -- node[above]{$e$} (G);
+  \draw[->] (G) -- (y);
+  \draw[->] (p) |- (H);
+  \draw[->] (H) -| (sum);
+\end{tikzpicture}
+\end{center}
