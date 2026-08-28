@@ -167,6 +167,14 @@ If you wrap it into a feedback loop, you get a first-order system, $G(s) = \frac
 ```{=latex}
 \input{tikz/first-order-loop.tex}
 ```
+ 
+Working backwards from the transfer function shows where the loop comes from: for $G(s) = \frac{1}{s+4}$,
+
+$$
+(s+4)Y = U \;\Rightarrow\; sY = U - 4Y \;\Rightarrow\; Y = \frac{1}{s}(U - 4Y)
+$$
+
+The last line says $Y$ is the integral of $U - 4Y$: feed $U$ into an integrator, subtract the feedback $4Y$, and out comes the loop above (with $a = 4$).
 
 Reading the diagram: the summing junction subtracts the feedback $a x$ from $u$, so the integrator input — the state derivative — is
 

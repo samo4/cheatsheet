@@ -130,7 +130,7 @@ $$F(0) = 250\ \text{N}, \qquad F(\ln 4) = \frac{800}{3}\cdot\frac{1}{256} - \fra
 
 The impact instant is the maximum (the stationary point is a minimum during the rebound), so $F_{\max} = 250$ N at $t=0$ — same conclusion, more work.
 
-## Problem 1 (2024-11-22 / 1)
+## Problem 3 (2024-11-22 / 1)
 
 For the circuit above we want to write down the state-space equations in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where the state vector $\vec{x} = [i_L, v_C]^T$ and $\vec{u} = [v_{g1}, i_{g2}]^T$.
 
@@ -254,7 +254,76 @@ $$
 
 with $\mathbf{A} = \begin{bmatrix} -\frac{R_1}{L} & -\frac{1}{L} \\ \frac{1}{C} & 0 \end{bmatrix}$ and $\mathbf{B} = \begin{bmatrix} \frac{1}{L} & \frac{R_1}{L} \\ 0 & -\frac{1}{C} \end{bmatrix}$. The top row is $\dot{i}_L$ (from Step 4), the bottom row is $\dot{v}_C$ (from Step 3).
 
+### Problem 4a (2021-01-26 / 1)
 
+aka what if you accidentally ground the wrong rail? The circuit is the same as in Problem 1, but the bottom rail is not grounded. Instead, the top rail is grounded. Find the state-space equations in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where $\vec{x} = [i_L, v_C]^T$ and $\vec{u} = [i_g, v_g]^T$.
+
+
+```text
+V1 --------- - vg + --------- V2 ------------------
+|                             |                   |
+|                             |                   |
+R1                            R2                  R3
+|                             |                   |
+|                             |                   V3
+|                             |                   |
+|                             |                   C
+|                             |                   |
+V4 ---- L --------------------+-------------------+------ GND
+```
+
+
+$$
+i_L + \frac{V_2}{R_2} + \frac{V_2 - v_C}{R_3} = 0
+\quad\Longrightarrow\quad
+V_2 = \frac{R_2,v_C - R_2R_3,i_L}{R_2 + R_3}
+$$
+
+### Problem 4b (2021-01-26 / 1)
+
+TODO: is it really the same as 1?
+
+Correct the previous problem: the top rail is grounded.
+
+```text
+GND -------- - vg + --------- Vg ------------------
+|                             |                   |
+|                             |                   |
+R1                            R2                  R3
+|                             |                   |
+|                             |                   V2
+|                             |                   |
+|                             |                   C
+|                             |                   |
+V4 ---- L --------------------+-------------------+---- V3
+```
+
+**Step 2** Node and element equations.
+
+Node–$V_2$: $\; i_C + \dfrac{V_2 - V_g}{R_3} = 0$
+
+Node–$V_3$: $\; -i_C - i_L + \dfrac{V_3 - V_g}{R_2} = 0$
+
+Node–$V_4$: $\; i_L + \dfrac{V_4}{R_1} = 0$
+
+Capacitor: $\; i_C = C\dot{v}_C, \quad v_C = V_2 - V_3$
+
+Inductor: $\; v_L = L\dot{i}_L, \quad v_L = V_4 - V_3$
+
+And we note that $V_g = v_g$ — grounding the top rail fixes $V_g$ by the source, so there is no node equation at $V_g$ to solve and the source current $i_{v_g}$ never appears (contrast with Problem 4a, where the floating source forced a supernode).
+
+$$
+i_C + \frac{V_2 - V_g}{R_3} - i_C - i_L + \frac{V_3 - V_g}{R_2} = 0
+\quad\Longrightarrow\quad
+\frac{V_2 - v_g}{R_3} + \frac{V_3 - v_g}{R_2} = i_L
+$$
+
+$$
+\dot{i}_L = \frac{1}{L}\Big[\frac{R_2}{R_2+R_3},v_C - \Big(R_1 + \frac{R_2R_3}{R_2+R_3}\Big)i_L - v_g\Big]
+$$
+$$
+\dot{v}_C = -\frac{R_2,i_L + v_C}{C(R_2+R_3)}
+$$
 
 ## Discrete
 
