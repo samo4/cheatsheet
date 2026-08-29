@@ -51,7 +51,9 @@ A resistor is never quiet: thermal agitation of its electrons puts a random volt
 
 The decay law $\dot{N} = -\lambda N$ is a first-order LTI system — pure exponential decay, the same shape as a discharging capacitor. Yet a Geiger counter never clicks that smoothly: the clicks form a Poisson process, so the count wanders around the exponential.
 
-**Why it fails the toolbox.** The ODE predicts the *mean* number of atoms, not the actual count. The fluctuations are of order $\sqrt{N}$: for a strong source they are relatively small and the model is excellent, but for a weak source randomness dominates and the exponential is only a guess about an average. The deterministic skeleton is genuinely there; the realization is not.
+The ODE predicts the *mean* number of atoms, not the actual count. The fluctuations are of order $\sqrt{N}$: for a strong source they are relatively small and the model is excellent, but for a weak source randomness dominates and the exponential is only a guess about an average. The deterministic skeleton is genuinely there; the realization is not.
+
+We can't strictly say the toolbox fails, but depending on what you're calculating it may be of limited use.
 
 ```{=latex}
 \end{example}

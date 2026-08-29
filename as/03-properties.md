@@ -21,10 +21,10 @@ A system $(\mathbf{A}, \mathbf{B})$ is **controllable** if, for any initial stat
 The **controllability matrix** collects the columns that matter:
 
 $$
-\mathcal{C} = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}
+M = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}
 $$
 
-and the system is controllable iff $\operatorname{rank}\mathcal{C} = n$.
+and the system is controllable iff $\operatorname{rank}M = n$.
 
 Why exactly those columns? Take the state response with $\vec{x}(0) = \vec{0}$; reaching $\vec{x}$ at time $t$ requires
 
@@ -79,10 +79,10 @@ A system $(\mathbf{A}, \mathbf{C})$ is **observable** if the initial state $\vec
 The **observability matrix** collects the rows that matter:
 
 $$
-\mathcal{O} = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}
+N = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}
 $$
 
-and the system is observable iff $\operatorname{rank}\mathcal{O} = n$.
+and the system is observable iff $\operatorname{rank}N = n$.
 
 Why exactly those rows? With $\vec{u} = \vec{0}$, the output is
 

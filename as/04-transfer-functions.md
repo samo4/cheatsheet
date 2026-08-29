@@ -158,6 +158,8 @@ Block diagrams are basically encoding equations, and by reading the block diagra
 
 The single most important block for state space conversions is the integrator, here represented as a block with $1/s$. If you place $\dot{x}$ on the input of this block, you get $x$ on the output. This already takes care of the A part of the state equation.
 
+Initial state can be packed into the integrator as an initial condition, or you can add it in as a separate input.
+
 ```{=latex}
 \input{tikz/integrator-block.tex}
 ```
