@@ -170,6 +170,18 @@ $$
 $$
 
 ```{=latex}
+\begin{example}[frametitle={Note - triangular matrices}]
+```
+If $\mathbf{A}$ is triangular (lower or upper), the determinant is just the product of the diagonal entries, so
+
+$$\det(\mathbf{A} - \lambda\mathbf{I}) = \prod_i (a_{ii} - \lambda)$$
+
+and the eigenvalues are exactly the diagonal entries $a_{11}, a_{22}, \dots, a_{nn}$. This is why triangular (and diagonal) matrices are so convenient — no characteristic polynomial to solve.
+```{=latex}
+\end{example}
+```
+
+```{=latex}
 \begin{example}[frametitle={Example - eigenvalues and eigenvectors}]
 ```
 
