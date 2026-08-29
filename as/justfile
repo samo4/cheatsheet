@@ -24,5 +24,8 @@ ch6:
 ch7:
     pandoc 07-appendix-A.md -o 07-appendix-A.pdf --pdf-engine=xelatex -H preamble.tex -V geometry:margin=1in
 
+ch7a:
+    pandoc 07a-exchange-eigenvectors.md -o 07a-exchange-eigenvectors.pdf --pdf-engine=xelatex -H preamble.tex -V geometry:margin=1in
+
 ch8:
     pandoc 08-appendix-B.md -o 08-appendix-B.pdf --pdf-engine=xelatex -H preamble.tex -V geometry:margin=1in
