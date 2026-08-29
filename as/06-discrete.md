@@ -1,42 +1,39 @@
 # Discrete systems
 
-Sampled-time systems evolve in discrete steps rather than continuously. The continuous time $t$ is replaced by $kT$ — $T$ the fixed sampling period, $k$ the integer sample index — and the $T$ is usually dropped, writing $x[k] = x(kT)$.
+Sampled-time systems evolve in discrete steps rather than continuously. The continuous time $t$ is replaced by $kT$ where $T$ is the fixed sampling period and $k$ the integer sample index. And as we don't like typing, we usually drop the $T$. Discrete indexing gets square brackets — $x[k]$ in place of the continuous $x(t)$ — the same convention most programming languages use.
 
 ## Difference equations
 
-The discrete analogue of an ODE is a **difference equation**. It has two equivalent notations, using forward or backward shifts:
+The discrete analogue of an ODE is a **difference equation**. In matrix form it is the discrete state-space equations — next state on the left, the direct counterpart of the continuous $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, $\vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}$:
 
 $$
-y[k+1] + a_0 y[k] = b_0 u[k+1] + b_1 u[k], \qquad
-y[k] + a_0 y[k-1] = b_0 u[k] + b_1 u[k-1]
+\underbrace{\vec{x}[k+1]}_{\text{next}} = \mathbf{A}\underbrace{\vec{x}[k]}_{\text{current}} + \mathbf{B}\underbrace{\vec{u}[k]}_{\text{current}}, \qquad
+\vec{y}[k] = \mathbf{C}\vec{x}[k] + \mathbf{D}\vec{u}[k]
 $$
 
-In general an $n$-th order difference equation reads
-
-$$
-y[k+n] + a_{n-1}y[k+n-1] + \cdots + a_0 y[k] = b_m u[k+m] + \cdots + b_0 u[k]
-$$
-
-and needs $n$ initial conditions (e.g. $y[0], \dots, y[n-1]$).
+Given the initial state $\vec{x}[0]$, the first equation steps the state forward one sample at a time.
 
 ## Modeling examples
 
 ```{=latex}
-\begin{example}[frametitle={Example - population migration}]
+\begin{example}[frametitle={Example - people moving to the city}]
 ```
 
-Each year, $a$ of the townspeople move to the suburbs and $b$ of the suburbanites move into the city:
+A region holds $x_1$ people in the city and $x_2$ people in the surroundings. Each year a fraction $\alpha$ of the city-dwellers move out to the surroundings, and a fraction $\beta$ of the surrounding dwellers move into the city — nobody enters or leaves the region:
 
 $$
-x_1[k+1] = (1-a)x_1[k] + b\,x_2[k], \qquad
-x_2[k+1] = a\,x_1[k] + (1-b)x_2[k]
+\begin{bmatrix} x_1[k+1] \\ x_2[k+1] \end{bmatrix}
+= \begin{bmatrix} 1-\alpha & \beta \\ \alpha & 1-\beta \end{bmatrix}\begin{bmatrix} x_1[k] \\ x_2[k] \end{bmatrix}
 $$
 
-In matrix form this is exactly the discrete state equation $\vec{x}[k+1] = \mathbf{A}\vec{x}[k]$ with
+Each entry $A_{ij}$ tells how much of current $x_j$ ends up in next year's $x_i$:
 
-$$
-\mathbf{A} = \begin{bmatrix} 1-a & b \\ a & 1-b \end{bmatrix}
-$$
+- $A_{11} = 1-\alpha$ — current city people contribute to next year's city, minus the fraction $\alpha$ who moved out to the surroundings.
+- $A_{12} = \beta$ — the fraction $\beta$ of current surrounding people who move into the city.
+- $A_{21} = \alpha$ — the fraction $\alpha$ of current city people who moved out to the surroundings.
+- $A_{22} = 1-\beta$ — current surrounding people contribute to next year's surroundings, minus the fraction $\beta$ who moved into the city.
+
+The columns of $\mathbf{A}$ sum to $1$, so the total population is conserved.
 
 ```{=latex}
 \end{example}
@@ -46,13 +43,38 @@ $$
 \begin{example}[frametitle={Example - Samuelson's national income model}]
 ```
 
-National income $y$, consumption $c$, investment $i$ and government spending $g$ satisfy $y[k] = c[k] + i[k] + g[k]$ with $c[k] = \alpha\,y[k-1]$ and $i[k] = \beta(c[k] - c[k-1])$. Substituting gives the second-order difference equation
+$y$ is the **national income** — the total output the economy produces in a year — split between consumption $c$, investment $i$ and government spending $g$:
+
+$$
+y[k] = c[k] + i[k] + g[k]
+$$
+
+- $\alpha$ — **marginal propensity to consume**: the fraction of last year's income spent on consumption this year, $c[k] = \alpha\,y[k-1]$.
+- $\beta$ — **accelerator**: how strongly investment reacts to the *change* in consumption, $i[k] = \beta(c[k] - c[k-1])$.
+
+Putting the pieces together — $c[k] = \alpha y[k-1]$ and $c[k-1] = \alpha y[k-2]$, so $i[k] = \alpha\beta(y[k-1] - y[k-2])$ — the identity becomes the second-order difference equation
 
 $$
 y[k] - \alpha(1+\beta)\,y[k-1] + \alpha\beta\, y[k-2] = g[k]
 $$
 
-with the government spending as input, and the income of the two previous periods as initial conditions.
+Stack the two previous incomes into the state $\vec{x}[k] = \begin{bmatrix} y[k-2] \\ y[k-1] \end{bmatrix}$, next state on the left:
+
+$$
+\begin{bmatrix} y[k-1] \\ y[k] \end{bmatrix}
+= \begin{bmatrix} 0 & 1 \\ -\alpha\beta & \alpha(1+\beta) \end{bmatrix}\begin{bmatrix} y[k-2] \\ y[k-1] \end{bmatrix}
++ \begin{bmatrix} 0 \\ 1 \end{bmatrix}g[k]
+$$
+
+Each entry tells how much of current $x_j$ ends up in next year's $x_i$:
+
+- $A_{11} = 0$ — the oldest income $y[k-2]$ contributes nothing directly to next year's $y[k-1]$; the two-year window simply slides forward.
+- $A_{12} = 1$ — current $y[k-1]$ *is* next year's $x_1$: last year's income shifts into the oldest slot.
+- $A_{21} = -\alpha\beta$ — income from two years ago *lowers* this year's income: a large $y[k-2]$ means consumption was high last year, so the change $c[k] - c[k-1]$ — and with it the accelerator investment — is small.
+- $A_{22} = \alpha(1+\beta)$ — last year's income feeds this year's through both channels: consumption $\alpha\,y[k-1]$ plus the accelerator's positive leg $\alpha\beta\,y[k-1]$.
+- $B_1 = 0,\ B_2 = 1$ — government spending enters the identity one-for-one, and only into the newest slot $y[k]$.
+
+government spending the input, the two previous incomes the initial conditions.
 
 ```{=latex}
 \end{example}
@@ -60,20 +82,22 @@ with the government spending as input, and the income of the two previous period
 
 ## Z-transform
 
-The $z$-transform maps a sequence into a function of $z$:
+Same idea as the Laplace transform, but for sequences. Where Laplace tames derivatives, the $z$-transform tames **shifts** — and it does it with a single trick: a one-sample delay is just a factor of $z^{-1}$. Shifting in time then becomes multiplying by a power of $z$, so a difference equation collapses into a plain algebraic equation.
+
+The transform itself tags every sample with the delay it has accumulated and sums:
 
 $$
 X(z) = \mathcal{Z}\{x[k]\} = \sum_{k=0}^{\infty} x[k]\, z^{-k}
 $$
 
-It turns shifts into algebra, exactly as the Laplace transform turns derivatives into algebra:
+so $x[k]$ is the coefficient of $z^{-k}$, and $z^{-1}$ is the delay operator. Remember what a shift does to the powers of $z$, and the whole rulebook follows:
 
-- **Linearity** — $\mathcal{Z}\{a x[k] + b y[k]\} = aX(z) + bY(z)$
-- **Right shift (delay)** — $\mathcal{Z}\{x[k-1]\} = z^{-1}X(z)$
-- **Left shift (advance)** — $\mathcal{Z}\{x[k+1]\} = z(X(z) - x[0])$
-- **Convolution** — $\mathcal{Z}\{(x * y)[k]\} = X(z)Y(z)$, with $(x*y)[k] = \sum_i x[i]\,y[k-i]$
+- Z-transforms are *linear*, so transform piece by piece and add: $\mathcal{Z}\{a x + b y\} = aX + bY$.
+- *Delay* — push the sequence one sample later and multiply by $z^{-1}$; each extra sample of delay costs another $z^{-1}$: $\mathcal{Z}\{x[k-1]\} = z^{-1}X$.
+- *Advance* — pull it one sample earlier and multiply by $z$, but the sample that falls off the front has to be subtracted back in: $\mathcal{Z}\{x[k+1]\} = zX - z\,x_0$.
+- *Convolution* — multiplying two transforms convolves the sequences in time: $\mathcal{Z}\{x * y\} = X\,Y$, exactly the same trade as with Laplace.
 
-A few common pairs (inverse transform works by partial fractions, as with Laplace):
+A few workhorse pairs (inversion by partial fractions, as with Laplace):
 
 $$
 \delta[k] \leftrightarrow 1, \qquad
@@ -135,11 +159,40 @@ $$
 
 ## Obtaining the discrete state-transition matrix $\mathbf{A}^k$
 
-Exactly the same four ways as for $e^{\mathbf{A}t}$, with $\lambda_i^k$ in place of $e^{\lambda_i t}$:
+Nothing new here — all three methods are exact copies of the continuous-time ones from the State-space chapter, with only the notation swapped: $\lambda_i^k$ in place of $e^{\lambda_i t}$, and the $z$-transform in place of the Laplace transform. Same ideas, same caveats.
 
-- **Z-transform** — $\mathbf{A}^k = \mathcal{Z}^{-1}\{z(z\mathbf{I}-\mathbf{A})^{-1}\}$.
-- **Diagonalization** — $\mathbf{A}^k = \mathbf{V}\boldsymbol{\Lambda}^k\mathbf{V}^{-1}$, with $\boldsymbol{\Lambda}^k$ diagonal (entries $\lambda_i^k$); only if $\mathbf{A}$ is diagonalizable.
-- **Cayley–Hamilton** — $\mathbf{A}^k = \alpha_0(k)\mathbf{I} + \cdots + \alpha_{n-1}(k)\mathbf{A}^{n-1}$, the $\alpha_i$ following from $\lambda_i^k = \alpha_0 + \alpha_1\lambda_i + \cdots$ (differentiate for repeated eigenvalues); works even for defective matrices.
+### $\mathbf{A}^k$ via the Z-transform
+
+Invert the resolvent, exactly as the Laplace transform did in the continuous case:
+
+$$
+\mathbf{A}^k = \mathcal{Z}^{-1}\left\{z\left(z\mathbf{I} - \mathbf{A}\right)^{-1}\right\}
+$$
+
+### $\mathbf{A}^k$ via diagonalization
+
+Powers of a diagonal matrix are entrywise powers, so with $\mathbf{A} = \mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}$,
+
+$$
+\mathbf{A}^k = \mathbf{V}\boldsymbol{\Lambda}^k\mathbf{V}^{-1}, \qquad
+\boldsymbol{\Lambda}^k = \operatorname{diag}\left(\lambda_1^k, \dots, \lambda_n^k\right)
+$$
+
+— only if $\mathbf{A}$ is diagonalizable.
+
+### $\mathbf{A}^k$ via Cayley–Hamilton
+
+Cayley–Hamilton folds every power $\mathbf{A}^k$ ($k \ge n$) back into a polynomial of degree at most $n-1$:
+
+$$
+\mathbf{A}^k = \alpha_0(k)\mathbf{I} + \alpha_1(k)\mathbf{A} + \cdots + \alpha_{n-1}(k)\mathbf{A}^{n-1}
+$$
+
+the coefficients following from the scalar identities $\lambda_i^k = \alpha_0 + \alpha_1\lambda_i + \cdots + \alpha_{n-1}\lambda_i^{n-1}$ (differentiate for repeated eigenvalues); works even for defective matrices.
+
+### Final remarks
+
+As in the continuous case, Cayley–Hamilton returns as the tool of choice for controllability and observability.
 
 ## Transfer function
 

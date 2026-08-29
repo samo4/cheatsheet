@@ -21,6 +21,62 @@ This book therefore works with **linear time-invariant (LTI)** systems, not only
 
 Even so, this is an idealization. The framework silently assumes the system is **lumped** — a finite number of states, so no partial differential equations (heat, flexible structures, fluids) and no transport delays — and **deterministic**, so no noise. Linearity itself also erases phenomena that no amount of linearization can recover: multiple equilibria, hysteresis, saturation, chaos. The Linearization chapter pushes back on some of this, and the Discrete chapter on sampled time; distributed, delayed, and stochastic systems remain out of reach — there a linear finite-dimensional model is at best a local approximation.
 
+The systems this "book" models *do* fit the toolbox: a mass on a spring, a resistor–capacitor circuit — a handful of states and deterministic equations, so a finite $\mathbf{A}$ captures them. Two common kinds of systems do not fit, and each fails for a different reason.
+
+**A drum is the archetype of a distributed system.** Its skin is a membrane: every point can move, so it has infinitely many states, not a finite vector $\vec{x}$. The governing equation is the two-dimensional wave equation, a partial differential equation in space and time,
+
+$$
+\frac{\partial^2 u}{\partial t^2} = c^2\left(\frac{\partial^2 u}{\partial r^2} + \frac{1}{r}\frac{\partial u}{\partial r} + \frac{1}{r^2}\frac{\partial^2 u}{\partial \theta^2}\right),
+$$
+
+whose modes are Bessel-function shapes. Hit the drum and you excite *all* of those infinitely many modes at once — no finite $\mathbf{A}$ matrix reproduces what you hear. A lumped model could keep only a few modes and would be a crude caricature. A plucked guitar string is the same story in one dimension: infinitely many modes too, though its harmonics at least fall on friendly integers. The drum cannot be analyzed with the LTI toolbox of this book.
+
+Three flavours of randomness, in increasing order of how much of the toolbox survives: in the first only the *signal* is random and the dynamics are fine; in the last there is no deterministic part left at all.
+
+```{=latex}
+\begin{example}[frametitle={Example - thermal noise in an RC circuit}]
+```
+
+A resistor is never quiet: thermal agitation of its electrons puts a random voltage across it — Johnson–Nyquist noise — with zero mean and a flat spectrum $S_v = 4 k_B T R$. The RC low-pass filter is the textbook LTI system — one capacitor, one state, a finite $\mathbf{A}$ — yet its output is a random signal that cannot be predicted, only described statistically.
+
+**Why it fails the toolbox.** The dynamics are perfectly LTI, but the *input* is not. Run the same experiment twice and the two traces differ, though nothing about the circuit changed. The toolbox predicts trajectories; here only the statistics are predictable. There is even a clean result: equipartition pins the variance of the capacitor voltage at $k_B T / C$, independent of the resistor — $R$ only sets how fast the fluctuations evolve.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
+\begin{example}[frametitle={Example - radioactive decay}]
+```
+
+The decay law $\dot{N} = -\lambda N$ is a first-order LTI system — pure exponential decay, the same shape as a discharging capacitor. Yet a Geiger counter never clicks that smoothly: the clicks form a Poisson process, so the count wanders around the exponential.
+
+**Why it fails the toolbox.** The ODE predicts the *mean* number of atoms, not the actual count. The fluctuations are of order $\sqrt{N}$: for a strong source they are relatively small and the model is excellent, but for a weak source randomness dominates and the exponential is only a guess about an average. The deterministic skeleton is genuinely there; the realization is not.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
+\begin{example}[frametitle={Example - Brownian motion of a pollen grain}]
+```
+
+A pollen grain in water never sits still: battered from all sides by molecules, it wanders at random. There is no average trajectory worth predicting — the position is a Wiener process whose spread grows as
+
+$$
+\langle x^2 \rangle = 2 D t
+$$
+
+with diffusion coefficient $D$.
+
+**Why it fails the toolbox.** There is no deterministic part at all. There is not even a mean trajectory to linearize around — the randomness is not a perturbation of an ODE, it *is* the whole phenomenon, and the LTI toolbox has nothing to grab onto.
+
+```{=latex}
+\end{example}
+```
+
+The drum fails because it is distributed, these systems because they are random — either way there is no finite deterministic ODE, and all of them stay outside this book's toolbox.
+
 The correct title of this chapter should then be "LTI lumped deterministic modeling" — but who wants that?
 
 Building a model is not always a paper exercise — it often needs data. A car suspension model, for instance, needs the spring rate, damping, and mass. That is not a dead end: given a good model structure, the parameters can be fitted to measurements of the real system. This is *system identification*, the often-forgotten counterpart of modeling.
