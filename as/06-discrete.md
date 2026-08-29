@@ -332,6 +332,29 @@ $$\vec{y}[k] = \mathbf{C}\mathbf{A}^k\vec{x}[0]$$
 
 $\mathbf{A}^k$ is the **discrete state-transition matrix**, mapping the initial state to the state at step $k$.
 
+```{=latex}
+\begin{example}[frametitle={Note - how to solve the response to an initial state}]
+```
+
+All the work is in computing $\mathbf{A}^k$ — the three ways are below (diagonalization is usually quickest). Once you have it, the response to a given initial state $\vec{x}[0]$ is a single matrix-vector product:
+
+$$
+\vec{x}[k] = \mathbf{A}^k\vec{x}[0]
+$$
+
+With the diagonalization form $\mathbf{A}^k = \mathbf{V}\boldsymbol{\Lambda}^k\mathbf{V}^{-1}$ this reads as a combination of the modes $\lambda_i^k$:
+
+$$
+\vec{x}[k] = c_1\lambda_1^k\vec{v}_1 + \cdots + c_n\lambda_n^k\vec{v}_n, \qquad
+\vec{c} = \mathbf{V}^{-1}\vec{x}[0]
+$$
+
+The coefficients $c_i$ are the coordinates of $\vec{x}[0]$ in the eigenbasis, so the initial state only decides *how much* of each mode appears — the modes themselves are properties of $\mathbf{A}$ alone.
+
+```{=latex}
+\end{example}
+```
+
 ### Nonhomogeneous state equations
 
 Same thing as homogeneous, but now we have to account for the input $\vec{u}[k]$:
@@ -340,7 +363,18 @@ $$\vec{x}[1] = \mathbf{A}\vec{x}[0] + \mathbf{B}\vec{u}[0]$$
 $$\vec{x}[2] = \mathbf{A}\vec{x}[1] + \mathbf{B}\vec{u}[1] = \mathbf{A}^2\vec{x}[0] + \mathbf{A}\mathbf{B}\vec{u}[0] + \mathbf{B}\vec{u}[1]$$
 $$\vec{x}[3] = \mathbf{A}\vec{x}[2] + \mathbf{B}\vec{u}[2] = \mathbf{A}^3\vec{x}[0] + \mathbf{A}^2\mathbf{B}\vec{u}[0] + \mathbf{A}\mathbf{B}\vec{u}[1] + \mathbf{B}\vec{u}[2]$$
 $$\vdots$$
-$$\vec{x}[k] = \mathbf{A}^k\vec{x}[0] + \sum_{i=0}^{k-1} \mathbf{A}^{k-1-i}\mathbf{B}\vec{u}[i]$$
+
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+\vec{x}[k] = \mathbf{A}^k\vec{x}[0] + \sum_{i=0}^{k-1} \mathbf{A}^{k-1-i}\mathbf{B}\vec{u}[i]
+$}
+\endgroup
+\]
+```
+
 $$\vec{y}[k] = \mathbf{C}\mathbf{A}^k\vec{x}[0] + \sum_{i=0}^{k-1} \mathbf{C}\mathbf{A}^{k-1-i}\mathbf{B}\vec{u}[i] + \mathbf{D}\vec{u}[k]$$
 
 ## Obtaining the discrete state-transition matrix $\mathbf{A}^k$
@@ -401,10 +435,17 @@ and at $k = 0$ this collapses to $\mathbf{A}^0 = \mathbf{P}_1 + \mathbf{P}_2 = \
 
 Powers of a diagonal matrix are entrywise powers, so with $\mathbf{A} = \mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}$,
 
-$$
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
 \mathbf{A}^k = \mathbf{V}\boldsymbol{\Lambda}^k\mathbf{V}^{-1}, \qquad
 \boldsymbol{\Lambda}^k = \operatorname{diag}\left(\lambda_1^k, \dots, \lambda_n^k\right)
-$$
+$}
+\endgroup
+\]
+```
 
 — only if $\mathbf{A}$ is diagonalizable.
 
