@@ -163,6 +163,30 @@ The rank $r = \operatorname{rank}\mathbf{A}$ is the number of linearly independe
 
 The homogeneous system $\mathbf{A}\vec{x} = \vec{0}$ always has the trivial solution $\vec{x} = \vec{0}$, and has nontrivial ones exactly when $\operatorname{rank}\mathbf{A} < n$, i.e. when $\mathbf{A}$ is singular ($\det\mathbf{A} = 0$). That is the exact condition behind the eigenvalue problem below.
 
+```{=latex}
+\begin{example}[frametitle={Rank}]
+```
+
+$$ N = \begin{bmatrix} C \\ CA \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ -3 & -7 \end{bmatrix}  $$
+
+$N$ is $2\times2$, so $n = 2$. Its rows are not scalar multiples of each other, which for a $2\times2$ matrix is equivalent to a nonzero determinant:
+
+$$
+\det N = 1\cdot(-7) - 1\cdot(-3) = -7 + 3 = -4 \ne 0
+$$
+
+Hence both rows are linearly independent and
+
+$$
+\operatorname{rank}N = 2 = n,
+$$
+
+i.e. $N$ has **full rank**. Since $N$ is the observability matrix of $(\mathbf{A}, \mathbf{C})$, the rank test $\operatorname{rank}N = n$ says the system is **observable**: the initial state can be reconstructed from the output.
+
+```{=latex}
+\end{example}
+```
+
 ### Eigenvalues and eigenvectors
 
 A common use for matrices is to describe linear transformations. A transformation $\vec{x}  \mapsto \mathbf{A}\vec{x}$ can stretch, shrink, rotate, or reflect vectors. Eigenvectors are the special directions that are only stretched or shrunk, not rotated.
