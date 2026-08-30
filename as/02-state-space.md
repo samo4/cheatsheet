@@ -174,6 +174,98 @@ $$
 \int f(t-\tau) g(\tau) d\tau = f * g
 $$
 
+```{=latex}
+\begin{example}[frametitle={Example - hanging mass on a spring}]
+```
+
+A mass $m$ hangs from the ceiling on a spring of constant $k$ with a damper of coefficient $b$. The equation of motion is
+
+$$
+m\ddot{x} = -kx - b\dot{x} - mg
+$$
+
+Introduce $v = \dot{x}$ and write it as a first-order system:
+
+$$
+\begin{bmatrix} \dot{x} \\ \dot{v} \end{bmatrix}
+= \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\begin{bmatrix} x \\ v \end{bmatrix}
++ \begin{bmatrix} 0 \\ -g \end{bmatrix}
+$$
+
+so $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}$, and the constant gravity term is the input, $\mathbf{B}\vec{u} = \begin{bmatrix} 0 \\ -g \end{bmatrix}$. This is the boxed solution above in action: build the kernel $\Phi(t) = e^{\mathbf{A}t}$, then run the convolution integral.
+
+**Step 1 — $\Phi$ via Laplace.** $\det(s\mathbf{I} - \mathbf{A}) = s^2 + \frac{b}{m}s + \frac{k}{m}$, which we complete into a sum of squares:
+
+$$
+s^2 + \frac{b}{m}s + \frac{k}{m}
+= \left(s + \frac{b}{2m}\right)^2 + \frac{k}{m}\left(1 - \frac{b^2}{4km}\right)
+$$
+
+Define the natural frequency and damping ratio,
+
+$$
+\omega_0 = \sqrt{\frac{k}{m}}, \qquad
+\zeta = \frac{b}{2\sqrt{km}} = \frac{b}{2m\omega_0}
+$$
+
+so $\frac{b}{m} = 2\zeta\omega_0$ and $\frac{k}{m} = \omega_0^2$, and the determinant takes the classic second-order form, which completes into a sum of squares:
+
+$$
+\det(s\mathbf{I} - \mathbf{A}) = s^2 + 2\zeta\omega_0 s + \omega_0^2
+= (s + \zeta\omega_0)^2 + \omega_0^2(1-\zeta^2)
+$$
+
+Take the **critically damped case $\zeta = 1$** (damper tuned so $b = 2\sqrt{km}$): then $\omega_d = \omega_0\sqrt{1-\zeta^2} = 0$, the two poles collide at $s = -\omega_0$, and the resolvent is
+
+$$
+(s\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{(s + \omega_0)^2}\begin{bmatrix} s + 2\omega_0 & 1 \\[2pt] -\omega_0^2 & s \end{bmatrix}
+$$
+
+Inverting with the double-pole pairs $\frac{1}{(s+\omega_0)^2} \leftrightarrow t e^{-\omega_0 t}$ and $\frac{s}{(s+\omega_0)^2} \leftrightarrow (1 - \omega_0 t)e^{-\omega_0 t}$ leaves only exponentials:
+
+$$
+\Phi(t) = e^{\mathbf{A}t} = e^{-\omega_0 t}\begin{bmatrix}
+1 + \omega_0 t & t \\[2pt]
+-\omega_0^2 t & 1 - \omega_0 t
+\end{bmatrix}
+$$
+
+**Step 2 — solve the state equation.** Plug $\Phi$ into the boxed nonhomogeneous solution above ($t_0 = 0$, $\vec{u} = 1$, $\mathbf{B} = [0, -g]^T$):
+
+$$
+\vec{x}(t) = \Phi(t)\vec{x}_0 + \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
+$$
+
+With the critical $\Phi$, the kernel dotted with the input is
+
+$$
+\Phi(t-\tau)\mathbf{B} = g\,e^{-\omega_0(t-\tau)}\begin{bmatrix} -(t-\tau) \\[2pt] \omega_0(t-\tau) - 1 \end{bmatrix}
+$$
+
+so the gravity term reads
+
+$$
+\int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
+= g\,e^{-\omega_0 t}\int_0^t \begin{bmatrix} (-t+\tau)e^{\omega_0\tau} \\[2pt] (\omega_0(t-\tau)-1)e^{\omega_0\tau} \end{bmatrix} d\tau
+$$
+
+Evaluating entry by entry (with $\int \tau e^{\omega_0\tau}d\tau = \frac{\tau}{\omega_0}e^{\omega_0\tau} - \frac{1}{\omega_0^2}e^{\omega_0\tau}$):
+
+$$
+\int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
+= e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0}t - \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) \\[2pt] -g\,t \end{bmatrix}
+$$
+
+so the full motion is
+
+$$
+\vec{x}(t) = \Phi(t)\vec{x}_0 + e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0}t - \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) \\[2pt] -g\,t \end{bmatrix}
+$$
+
+```{=latex}
+\end{example}
+```
+
 ## 5. Obtaining the state-transition matrix
 
 ### $\Phi$ via the Taylor series
@@ -257,9 +349,16 @@ $$
 
 Inverse-transforming term by term ($\vec{x}(0) = \vec{x}_0$):
 
-$$
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
 \vec{x}(t) = \mathcal{L}^{-1}\left\{(s\mathbf{I} - \mathbf{A})^{-1}\right\}\vec{x}_0 + \mathcal{L}^{-1}\left\{(s\mathbf{I} - \mathbf{A})^{-1}\mathbf{B}\mathbf{U}(s)\right\}
-$$
+$}
+\endgroup
+\]
+```
 
 The first term is the homogeneous response, the second is the convolution with $\vec{u}$, so comparing with the boxed solution of Section 4 identifies
 
@@ -293,77 +392,6 @@ e^{-t} - e^{-2t} & e^{-t}
 $$
 
 which (shockingly, I know!) matches the Taylor result.
-
-```{=latex}
-\end{example}
-```
-
-```{=latex}
-\begin{example}[frametitle={Example - hanging mass on a spring via Laplace}]
-```
-
-A mass $m$ hangs from the ceiling on a spring of constant $k$ with a damper of coefficient $b$. The equation of motion is
-
-$$
-m\ddot{x} = -kx - b\dot{x} - mg
-$$
-
-Introduce $v = \dot{x}$ and write it as a first-order system:
-
-$$
-\begin{bmatrix} \dot{x} \\ \dot{v} \end{bmatrix}
-= \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\begin{bmatrix} x \\ v \end{bmatrix}
-+ \begin{bmatrix} 0 \\ -g \end{bmatrix}
-$$
-
-**The resolvent, made Laplace-friendly.** $\det(s\mathbf{I} - \mathbf{A}) = s^2 + \frac{b}{m}s + \frac{k}{m}$, which we complete into a sum of squares:
-
-$$
-s^2 + \frac{b}{m}s + \frac{k}{m}
-= \left(s + \frac{b}{2m}\right)^2 + \frac{k}{m} - \frac{b^2}{4m^2}
-= \left(s + \frac{b}{2m}\right)^2 + \frac{k}{m} \left(1 - \frac{b^2}{4km}\right)
-$$
-
-Define the natural frequency $\omega_0$ and the damping ratio $\zeta$:
-
-$$
-\omega_0 = \sqrt{\frac{k}{m}}, \qquad
-\zeta = \frac{b}{2\sqrt{km}} = \frac{b}{2m\omega_0}
-$$
-
-so $\frac{b}{m} = 2\zeta\omega_0$ and $\frac{k}{m} = \omega_0^2$. The determinant takes the classic second-order form, which completes into a sum of squares:
-
-$$
-\det(s\mathbf{I} - \mathbf{A}) = s^2 + 2\zeta\omega_0 s + \omega_0^2
-= (s + \zeta\omega_0)^2 + \omega_0^2(1-\zeta^2)
-$$
-
-For the underdamped case $\zeta < 1$, with damped natural frequency $\omega_d = \omega_0\sqrt{1-\zeta^2}$ — so that $\omega_d^2 = \omega_0^2(1-\zeta^2)$ — this reads
-
-$$
-\det(s\mathbf{I} - \mathbf{A}) = (s + \zeta\omega_0)^2 + \omega_d^2
-$$
-
-This is the form the Laplace tables like. The resolvent reads
-
-$$
-(s\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{(s + \zeta\omega_0)^2 + \omega_d^2}\begin{bmatrix} s + 2\zeta\omega_0 & 1 \\[2pt] -\omega_0^2 & s \end{bmatrix}
-$$
-
-**The critically damped case $\zeta = 1$.** If the damper is tuned to critical damping, $b = 2\sqrt{km}$ (i.e. $b = 2m\omega_0$), then $\zeta = 1$ and $\omega_d = \omega_0\sqrt{1-\zeta^2} = 0$: the two poles collide at $s = -\omega_0$, the denominator becomes a repeated pole, and the trig disappears. The resolvent is
-
-$$
-(s\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{(s + \omega_0)^2}\begin{bmatrix} s + 2\omega_0 & 1 \\[2pt] -\omega_0^2 & s \end{bmatrix}
-$$
-
-Inverting with the double-pole pairs $\frac{1}{(s+\omega_0)^2} \leftrightarrow t e^{-\omega_0 t}$ and $\frac{s}{(s+\omega_0)^2} \leftrightarrow (1 - \omega_0 t)e^{-\omega_0 t}$ leaves only exponentials:
-
-$$
-\Phi(t) = e^{\mathbf{A}t} = e^{-\omega_0 t}\begin{bmatrix}
-1 + \omega_0 t & t \\[2pt]
--\omega_0^2 t & 1 - \omega_0 t
-\end{bmatrix}
-$$
 
 ```{=latex}
 \end{example}
@@ -405,8 +433,8 @@ $$
 
 So eigenvalues are the roots of the characteristic polynomial $\det(\mathbf{A} - \lambda\mathbf{I})$. For an $n \times n$ matrix this is a polynomial of degree $n$, so by the fundamental theorem of algebra there are $n$ eigenvalues counting multiplicity. Each eigenvalue carries two numbers:
 
-- **Algebraic multiplicity** $m_{a,i}$ — how many times $\lambda_i$ occurs as a root of the characteristic polynomial. These sum to the matrix dimension: $\sum_i m_{a,i} = n$.
-- **Geometric multiplicity** $m_{g,i}$ — the dimension of the eigenspace $\ker(\mathbf{A} - \lambda_i\mathbf{I})$, i.e. the number of linearly independent eigenvectors belonging to $\lambda_i$. Computed as the nullity $m_{g,i} = n - \operatorname{rank}(\mathbf{A} - \lambda_i\mathbf{I})$.
+- **Algebraic** multiplicity $m_{a,i}$ — how many times $\lambda_i$ occurs as a root of the characteristic polynomial. These sum to the matrix dimension: $\sum_i m_{a,i} = n$.
+- **Geometric** multiplicity $m_{g,i}$ — the dimension of the eigenspace $\ker(\mathbf{A} - \lambda_i\mathbf{I})$, i.e. the number of linearly independent eigenvectors belonging to $\lambda_i$. Computed as the nullity $m_{g,i} = n - \operatorname{rank}(\mathbf{A} - \lambda_i\mathbf{I})$.
 
 They are always related by $1 \le m_{g,i} \le m_{a,i}$. The gap $m_{a,i} - m_{g,i}$ measures how "defective" $\mathbf{A}$ is at $\lambda_i$: if $m_{g,i} < m_{a,i}$ there are not enough eigenvectors, and diagonalization fails.
 
