@@ -13,6 +13,16 @@ $$
 i.e. entry $(i,j)$ is the dot product of row $i$ of $\mathbf{A}$ with column $j$ of $\mathbf{B}$.
 
 ```{=latex}
+\begin{example}[frametitle={Remember - row by column}]
+```
+
+Matrix multiplication is **row by column**: row $i$ of the left matrix against column $j$ of the right matrix, entry by entry. The inner dimensions must match: columns of the left = rows of the right.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
 \begin{example}[frametitle={Example - 2×3 times 3×2}]
 ```
 
