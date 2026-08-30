@@ -169,19 +169,19 @@ The homogeneous system $\mathbf{A}\vec{x} = \vec{0}$ always has the trivial solu
 
 $$ N = \begin{bmatrix} C \\ CA \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ -3 & -7 \end{bmatrix}  $$
 
-$N$ is $2\times2$, so $n = 2$. Its rows are not scalar multiples of each other, which for a $2\times2$ matrix is equivalent to a nonzero determinant:
+$N$ is $2\times2$, so $n = 2$. Row-reduce (rank is unchanged by row operations):
 
 $$
-\det N = 1\cdot(-7) - 1\cdot(-3) = -7 + 3 = -4 \ne 0
+N \sim \begin{bmatrix} 1 & 1 \\ 0 & -4 \end{bmatrix}
 $$
 
-Hence both rows are linearly independent and
+(take row 2 $+ 3\times$ row 1: $-3 + 3\cdot1 = 0$, $-7 + 3\cdot1 = -4$). Two nonzero pivots, so both rows are linearly independent and
 
 $$
 \operatorname{rank}N = 2 = n,
 $$
 
-i.e. $N$ has **full rank**. Since $N$ is the observability matrix of $(\mathbf{A}, \mathbf{C})$, the rank test $\operatorname{rank}N = n$ says the system is **observable**: the initial state can be reconstructed from the output.
+i.e. $N$ has **full rank**.
 
 ```{=latex}
 \end{example}

@@ -40,7 +40,7 @@ $$
 
 In general, any invertible $\mathbf{T}$ defines new states $\tilde{\vec{x}} = \mathbf{T}^{-1}\vec{x}$ and yields the equivalent representation $\tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}$, $\tilde{\mathbf{B}} = \mathbf{T}^{-1}\mathbf{B}$, $\tilde{\mathbf{C}} = \mathbf{C}\mathbf{T}$, $\tilde{\mathbf{D}} = \mathbf{D}$.
 
-## 2. State-space representation
+## State-space representation
 
 The state-space representation is a geometric view of the dynamics: at every instant the system sits at a point $\vec{x}(t)$ in state space, and the equations $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$ push that point along a curve — the *trajectory*. For the example system from the Modeling chapter, $\dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -3 & -2 \end{bmatrix}\vec{x}$ with $\vec{x}(0) = (1, 0)$, the state spirals into the origin (markers at integer times):
 
@@ -50,7 +50,7 @@ The state-space representation is a geometric view of the dynamics: at every ins
 
 The decay and the oscillation come straight from the eigenvalues of $\mathbf{A}$ — here $-1 \pm j\sqrt{2}$, the negative real part damping the spiral, the imaginary part driving the rotation.
 
-## 3. Homogeneous Solution
+## Homogeneous Solution
 
 $$\dot{\vec{x}} = \mathbf{A}\vec{x}$$ 
 
@@ -114,10 +114,12 @@ $$
 
 State transition matrix has the following properties:
 
-1. $\Phi(0) = \mathbf{I}$ (identity matrix)
+1. $\Phi(0) = \mathbf{I}$
 2. $\Phi(t_1 + t_2) = \Phi(t_1)\Phi(t_2)$
 3. $\Phi(t_1 - t_2) = \Phi(t_1)\Phi^{-1}(t_2)$
 4. $\frac{d}{dt}\Phi(t) = \mathbf{A}\Phi(t)$
+
+When working with state transition matrix, don't forget how matrix multiplcation works: the rightmost matrix is the one that gets multiplied first: ABC means A(B(C)).
 
 ## 4. Nonhomogeneous Solution
 
@@ -291,6 +293,77 @@ e^{-t} - e^{-2t} & e^{-t}
 $$
 
 which (shockingly, I know!) matches the Taylor result.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
+\begin{example}[frametitle={Example - hanging mass on a spring via Laplace}]
+```
+
+A mass $m$ hangs from the ceiling on a spring of constant $k$ with a damper of coefficient $b$. The equation of motion is
+
+$$
+m\ddot{x} = -kx - b\dot{x} - mg
+$$
+
+Introduce $v = \dot{x}$ and write it as a first-order system:
+
+$$
+\begin{bmatrix} \dot{x} \\ \dot{v} \end{bmatrix}
+= \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\begin{bmatrix} x \\ v \end{bmatrix}
++ \begin{bmatrix} 0 \\ -g \end{bmatrix}
+$$
+
+**The resolvent, made Laplace-friendly.** $\det(s\mathbf{I} - \mathbf{A}) = s^2 + \frac{b}{m}s + \frac{k}{m}$, which we complete into a sum of squares:
+
+$$
+s^2 + \frac{b}{m}s + \frac{k}{m}
+= \left(s + \frac{b}{2m}\right)^2 + \frac{k}{m} - \frac{b^2}{4m^2}
+= \left(s + \frac{b}{2m}\right)^2 + \frac{k}{m} \left(1 - \frac{b^2}{4km}\right)
+$$
+
+Define the natural frequency $\omega_0$ and the damping ratio $\zeta$:
+
+$$
+\omega_0 = \sqrt{\frac{k}{m}}, \qquad
+\zeta = \frac{b}{2\sqrt{km}} = \frac{b}{2m\omega_0}
+$$
+
+so $\frac{b}{m} = 2\zeta\omega_0$ and $\frac{k}{m} = \omega_0^2$. The determinant takes the classic second-order form, which completes into a sum of squares:
+
+$$
+\det(s\mathbf{I} - \mathbf{A}) = s^2 + 2\zeta\omega_0 s + \omega_0^2
+= (s + \zeta\omega_0)^2 + \omega_0^2(1-\zeta^2)
+$$
+
+For the underdamped case $\zeta < 1$, with damped natural frequency $\omega_d = \omega_0\sqrt{1-\zeta^2}$ — so that $\omega_d^2 = \omega_0^2(1-\zeta^2)$ — this reads
+
+$$
+\det(s\mathbf{I} - \mathbf{A}) = (s + \zeta\omega_0)^2 + \omega_d^2
+$$
+
+This is the form the Laplace tables like. The resolvent reads
+
+$$
+(s\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{(s + \zeta\omega_0)^2 + \omega_d^2}\begin{bmatrix} s + 2\zeta\omega_0 & 1 \\[2pt] -\omega_0^2 & s \end{bmatrix}
+$$
+
+**The critically damped case $\zeta = 1$.** If the damper is tuned to critical damping, $b = 2\sqrt{km}$ (i.e. $b = 2m\omega_0$), then $\zeta = 1$ and $\omega_d = \omega_0\sqrt{1-\zeta^2} = 0$: the two poles collide at $s = -\omega_0$, the denominator becomes a repeated pole, and the trig disappears. The resolvent is
+
+$$
+(s\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{(s + \omega_0)^2}\begin{bmatrix} s + 2\omega_0 & 1 \\[2pt] -\omega_0^2 & s \end{bmatrix}
+$$
+
+Inverting with the double-pole pairs $\frac{1}{(s+\omega_0)^2} \leftrightarrow t e^{-\omega_0 t}$ and $\frac{s}{(s+\omega_0)^2} \leftrightarrow (1 - \omega_0 t)e^{-\omega_0 t}$ leaves only exponentials:
+
+$$
+\Phi(t) = e^{\mathbf{A}t} = e^{-\omega_0 t}\begin{bmatrix}
+1 + \omega_0 t & t \\[2pt]
+-\omega_0^2 t & 1 - \omega_0 t
+\end{bmatrix}
+$$
 
 ```{=latex}
 \end{example}

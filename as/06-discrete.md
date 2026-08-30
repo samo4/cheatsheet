@@ -385,9 +385,16 @@ Nothing new here — all three methods are exact copies of the continuous-time o
 
 Invert the resolvent, almost exactly\footnote{watch for that additional $z$} as the Laplace transform did in the continuous case:
 
-$$
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
 \mathbf{A}^k = \mathcal{Z}^{-1}\left\{z\left(z\mathbf{I} - \mathbf{A}\right)^{-1}\right\}
-$$
+$}
+\endgroup
+\]
+```
 
 How did we get here? Start from the homogeneous state equations, take the Z-transform, and solve for $\vec{X}(z)$. The advance rule $\mathcal{Z}\{\vec{x}[k+1]\} = z\vec{X}(z) - z\vec{x}[0]$ handles the left-hand side:
 
@@ -402,8 +409,22 @@ $$\vec{x}[k] = \mathcal{Z}^{-1}\left\{(z\mathbf{I} - \mathbf{A})^{-1} z\right\}\
 \quad\Longrightarrow\quad
 \mathbf{A}^k = \mathcal{Z}^{-1}\left\{z\left(z\mathbf{I} - \mathbf{A}\right)^{-1}\right\}$$
 
+With an input the same trick runs once more — transform $\vec{x}[k+1] = \mathbf{A}\vec{x}[k] + \mathbf{B}\vec{u}[k]$:
 
+$$z\vec{X}(z) - z\vec{x}[0] = \mathbf{A}\vec{X}(z) + \mathbf{B}U(z)$$
 
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+\vec{X}(z) = z(z\mathbf{I}-\mathbf{A})^{-1}\vec{x}[0] + (z\mathbf{I}-\mathbf{A})^{-1}\mathbf{B}\,U(z)
+$}
+\endgroup
+\]
+```
+
+The first term is the homogeneous (zero-input) response from above; the second is the forced response.
 
 ```{=latex}
 \begin{example}[frametitle={Example - $\mathbf{A}^k$ via the Z-transform}]
@@ -426,6 +447,56 @@ $$(z\mathbf{I} - \mathbf{A})^{-1} = \frac{\mathbf{P}_1}{z-0.5} + \frac{\mathbf{P
 $$\mathbf{A}^k = \mathcal{Z}^{-1}\left\{\frac{z\mathbf{P}_1}{z-0.5} + \frac{z\mathbf{P}_2}{z-0.2}\right\} = 0.5^k\mathbf{P}_1 + 0.2^k\mathbf{P}_2 = \begin{bmatrix} -\frac{2}{3}0.5^k + \frac{5}{3}0.2^k & \frac{10}{3}(0.5^k - 0.2^k) \\[2pt] -\frac{1}{3}(0.5^k - 0.2^k) & \frac{5}{3}0.5^k - \frac{2}{3}0.2^k \end{bmatrix}$$
 
 and at $k = 0$ this collapses to $\mathbf{A}^0 = \mathbf{P}_1 + \mathbf{P}_2 = \mathbf{I}$, as it must.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
+\begin{example}[frametitle={Example - the $z$-domain route, double pole}]
+```
+
+The previous example had distinct poles; this one has a repeated pole. Take $\mathbf{A} = \begin{bmatrix} 1 & 0 \\ -\frac{1}{100} & 1 \end{bmatrix}$ and $\mathbf{B} = \begin{bmatrix} 100 \\ 40 \end{bmatrix}$, with zero initial conditions and a unit step input $u[k] = 1$. All we need is the forced term of the $z$-domain solution just derived:
+
+$$\vec{X}(z) = (z\mathbf{I} - \mathbf{A})^{-1}\mathbf{B}\,U(z)$$
+
+**Step 1 — the resolvent.** $\det(z\mathbf{I} - \mathbf{A}) = (z-1)^2$, so
+
+$$(z\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{(z-1)^2}\begin{bmatrix} z-1 & 0 \\[2pt] -\frac{1}{100} & z-1 \end{bmatrix}$$
+
+Keep the determinant factor outside; each row of the resolvent then feeds one entry of $\vec{X}(z)$.
+
+**Step 2 — $X_1$.** Row 1 of the resolvent dotted with $\mathbf{B}$, times $U(z) = \frac{z}{z-1}$ (unit step):
+
+$$X_1(z) = \underbrace{\frac{1}{(z-1)^2}}_{\det\text{ factor}}\left[\underbrace{(z-1)\cdot 100}_{\text{row 1 }\cdot\, \mathbf{B}}\right]\underbrace{\frac{z}{z-1}}_{U(z)} = \frac{100z}{(z-1)^2}$$
+
+The pair $\frac{z}{(z-1)^2} \leftrightarrow k$ reads off immediately: $x_1[k] = 100k$.
+
+**Step 3 — $X_2$ via partial fractions.** Row 2 of the resolvent dotted with $\mathbf{B}$, times $U(z)$:
+
+$$X_2(z) = \frac{1}{(z-1)^2}\left[-\frac{1}{100}\cdot 100 + (z-1)\cdot 40\right]\frac{z}{z-1} = \frac{z(40z-41)}{(z-1)^3}$$
+
+Same PFE trick as in the Z-transform section: store the $z$ on the left and expand $\frac{X_2}{z}$ — a triple pole at $z=1$:
+
+$$\frac{X_2(z)}{z} = \frac{40z-41}{(z-1)^3} = \frac{A}{z-1} + \frac{B}{(z-1)^2} + \frac{C}{(z-1)^3}$$
+
+Clear denominators: $40z - 41 = A(z-1)^2 + B(z-1) + C$. At $z = 1$ we get $C = -1$; matching powers of $z$ gives $A = 0$ and $B = 40$. So
+
+$$\frac{X_2(z)}{z} = \frac{40}{(z-1)^2} - \frac{1}{(z-1)^3}$$
+
+multiply back by $z$ and read off the pairs $\frac{z}{(z-1)^2} \leftrightarrow k$ and $\frac{z}{(z-1)^3} \leftrightarrow \frac{k(k-1)}{2}$:
+
+$$X_2(z) = \frac{40z}{(z-1)^2} - \frac{z}{(z-1)^3}
+\quad\Longrightarrow\quad
+x_2[k] = 40k - \frac{k(k-1)}{2} = \frac{k(81-k)}{2}$$
+
+so
+
+$$\vec{x}[k] = \begin{bmatrix} 100k \\[2pt] \frac{k(81-k)}{2} \end{bmatrix}$$
+
+The question this example answers — at which step does a state come back to zero? $x_2[k] = \frac{k(81-k)}{2}$ vanishes at $k = 0$ and again at $k = 81$, so the second state returns to zero after 81 steps. The first state, $x_1[k] = 100k$, only ever touches zero at $k = 0$.
+
+Sanity check: $\vec{x}[1] = \begin{bmatrix} 100 \\ 40 \end{bmatrix} = \mathbf{B}$, as it must from $\vec{x}[1] = \mathbf{B}u[0]$. And the same resolvent is the $\mathbf{A}^k$ machine from the section header: $\mathbf{A}^k = \mathcal{Z}^{-1}\{z(z\mathbf{I}-\mathbf{A})^{-1}\} = \begin{bmatrix} 1 & 0 \\[2pt] -\frac{k}{100} & 1 \end{bmatrix}$.
 
 ```{=latex}
 \end{example}
