@@ -119,7 +119,7 @@ State transition matrix has the following properties:
 3. $\Phi(t_1 - t_2) = \Phi(t_1)\Phi^{-1}(t_2)$
 4. $\frac{d}{dt}\Phi(t) = \mathbf{A}\Phi(t)$
 
-When working with state transition matrix, don't forget how matrix multiplcation works: the rightmost matrix is the one that gets multiplied first: ABC means A(B(C)).
+PS: Matrix multiplication is associative ($\mathbf{A}\mathbf{B}\mathbf{C} = (\mathbf{A}\mathbf{B})\mathbf{C} = \mathbf{A}(\mathbf{B}\mathbf{C})$) but not commutative ($\mathbf{A}\mathbf{B} \ne \mathbf{B}\mathbf{A}$ in general). Even though it's associative, in many fields the rightmost matrix "acts first", so we usually multiply from right to left.
 
 ## 4. Nonhomogeneous Solution
 
