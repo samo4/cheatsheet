@@ -56,7 +56,7 @@ $$\dot{\vec{x}} = \mathbf{A}\vec{x}$$
 
 with initial condition $\vec{x}(0) = \vec{x}_0$ is a linear ODE. The solution can be expressed in terms of the matrix exponential:
 
-For the trivial case of homogeneous equations (homogeneous: no input, $\vec{u} = 0$), let's try solving it with scalars first:
+For the trivial case of homogeneous equations (homogeneous: no input, $\vec{u} = \vec{0}$), let's try solving it with scalars first:
 
 $$
 \dot{x} = a x
@@ -85,7 +85,7 @@ $$
 
 Where the last part is the solution of scalar homogeneous ODE. The solution of the vector case is a straightforward generalization.
 
-By the analogy with the scalar case, we can try the same exponential solution for the vector case $\dot{\vec{x}} = \mathbf{A}\vec{x}$ (still homogeneous, $\vec{u} = 0$). Try the same exponential:
+By the analogy with the scalar case, we can try the same exponential solution for the vector case $\dot{\vec{x}} = \mathbf{A}\vec{x}$ (still homogeneous, $\vec{u} = \vec{0}$). Try the same exponential:
 
 
 $$
@@ -393,6 +393,36 @@ $$
 
 which (shockingly, I know!) matches the Taylor result.
 
+Now let's do something useful with $\Phi$: **the step response**.
+
+Take zero initial state $\vec{x}(0) = \vec{0}$, a step input $u(t) = 5$ (constant for $t \ge 0$), and $\mathbf{B}^{\mathsf{T}} = \left[1\ 0\right]$. The homogeneous term in the boxed solution of Section 4 dies, leaving the forced convolution:
+
+$$
+\vec{x}(t) = \int_0^t \underbrace{e^{\mathbf{A}(t-\tau)}}_{\Phi(t-\tau)}\,\mathbf{B}\,u(\tau)\,d\tau = e^{\mathbf{A}t}\int_0^t e^{-\mathbf{A}\tau}\,\mathbf{B}\,u(\tau)\,d\tau = 5\,e^{\mathbf{A}t}\int_0^t e^{-\mathbf{A}\tau}\,\mathbf{B}\,d\tau
+$$
+
+Splitting the exponential as $e^{\mathbf{A}(t-\tau)} = e^{\mathbf{A}t}e^{-\mathbf{A}\tau}$, the $\tau$-independent factor $e^{\mathbf{A}t}$ steps out of the integral, and the constant step $u = 5$ follows it out. Writing out the two matrix exponentials — $e^{\mathbf{A}t} = \Phi(t)$ outside, $e^{-\mathbf{A}\tau} = \Phi(-\tau)$ inside — the input vector $\mathbf{B}$ picks out the first column:
+
+$$
+\vec{x}(t) = 5 \underbrace{\begin{bmatrix} e^{-2t} & 0 \\ e^{-t} - e^{-2t} & e^{-t} \end{bmatrix}}_{\Phi(t)} \int_0^t \underbrace{\begin{bmatrix} e^{2\tau} & 0 \\ e^{\tau} - e^{2\tau} & e^{\tau} \end{bmatrix}}_{\Phi(-\tau)} \begin{bmatrix} 1 \\ 0 \end{bmatrix}d\tau
+$$
+
+Integrating entry by entry — $\int_0^t e^{a\tau}d\tau = \frac{e^{at}-1}{a}$ — the inner exponential dotted with $\mathbf{B}$ gives
+
+$$
+\int_0^t e^{-\mathbf{A}\tau}\,\mathbf{B}\,d\tau = \int_0^t \begin{bmatrix} e^{2\tau} \\[2pt] e^{\tau} - e^{2\tau} \end{bmatrix}d\tau = \begin{bmatrix} \frac{e^{2t}-1}{2} \\[2pt] (e^{t}-1) - \frac{e^{2t}-1}{2} \end{bmatrix}
+$$
+
+and multiplying the $5e^{\mathbf{A}t}$ back in front:
+
+$$
+\vec{x}(t) = 5 \begin{bmatrix} e^{-2t} & 0 \\ e^{-t} - e^{-2t} & e^{-t} \end{bmatrix}\begin{bmatrix} \frac{e^{2t}-1}{2} \\[2pt] (e^{t}-1) - \frac{e^{2t}-1}{2} \end{bmatrix}
+$$
+
+$$
+= \frac{5}{2}\begin{bmatrix} 1 - e^{-2t} \\[2pt] 1 - 2e^{-t} + e^{-2t} \end{bmatrix}
+$$
+
 ```{=latex}
 \end{example}
 ```
@@ -415,23 +445,23 @@ $$
 e^{\mathbf{A}t} = \mathbf{I} + t\mathbf{A} + \frac{t^2}{2!}\mathbf{A}^2 + \frac{t^3}{3!}\mathbf{A}^3 + \dots = \begin{bmatrix} e^{d_1 t} & & \\ & \ddots & \\ & & e^{d_n t} \end{bmatrix} = \begin{bmatrix} \Phi_{11} & & \\ & \ddots & \\ & & \Phi_{nn} \end{bmatrix}
 $$
 
-i.e. entrywise $\Phi_{nn}(t) = \sum_{k=0}^{\infty} \frac{(d_n t)^k}{k!} = e^{d_n t}$.
+If diagonal matrices are so nice, how do we make one? Let's make a detour through eigenvalues and eigenvectors.
 
-#### Eigenvalues
+#### Eigenvalues and eigenvectors
 
-Let's go on a little tangent and see how to diagonalize a matrix. The eigenvalues of $\mathbf{A}$ are the scalars $\lambda$ for which
+The eigenvalues\footnote{D.Hilbert gave us the nice german name "Eigenwert" for eigenvalue} of $\mathbf{A}$ are the scalars $\lambda$ for which
 
 $$
 \mathbf{A}\vec{v} = \lambda\vec{v}
 $$
 
-has a nonzero solution $\vec{v} \ne 0$ — the eigenvector. Geometrically, $\mathbf{A}$ just stretches $\vec{v}$ by $\lambda$ without rotating it. Rearranging gives $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = 0$, which has a nontrivial solution iff the matrix is singular, i.e.
+has a nonzero solution $\vec{v} \ne 0$ — the eigenvector. Geometrically, $\mathbf{A}$ just stretches $\vec{v}$ by $\lambda$ without rotating it. Rearranging gives $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$, which has a nontrivial solution iff the matrix is singular, i.e.
 
 $$
 \det(\mathbf{A} - \lambda\mathbf{I}) = 0
 $$
 
-So eigenvalues are the roots of the characteristic polynomial $\det(\mathbf{A} - \lambda\mathbf{I})$. For an $n \times n$ matrix this is a polynomial of degree $n$, so by the fundamental theorem of algebra there are $n$ eigenvalues counting multiplicity. Each eigenvalue carries two numbers:
+Eigenvalues are the roots of the characteristic polynomial $\det(\mathbf{A} - \lambda\mathbf{I})$. For an $n \times n$ matrix this is a polynomial of degree $n$, so by the fundamental theorem of algebra there are $n$ eigenvalues counting multiplicity. Each eigenvalue carries two numbers:
 
 - **Algebraic** multiplicity $m_{a,i}$ — how many times $\lambda_i$ occurs as a root of the characteristic polynomial. These sum to the matrix dimension: $\sum_i m_{a,i} = n$.
 - **Geometric** multiplicity $m_{g,i}$ — the dimension of the eigenspace $\ker(\mathbf{A} - \lambda_i\mathbf{I})$, i.e. the number of linearly independent eigenvectors belonging to $\lambda_i$. Computed as the nullity $m_{g,i} = n - \operatorname{rank}(\mathbf{A} - \lambda_i\mathbf{I})$.
@@ -440,8 +470,10 @@ They are always related by $1 \le m_{g,i} \le m_{a,i}$. The gap $m_{a,i} - m_{g,
 
 In practice:
 
-1. Solve $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$ for the eigenvalues — factor the polynomial, use the quadratic formula for $2\times 2$, or numerical methods for larger matrices.
-2. For each $\lambda_i$, solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = 0$; the number of free parameters in the solution is $m_{g,i}$.
+1. Solve $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$ for the eigenvalues.
+2. For each $\lambda_i$, solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$; the number of free parameters in the solution is $m_{g,i}$.
+
+**Watch out for linear dependence.** Since $\lambda_i$ *is* an eigenvalue, the matrix $(\mathbf{A} - \lambda_i\mathbf{I})$ is singular by construction — its rows are linearly dependent. So when you solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$, don't be alarmed that one row turns out to be a multiple of another, or that a row is all zeros: that's exactly what should happen. Only the independent equations carry information — their number is the rank, and the leftover free variables are precisely the geometric multiplicity $m_{g,i}$.
 
 $\mathbf{A}$ is diagonalizable iff $m_{g,i} = m_{a,i}$ for every $i$. This is always the case when all eigenvalues are distinct, since then $m_{g,i} = m_{a,i} = 1$.
 
@@ -457,29 +489,39 @@ $$
 \det(\mathbf{A} - \lambda\mathbf{I}) = \begin{vmatrix} 1-\lambda & 0 & 0 \\ 0 & 2-\lambda & 1 \\ 0 & 0 & 2-\lambda \end{vmatrix} = (1-\lambda)(2-\lambda)^2 = 0
 $$
 
-so $\lambda_1 = 1$ with $\alpha_1 = 1$, and $\lambda_2 = 2$ with $\alpha_2 = 2$.
+so $\lambda_1 = 1$ with $m_{a,1} = 1$, and $\lambda_2 = 2$ with $m_{a,2} = 2$.
 
-For $\lambda_1 = 1$, solve $(\mathbf{A} - \mathbf{I})\vec{v} = 0$:
+For $\lambda_1 = 1$, solve $(\mathbf{A} - \mathbf{I})\vec{v} = \vec{0}$:
 
 $$
-\begin{bmatrix} 0 & 0 & 0 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix}\vec{v} = 0
+(\mathbf{A} - \mathbf{I}) = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+The first row vanished entirely — the eigenvalue knocked out the $(1,1)$ diagonal entry and there's nothing else in that row, so it contributes no equation. The other two rows are independent (each has a pivot), so the rank is $2$ and exactly one variable is free: $m_{g,1} = 3 - 2 = 1 = m_{a,1}$.
+
+The surviving equations are $v_2 + v_3 = 0$ and $v_3 = 0$, which force $v_3 = 0$ and $v_2 = 0$ while leaving $v_1$ free:
+
+$$
+v_2 + v_3 = 0,\ v_3 = 0
 \quad\Longrightarrow\quad
 v_3 = 0,\ v_2 = 0,\ v_1 \text{ free}
 \quad\Longrightarrow\quad
 \vec{v}_1 = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}
 $$
 
-For $\lambda_2 = 2$, solve $(\mathbf{A} - 2\mathbf{I})\vec{v} = 0$:
+As always, any scalar multiple of $\vec{v}_1$ is also an eigenvector — the eigenspace is the whole line through $\vec{v_1}$.
+
+For $\lambda_2 = 2$, solve $(\mathbf{A} - 2\mathbf{I})\vec{v} = \vec{0}$:
 
 $$
-\begin{bmatrix} -1 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix}\vec{v} = 0
+\begin{bmatrix} -1 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix}\vec{v} = \vec{0}
 \quad\Longrightarrow\quad
 v_1 = 0,\ v_3 = 0,\ v_2 \text{ free}
 \quad\Longrightarrow\quad
 \vec{v}_2 = \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}
 $$
 
-Here $\gamma_2 = 1 < \alpha_2 = 2$: only two linearly independent eigenvectors exist, so $\mathbf{A}$ is defective and **not** diagonalizable.
+Here $m_{g,2} = 1 < m_{a,2} = 2$: only two linearly independent eigenvectors exist, so $\mathbf{A}$ is defective and **not** diagonalizable.
 
 ```{=latex}
 \end{example}
@@ -487,21 +529,32 @@ Here $\gamma_2 = 1 < \alpha_2 = 2$: only two linearly independent eigenvectors e
 
 #### Diagonalization
 
-When $m_{g,i} = m_{a,i}$ for every eigenvalue, there are exactly $n$ linearly independent eigenvectors $\vec{v}_1, \dots, \vec{v}_n$. Stack them as columns:
+And now back where we're really going: how to reorganize our matrix into a diagonal form. When $m_{g,i} = m_{a,i}$ for every eigenvalue, there are exactly $n$ linearly independent eigenvectors $\vec{v}_1, \dots, \vec{v}_n$. Stack them as columns:
 
 $$
 \mathbf{V} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}
 $$
 
-Each eigenpair satisfies $\mathbf{A}\vec{v}_i = \lambda_i \vec{v}_i$, so all of them at once read
+Each eigenpair satisfies $\mathbf{A}\vec{v}_i = \lambda_i \vec{v}_i$, so stacking the $n$ equations side by side lets $\mathbf{A}$ act on every column at once:
 
 $$
-\mathbf{A}\mathbf{V} = \mathbf{V}\boldsymbol{\Lambda}, \qquad
-\boldsymbol{\Lambda} = \begin{bmatrix}
+\mathbf{A} \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix} = \begin{bmatrix} \lambda_1\vec{v}_1 & \lambda_2\vec{v}_2 & \cdots & \lambda_n\vec{v}_n \end{bmatrix}
+$$
+
+The scaled columns on the right are just the original ones times the diagonal eigenvalue matrix $\boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)$:
+
+$$
+= \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}\begin{bmatrix}
 \lambda_1 & & \\
 & \ddots & \\
 & & \lambda_n
 \end{bmatrix}
+$$
+
+So, writing $\mathbf{V}$ for the stacked matrix, this is exactly
+
+$$
+\mathbf{A}\mathbf{V} = \mathbf{V}\boldsymbol{\Lambda}
 $$
 
 Independence makes $\mathbf{V}$ invertible, so multiplying by $\mathbf{V}^{-1}$ from the right gives the factorization
@@ -510,11 +563,35 @@ $$
 \mathbf{A} = \mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}
 $$
 
-This is the whole trick: $\mathbf{A}$ is just a diagonal matrix in a different basis. Powers pass through the same similarity ($\mathbf{A}^k = \mathbf{V}\boldsymbol{\Lambda}^k\mathbf{V}^{-1}$), so the Taylor series telescopes into
+The order of the columns is your choice — each eigenvalue on the diagonal of $\boldsymbol{\Lambda}$ just has to follow its own eigenvector. Swapping two columns of $\mathbf{V}$ (and the matching eigenvalues) flips the sign of $\det\mathbf{V}$ but leaves $\mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}$, and hence $\Phi(t)$, identical. Only $\det\mathbf{V} \ne 0$ really matters.
+
+This is the whole trick: $\mathbf{A}$ is just a diagonal matrix in a different basis. Powers pass through the same similarity — the inner $\mathbf{V}^{-1}\mathbf{V}$ pairs cancel, like a telescope:
 
 $$
-e^{\mathbf{A}t} = \sum_{k=0}^{\infty} \frac{(\mathbf{A}t)^k}{k!}
-= \mathbf{V} \left( \sum_{k=0}^{\infty} \frac{(\boldsymbol{\Lambda}t)^k}{k!} \right) \mathbf{V}^{-1}
+\mathbf{A}^2 = \mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}\,\mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}
+= \mathbf{V}\boldsymbol{\Lambda}\,(\mathbf{V}^{-1}\mathbf{V})\,\boldsymbol{\Lambda}\mathbf{V}^{-1}
+= \mathbf{V}\boldsymbol{\Lambda}^2\mathbf{V}^{-1}
+$$
+
+$$
+\mathbf{A}^k = \mathbf{V}\boldsymbol{\Lambda}^k\mathbf{V}^{-1}
+$$
+
+so the Taylor series telescopes into
+
+$$
+e^{\mathbf{A}t} = \mathbf{I} + \mathbf{A}t + \frac{(\mathbf{A}t)^2}{2!} + \frac{(\mathbf{A}t)^3}{3!} + \dots
+$$
+
+$$
+= \mathbf{V}\mathbf{I}\mathbf{V}^{-1} + \mathbf{V}\boldsymbol{\Lambda}t\,\mathbf{V}^{-1} + \mathbf{V}\frac{(\boldsymbol{\Lambda}t)^2}{2!}\mathbf{V}^{-1} + \mathbf{V}\frac{(\boldsymbol{\Lambda}t)^3}{3!}\mathbf{V}^{-1} + \dots
+$$
+
+$$
+= \mathbf{V} \left( \mathbf{I} + \boldsymbol{\Lambda}t + \frac{(\boldsymbol{\Lambda}t)^2}{2!} + \frac{(\boldsymbol{\Lambda}t)^3}{3!} + \dots \right) \mathbf{V}^{-1}
+$$
+
+$$
 = \mathbf{V} e^{\boldsymbol{\Lambda}t} \mathbf{V}^{-1}
 $$
 
@@ -539,17 +616,37 @@ $}
 \begin{example}[frametitle={Example - obtaining $\Phi$ via diagonalization}]
 ```
 
-$\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$. The characteristic equation $\det(\mathbf{A} - \lambda\mathbf{I}) = (-2-\lambda)(-1-\lambda) = 0$ gives distinct eigenvalues $\lambda_1 = -2$, $\lambda_2 = -1$, so $m_{g,i} = m_{a,i} = 1$ and $\mathbf{A}$ is diagonalizable.
+$\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$. 
 
-Eigenvectors from $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v}_i = 0$, one eigenvalue at a time.
+The characteristic equation $\det(\mathbf{A} - \lambda\mathbf{I}) = (-2-\lambda)(-1-\lambda) = 0$ gives distinct eigenvalues $\lambda_1 = -2$, $\lambda_2 = -1$, so $m_{g,i} = m_{a,i} = 1$ and $\mathbf{A}$ is diagonalizable.
+
+We hunt for the eigenvectors from the condition
+
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}
+$}
+\endgroup
+\]
+```
+
+one eigenvalue at a time.
 
 For $\lambda_1 = -2$: $(\mathbf{A} - (-2)\mathbf{I}) = \mathbf{A} + 2\mathbf{I}$, so
 
 $$
-(\mathbf{A} + 2\mathbf{I}) = \begin{bmatrix} 0 & 0 \\ 1 & 1 \end{bmatrix}, \qquad
-\begin{bmatrix} 0 & 0 \\ 1 & 1 \end{bmatrix}\vec{v}_1 = 0
+(\mathbf{A} + 2\mathbf{I}) = \begin{bmatrix} 0 & 0 \\ 1 & 1 \end{bmatrix}
+$$
+
+The first row vanished — $\lambda = -2$ zeroed the $(1,1)$ diagonal entry and the $(1,2)$ entry was already $0$ — so the rank is $1$ and one variable is free. The one surviving equation, $v_1 + v_2 = 0$, forces $v_2 = -v_1$:
+
+$$
+\begin{bmatrix} 0 & 0 \\ 1 & 1 \end{bmatrix}\vec{v}_1 = \vec{0}
 \quad\Longrightarrow\quad
-v_1 + v_2 = 0,\ v_1 \text{ free}
+v_2 = -v_1,\ v_1 \text{ free}
 \quad\Longrightarrow\quad
 \vec{v}_1 = \begin{bmatrix} 1 \\ -1 \end{bmatrix}
 $$
@@ -557,20 +654,30 @@ $$
 For $\lambda_2 = -1$: $(\mathbf{A} - (-1)\mathbf{I}) = \mathbf{A} + \mathbf{I}$, so
 
 $$
-(\mathbf{A} + \mathbf{I}) = \begin{bmatrix} -1 & 0 \\ 1 & 0 \end{bmatrix}, \qquad
-\begin{bmatrix} -1 & 0 \\ 1 & 0 \end{bmatrix}\vec{v}_2 = 0
+(\mathbf{A} + \mathbf{I}) = \begin{bmatrix} -1 & 0 \\ 1 & 0 \end{bmatrix}
+$$
+
+The bottom row is $-1\times$ the top row, so the rank is $1$ again: the surviving equation $v_1 = 0$ pins down $v_1$ and leaves $v_2$ free:
+
+$$
+\begin{bmatrix} -1 & 0 \\ 1 & 0 \end{bmatrix}\vec{v}_2 = \vec{0}
 \quad\Longrightarrow\quad
 v_1 = 0,\ v_2 \text{ free}
 \quad\Longrightarrow\quad
 \vec{v}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}
 $$
 
-Assemble the pieces ($\det\mathbf{V} = 1$, so inversion is trivial):
+**Assemble the pieces.** The eigenvectors become the *columns* of $\mathbf{V}$, and the eigenvalues sit on the diagonal of $\boldsymbol{\Lambda}$ in the same order:
 
 $$
-\mathbf{V} = \begin{bmatrix} 1 & 0 \\ -1 & 1 \end{bmatrix}, \qquad
-\mathbf{V}^{-1} = \begin{bmatrix} 1 & 0 \\ 1 & 1 \end{bmatrix}, \qquad
-\boldsymbol{\Lambda} = \begin{bmatrix} -2 & 0 \\ 0 & -1 \end{bmatrix}
+\mathbf{V} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ -1 & 1 \end{bmatrix}, \qquad
+\boldsymbol{\Lambda} = \begin{bmatrix} \lambda_1 & 0 \\ 0 & \lambda_2 \end{bmatrix} = \begin{bmatrix} -2 & 0 \\ 0 & -1 \end{bmatrix}
+$$
+
+Last, $\mathbf{V}^{-1}$ by the $2\times2$ inverse formula:
+
+$$
+\mathbf{V}^{-1} = \frac{1}{\det\mathbf{V}}\begin{bmatrix} v_{22} & -v_{12} \\ -v_{21} & v_{11} \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ 1 & 1 \end{bmatrix}
 $$
 
 Putting it together,
@@ -582,6 +689,86 @@ $$
 $$
 
 which (surprise, surprise) matches the Taylor and Laplace results. 
+
+```{=latex}
+\end{example}
+```
+```{=latex}
+\begin{example}[frametitle={Example - obtaining $\Phi$ via diagonalization, 3×3}]
+```
+
+Let's do a bigger one, and keep our eyes on the prize: we're after $\Phi(t) = e^{\mathbf{A}t}$, with
+
+$$
+\mathbf{A} = \begin{bmatrix} 2 & 2 & 2 \\ 0 & 2 & 0 \\ 0 & 1 & 3 \end{bmatrix}
+$$
+
+**Step 1 — eigenvalues.** Expand the determinant along the first column:
+
+$$
+\det(\mathbf{A} - \lambda\mathbf{I}) = \begin{vmatrix} 2-\lambda & 2 & 2 \\ 0 & 2-\lambda & 0 \\ 0 & 1 & 3-\lambda \end{vmatrix} = (2-\lambda)\begin{vmatrix} 2-\lambda & 0 \\ 1 & 3-\lambda \end{vmatrix} = (2-\lambda)^2(3-\lambda) = 0
+$$
+
+so $\lambda_1 = 2$ with $m_{a,1} = 2$, and $\lambda_2 = 3$ with $m_{a,2} = 1$.
+
+**Step 2 — eigenvectors for $\lambda_1 = 2$.** Solve $(\mathbf{A} - 2\mathbf{I})\vec{v} = \vec{0}$:
+
+$$
+(\mathbf{A} - 2\mathbf{I}) = \begin{bmatrix} 0 & 2 & 2 \\ 0 & 0 & 0 \\ 0 & 1 & 1 \end{bmatrix}
+$$
+
+The first and last rows are proportional — the first is $2\times$ the last — and the middle row is all zeros. So every row is a multiple of $(0,1,1)$, the rank is $1$, and two parameters ($v_1$ and $v_3$) stay free:
+
+$$
+v_2 = -v_3,\ v_1 \text{ free}
+\quad\Longrightarrow\quad
+\vec{v}_1 = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix},\qquad
+\vec{v}_2 = \begin{bmatrix} 0 \\ -1 \\ 1 \end{bmatrix}
+$$
+
+Since $m_{g,1} = 2 = m_{a,1}$, the repeated eigenvalue still contributes two independent eigenvectors.
+
+**Step 3 — eigenvector for $\lambda_2 = 3$.** Solve $(\mathbf{A} - 3\mathbf{I})\vec{v} = \vec{0}$:
+
+$$
+(\mathbf{A} - 3\mathbf{I}) = \begin{bmatrix} -1 & 2 & 2 \\ 0 & -1 & 0 \\ 0 & 1 & 0 \end{bmatrix}
+$$
+
+Rows 2 and 3 are again dependent (each is the negative of the other), so the rank is $2$ and only $v_3$ is free:
+
+$$
+v_2 = 0,\ v_1 = 2v_3,\ v_3 \text{ free}
+\quad\Longrightarrow\quad
+\vec{v}_3 = \begin{bmatrix} 2 \\ 0 \\ 1 \end{bmatrix}
+$$
+
+Every eigenvalue has $m_{g,i} = m_{a,i}$, so $\mathbf{A}$ is diagonalizable.
+
+**Step 4 — assemble $\Phi(t)$.** Stack the eigenvectors as columns and read off $\boldsymbol{\Lambda}$:
+
+$$
+\mathbf{V} = \begin{bmatrix} 1 & 0 & 2 \\ 0 & -1 & 0 \\ 0 & 1 & 1 \end{bmatrix}, \qquad
+\boldsymbol{\Lambda} = \begin{bmatrix} 2 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 3 \end{bmatrix}
+$$
+
+$\det\mathbf{V} = -1$ (invertible), and the inverse is
+
+$$
+\mathbf{V}^{-1} = \begin{bmatrix} 1 & -2 & -2 \\ 0 & -1 & 0 \\ 0 & 1 & 1 \end{bmatrix}
+$$
+
+so
+
+$$
+\Phi(t) = e^{\mathbf{A}t} = \mathbf{V} e^{\boldsymbol{\Lambda}t} \mathbf{V}^{-1}
+= \begin{bmatrix} 1 & 0 & 2 \\ 0 & -1 & 0 \\ 0 & 1 & 1 \end{bmatrix}\begin{bmatrix} e^{2t} & 0 & 0 \\ 0 & e^{2t} & 0 \\ 0 & 0 & e^{3t} \end{bmatrix}\begin{bmatrix} 1 & -2 & -2 \\ 0 & -1 & 0 \\ 0 & 1 & 1 \end{bmatrix}
+$$
+
+$$
+= \begin{bmatrix} e^{2t} & 2(e^{3t}-e^{2t}) & 2(e^{3t}-e^{2t}) \\ 0 & e^{2t} & 0 \\ 0 & e^{3t}-e^{2t} & e^{3t} \end{bmatrix}
+$$
+
+Sanity check: $\Phi(0) = \mathbf{I}$, as it must.
 
 ```{=latex}
 \end{example}
