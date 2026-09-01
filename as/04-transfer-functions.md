@@ -220,7 +220,7 @@ $$
 \begin{bmatrix} y_1 \\ y_2 \end{bmatrix}
 = \begin{bmatrix} 1 & 1 \\ 1 & 0 \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}
 + \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}\begin{bmatrix} u_1 \\ u_2 \end{bmatrix}
-$$
+$$ 
 
 ```{=latex}
 \end{example}
