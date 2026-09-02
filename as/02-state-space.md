@@ -175,7 +175,88 @@ $$
 $$
 
 ```{=latex}
-\begin{example}[frametitle={Example - hanging mass on a spring}]
+\begin{example}[frametitle={Example - mass on a spring}]
+```
+Drop a weight on a spring with $v_0$. How will the weight move?
+
+The equation of motion is:
+
+$$m\ddot{x} = -kx - mg$$
+
+Introduce $v = \dot{x}$ and write it in state space:
+
+$$
+\begin{bmatrix} \dot{x} \\ \dot{v} \end{bmatrix}
+= \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & 0 \end{bmatrix}\begin{bmatrix} x \\ v \end{bmatrix}
++ \begin{bmatrix} 0 \\ -g \end{bmatrix}
+$$
+
+**Step 1 — $\Phi$ via Laplace.** $e^{\mathbf{A}t} = \mathcal{L}^{-1}\left\{(s\mathbf{I}-\mathbf{A})^{-1}\right\}$. Compute the resolvent in raw form:
+
+$$
+s\mathbf{I} - \mathbf{A} = \begin{bmatrix} s & -1 \\ \frac{k}{m} & s \end{bmatrix}, \qquad
+\det(s\mathbf{I} - \mathbf{A}) = s^2 + \frac{k}{m}
+$$
+
+So the determinant is $s^2$ plus *something*. The inverse Laplace of $\frac{1}{s^2 + a^2}$ rings at frequency $a$, so it would be very convenient if that something were a square. Introduce the natural frequency $\omega_0 = \sqrt{k/m}$, i.e. $\frac{k}{m} = \omega_0^2$, and
+
+$$
+(s\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{s^2 + \omega_0^2}\begin{bmatrix} s & 1 \\ -\omega_0^2 & s \end{bmatrix}
+$$
+
+Anti-Laplace entrywise, using $\frac{s}{s^2+\omega_0^2} \leftrightarrow \cos\omega_0 t$ and $\frac{\omega_0}{s^2+\omega_0^2} \leftrightarrow \sin\omega_0 t$:
+
+$$
+\Phi(t) = e^{\mathbf{A}t} = \begin{bmatrix} \cos\omega_0 t & \frac{1}{\omega_0}\sin\omega_0 t \\[2pt] -\omega_0\sin\omega_0 t & \cos\omega_0 t \end{bmatrix}
+$$
+
+**Step 2 — the $\tau$ trick.** Gravity is a constant input, $\mathbf{B}\vec{u} = \tvec{0,-g}$, so the boxed solution leaves a plain integral:
+
+$$
+\vec{x}(t) = \Phi(t)\vec{x}_0 + \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
+$$
+
+The integrand sees $t$ and $\tau$ only through $t-\tau$, so substitute $u = t-\tau$: as $\tau$ runs $0 \to t$, $u$ runs $t \to 0$, and the minus from $d\tau = -du$ flips the limits back to
+
+$$
+\int_0^t \Phi(t-\tau)\,d\tau = \int_0^t \Phi(u)\,du
+$$
+
+This is exactly the trick that only works because we start at $0$ — a nonzero lower limit $t_0$ would leave the shifted window $[t-t_0,\, t]$. With $\tau$ gone, what remains is an ordinary integral of $\Phi(u)\mathbf{B}$:
+
+$$
+\int_0^t \Phi(u)\mathbf{B}\,du = \int_0^t \begin{bmatrix} -\frac{g}{\omega_0}\sin\omega_0 u \\[2pt] -g\cos\omega_0 u \end{bmatrix}du
+= \begin{bmatrix} \frac{g}{\omega_0^2}(\cos\omega_0 t - 1) \\[2pt] -\frac{g}{\omega_0}\sin\omega_0 t \end{bmatrix}
+$$
+
+so the full motion is
+
+$$
+\vec{x}(t) = \Phi(t)\vec{x}_0 + \begin{bmatrix} \frac{g}{\omega_0^2}(\cos\omega_0 t - 1) \\[2pt] -\frac{g}{\omega_0}\sin\omega_0 t \end{bmatrix}
+$$
+
+**Step 3 — the homogeneous part, explicitly.** With the drop condition $\vec{x}_0 = \tvec{0,v_0}$, the first term is just $\Phi(t)$ acting on a pure kick:
+
+$$
+\Phi(t)\vec{x}_0 = \begin{bmatrix} \cos\omega_0 t & \frac{1}{\omega_0}\sin\omega_0 t \\[2pt] -\omega_0\sin\omega_0 t & \cos\omega_0 t \end{bmatrix}\begin{bmatrix} 0 \\ v_0 \end{bmatrix}
+= \begin{bmatrix} \frac{v_0}{\omega_0}\sin\omega_0 t \\[2pt] v_0\cos\omega_0 t \end{bmatrix}
+$$
+
+Adding the gravity response writes the whole motion out:
+
+$$
+\vec{x}(t) = \begin{bmatrix} \frac{v_0}{\omega_0}\sin\omega_0 t \\[2pt] v_0\cos\omega_0 t \end{bmatrix}
++ \begin{bmatrix} \frac{g}{\omega_0^2}(\cos\omega_0 t - 1) \\[2pt] -\frac{g}{\omega_0}\sin\omega_0 t \end{bmatrix}
+$$
+
+Sanity check at $t = 0$: $x(0) = 0$ (both position terms vanish) and $v(0) = v_0$ (only the homogeneous $\cos$ survives), just as dropped. The gravity piece makes the mass ring about the lowered point — its constant part $-\frac{g}{\omega_0^2} = -\frac{mg}{k}$ is the static stretch that balances the weight — while the $\frac{v_0}{\omega_0}\sin\omega_0 t$ term is the free oscillation of the initial kick superimposed on top.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
+\begin{example}[frametitle={Example - hanging mass on a spring with damper}]
 ```
 
 A mass $m$ hangs from the ceiling on a spring of constant $k$ with a damper of coefficient $b$. The equation of motion is
@@ -192,7 +273,7 @@ $$
 + \begin{bmatrix} 0 \\ -g \end{bmatrix}
 $$
 
-so $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}$, and the constant gravity term is the input, $\mathbf{B}\vec{u} = \begin{bmatrix} 0 \\ -g \end{bmatrix}$. This is the boxed solution above in action: build the kernel $\Phi(t) = e^{\mathbf{A}t}$, then run the convolution integral.
+The constant gravity term is the input, $\mathbf{B}\vec{u} = \tvec{0,-g}$. This is the boxed solution above in action: build the kernel $\Phi(t) = e^{\mathbf{A}t}$, then run the convolution integral.
 
 **Step 1 — $\Phi$ via Laplace.** $\det(s\mathbf{I} - \mathbf{A}) = s^2 + \frac{b}{m}s + \frac{k}{m}$, which we complete into a sum of squares:
 
@@ -249,7 +330,23 @@ $$
 = g\,e^{-\omega_0 t}\int_0^t \begin{bmatrix} (-t+\tau)e^{\omega_0\tau} \\[2pt] (\omega_0(t-\tau)-1)e^{\omega_0\tau} \end{bmatrix} d\tau
 $$
 
-Evaluating entry by entry (with $\int \tau e^{\omega_0\tau}d\tau = \frac{\tau}{\omega_0}e^{\omega_0\tau} - \frac{1}{\omega_0^2}e^{\omega_0\tau}$):
+Evaluating entry by entry — this is the alternative to the $\tau$ trick of the spring example: no substitution, we integrate in $\tau$ directly and watch each $\tau$ vanish. The $t$ inside the integrand is a *constant* as far as the $\tau$-integration is concerned, and a $\tau$ disappears only when its antiderivative is evaluated at the limits. First entry — using $\int \tau e^{\omega_0\tau}d\tau = \left(\frac{\tau}{\omega_0}-\frac{1}{\omega_0^2}\right)e^{\omega_0\tau}$:
+
+$$
+\int_0^t (-t+\tau)e^{\omega_0\tau}\,d\tau
+= \left[-\frac{t}{\omega_0}e^{\omega_0\tau} + \left(\frac{\tau}{\omega_0}-\frac{1}{\omega_0^2}\right)e^{\omega_0\tau}\right]_{0}^{t}
+= \frac{t}{\omega_0} - \frac{e^{\omega_0 t}-1}{\omega_0^2}
+$$
+
+Second entry — here the antiderivative is simply $(t-\tau)e^{\omega_0\tau}$, because its $\tau$-derivative is $(\omega_0(t-\tau)-1)e^{\omega_0\tau}$:
+
+$$
+\int_0^t \big(\omega_0(t-\tau)-1\big)e^{\omega_0\tau}\,d\tau
+= \Big[(t-\tau)e^{\omega_0\tau}\Big]_{0}^{t}
+= -t
+$$
+
+Assembling both rows under the common factor $g\,e^{-\omega_0 t}$:
 
 $$
 \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
