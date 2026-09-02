@@ -927,3 +927,112 @@ We have shown four ways to skin a cat, but at the end you still have the same de
 Cayley–Hamilton specifically will come in very handy when we'll talk about controllability and observability.
 
 In practice, the choice of method depends on the specific matrix $\mathbf{A}$ and the context of the problem.
+
+```{=latex}
+\begin{example}[frametitle={Example - diagonalization and Cayley–Hamilton on the same matrix}]
+```
+
+A quick one to watch both routes land on the same $\Phi(t)$:
+
+$$
+\mathbf{A} = \begin{bmatrix} -3 & 4 \\ 0 & -2 \end{bmatrix}
+$$
+
+Upper-triangular, so the eigenvalues sit right on the diagonal: $\lambda_1 = -3$, $\lambda_2 = -2$ — distinct, hence diagonalizable.
+
+**Diagonalization.** Eigenvectors from $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$, one eigenvalue at a time.
+
+For $\lambda_1 = -3$: $(\mathbf{A} + 3\mathbf{I})$ the surviving equation is $4v_2 = 0$ (row two says $v_2 = 0$, the same constraint), forcing $v_2 = 0$ with $v_1$ free $\vec{v}_1 = \tvec{1,0}$
+
+For $\lambda_2 = -2$: $(\mathbf{A} + 2\mathbf{I})$ leaves the single equation $-v_1 + 4v_2 = 0$, i.e. $v_1 = 4v_2$; picking $v_2 = 1$ gives $\vec{v}_2 = \tvec{4,1}$
+
+Then we assemble the vector matrix $\mathbf{V}$ and the diagonal eigenvalue matrix $\boldsymbol{\Lambda}$:
+
+$$
+\Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}
+= \begin{bmatrix} 1 & 4 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} e^{-3t} & 0 \\ 0 & e^{-2t} \end{bmatrix}\begin{bmatrix} 1 & -4 \\ 0 & 1 \end{bmatrix}
+= \begin{bmatrix} e^{-3t} & 4(e^{-2t}-e^{-3t}) \\ 0 & e^{-2t} \end{bmatrix}
+$$
+
+**Cayley–Hamilton.** Same $\mathbf{A}$. The characteristic polynomial $\det(\lambda\mathbf{I}-\mathbf{A}) = (\lambda+3)(\lambda+2) = \lambda^2 + 5\lambda + 6$ gives the degree-1 ansatz
+
+$$e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A}$$
+$$e^{\lambda t} = \alpha_0 + \alpha_1\lambda$$
+$$\lambda_1 = -3: \quad e^{-3t} = \alpha_0 - 3\alpha_1$$
+$$\lambda_2 = -2: \quad e^{-2t} = \alpha_0 - 2\alpha_1$$
+
+Subtracting the two equations gives $\alpha_1 = e^{-2t} - e^{-3t}$, and back-substitution yields $\alpha_0 = e^{-3t} + 3\alpha_1 = 3e^{-2t} - 2e^{-3t}$. Putting these back into the matrix form:
+
+$$
+\Phi(t) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}
+= \left(3e^{-2t} - 2e^{-3t}\right)\mathbf{I}
++ \left(e^{-2t}-e^{-3t}\right)\begin{bmatrix} -3 & 4 \\ 0 & -2 \end{bmatrix}
+= \begin{bmatrix} e^{-3t} & 4(e^{-2t}-e^{-3t}) \\ 0 & e^{-2t} \end{bmatrix}
+$$
+
+Identical to the diagonalization result — two routes, same $\Phi(t)$, and indeed $\Phi(0) = \mathbf{I}$.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
+\begin{example}[frametitle={Example - complex eigenvalues: $\Phi$ via Cayley–Hamilton and an impulse response}]
+```
+
+A two-parter that leans on complex eigenvalues (so the state spirals) and an impulse input:
+
+$$
+\begin{bmatrix} \dot{x}_1 \\ \dot{x}_2 \end{bmatrix}
+= \begin{bmatrix} -1 & -1 \\ 1 & -1 \end{bmatrix}\vec{x}
++ \begin{bmatrix} 1 \\ 0 \end{bmatrix}u
+$$
+
+**(a) $\Phi$ via Cayley–Hamilton.** The characteristic polynomial,
+
+$$
+\det(\lambda\mathbf{I} - \mathbf{A})
+= \begin{vmatrix} \lambda+1 & 1 \\ -1 & \lambda+1 \end{vmatrix}
+= (\lambda+1)^2 + 1 = \lambda^2 + 2\lambda + 2
+$$
+
+after you apply quadratic formula you get conjugate pair solution $\lambda = -1 \pm i$ — the $\pm i$. Cayley–Hamilton doesn't care: $\mathbf{A}^2 + 2\mathbf{A} + 2\mathbf{I} = \mathbf{0}$, so with $n = 2$
+
+$$e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A}$$
+$$e^{\lambda t} = \alpha_0 + \alpha_1\lambda$$
+
+Evaluate at $\lambda = -1 + i$ (the conjugate root merely conjugates the same equations). By Euler, $e^{(-1+i)t} = e^{-t}(\cos t + i\sin t)$, so splitting $\alpha_0 + \alpha_1(-1+i)$ into real and imaginary parts:
+
+$$e^{-t}\cos t = \alpha_0 - \alpha_1$$
+$$e^{-t}\sin t = \alpha_1$$
+
+hence $\alpha_1 = e^{-t}\sin t$ and $\alpha_0 = e^{-t}(\cos t + \sin t)$. Reassembling entrywise:
+
+$$
+\Phi(t) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}
+= e^{-t}\begin{bmatrix} \cos t & -\sin t \\ \sin t & \cos t \end{bmatrix}
+$$
+
+the state transition matrix is $e^{-t}$ times a rotation: it spins the state while pulling it toward the origin — a decaying spiral. Sanity check: $\Phi(0) = \mathbf{I}$.
+
+**(b) Impulse response.** Take $\vec{x}(0) = \tvec{1,1}$ and $u(t) = \delta(t)$. The nonhomogeneous solution
+
+$$
+\vec{x}(t) = \Phi(t)\vec{x}(0) + \int_0^t \Phi(t-\tau)\mathbf{B}\,u(\tau)\,d\tau
+$$
+
+collapses under the sifting property: the $\delta$ at $\tau = 0$ pulls $\Phi(t)\mathbf{B}$ out of the integral — physically, the impulse at $t = 0$ jumps the state by $\mathbf{B}$, so the motion is free from $\vec{x}(0) + \mathbf{B}$:
+
+$$
+\vec{x}(t) = \Phi(t)\big(\vec{x}(0) + \mathbf{B}\big)
+= e^{-t}\begin{bmatrix} \cos t & -\sin t \\ \sin t & \cos t \end{bmatrix}\left(\begin{bmatrix} 1 \\ 1 \end{bmatrix} + \begin{bmatrix} 1 \\ 0 \end{bmatrix}\right)
+$$
+
+$$
+= e^{-t}\begin{bmatrix} \cos t & -\sin t \\ \sin t & \cos t \end{bmatrix}\begin{bmatrix} 2 \\ 1 \end{bmatrix}
+= e^{-t}\begin{bmatrix} 2\cos t - \sin t \\ 2\sin t + \cos t \end{bmatrix}
+$$
+
+```{=latex}
+\end{example}
+```
