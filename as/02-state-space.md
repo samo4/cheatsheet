@@ -1,6 +1,6 @@
 # State-space
 
-## 1. State-space variables and equations
+## State-space variables and equations
 
 A system is captured by its state — the smallest set of variables that fully summarizes its past — plus how that state evolves and how it shapes the outputs. State variables are usually chosen as directly measurable or physically meaningful quantities: in electrical circuits the inductor currents and capacitor voltages, in mechanical systems the displacements and velocities. MIMO (multiple-input, multiple-output) systems bundle this into one picture, with the state vector living inside the system:
 
@@ -121,7 +121,7 @@ State transition matrix has the following properties:
 
 PS: Matrix multiplication is associative ($\mathbf{A}\mathbf{B}\mathbf{C} = (\mathbf{A}\mathbf{B})\mathbf{C} = \mathbf{A}(\mathbf{B}\mathbf{C})$) but not commutative ($\mathbf{A}\mathbf{B} \ne \mathbf{B}\mathbf{A}$ in general). Even though it's associative, in many fields the rightmost matrix "acts first", so we usually multiply from right to left.
 
-## 4. Nonhomogeneous Solution
+## Nonhomogeneous Solution
 
 $$
 \dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}, \qquad \vec{x}(t_0) = \vec{x}_0
@@ -191,29 +191,46 @@ $$
 + \begin{bmatrix} 0 \\ -g \end{bmatrix}
 $$
 
-**Step 1 — $\Phi$ via Laplace.** $e^{\mathbf{A}t} = \mathcal{L}^{-1}\left\{(s\mathbf{I}-\mathbf{A})^{-1}\right\}$. Compute the resolvent in raw form:
+**Step 1 — $\Phi$ by the defining series.** At this point the only tool for a concrete $\Phi$ is Taylor series\footnote{The same $\Phi$ drops out faster through Laplace, $\mathcal{L}^{-1}\{(s\mathbf{I}-\mathbf{A})^{-1}\}$ — an identity we derive in Section 5, where the hanging-mass example works exactly that route.} Compute the first powers:
 
 $$
-s\mathbf{I} - \mathbf{A} = \begin{bmatrix} s & -1 \\ \frac{k}{m} & s \end{bmatrix}, \qquad
-\det(s\mathbf{I} - \mathbf{A}) = s^2 + \frac{k}{m}
+\mathbf{A}^2 = \mathbf{A}\mathbf{A} = \begin{bmatrix} -\frac{k}{m} & 0 \\ 0 & -\frac{k}{m} \end{bmatrix} = -\frac{k}{m}\mathbf{I}
 $$
 
-So the determinant is $s^2$ plus *something*. The inverse Laplace of $\frac{1}{s^2 + a^2}$ rings at frequency $a$, so it would be very convenient if that something were a square. Introduce the natural frequency $\omega_0 = \sqrt{k/m}$, i.e. $\frac{k}{m} = \omega_0^2$, and
+$\mathbf{A}^2$ came out a scalar matrix — a multiple of the identity. For reasons that will be apparent soon, it would be very convenient to introduce a new variable $\omega_0 = \sqrt{k/m}$. Grouping even and odd powers in the series:
 
 $$
-(s\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{s^2 + \omega_0^2}\begin{bmatrix} s & 1 \\ -\omega_0^2 & s \end{bmatrix}
+\Phi(t) = e^{\mathbf{A}t}
+= \mathbf{I}\left(1 - \omega_0^2\frac{t^2}{2!} + \omega_0^4\frac{t^4}{4!} - \cdots\right)
+ + \mathbf{A}\left(t - \omega_0^2\frac{t^3}{3!} + \omega_0^4\frac{t^5}{5!} - \cdots\right)
 $$
 
-Anti-Laplace entrywise, using $\frac{s}{s^2+\omega_0^2} \leftrightarrow \cos\omega_0 t$ and $\frac{\omega_0}{s^2+\omega_0^2} \leftrightarrow \sin\omega_0 t$:
+The two brackets are now recognizable: they are the $\cos$ and $\sin$ series with argument $\omega_0 t$. The brackets close:
 
 $$
-\Phi(t) = e^{\mathbf{A}t} = \begin{bmatrix} \cos\omega_0 t & \frac{1}{\omega_0}\sin\omega_0 t \\[2pt] -\omega_0\sin\omega_0 t & \cos\omega_0 t \end{bmatrix}
+\Phi(t) = e^{\mathbf{A}t} = \mathbf{I}\cos\omega_0 t + \mathbf{A}\,\frac{\sin\omega_0 t}{\omega_0}
+= \begin{bmatrix} \cos\omega_0 t & \frac{1}{\omega_0}\sin\omega_0 t \\[2pt] -\omega_0\sin\omega_0 t & \cos\omega_0 t \end{bmatrix}
 $$
 
-**Step 2 — the $\tau$ trick.** Gravity is a constant input, $\mathbf{B}\vec{u} = \tvec{0,-g}$, so the boxed solution leaves a plain integral:
+**Step 2 — the homogeneous part first (the easy one).** The boxed solution is a sum,
 
 $$
 \vec{x}(t) = \Phi(t)\vec{x}_0 + \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
+$$
+
+and the first term needs no integration — just a matrix multiply. With the drop condition $\vec{x}_0 = \tvec{0,v_0}$:
+
+$$
+\Phi(t)\vec{x}_0 = \begin{bmatrix} \cos\omega_0 t & \frac{1}{\omega_0}\sin\omega_0 t \\[2pt] -\omega_0\sin\omega_0 t & \cos\omega_0 t \end{bmatrix}\begin{bmatrix} 0 \\ v_0 \end{bmatrix}
+= \begin{bmatrix} \frac{v_0}{\omega_0}\sin\omega_0 t \\[2pt] v_0\cos\omega_0 t \end{bmatrix}
+$$
+
+That is the whole homogeneous response: the free ring of the initial kick, starting at $x = 0$ with speed $v_0$ and oscillating forever (no damping yet).
+
+**Step 3 — the forced part: gravity, via the $\tau$ trick.** The homogeneous piece is done; the input term remains. Gravity is a constant input, $\mathbf{B}\vec{u} = \tvec{0,-g}$, so the forced integral is
+
+$$
+\int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
 $$
 
 The integrand sees $t$ and $\tau$ only through $t-\tau$, so substitute $u = t-\tau$: as $\tau$ runs $0 \to t$, $u$ runs $t \to 0$, and the minus from $d\tau = -du$ flips the limits back to
@@ -229,20 +246,7 @@ $$
 = \begin{bmatrix} \frac{g}{\omega_0^2}(\cos\omega_0 t - 1) \\[2pt] -\frac{g}{\omega_0}\sin\omega_0 t \end{bmatrix}
 $$
 
-so the full motion is
-
-$$
-\vec{x}(t) = \Phi(t)\vec{x}_0 + \begin{bmatrix} \frac{g}{\omega_0^2}(\cos\omega_0 t - 1) \\[2pt] -\frac{g}{\omega_0}\sin\omega_0 t \end{bmatrix}
-$$
-
-**Step 3 — the homogeneous part, explicitly.** With the drop condition $\vec{x}_0 = \tvec{0,v_0}$, the first term is just $\Phi(t)$ acting on a pure kick:
-
-$$
-\Phi(t)\vec{x}_0 = \begin{bmatrix} \cos\omega_0 t & \frac{1}{\omega_0}\sin\omega_0 t \\[2pt] -\omega_0\sin\omega_0 t & \cos\omega_0 t \end{bmatrix}\begin{bmatrix} 0 \\ v_0 \end{bmatrix}
-= \begin{bmatrix} \frac{v_0}{\omega_0}\sin\omega_0 t \\[2pt] v_0\cos\omega_0 t \end{bmatrix}
-$$
-
-Adding the gravity response writes the whole motion out:
+**Putting it together** — the full motion is the sum of the two pieces:
 
 $$
 \vec{x}(t) = \begin{bmatrix} \frac{v_0}{\omega_0}\sin\omega_0 t \\[2pt] v_0\cos\omega_0 t \end{bmatrix}
@@ -255,115 +259,7 @@ Sanity check at $t = 0$: $x(0) = 0$ (both position terms vanish) and $v(0) = v_0
 \end{example}
 ```
 
-```{=latex}
-\begin{example}[frametitle={Example - hanging mass on a spring with damper}]
-```
-
-A mass $m$ hangs from the ceiling on a spring of constant $k$ with a damper of coefficient $b$. The equation of motion is
-
-$$
-m\ddot{x} = -kx - b\dot{x} - mg
-$$
-
-Introduce $v = \dot{x}$ and write it as a first-order system:
-
-$$
-\begin{bmatrix} \dot{x} \\ \dot{v} \end{bmatrix}
-= \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\begin{bmatrix} x \\ v \end{bmatrix}
-+ \begin{bmatrix} 0 \\ -g \end{bmatrix}
-$$
-
-The constant gravity term is the input, $\mathbf{B}\vec{u} = \tvec{0,-g}$. This is the boxed solution above in action: build the kernel $\Phi(t) = e^{\mathbf{A}t}$, then run the convolution integral.
-
-**Step 1 — $\Phi$ via Laplace.** $\det(s\mathbf{I} - \mathbf{A}) = s^2 + \frac{b}{m}s + \frac{k}{m}$, which we complete into a sum of squares:
-
-$$
-s^2 + \frac{b}{m}s + \frac{k}{m}
-= \left(s + \frac{b}{2m}\right)^2 + \frac{k}{m}\left(1 - \frac{b^2}{4km}\right)
-$$
-
-Define the natural frequency and damping ratio,
-
-$$
-\omega_0 = \sqrt{\frac{k}{m}}, \qquad
-\zeta = \frac{b}{2\sqrt{km}} = \frac{b}{2m\omega_0}
-$$
-
-so $\frac{b}{m} = 2\zeta\omega_0$ and $\frac{k}{m} = \omega_0^2$, and the determinant takes the classic second-order form, which completes into a sum of squares:
-
-$$
-\det(s\mathbf{I} - \mathbf{A}) = s^2 + 2\zeta\omega_0 s + \omega_0^2
-= (s + \zeta\omega_0)^2 + \omega_0^2(1-\zeta^2)
-$$
-
-Take the **critically damped case $\zeta = 1$** (damper tuned so $b = 2\sqrt{km}$): then $\omega_d = \omega_0\sqrt{1-\zeta^2} = 0$, the two poles collide at $s = -\omega_0$, and the resolvent is
-
-$$
-(s\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{(s + \omega_0)^2}\begin{bmatrix} s + 2\omega_0 & 1 \\[2pt] -\omega_0^2 & s \end{bmatrix}
-$$
-
-Inverting with the double-pole pairs $\frac{1}{(s+\omega_0)^2} \leftrightarrow t e^{-\omega_0 t}$ and $\frac{s}{(s+\omega_0)^2} \leftrightarrow (1 - \omega_0 t)e^{-\omega_0 t}$ leaves only exponentials:
-
-$$
-\Phi(t) = e^{\mathbf{A}t} = e^{-\omega_0 t}\begin{bmatrix}
-1 + \omega_0 t & t \\[2pt]
--\omega_0^2 t & 1 - \omega_0 t
-\end{bmatrix}
-$$
-
-**Step 2 — solve the state equation.** Plug $\Phi$ into the boxed nonhomogeneous solution above ($t_0 = 0$, $\vec{u} = 1$, $\mathbf{B} = [0, -g]^T$):
-
-$$
-\vec{x}(t) = \Phi(t)\vec{x}_0 + \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
-$$
-
-With the critical $\Phi$, the kernel dotted with the input is
-
-$$
-\Phi(t-\tau)\mathbf{B} = g\,e^{-\omega_0(t-\tau)}\begin{bmatrix} -(t-\tau) \\[2pt] \omega_0(t-\tau) - 1 \end{bmatrix}
-$$
-
-so the gravity term reads
-
-$$
-\int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
-= g\,e^{-\omega_0 t}\int_0^t \begin{bmatrix} (-t+\tau)e^{\omega_0\tau} \\[2pt] (\omega_0(t-\tau)-1)e^{\omega_0\tau} \end{bmatrix} d\tau
-$$
-
-Evaluating entry by entry — this is the alternative to the $\tau$ trick of the spring example: no substitution, we integrate in $\tau$ directly and watch each $\tau$ vanish. The $t$ inside the integrand is a *constant* as far as the $\tau$-integration is concerned, and a $\tau$ disappears only when its antiderivative is evaluated at the limits. First entry — using $\int \tau e^{\omega_0\tau}d\tau = \left(\frac{\tau}{\omega_0}-\frac{1}{\omega_0^2}\right)e^{\omega_0\tau}$:
-
-$$
-\int_0^t (-t+\tau)e^{\omega_0\tau}\,d\tau
-= \left[-\frac{t}{\omega_0}e^{\omega_0\tau} + \left(\frac{\tau}{\omega_0}-\frac{1}{\omega_0^2}\right)e^{\omega_0\tau}\right]_{0}^{t}
-= \frac{t}{\omega_0} - \frac{e^{\omega_0 t}-1}{\omega_0^2}
-$$
-
-Second entry — here the antiderivative is simply $(t-\tau)e^{\omega_0\tau}$, because its $\tau$-derivative is $(\omega_0(t-\tau)-1)e^{\omega_0\tau}$:
-
-$$
-\int_0^t \big(\omega_0(t-\tau)-1\big)e^{\omega_0\tau}\,d\tau
-= \Big[(t-\tau)e^{\omega_0\tau}\Big]_{0}^{t}
-= -t
-$$
-
-Assembling both rows under the common factor $g\,e^{-\omega_0 t}$:
-
-$$
-\int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
-= e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0}t - \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) \\[2pt] -g\,t \end{bmatrix}
-$$
-
-so the full motion is
-
-$$
-\vec{x}(t) = \Phi(t)\vec{x}_0 + e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0}t - \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) \\[2pt] -g\,t \end{bmatrix}
-$$
-
-```{=latex}
-\end{example}
-```
-
-## 5. Obtaining the state-transition matrix
+## Obtaining the state-transition matrix
 
 ### $\Phi$ via the Taylor series
 
@@ -518,6 +414,114 @@ $$
 
 $$
 = \frac{5}{2}\begin{bmatrix} 1 - e^{-2t} \\[2pt] 1 - 2e^{-t} + e^{-2t} \end{bmatrix}
+$$
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
+\begin{example}[frametitle={Example - hanging mass on a spring with damper, now with time solution}]
+```
+
+A mass $m$ hangs from the ceiling on a spring of constant $k$ with a damper of coefficient $b$. The equation of motion is
+
+$$
+m\ddot{x} = -kx - b\dot{x} - mg
+$$
+
+Introduce $v = \dot{x}$ and write it as a first-order system:
+
+$$
+\begin{bmatrix} \dot{x} \\ \dot{v} \end{bmatrix}
+= \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\begin{bmatrix} x \\ v \end{bmatrix}
++ \begin{bmatrix} 0 \\ -g \end{bmatrix}
+$$
+
+The constant gravity term is the input, $\mathbf{B}\vec{u} = \tvec{0,-g}$. This is the boxed solution above in action: build the kernel $\Phi(t) = e^{\mathbf{A}t}$, then run the convolution integral.
+
+**Step 1 — $\Phi$ via Laplace.** $\det(s\mathbf{I} - \mathbf{A}) = s^2 + \frac{b}{m}s + \frac{k}{m}$, which we complete into a sum of squares:
+
+$$
+s^2 + \frac{b}{m}s + \frac{k}{m}
+= \left(s + \frac{b}{2m}\right)^2 + \frac{k}{m}\left(1 - \frac{b^2}{4km}\right)
+$$
+
+Define the natural frequency and damping ratio,
+
+$$
+\omega_0 = \sqrt{\frac{k}{m}}, \qquad
+\zeta = \frac{b}{2\sqrt{km}} = \frac{b}{2m\omega_0}
+$$
+
+so $\frac{b}{m} = 2\zeta\omega_0$ and $\frac{k}{m} = \omega_0^2$, and the determinant takes the classic second-order form, which completes into a sum of squares:
+
+$$
+\det(s\mathbf{I} - \mathbf{A}) = s^2 + 2\zeta\omega_0 s + \omega_0^2
+= (s + \zeta\omega_0)^2 + \omega_0^2(1-\zeta^2)
+$$
+
+Take the **critically damped case $\zeta = 1$** (damper tuned so $b = 2\sqrt{km}$): then $\omega_d = \omega_0\sqrt{1-\zeta^2} = 0$, the two poles collide at $s = -\omega_0$, and the resolvent is
+
+$$
+(s\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{(s + \omega_0)^2}\begin{bmatrix} s + 2\omega_0 & 1 \\[2pt] -\omega_0^2 & s \end{bmatrix}
+$$
+
+Inverting with the double-pole pairs $\frac{1}{(s+\omega_0)^2} \leftrightarrow t e^{-\omega_0 t}$ and $\frac{s}{(s+\omega_0)^2} \leftrightarrow (1 - \omega_0 t)e^{-\omega_0 t}$ leaves only exponentials:
+
+$$
+\Phi(t) = e^{\mathbf{A}t} = e^{-\omega_0 t}\begin{bmatrix}
+1 + \omega_0 t & t \\[2pt]
+-\omega_0^2 t & 1 - \omega_0 t
+\end{bmatrix}
+$$
+
+**Step 2 — solve the state equation.** Plug $\Phi$ into the boxed nonhomogeneous solution above ($t_0 = 0$, $\vec{u} = 1$, $\mathbf{B} = [0, -g]^T$):
+
+$$
+\vec{x}(t) = \Phi(t)\vec{x}_0 + \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
+$$
+
+With the critical $\Phi$, the kernel dotted with the input is
+
+$$
+\Phi(t-\tau)\mathbf{B} = g\,e^{-\omega_0(t-\tau)}\begin{bmatrix} -(t-\tau) \\[2pt] \omega_0(t-\tau) - 1 \end{bmatrix}
+$$
+
+so the gravity term reads
+
+$$
+\int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
+= g\,e^{-\omega_0 t}\int_0^t \begin{bmatrix} (-t+\tau)e^{\omega_0\tau} \\[2pt] (\omega_0(t-\tau)-1)e^{\omega_0\tau} \end{bmatrix} d\tau
+$$
+
+Evaluating entry by entry — this is the alternative to the $\tau$ trick of the spring example: no substitution, we integrate in $\tau$ directly and watch each $\tau$ vanish. The $t$ inside the integrand is a *constant* as far as the $\tau$-integration is concerned, and a $\tau$ disappears only when its antiderivative is evaluated at the limits. First entry — using $\int \tau e^{\omega_0\tau}d\tau = \left(\frac{\tau}{\omega_0}-\frac{1}{\omega_0^2}\right)e^{\omega_0\tau}$:
+
+$$
+\int_0^t (-t+\tau)e^{\omega_0\tau}\,d\tau
+= \left[-\frac{t}{\omega_0}e^{\omega_0\tau} + \left(\frac{\tau}{\omega_0}-\frac{1}{\omega_0^2}\right)e^{\omega_0\tau}\right]_{0}^{t}
+= \frac{t}{\omega_0} - \frac{e^{\omega_0 t}-1}{\omega_0^2}
+$$
+
+Second entry — here the antiderivative is simply $(t-\tau)e^{\omega_0\tau}$, because its $\tau$-derivative is $(\omega_0(t-\tau)-1)e^{\omega_0\tau}$:
+
+$$
+\int_0^t \big(\omega_0(t-\tau)-1\big)e^{\omega_0\tau}\,d\tau
+= \Big[(t-\tau)e^{\omega_0\tau}\Big]_{0}^{t}
+= -t
+$$
+
+Assembling both rows under the common factor $g\,e^{-\omega_0 t}$:
+
+$$
+\int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
+= e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0}t - \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) \\[2pt] -g\,t \end{bmatrix}
+$$
+
+so the full motion is
+
+$$
+\vec{x}(t) = \Phi(t)\vec{x}_0 + e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0}t - \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) \\[2pt] -g\,t \end{bmatrix}
 $$
 
 ```{=latex}
