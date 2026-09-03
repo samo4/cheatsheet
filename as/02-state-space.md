@@ -546,7 +546,13 @@ $$
 e^{\mathbf{A}t} = \mathbf{I} + t\mathbf{A} + \frac{t^2}{2!}\mathbf{A}^2 + \frac{t^3}{3!}\mathbf{A}^3 + \dots = \begin{bmatrix} e^{d_1 t} & & \\ & \ddots & \\ & & e^{d_n t} \end{bmatrix} = \begin{bmatrix} \Phi_{11} & & \\ & \ddots & \\ & & \Phi_{nn} \end{bmatrix}
 $$
 
-If diagonal matrices are so nice, how do we make one? Let's make a detour through eigenvalues and eigenvectors.
+*If $\mathbf{A}$ is already diagonal, you hit the jackpot.* When only the main diagonal is nonzero, nothing needs to be done: $\Phi(t)$ reads off by inspection,
+
+$$
+\Phi(t) = e^{\mathbf{A}t} = \operatorname{diag}\!\big(e^{d_1 t},\, e^{d_2 t},\, \dots,\, e^{d_n t}\big)
+$$
+
+Most $\mathbf{A}$'s are not diagonal, but with a little elbow grease we can still get there — the ingredients are eigenvalues and eigenvectors, so let's detour.
 
 #### Eigenvalues and eigenvectors
 
@@ -712,6 +718,8 @@ $}
 \endgroup
 \]
 ```
+
+*$\boldsymbol{\Lambda}$ is fully diagonal; $\Phi$ generally is not.* Diagonalization, when it works, lands on a genuinely diagonal $\boldsymbol{\Lambda}$ — that's the whole deal. The triangular-looking $\Phi$'s below are an accident of the triangular example $\mathbf{A}$'s — triangular in, triangular out.
 
 ```{=latex}
 \begin{example}[frametitle={Example - obtaining $\Phi$ via diagonalization}]
