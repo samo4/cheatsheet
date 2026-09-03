@@ -575,12 +575,14 @@ Eigenvalues are the roots of the characteristic polynomial $\det(\mathbf{A} - \l
 
 They are always related by $1 \le m_{g,i} \le m_{a,i}$. The gap $m_{a,i} - m_{g,i}$ measures how "defective" $\mathbf{A}$ is at $\lambda_i$: if $m_{g,i} < m_{a,i}$ there are not enough eigenvectors, and diagonalization fails.
 
-In practice:
+**In practice**:
 
 1. Solve $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$ for the eigenvalues.
 2. For each $\lambda_i$, solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$; the number of free parameters in the solution is $m_{g,i}$.
 
-**Watch out for linear dependence.** Since $\lambda_i$ *is* an eigenvalue, the matrix $(\mathbf{A} - \lambda_i\mathbf{I})$ is singular by construction — its rows are linearly dependent. So when you solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$, don't be alarmed that one row turns out to be a multiple of another, or that a row is all zeros: that's exactly what should happen. Only the independent equations carry information — their number is the rank, and the leftover free variables are precisely the geometric multiplicity $m_{g,i}$.
+*Triangular shortcut.* If $\mathbf{A}$ is upper or lower triangular, step 1 needs no work: the determinant is already factored, and the eigenvalues are just the diagonal entries. Diagonal was the whole jackpot; triangular is the half-jackpot — eigenvalues free, but the full $\Phi$ still needs a method.
+
+*Watch out for linear dependence.* Since $\lambda_i$ *is* an eigenvalue, the matrix $(\mathbf{A} - \lambda_i\mathbf{I})$ is singular by construction — its rows are linearly dependent. So when you solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$, don't be alarmed that one row turns out to be a multiple of another, or that a row is all zeros: that's exactly what should happen. Only the independent equations carry information — their number is the rank, and the leftover free variables are precisely the geometric multiplicity $m_{g,i}$.
 
 $\mathbf{A}$ is diagonalizable iff $m_{g,i} = m_{a,i}$ for every $i$. This is always the case when all eigenvalues are distinct, since then $m_{g,i} = m_{a,i} = 1$.
 
