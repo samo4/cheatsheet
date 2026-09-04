@@ -131,6 +131,54 @@ $$
 \end{example}
 ```
 
+```{=latex}
+\begin{example}[frametitle={Example - Gauss saving your PFE}]
+```
+
+When doing lots of partial fraction expansion, Gauss can save you some writing. Your PFE brought you 3 equations in 3 unknowns, and you rewrite them to:
+
+$$
+\begin{bmatrix} 1 & 1 & 1 \\ 7 & 9 & 10 \\ 2 & 3 & 3 \end{bmatrix}\begin{bmatrix} A \\ B \\ C \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$$
+
+Pack everything into one augmented matrix and row-reduce. A few heuristics for choosing the moves:
+
+- *Work one column at a time, left to right.* The leading $1$ in row 1 is the pivot; kill everything below it by subtracting multiples of the pivot row, $R_i - a_{i1}R_1$ — here $R_2 - 7R_1$ and $R_3 - 2R_1$.
+- *Favor a pivot of $1$.* The next pivot sits in column 2; row 3 already has a $1$ there, so swap it up ($R_2 \leftrightarrow R_3$) instead of pivoting on the $2$ and dragging fractions along.
+- *The multiplier is always entry-over-pivot.* After the swap, column 2 of the bottom row holds a $2$ over pivot $1$, so the move is $R_3 - 2R_2$.
+- *Rows above the current pivot are finished* — leave them alone. At the end, either back-substitute from the bottom, or keep eliminating upward ($R_i - a_{ic}R_p$) until the left block is $\mathbf{I}$ and read the answer off the last column.
+
+$$
+\left[\begin{array}{ccc|c} 1 & 1 & 1 & 0 \\ 7 & 9 & 10 & 0 \\ 2 & 3 & 3 & 1 \end{array}\right]
+\xrightarrow{row_2 - 7row_1, \ row_3 - 2row_1}
+\left[\begin{array}{ccc|c} 1 & 1 & 1 & 0 \\ 0 & 2 & 3 & 0 \\ 0 & 1 & 1 & 1 \end{array}\right]
+$$
+
+Swap the last two rows and eliminate again:
+
+$$
+\xrightarrow{row_2 \leftrightarrow row_3}
+\left[\begin{array}{ccc|c} 1 & 1 & 1 & 0 \\ 0 & 1 & 1 & 1 \\ 0 & 2 & 3 & 0 \end{array}\right]
+\xrightarrow{row_3 - 2row_2}
+\left[\begin{array}{ccc|c} 1 & 1 & 1 & 0 \\ 0 & 1 & 1 & 1 \\ 0 & 0 & 1 & -2 \end{array}\right]
+$$
+
+Now kill the entries above the pivots, top to bottom:
+
+$$
+\xrightarrow{row_2 - row_3, \ row_1 - row_3}
+\left[\begin{array}{ccc|c} 1 & 1 & 0 & 2 \\ 0 & 1 & 0 & 3 \\ 0 & 0 & 1 & -2 \end{array}\right]
+\xrightarrow{row_1 - row_2}
+\left[\begin{array}{ccc|c} 1 & 0 & 0 & -1 \\ 0 & 1 & 0 & 3 \\ 0 & 0 & 1 & -2 \end{array}\right]
+$$
+
+The left block is $\mathbf{I}$, so the augmented column is the solution — read it off directly, because row swaps cannot scramble your variables: a row is one *equation*, and columns keep their meaning, so $A,B,C$ stay glued to columns 1, 2, 3 no matter how you shuffle the rows. Only swapping *columns* would relabel the variables — and then you'd have to swap the names $A,B,C$ to match. $(A, B, C) = (-1, \ 3, \ -2)$
+
+Side note: strictly, Gauss elimination is not the same as the (eigen)diagonalization below. Row reduction only left-multiplies $\mathbf{A}$ by elementary matrices, so it does **not** preserve eigenvalues — diagonalization is a similarity $\mathbf{P}^{-1}\mathbf{A}\mathbf{P}$ and needs column operations too. What elimination does give you is the rank, and that is exactly what detects the singularity behind $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.
+
+```{=latex}
+\end{example}
+```
+
 #### With cofactors
 
 The adjugate formula

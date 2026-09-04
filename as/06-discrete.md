@@ -153,30 +153,56 @@ the two real modes decaying ($|{-}\frac{1}{2}|, |\frac{1}{2}| < 1$) and the alte
 ```
 
 ```{=latex}
-\begin{example}[frametitle={Example - another PFE}]
+\begin{example}[frametitle={Example - when PFE hands you lemons}]
 ```
 
-$$X[z] = \frac{z^2}{(z-3)(z-5)}$$
+The example above picked a numerator with a $z$ to spare, so dividing by $z$ cost nothing. This one has no $z$ to lend:
 
-TLDR: we store the $z$ on the left side and we bring it back at final inverse transform.
+$$Y(z) = \frac{6z+6}{6z^2 - 7z + 2} = \frac{z+1}{\left(z-\frac{2}{3}\right)\left(z-\frac{1}{2}\right)}$$
 
-$$\frac{X[z]}{z} = \frac{z}{(z-3)(z-5)} = \frac{A}{z-3} + \frac{B}{z-5}$$
+**The Laplace habit.** In continuous time we would partial-fraction $F(s)$ as it stands and read each $\frac{K}{s-p}$ straight off the table. Doing the same here:
+
+$$\frac{z+1}{\left(z-\frac{2}{3}\right)\left(z-\frac{1}{2}\right)} = \frac{A}{z-\frac{2}{3}} + \frac{B}{z-\frac{1}{2}}$$
 
 Clear denominators and equate coefficients of powers of $z$:
 
-$$z = A(z-5) + B(z-3) = (A+B)z - 5A - 3B
-\quad\rightarrow\quad
-A + B = 1, \quad -5A - 3B = 0
-\quad\rightarrow\quad
-A = -\frac{3}{2},\quad B = \frac{5}{2}$$
+$$z+1 = A\left(z-\frac{1}{2}\right) + B\left(z-\frac{2}{3}\right) = (A+B)z - \frac{1}{2}A - \frac{2}{3}B$$
 
-multiply back by $z$ and read off the pair $\frac{Kz}{z-p} \leftrightarrow K p^k$:
+Reading off the coefficient of $z$ and of the constant separately gives two equations in $A$ and $B$:
 
-$$X[z] = -\frac{3}{2}\,\frac{z}{z-3} + \frac{5}{2}\,\frac{z}{z-5}
-\quad\rightarrow\quad
-x[k] = \left[-\frac{3}{2}\,3^k + \frac{5}{2}\,5^k\right]u[k]$$
+$$A + B = 1, \qquad -\frac{1}{2}A - \frac{2}{3}B = 1$$
 
-Sanity check: $x[0] = -\frac{3}{2} + \frac{5}{2} = 1$, matching $X[z] \to 1$ as $z \to \infty$. For the nitpickers: $k \ge 0$.
+From the first, $A = 1 - B$; substituting into the second gives $-\frac{1}{2}(1-B) - \frac{2}{3}B = 1$, i.e. $-\frac{1}{2} - \frac{1}{6}B = 1$, so $B = -9$ and then $A = 10$:
+
+$$Y(z) = \frac{10}{z-\frac{2}{3}} - \frac{9}{z-\frac{1}{2}}$$
+
+Algebraically this is a perfectly good decomposition. But it is a dead end for inversion, and that is the subtle difference from Laplace: **there is no $\frac{K}{z-a}$ pair**. Laplace can invert $\frac{K}{s-p}$ directly because $\frac{1}{s-a} \leftrightarrow e^{at}$ is in its table; every pair in the Z-transform table above keeps the pole with a $z$ on top, $\frac{z}{z-a} \leftrightarrow a^k$, and $\frac{10}{z-\frac{2}{3}}$ is not of that shape.
+
+**The fix — pay for the missing $z$ with a delay.** The $z$ has to come from somewhere, and the only place it can come from is an explicit factor $\frac{1}{z}$:
+
+$$\frac{K}{z-a} = \frac{K}{z}\cdot\frac{z}{z-a}$$
+
+The right-hand factor is exactly the pair; the leftover $\frac{1}{z}$ is not a harmless pole but the delay operator $z^{-1}$ — $\mathcal{Z}\{f[k-1]\} = z^{-1}F$ — which ships the whole mode one sample late:
+
+$$Y(z) = \frac{10}{z}\cdot\frac{z}{z-\frac{2}{3}} - \frac{9}{z}\cdot\frac{z}{z-\frac{1}{2}}$$
+
+Inverting, each clean pair $\frac{Kz}{z-a} \leftrightarrow K a^k$ arrives one sample late: the step becomes $u[k-1]$ and the exponent drops to $k-1$,
+
+$$y[k] = \left[10\left(\frac{2}{3}\right)^{k-1} - 9\left(\frac{1}{2}\right)^{k-1}\right]u[k-1]$$
+
+The $u[k-1]$ — not $u[k]$ — is the fingerprint of the borrowed delay: **the response starts at $k=1$, not $k=0$**, so $y[0] = 0$. Sanity: $Y(z) \to 0$ as $z \to \infty$, so $y[0] = 0$ is forced. A naive inversion that silently supplied the missing $z$ — $\frac{10}{z-\frac{2}{3}} \to 10\left(\frac{2}{3}\right)^k$ — would claim $y[0] = 10 - 9 = 1$: off by exactly the sample we forgot to delay.
+
+**Cross-check — the store-the-$z$ recipe, and the extra term it exposes.** Run the same recipe as in the example above on this $Y(z)$. Dividing by $z$ now plants a pole at $z=0$ — there is no $z$ upstairs to cancel it — so the expansion picks up a *third* term:
+
+$$\frac{Y(z)}{z} = \frac{z+1}{z\left(z-\frac{2}{3}\right)\left(z-\frac{1}{2}\right)} = \frac{3}{z} + \frac{15}{z-\frac{2}{3}} - \frac{18}{z-\frac{1}{2}}$$
+
+(cover-up, one coefficient at a time: the one in front of $\frac{1}{z}$ is just $Y(0) = \frac{6}{2} = 3$; the others are $\left.\frac{z+1}{z\left(z-\frac{1}{2}\right)}\right|_{z=\frac{2}{3}} = 15$ and $\left.\frac{z+1}{z\left(z-\frac{2}{3}\right)}\right|_{z=\frac{1}{2}} = -18$.) Multiplying back by $z$ turns that $\frac{3}{z}$ into the bare constant $3$ — the extra term a Laplace-trained sharp eye would not expect:
+
+$$Y(z) = 3 + \frac{15z}{z-\frac{2}{3}} - \frac{18z}{z-\frac{1}{2}}
+\quad\Longrightarrow\quad
+y[k] = 3\delta[k] + \left[15\left(\frac{2}{3}\right)^k - 18\left(\frac{1}{2}\right)^k\right]u[k]$$
+
+The $3\delta[k]$ is not decoration: without it the two modes alone would give $y[0] = 15 - 18 = -3$, contradicting $Y(z) \to 0$.
 
 ```{=latex}
 \end{example}
