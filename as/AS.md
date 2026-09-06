@@ -1,8 +1,8 @@
 ---
-title: "Modeling and analysis of linear systems"
+title: "Lecture notes on modeling and analysis of linear systems"
 author: "Samo F."
 ---
 
 # About this
 
-> **Draft.** I attended lectures by prof. Brumen in the fall of 2025. As I tried to decypher and organize my notes and understand the subject matter, I chose to convert them to my regular flow of LaTeX enhanced markdow. Adding LLM's in the mix, things escalated to what you see here. Use at your own risk.
+> **Draft.** I attended lectures by prof. Brumen. As I tried to make sense of my notes, I decided them that markdown with a dash of latex would be a good format to convert my notes to. With help of LLMs, this is the result. The only thing that I guarantee is that it's full of errors. Use at your own risk.
