@@ -316,7 +316,7 @@ $$e^{\mathbf{A}_c T} = \mathbf{V}\,e^{\boldsymbol{\Lambda} T}\,\mathbf{V}^{-1}, 
 
 — exponentiating a matrix collapses to exponentiating its eigenvalues one scalar at a time. (If a matrix refuses to diagonalize, Cayley–Hamilton does the same job without the eigenvectors.) So the plan is: find the eigenvalues, then exponentiate.
 
-**Step 1 — eigenvalues.** In this entire "book", when you don't know where to start, just calculate the eigenvalues. In this particular example, this is actually the first step.
+**Step 1 — eigenvalues.** When you don't know where to start, just calculate the eigenvalues.
 
 $\det(\lambda\mathbf{I} - \mathbf{A}_c) = (\lambda + 2)(\lambda + 1)$, so the eigenvalues are real: $\lambda_1 = -2$ and $\lambda_2 = -1$.
 

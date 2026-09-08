@@ -729,7 +729,7 @@ $}
 
 $\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$. 
 
-The characteristic equation $\det(\mathbf{A} - \lambda\mathbf{I}) = (-2-\lambda)(-1-\lambda) = 0$ gives distinct eigenvalues $\lambda_1 = -2$, $\lambda_2 = -1$, so $m_{g,i} = m_{a,i} = 1$ and $\mathbf{A}$ is diagonalizable.
+$\mathbf{A}$ is lower triangular, so the shortcut applies: the eigenvalues sit on the diagonal, $\lambda_1 = -2$, $\lambda_2 = -1$, and $\det(\mathbf{A} - \lambda\mathbf{I}) = (-2-\lambda)(-1-\lambda) = 0$ just confirms it. They are distinct, so $m_{g,i} = m_{a,i} = 1$ and $\mathbf{A}$ is diagonalizable.
 
 We hunt for the eigenvectors from the condition
 

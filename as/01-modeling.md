@@ -8,30 +8,30 @@ In every domain a system is built from the same three kinds of ideal elements:
 - **Storage** elements hold energy and release it on their own time scale — a capacitor or inductor, a spring or mass.
 - **Dissipation** converts energy into heat — a resistor, a damper.
 
-Storage is what makes a system *dynamic*. A storage element cannot change its energy instantly: it accumulates input over time, so the system keeps reacting after the input is gone — sometimes slowly, sometimes violently. That behaviour is captured by differential equations. Each storage element contributes one state, so the number of states equals the number of storage elements.
+Storage is what makes a system *dynamic*. A storage element cannot change its energy instantly: it accumulates input over time, so the system keeps reacting after the input is gone. That behaviour is captured by differential equations. Each storage element contributes one state, so the number of states equals the number of storage elements.
 
-The same three elements appear in every domain — electrical, mechanical, hydraulic, thermal — and in non-physical systems such as biological populations or economic ones. This chapter turns the resulting differential equations into the common state-space form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, so that one set of tools works everywhere.
+The same three elements appear in every domain — electrical, mechanical, hydraulic, thermal — and in non-physical systems such as biological populations or economic ones. This chapter turns the resulting differential equations into the common state-space form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$.
 
 Given the state and the input, such a model predicts the behaviour for all future time — but only under two assumptions that real systems violate:
 
 - **Time invariance** — the parameters must not change with time. A rocket burning fuel loses mass, so its equations change as it flies.
-- **Linearity** — the dynamics must be linear, and essentially no real system is. Even the ultimate physical limit — the speed of light — forces nonlinear equations.
+- **Linearity** — the dynamics must be linear, and essentially no real system is.
 
-This book therefore works with **linear time-invariant (LTI)** systems, not only because the math is elegant, but because LTI theory is the foundation that extends to the harder cases.
+These notes therefore works with **linear time-invariant (LTI)** systems, not only because the math is elegant, but because local linearization lets the toolbox extend to nonlinear and time-varying systems around equilibria or along trajectories.
 
 Even so, this is an idealization. The framework silently assumes the system is **lumped** — a finite number of states, so no partial differential equations (heat, flexible structures, fluids) and no transport delays — and **deterministic**, so no noise. Linearity itself also erases phenomena that no amount of linearization can recover: multiple equilibria, hysteresis, saturation, chaos. The Linearization chapter pushes back on some of this, and the Discrete chapter on sampled time; distributed, delayed, and stochastic systems remain out of reach — there a linear finite-dimensional model is at best a local approximation.
 
-The systems this "book" models *do* fit the toolbox: a mass on a spring, a resistor–capacitor circuit — a handful of states and deterministic equations, so a finite $\mathbf{A}$ captures them. Two common kinds of systems do not fit, and each fails for a different reason.
+The systems these notes model *do* fit the toolbox: a mass on a spring, a resistor–capacitor circuit — a handful of states and deterministic equations, so a finite $\mathbf{A}$ captures them. Two common kinds of systems do not fit, and each fails for a different reason.
 
-**A drum is the archetype of a distributed system.** Its skin is a membrane: every point can move, so it has infinitely many states, not a finite vector $\vec{x}$. The governing equation is the two-dimensional wave equation, a partial differential equation in space and time,
+A drum is the archetype of a **distributed** system. Its skin is a membrane: every point can move, so it has infinitely many states, not a finite vector $\vec{x}$. The governing equation is the two-dimensional wave equation, a partial differential equation in space and time,
 
 $$
 \frac{\partial^2 u}{\partial t^2} = c^2\left(\frac{\partial^2 u}{\partial r^2} + \frac{1}{r}\frac{\partial u}{\partial r} + \frac{1}{r^2}\frac{\partial^2 u}{\partial \theta^2}\right),
 $$
 
-whose modes are Bessel-function shapes. Hit the drum and you excite *all* of those infinitely many modes at once — no finite $\mathbf{A}$ matrix reproduces what you hear. A lumped model could keep only a few modes and would be a crude caricature. A plucked guitar string is the same story in one dimension: infinitely many modes too, though its harmonics at least fall on friendly integers. The drum cannot be analyzed with the LTI toolbox of this book.
+whose modes are Bessel-function shapes. Hit the drum and you excite *all* of those infinitely many modes at once — no finite $\mathbf{A}$ matrix reproduces what you hear. A lumped model could keep only a few modes and would be a crude caricature. A plucked guitar string is the same story in one dimension: infinitely many modes too, though its harmonics at least fall on friendly integers. The drum cannot be analyzed with the LTI toolbox of these notes.
 
-Three flavours of randomness, in increasing order of how much of the toolbox survives: in the first only the *signal* is random and the dynamics are fine; in the last there is no deterministic part left at all.
+Three flavours of **randomness**, in increasing order of how much of the toolbox survives: in the first only the *signal* is random and the dynamics are fine; in the last there is no deterministic part left at all.
 
 ```{=latex}
 \begin{example}[frametitle={Example - thermal noise in an RC circuit}]
@@ -77,7 +77,7 @@ with diffusion coefficient $D$.
 \end{example}
 ```
 
-The drum fails because it is distributed, these systems because they are random — either way there is no finite deterministic ODE, and all of them stay outside this book's toolbox.
+The drum fails because it is distributed, these systems because they are random — either way there is no finite deterministic ODE, and all of them stay outside the toolbox provided by these notes.
 
 The correct title of this chapter should then be "LTI lumped deterministic modeling" — but who wants that?
 
@@ -151,6 +151,21 @@ Plus, to complete the list at the top, a *source* of energy: a force $F(t)$ or a
 3. Newton: $\sum F = ma$. Add element forces with the sign from their formulas; add external forces with the sign they have in the diagram.
 4. Measure $x$ from the static equilibrium (where the spring already holds the weight), so the constant $mg$ never appears.
 5. Sanity-check at rest: with $\ddot{x} = 0$ and $\dot{x} = 0$ the spring must hold exactly the static load. If it does not, a sign is flipped.
+
+**Why it works — the ultimate recipe.** A spring and a damper are *two-terminal* elements: each only acts on the difference between its two ends — the spring wants a constant separation, the damper a constant relative velocity. So the force an element exerts on the body you are isolating is always
+
+$$F = k\,(x_{\text{other}} - x_{\text{mass}}), \qquad F = b\,(\dot{x}_{\text{other}} - \dot{x}_{\text{mass}}),$$
+
+and the parentheses already contain every sign:
+
+- the **mass's own coordinate** carries the minus — the element always pushes back on *this* body, whichever way you drew the axis;
+- the **other terminal** carries the plus — another moving mass *assists* the motion, while fixed ground adds only a constant, which disappears once $x$ is measured from static equilibrium and leaves plain $-kx$ or $-b\dot{x}$.
+
+Because no choice of axis direction can change which terminal is the mass's *own*, a sign cannot be placed wrongly by reasoning — only the picture can be misread. The ultimate recipe collapses the five steps above to:
+
+1. Use the **same positive direction** for every coordinate and for $ma$.
+2. For each element touching the body, write $k(x_{\text{other}} - x_{\text{mass}})$ or $b(\dot{x}_{\text{other}} - \dot{x}_{\text{mass}})$ — never add a sign yourself.
+3. Sum with Newton, collect, and trust the at-rest check: if the springs don't hold the load, the diagram is wrong, not the math.
 
 ```{=latex}
 \begin{example}[frametitle={Example - car wheel on its suspension}]
