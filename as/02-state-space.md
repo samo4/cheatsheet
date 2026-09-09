@@ -1033,11 +1033,14 @@ $$
 
 ### Final remarks on obtaining $\Phi$
 
-We have shown four ways to skin a cat, but at the end you still have the same dead cat. The Taylor series is the most general, flows nicely from rudimentary principles, but it is slow and tedious. Diagonalization is elegant, but fails for defective matrices. Laplace transform is a nice trick, but requires some algebraic manipulation. Cayley–Hamilton is a clever method, but requires solving a Vandermonde system. 
+We have shown four ways to skin a cat, but at the end you still have the same dead cat. The Taylor series is the most general, flows nicely from rudimentary principles, but it is tedious. Diagonalization is elegant, but fails for defective matrices. Laplace transform is a nice trick, but requires some algebraic manipulation (in other words: much harder to implement in computers). Cayley–Hamilton is a clever method, but requires solving a Vandermonde system.
 
-Cayley–Hamilton specifically will come in very handy when we'll talk about controllability and observability.
+In practice, the choice of method depends on the specific matrix $\mathbf{A}$ and the context of the problem — but Cayley–Hamilton specifically will come in very handy when we talk about controllability and observability, and it earns its keep in a few recurring situations. CH shines when:
 
-In practice, the choice of method depends on the specific matrix $\mathbf{A}$ and the context of the problem.
+- The matrix is *defective* — diagonalization is out entirely, and CH, with the derivative trick for the repeated eigenvalue, picks up where it fails.
+- The matrix has *repeated eigenvalues* but is still diagonalizable — CH avoids eigenvector hunting.
+- You want a closed form without computing $\mathbf{V}^{-1}$ — CH never inverts a matrix, only multiplies out powers of $\mathbf{A}$.
+- You're working with *symbolic parameters*, where eigenvectors get messy — they come out as rational expressions in the parameters, while CH's coefficients stay clean.
 
 ```{=latex}
 \begin{example}[frametitle={Example - diagonalization and Cayley–Hamilton on the same matrix}]
