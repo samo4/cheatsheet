@@ -115,7 +115,7 @@ BIBO stability is a statement about the input–output map, asymptotic stability
 
 ## Controllability
 
-A system $(\mathbf{A}, \mathbf{B})$ is **controllable** if, for any initial state $\vec{x}_0$ and any target state $\vec{x}_1$, there exists an input $\vec{u}(t)$ that drives the state from $\vec{x}_0$ to $\vec{x}_1$ in finite time — the input can steer the state anywhere in state space.
+A system is **controllable** if, for any initial state $\vec{x}_0$ and any target state $\vec{x}_1$, there exists an input $\vec{u}(t)$ that drives the state from $\vec{x}_0$ to $\vec{x}_1$ in finite time — the input can steer the state anywhere in state space.
 
 Controllability is a practical requirement, not just a theoretical one. Take a car with no throttle: you might get it to drift to a position, but you can never place it where you want. The input reaches the state only through $\mathbf{B}$, and with no throttle that path is missing, so no input moves the state; how much that hurts depends on the output matrices, since the engine rpm can do as it likes while you try to park.
 
@@ -177,7 +177,7 @@ so $\operatorname{rank}\mathcal{C} = 2 < n$ and the system is not controllable. 
 
 ## Observability
 
-A system $(\mathbf{A}, \mathbf{C})$ is **observable** if the initial state $\vec{x}_0$ can be reconstructed from the output $\vec{y}(t)$ (and the known input $\vec{u}(t)$) over a finite time interval — every mode eventually shows up in the output.
+A system is **observable** if the initial state $\vec{x}_0$ can be reconstructed from the output $\vec{y}(t)$ (and the known input $\vec{u}(t)$) over a finite time interval — every mode eventually shows up in the output.
 
 Rolling on the car example from the previous section, the sensors are the $\mathbf{C}$: what never reaches them can never be reconstructed, so observability (pun intended) is about $\mathbf{A}$ and $\mathbf{C}$ alone. The **observability matrix** collects the rows that matter:
 
