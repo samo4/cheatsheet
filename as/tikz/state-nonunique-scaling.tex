@@ -1,0 +1,16 @@
+\begin{center}
+\begin{circuitikz}[scale=1.2, european resistors, american voltages, american currents]
+  \draw (0,0) to[I, l_=$i_g$] (0,3);
+  \draw (0,3) -- (6,3);
+  \draw (0,0) -- (6,0);
+  \draw (3,3) to[C] (3,0);
+  \draw (6,3) to[L=$L$, i>^=$i_L$] (6,1.5) to[R] (6,0);
+  \draw (3,0) node[ground]{};
+  \node[left=14pt] at (3,1.5) {$C$};
+  \node at (3.3,2.1) {$+$};
+  \node[right=14pt] at (3,1.5) {$v_C$};
+  \node[left=14pt] at (6,0.75) {$R$};
+  \node at (6.3,1.35) {$+$};
+  \node[right=14pt] at (6,0.75) {$u_R$};
+\end{circuitikz}
+\end{center}

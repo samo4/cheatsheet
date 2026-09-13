@@ -102,3 +102,38 @@ so $\delta\ddot{x} + \dfrac{k_1 + 3k_2 x_e^2}{m}\,\delta x = 0$: the cubic term 
 ```{=latex}
 \end{example}
 ```
+
+## Two models worth linearizing
+
+### Lotka–Volterra (predator–prey)
+
+Prey $x$, predators $y$:
+
+$$
+\dot{x} = \alpha x - \beta xy, \qquad \dot{y} = \delta xy - \gamma y
+$$
+
+the prey grows exponentially ($\alpha x$) and is eaten proportionally to encounters ($\beta xy$); the predators grow with the available food ($\delta xy$) and die off ($\gamma y$).
+
+The coexistence equilibrium is $(x_e, y_e) = (\gamma/\delta,\ \alpha/\beta)$. The Jacobian there is
+
+$$
+\mathbf{A} = \begin{bmatrix} \alpha - \beta y_e & -\beta x_e \\ \delta y_e & \delta x_e - \gamma \end{bmatrix}
+= \begin{bmatrix} 0 & -\beta x_e \\ \delta y_e & 0 \end{bmatrix},
+$$
+
+so both eigenvalues are purely imaginary, $\lambda = \pm j\sqrt{\alpha\gamma}$. This is the case linearization cannot decide: with $\operatorname{Re}\lambda = 0$ the linear model says nothing about the nonlinear one, which here neither settles nor escapes but runs on a family of closed orbits.
+
+### SIR epidemic
+
+Susceptible $S$, infectious $I$, recovered $R$, with $N = S + I + R$ constant:
+
+$$
+\dot{S} = -\beta SI, \qquad \dot{I} = \beta SI - \gamma I, \qquad \dot{R} = \gamma I
+$$
+
+With $N$ fixed, only two of the three equations are independent. At the disease-free equilibrium $(N, 0, 0)$ the Jacobian has a single nonzero eigenvalue, $\beta N - \gamma$, so here linearization *is* decisive: the state is stable, and no outbreak occurs, exactly when
+
+$$
+R_0 = \frac{\beta N}{\gamma} < 1.
+$$

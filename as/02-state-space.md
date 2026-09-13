@@ -15,7 +15,7 @@ $$
 \vec{y} = \mathbf{g}(\vec{x}, \vec{u}, t)
 $$
 
-For linear time-invariant (LTI) systems they collapse to Kalman's matrix form:
+For LTI systems they collapse to Kalman's matrix form:
 
 $$
 \dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}
@@ -24,25 +24,83 @@ $$
 \vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}
 $$
 
-with $\mathbf{A}$ ($n\times n$) the dynamics, $\mathbf{B}$ ($n\times p$) the input coupling, $\mathbf{C}$ ($q\times n$) the output coupling, and $\mathbf{D}$ ($q\times p$) the direct feedthrough — typically $\mathbf{D} = \mathbf{0}$. The outputs are generally not the states themselves — that is exactly what $\mathbf{C}$ and $\mathbf{D}$ capture.
+with $\mathbf{A}$ the dynamics, $\mathbf{B}$ the input coupling, $\mathbf{C}$ the output coupling, and $\mathbf{D}$ the direct feedthrough — often, but certainly not always, $\mathbf{D} = \mathbf{0}$. The outputs are generally not the states themselves — that is exactly what $\mathbf{C}$ and $\mathbf{D}$ capture.
 
-The state variables are not unique. For the second-order ODE $\ddot{y} + 2\dot{y} + 3y = 4u$, the Modeling chapter chose $x_1 = y$, $x_2 = \dot{y}$:
+The state variables are not unique. Relabeling is the dull case — reordering $x_1 = y$, $x_2 = \dot{y}$ changes nothing but the row order. The interesting case is swapping one physical quantity for another: the first example shows that the choice is genuinely free, the second that it can pay off.
+
+```{=latex}
+\begin{example}[frametitle={Example - state variables are not unique: rescaling}]
+```
+
+Two elements give a state, a third gives a choice. A current source $i_g$ and a capacitor $C$ sit in parallel, and that pair drives a series $L$–$R$ branch.
+
+```{=latex}
+\input{tikz/state-nonunique-scaling.tex}
+```
+
+With $v_C$ the capacitor voltage and $i_L$ the inductor current, KCL at the node and KVL around the branch give
 
 $$
-\dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -3 & -2 \end{bmatrix}\vec{x} + \begin{bmatrix} 0 \\ 4 \end{bmatrix}u, \qquad y = \begin{bmatrix} 1 & 0 \end{bmatrix}\vec{x}
+C\dot{v}_C = i_g - i_L, \qquad L\dot{i}_L = v_C - R i_L,
 $$
 
-but swapping the order, $z_1 = \dot{y}$, $z_2 = y$, gives an equally valid triple with the same input–output behaviour:
+so for the state $\vec{x} = \tvec{v_C, i_L}$,
 
 $$
-\dot{\vec{z}} = \begin{bmatrix} -2 & -3 \\ 1 & 0 \end{bmatrix}\vec{z} + \begin{bmatrix} 4 \\ 0 \end{bmatrix}u, \qquad y = \begin{bmatrix} 0 & 1 \end{bmatrix}\vec{z}
+\dot{\vec{x}} = \begin{bmatrix} 0 & -\frac{1}{C} \\ \frac{1}{L} & -\frac{R}{L} \end{bmatrix}\vec{x} + \begin{bmatrix} \frac{1}{C} \\ 0 \end{bmatrix}i_g.
 $$
 
-In general, any invertible $\mathbf{T}$ defines new states $\tilde{\vec{x}} = \mathbf{T}^{-1}\vec{x}$ and yields the equivalent representation $\tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}$, $\tilde{\mathbf{B}} = \mathbf{T}^{-1}\mathbf{B}$, $\tilde{\mathbf{C}} = \mathbf{C}\mathbf{T}$, $\tilde{\mathbf{D}} = \mathbf{D}$.
+Now keep the circuit and change only the description: $\tilde{\vec{x}} = \tvec{u_C, u_R}$ — the capacitor voltage and the resistor voltage $u_R = R i_L$. The two state vectors are related by the invertible linear map $\tilde{\vec{x}} = \mathbf{T}^{-1}\vec{x}$, $\mathbf{T}^{-1} = \operatorname{diag}(1, R)$, so each determines the other and neither is privileged. Differentiating $u_R = R i_L$ and reusing the two equations above,
+
+$$
+\dot{u}_C = \frac{1}{C}i_g - \frac{1}{CR}u_R, \qquad \dot{u}_R = \frac{R}{L}\left(u_C - u_R\right),
+$$
+
+$$
+\dot{\tilde{\vec{x}}} = \begin{bmatrix} 0 & -\frac{1}{CR} \\ \frac{R}{L} & -\frac{R}{L} \end{bmatrix}\tilde{\vec{x}} + \begin{bmatrix} \frac{1}{C} \\ 0 \end{bmatrix}i_g.
+$$
+
+Every entry changed, yet the circuit did not, and the two matrices are similar, $\tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}$. They therefore share the same eigenvalues — the characteristic equation $\lambda^2 + \frac{R}{L}\lambda + \frac{1}{LC} = 0$ is the same either way — so both descriptions ring at the same frequency and decay at the same rate.
+
+What the second choice buys is bookkeeping. Both components of $\tilde{\vec{x}}$ are voltages, so the state plane carries one unit and one axis scale; and if the resistor voltage is the quantity worth measuring, the output equation collapses to $y = \begin{bmatrix} 0 & 1 \end{bmatrix}\tilde{\vec{x}}$, one of the states, against $y = \begin{bmatrix} 0 & R \end{bmatrix}\vec{x}$ before.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
+\begin{example}[frametitle={Example - state variables are not unique: modes}]
+```
+
+Two identical RC sections — capacitance $C$ and leakage $R$ to ground each — joined by a coupling resistor $R_c$.
+
+```{=latex}
+\input{tikz/state-nonunique-modes.tex}
+```
+
+Writing $v_1, v_2$ for the capacitor voltages and $\alpha = \frac{1}{RC}$, $\beta = \frac{1}{R_cC}$, KCL at the two nodes gives
+
+$$
+\dot{\vec{v}} = \begin{bmatrix} -(\alpha+\beta) & \beta \\ \beta & -(\alpha+\beta) \end{bmatrix}\vec{v}.
+$$
+
+The coupling ties the two equations together, and a rescaling cannot break it: scaling the two states multiplies one off-diagonal entry up and the other down by the same factor, leaving their product — and the coupling it represents — untouched. Only a change that *mixes* the two states can separate them. So add and subtract the two equations — that is, choose the *common* and *differential* combinations $w_1 = v_1 + v_2$ and $w_2 = v_1 - v_2$:
+
+$$
+\dot{\vec{w}} = \begin{bmatrix} -\alpha & 0 \\ 0 & -(\alpha+2\beta) \end{bmatrix}\vec{w},
+$$
+
+two independent first-order systems. The physics explains why: in common mode $v_1 = v_2$, no current flows through $R_c$, and each capacitor discharges through its own $R$ with time constant $RC$; in differential mode $v_1 = -v_2$, the coupling resistor sees the full $2v_1$ and shortens the time constant to $\frac{1}{\alpha+2\beta}$ — exactly as if $\frac{R_c}{2}$ sat in parallel with $R$.
+
+So the new states are not the old ones relabeled; they are coordinates along the eigenvectors of $\mathbf{A}$ — the *modes* of the system, found here by inspection, and in the diagonalization section below by construction.
+
+```{=latex}
+\end{example}
+```
 
 ## State-space representation
 
-The state-space representation is a geometric view of the dynamics: at every instant the system sits at a point $\vec{x}(t)$ in state space, and the equations $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$ push that point along a curve — the *trajectory*. For the example system from the Modeling chapter, $\dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -3 & -2 \end{bmatrix}\vec{x}$ with $\vec{x}(0) = (1, 0)$, the state spirals into the origin (markers at integer times):
+The state-space representation is a geometric view of the dynamics: at every instant the system sits at a point $\vec{x}(t)$ in state space, and the equations $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$ push that point along a curve — the *trajectory*. For the example system from the Modeling chapter, $\dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -3 & -2 \end{bmatrix}\vec{x}$ with $\vec{x}(0) = (1, 0)$, the state spirals into the origin — the same motion, plotted one state at a time, is two decaying sinusoids (markers at integer times):
 
 ```{=latex}
 \input{tikz/state-spiral.tex}
@@ -212,7 +270,7 @@ $$
 = \begin{bmatrix} \cos\omega_0 t & \frac{1}{\omega_0}\sin\omega_0 t \\[2pt] -\omega_0\sin\omega_0 t & \cos\omega_0 t \end{bmatrix}
 $$
 
-**Step 2 — the homogeneous part first (the easy one).** The boxed solution is a sum,
+**Step 2 — the homogeneous part first.** The boxed solution is a sum,
 
 $$
 \vec{x}(t) = \Phi(t)\vec{x}_0 + \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
@@ -355,9 +413,16 @@ $}
 
 The first term is the homogeneous response, the second is the convolution with $\vec{u}$, so comparing with the boxed solution of Section 4 identifies
 
-$$
-\mathcal{L}^{-1}\left\{(s\mathbf{I} - \mathbf{A})^{-1}\right\} = e^{\mathbf{A}t} = \Phi(t)
-$$
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+e^{\mathbf{A}t} = \Phi(t) = \mathcal{L}^{-1}\left\{(s\mathbf{I} - \mathbf{A})^{-1}\right\}
+$}
+\endgroup
+\]
+```
 
 ```{=latex}
 \begin{example}[frametitle={Example - obtaining $\Phi$ via Laplace transform}]

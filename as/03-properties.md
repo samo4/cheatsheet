@@ -21,10 +21,10 @@ A system $(\mathbf{A}, \mathbf{B})$ is **controllable** if, for any initial stat
 The **controllability matrix** collects the columns that matter:
 
 $$
-M = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}
+\mathcal{C} = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}
 $$
 
-and the system is controllable iff $\operatorname{rank}M = n$.
+and the system is controllable iff $\operatorname{rank}\mathcal{C} = n$.
 
 Why exactly those columns? Take the state response with $\vec{x}(0) = \vec{0}$; reaching $\vec{x}$ at time $t$ requires
 
@@ -45,13 +45,13 @@ $$
 = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}\vec{w}
 $$
 
-Cayley–Hamilton alone gives the easy direction: reachable states lie in the column space of $M$. For the converse — that $\operatorname{rank}M = n$ really makes every state reachable — an explicit input is needed, and the **controllability Gramian**
+Cayley–Hamilton alone gives the easy direction: reachable states lie in the column space of $\mathcal{C}$. For the converse — that $\operatorname{rank}\mathcal{C} = n$ really makes every state reachable — an explicit input is needed, and the **controllability Gramian**
 
 $$
 \mathbf{W}_c(t) = \int_0^t e^{\mathbf{A}\tau}\mathbf{B}\mathbf{B}^T e^{\mathbf{A}^T\tau}\, d\tau
 $$
 
-provides it. $\mathbf{W}_c(t)$ is nonsingular iff $\operatorname{rank}M = n$: if $\vec{v}^T\mathbf{W}_c\vec{v} = \int_0^t \lVert\mathbf{B}^T e^{\mathbf{A}^T\tau}\vec{v}\rVert^2\, d\tau = 0$, then $\mathbf{B}^T e^{\mathbf{A}^T\tau}\vec{v} = \vec{0}$ for all $\tau$, and differentiating at $\tau = 0$ yields $\mathbf{B}^T(\mathbf{A}^T)^k\vec{v} = \vec{0}$, i.e. $M^T\vec{v} = \vec{0}$. When it is nonsingular, choosing
+provides it. $\mathbf{W}_c(t)$ is nonsingular iff $\operatorname{rank}\mathcal{C} = n$: if $\vec{v}^T\mathbf{W}_c\vec{v} = \int_0^t \lVert\mathbf{B}^T e^{\mathbf{A}^T\tau}\vec{v}\rVert^2\, d\tau = 0$, then $\mathbf{B}^T e^{\mathbf{A}^T\tau}\vec{v} = \vec{0}$ for all $\tau$, and differentiating at $\tau = 0$ yields $\mathbf{B}^T(\mathbf{A}^T)^k\vec{v} = \vec{0}$, i.e. $\mathcal{C}^T\vec{v} = \vec{0}$. When it is nonsingular, choosing
 
 $$
 \vec{u}(\tau) = \mathbf{B}^T e^{\mathbf{A}^T(t-\tau)}\mathbf{W}_c^{-1}(t)\,\vec{x}_1
@@ -84,7 +84,7 @@ $$
 \vec{w} = \begin{bmatrix} \int_0^t \alpha_0(\tau)\vec{u}(\tau)\, d\tau \\ \int_0^t \alpha_1(\tau)\vec{u}(\tau)\, d\tau \\ \vdots \\ \int_0^t \alpha_{n-1}(\tau)\vec{u}(\tau)\, d\tau \end{bmatrix}
 $$
 
-So $\vec{x}_0$ can be driven to $\vec{0}$ iff it lies in the column space of $M$ — and since $\vec{x}_0$ ranges over all of $\mathbb{R}^n$, this is again exactly $\operatorname{rank}M = n$. Controllability therefore involves only $(\mathbf{A}, \mathbf{B})$: the output matrices $\mathbf{C}$ and $\mathbf{D}$ are irrelevant, since they say nothing about where the state can be driven.
+So $\vec{x}_0$ can be driven to $\vec{0}$ iff it lies in the column space of $\mathcal{C}$ — and since $\vec{x}_0$ ranges over all of $\mathbb{R}^n$, this is again exactly $\operatorname{rank}\mathcal{C} = n$. Controllability therefore involves only $(\mathbf{A}, \mathbf{B})$: the output matrices $\mathbf{C}$ and $\mathbf{D}$ are irrelevant, since they say nothing about where the state can be driven.
 
 ```{=latex}
 \begin{example}[frametitle={Example - controllability of a diagonal system}]
@@ -93,13 +93,13 @@ So $\vec{x}_0$ can be driven to $\vec{0}$ iff it lies in the column space of $M$
 $\mathbf{A} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -2 & 0 \\ 0 & 0 & -3 \end{bmatrix}$, $\mathbf{B} = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}$.
 
 $$
-M = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} \end{bmatrix}
+\mathcal{C} = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} \end{bmatrix}
 = \begin{bmatrix} 1 & -1 & 1 \\ 1 & -2 & 4 \\ 0 & 0 & 0 \end{bmatrix}
 $$
 
-so $\operatorname{rank}M = 2 < n$ and the system is **not** controllable. Note the test is $\operatorname{rank}M = n$, not a determinant: since $\mathbf{B}$ is $n \times m$, $M$ is $n \times nm$ — square only for a single input ($m = 1$), so in general $\det M$ is not even defined. Here the zero third row already shows $\operatorname{rank}M \le 2 < n$: the columns span a subspace of $\mathbb{R}^3$ but not all of it, so the input cannot reach every state.
+so $\operatorname{rank}\mathcal{C} = 2 < n$ and the system is **not** controllable. Note the test is $\operatorname{rank}\mathcal{C} = n$, not a determinant: since $\mathbf{B}$ is $n \times m$, $\mathcal{C}$ is $n \times nm$ — square only for a single input ($m = 1$), so in general $\det\mathcal{C}$ is not even defined. Here the zero third row already shows $\operatorname{rank}\mathcal{C} \le 2 < n$: the columns span a subspace of $\mathbb{R}^3$ but not all of it, so the input cannot reach every state.
 
-**Interpretation** — the zero in the third row of $\mathbf{B}$ disconnects the third state from the input. Because $\mathbf{A}$ is diagonal, the input reaches state $i$ only through the entry $b_i$ of $\mathbf{B}$; with $b_3 = 0$ the third mode evolves on its own, untouched by $\vec{u}$. That is why the entire third row of $M$ is zeros — the input can never get a grip on that mode.
+**Interpretation** — the zero in the third row of $\mathbf{B}$ disconnects the third state from the input. Because $\mathbf{A}$ is diagonal, the input reaches state $i$ only through the entry $b_i$ of $\mathbf{B}$; with $b_3 = 0$ the third mode evolves on its own, untouched by $\vec{u}$. That is why the entire third row of $\mathcal{C}$ is zeros — the input can never get a grip on that mode.
 
 ```{=latex}
 \end{example} 
@@ -112,10 +112,10 @@ A system $(\mathbf{A}, \mathbf{C})$ is **observable** if the initial state $\vec
 The **observability matrix** collects the rows that matter:
 
 $$
-N = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}
+\mathcal{O} = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}
 $$
 
-and the system is observable iff $\operatorname{rank}N = n$.
+and the system is observable iff $\operatorname{rank}\mathcal{O} = n$.
 
 Why exactly those rows? With $\vec{u} = \vec{0}$, the output is
 
@@ -141,9 +141,9 @@ $$
 \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}\vec{x}_0 = \vec{z}
 $$
 
-is a linear system for $\vec{x}_0$ with a unique solution iff $N$ has full column rank $n$. Powers $\mathbf{A}^k$ with $k \ge n$ add nothing new — Cayley–Hamilton folds them back into $\mathbf{A}^0, \dots, \mathbf{A}^{n-1}$.
+is a linear system for $\vec{x}_0$ with a unique solution iff $\mathcal{O}$ has full column rank $n$. Powers $\mathbf{A}^k$ with $k \ge n$ add nothing new — Cayley–Hamilton folds them back into $\mathbf{A}^0, \dots, \mathbf{A}^{n-1}$.
 
-Note the duality: observability of $(\mathbf{A}, \mathbf{C})$ is controllability of $(\mathbf{A}^T, \mathbf{C}^T)$ — here, with $\mathbf{C} = \mathbf{B}^T$, the observability matrix is exactly $N = M^T$.
+Note the duality: observability of $(\mathbf{A}, \mathbf{C})$ is controllability of $(\mathbf{A}^T, \mathbf{C}^T)$ — here, with $\mathbf{C} = \mathbf{B}^T$, the observability matrix is exactly $\mathcal{O} = \mathcal{C}^T$.
 
 ```{=latex}
 \begin{example}[frametitle={Example - observability of a diagonal system}]
@@ -152,16 +152,16 @@ Note the duality: observability of $(\mathbf{A}, \mathbf{C})$ is controllability
 Same $\mathbf{A} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -2 & 0 \\ 0 & 0 & -3 \end{bmatrix}$, $\mathbf{C} = \begin{bmatrix} 1 & 1 & 1 \end{bmatrix}$.
 
 $$
-N_1 = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \end{bmatrix}
+\mathcal{O}_1 = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \end{bmatrix}
 = \begin{bmatrix} 1 & 1 & 1 \\ -1 & -2 & -3 \\ 1 & 4 & 9 \end{bmatrix}, \qquad
-\det N_1 = -2 \ne 0
+\det\mathcal{O}_1 = -2 \ne 0
 $$
 
-so $\operatorname{rank}N_1 = 3 = n$ and the system is observable — every mode shows up in the output. With $\mathbf{C} = \begin{bmatrix} 1 & 0 & 1 \end{bmatrix}$ the second mode is invisible in the output:
+so $\operatorname{rank}\mathcal{O}_1 = 3 = n$ and the system is observable — every mode shows up in the output. With $\mathbf{C} = \begin{bmatrix} 1 & 0 & 1 \end{bmatrix}$ the second mode is invisible in the output:
 
 $$
-N_2 = \begin{bmatrix} 1 & 0 & 1 \\ -1 & 0 & -3 \\ 1 & 0 & 9 \end{bmatrix}, \qquad
-\operatorname{rank}N_2 = 2 < 3
+\mathcal{O}_2 = \begin{bmatrix} 1 & 0 & 1 \\ -1 & 0 & -3 \\ 1 & 0 & 9 \end{bmatrix}, \qquad
+\operatorname{rank}\mathcal{O}_2 = 2 < 3
 $$
 
 so the system is **not** observable.

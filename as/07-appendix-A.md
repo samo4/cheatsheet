@@ -215,21 +215,21 @@ The homogeneous system $\mathbf{A}\vec{x} = \vec{0}$ always has the trivial solu
 \begin{example}[frametitle={Rank}]
 ```
 
-$$ N = \begin{bmatrix} C \\ CA \end{bmatrix} = \begin{bmatrix} -1 & -1 \\ 3 & 7 \end{bmatrix}  $$
+$$ \mathcal{O} = \begin{bmatrix} C \\ CA \end{bmatrix} = \begin{bmatrix} -1 & -1 \\ 3 & 7 \end{bmatrix}  $$
 
-$N$ is $2\times2$, so $n = 2$. Row-reduce — rank is unchanged by row operations, and the point is to force a zero under the first pivot, the same column-by-column drill as in the Gauss example above. This time the leading entry is $-1$, and the cheapest first move is to flip the row: $-R_1$ turns it into the favourite pivot $+1$ and spares every sign from here on — rank never minds a row being multiplied by $-1$. Then clear column 1 with $R_2 - 3R_1$:
+$\mathcal{O}$ is $2\times2$, so $n = 2$. Row-reduce — rank is unchanged by row operations, and the point is to force a zero under the first pivot, the same column-by-column drill as in the Gauss example above. This time the leading entry is $-1$, and the cheapest first move is to flip the row: $-R_1$ turns it into the favourite pivot $+1$ and spares every sign from here on — rank never minds a row being multiplied by $-1$. Then clear column 1 with $R_2 - 3R_1$:
 
 $$
-N \sim \begin{bmatrix} 1 & 1 \\ 0 & 4 \end{bmatrix}
+\mathcal{O} \sim \begin{bmatrix} 1 & 1 \\ 0 & 4 \end{bmatrix}
 $$
 
 ($-R_1$: $[-1\ -1] \to [1\ 1]$; then $3 - 3\cdot1 = 0$, $7 - 3\cdot1 = 4$). Now independence is plain to see: with a $0$ in its first slot, row 2 could only be a multiple of row 1 if it were the *zero* multiple — any $\alpha\begin{bmatrix}1 & 1\end{bmatrix}$ starts with $\alpha$, which vanishes only for $\alpha = 0$ — and row 2 is not the zero row. Two pivots, one per row, so the rows are linearly independent and
 
 $$
-\operatorname{rank}N = 2 = n,
+\operatorname{rank}\mathcal{O} = 2 = n,
 $$
 
-i.e. $N$ has **full rank**.
+i.e. $\mathcal{O}$ has **full rank**.
 
 Rectangular matrices work the same way, the rank is just capped by the smaller dimension, $\operatorname{rank}\mathbf{A} \le \min(m, n)$: a $3\times4$ matrix can carry at most three pivots. Take one with a dependency planted inside — row 3 was written as row 1 $+$ row 2:
 
@@ -252,13 +252,13 @@ $$
 \operatorname{rank}\mathbf{A} = 2 < 3,
 $$
 
-one short of full row rank. That is the same question the observability test $\operatorname{rank}N = n$ asks: every row $\mathbf{C}\mathbf{A}^k$ must add a genuinely new direction, or the state cannot be reconstructed.
+one short of full row rank. That is the same question the observability test $\operatorname{rank}\mathcal{O} = n$ asks: every row $\mathbf{C}\mathbf{A}^k$ must add a genuinely new direction, or the state cannot be reconstructed.
 
 ```{=latex}
 \end{example}
 ```
 
-**Square shortcut.** $full rank ⇔ \det\mathbf{A} \ne 0$ When the matrix is square, one number settles full rank: for $n\times n$ $\mathbf{A}$, $\operatorname{rank}\mathbf{A} = n$ exactly when $\det\mathbf{A} \ne 0$ — dependent rows or columns are precisely what make the determinant vanish, and their absence *is* full rank. This is the cheap route to the controllability and observability tests whenever the matrix comes out square: $M$ is square only for a single input ($m = 1$), $N$ only for a single output ($p = 1$). For rectangular matrices $\det$ is not even defined, so row-reduction is the only way.
+**Square shortcut.** $full rank ⇔ \det\mathbf{A} \ne 0$ When the matrix is square, one number settles full rank: for $n\times n$ $\mathbf{A}$, $\operatorname{rank}\mathbf{A} = n$ exactly when $\det\mathbf{A} \ne 0$ — dependent rows or columns are precisely what make the determinant vanish, and their absence *is* full rank. This is the cheap route to the controllability and observability tests whenever the matrix comes out square: $\mathcal{C}$ is square only for a single input ($m = 1$), $\mathcal{O}$ only for a single output ($p = 1$). For rectangular matrices $\det$ is not even defined, so row-reduction is the only way.
 
 ### Eigenvalues and eigenvectors
 

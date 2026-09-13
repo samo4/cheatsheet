@@ -1,0 +1,15 @@
+\begin{center}
+\begin{circuitikz}[scale=1.2, european resistors, american voltages]
+  \draw (0,3) to[C=$C$] (0,0);
+  \draw (2,3) to[R=$R$] (2,0);
+  \draw (6,3) to[R=$R$] (6,0);
+  \draw (8,3) to[C=$C$] (8,0);
+  \draw (0,3) -- (2,3);
+  \draw (6,3) -- (8,3);
+  \draw (2,3) to[R=$R_c$] (6,3);
+  \draw (0,0) -- (8,0);
+  \draw (4,0) node[ground]{};
+  \draw (2,3) node[circ,label=above:$v_1$]{};
+  \draw (6,3) node[circ,label=above:$v_2$]{};
+\end{circuitikz}
+\end{center}
