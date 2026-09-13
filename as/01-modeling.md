@@ -10,76 +10,9 @@ In every domain a system is built from the same three kinds of ideal elements:
 
 Storage is what makes a system *dynamic*. A storage element cannot change its energy instantly: it accumulates input over time, so the system keeps reacting after the input is gone. That behaviour is captured by differential equations. Each storage element contributes one state, so the number of states equals the number of storage elements.
 
-The same three elements appear in every domain — electrical, mechanical, hydraulic, thermal — and in non-physical systems such as biological populations or economic ones. This chapter turns the resulting differential equations into the common state-space form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$.
+The same three elements appear in every domain — electrical, mechanical, hydraulic, thermal — and in non-physical systems such as biological populations or economic ones. This chapter turns the resulting differential equations into state-space form: a first-order vector equation in the state and the input.
 
-Given the state and the input, such a model predicts the behaviour for all future time — but only under two assumptions that real systems violate:
-
-- **Time invariance** — the parameters must not change with time. A rocket burning fuel loses mass, so its equations change as it flies.
-- **Linearity** — the dynamics must be linear, and essentially no real system is.
-
-These notes therefore works with **linear time-invariant (LTI)** systems, not only because the math is elegant, but because local linearization lets the toolbox extend to nonlinear and time-varying systems around equilibria or along trajectories.
-
-Even so, this is an idealization. The framework silently assumes the system is **lumped** — a finite number of states, so no partial differential equations (heat, flexible structures, fluids) and no transport delays — and **deterministic**, so no noise. Linearity itself also erases phenomena that no amount of linearization can recover: multiple equilibria, hysteresis, saturation, chaos. The Linearization chapter pushes back on some of this, and the Discrete chapter on sampled time; distributed, delayed, and stochastic systems remain out of reach — there a linear finite-dimensional model is at best a local approximation.
-
-The systems these notes model *do* fit the toolbox: a mass on a spring, a resistor–capacitor circuit — a handful of states and deterministic equations, so a finite $\mathbf{A}$ captures them. Two common kinds of systems do not fit, and each fails for a different reason.
-
-A drum is the archetype of a **distributed** system. Its skin is a membrane: every point can move, so it has infinitely many states, not a finite vector $\vec{x}$. The governing equation is the two-dimensional wave equation, a partial differential equation in space and time,
-
-$$
-\frac{\partial^2 u}{\partial t^2} = c^2\left(\frac{\partial^2 u}{\partial r^2} + \frac{1}{r}\frac{\partial u}{\partial r} + \frac{1}{r^2}\frac{\partial^2 u}{\partial \theta^2}\right),
-$$
-
-whose modes are Bessel-function shapes. Hit the drum and you excite *all* of those infinitely many modes at once — no finite $\mathbf{A}$ matrix reproduces what you hear. A lumped model could keep only a few modes and would be a crude caricature. A plucked guitar string is the same story in one dimension: infinitely many modes too, though its harmonics at least fall on friendly integers. The drum cannot be analyzed with the LTI toolbox of these notes.
-
-Three flavours of **randomness**, in increasing order of how much of the toolbox survives: in the first only the *signal* is random and the dynamics are fine; in the last there is no deterministic part left at all.
-
-```{=latex}
-\begin{example}[frametitle={Example - thermal noise in an RC circuit}]
-```
-
-A resistor is never quiet: thermal agitation of its electrons puts a random voltage across it — Johnson–Nyquist noise — with zero mean and a flat spectrum $S_v = 4 k_B T R$. The RC low-pass filter is the textbook LTI system — one capacitor, one state, a finite $\mathbf{A}$ — yet its output is a random signal that cannot be predicted, only described statistically.
-
-**Why it fails the toolbox.** The dynamics are perfectly LTI, but the *input* is not. Run the same experiment twice and the two traces differ, though nothing about the circuit changed. The toolbox predicts trajectories; here only the statistics are predictable. There is even a clean result: equipartition pins the variance of the capacitor voltage at $k_B T / C$, independent of the resistor — $R$ only sets how fast the fluctuations evolve.
-
-```{=latex}
-\end{example}
-```
-
-```{=latex}
-\begin{example}[frametitle={Example - radioactive decay}]
-```
-
-The decay law $\dot{N} = -\lambda N$ is a first-order LTI system — pure exponential decay, the same shape as a discharging capacitor. Yet a Geiger counter never clicks that smoothly: the clicks form a Poisson process, so the count wanders around the exponential.
-
-The ODE predicts the *mean* number of atoms, not the actual count. The fluctuations are of order $\sqrt{N}$: for a strong source they are relatively small and the model is excellent, but for a weak source randomness dominates and the exponential is only a guess about an average. The deterministic skeleton is genuinely there; the realization is not.
-
-We can't strictly say the toolbox fails, but depending on what you're calculating it may be of limited use.
-
-```{=latex}
-\end{example}
-```
-
-```{=latex}
-\begin{example}[frametitle={Example - Brownian motion of a pollen grain}]
-```
-
-A pollen grain in water never sits still: battered from all sides by molecules, it wanders at random. There is no average trajectory worth predicting — the position is a Wiener process whose spread grows as
-
-$$
-\langle x^2 \rangle = 2 D t
-$$
-
-with diffusion coefficient $D$.
-
-**Why it fails the toolbox.** There is no deterministic part at all. There is not even a mean trajectory to linearize around — the randomness is not a perturbation of an ODE, it *is* the whole phenomenon, and the LTI toolbox has nothing to grab onto.
-
-```{=latex}
-\end{example}
-```
-
-The drum fails because it is distributed, these systems because they are random — either way there is no finite deterministic ODE, and all of them stay outside the toolbox provided by these notes.
-
-The correct title of this chapter should then be "LTI lumped deterministic modeling" — but who wants that?
+These notes work with **LTI, lumped, deterministic** systems — the class carved out in the Introduction. Given the state and the input, such a model predicts the behaviour for all future time; outside that class the predictions fall back to local approximations (nonlinear and time-varying systems, via the Linearization chapter) or give out altogether (distributed and stochastic ones).
 
 Building a model is not always a paper exercise — it often needs data. A car suspension model, for instance, needs the spring rate, damping, and mass. That is not a dead end: given a good model structure, the parameters can be fitted to measurements of the real system. This is *system identification*, the often-forgotten counterpart of modeling.
 
@@ -95,7 +28,7 @@ $$
 \dot{x}_1 = x_2
 $$
 
-But just looking the the example it's easer: take the second-order ODE
+But just looking at the example it's easier: take the second-order ODE
 
 $$
 \ddot{y} + 2\dot{y} + 3y = 4u
@@ -108,17 +41,17 @@ $$
 \dot{x}_2 = \ddot{y} = -3x_1 - 2x_2 + 4u
 $$
 
-which is exactly the state-space shape from the circuit example:
+which is exactly the state-space shape we are after:
 
 $$
 \begin{bmatrix} \dot{x_1} \\ \dot{x_2} \end{bmatrix} = \begin{bmatrix} 0 & 1 \\ -3 & -2 \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} + \begin{bmatrix} 0 \\ 4 \end{bmatrix}u, \qquad
 y = \begin{bmatrix} 1 & 0 \end{bmatrix}\vec{x}
 $$
 
-In general, an $n$-th order ODE $y^{(n)} + a_{n-1}y^{(n-1)} + \cdots + a_1\dot{y} + a_0 y = u$ becomes $n$ first-order equations by taking $x_1 = y$, $x_2 = \dot{y}$, $\dots$, $x_n = y^{(n-1)}$; the $\mathbf{A}$ matrix takes the companion form
+In general, an $n$-th order ODE $y^{(n)} + a_{n-1}y^{(n-1)} + \cdots + a_1\dot{y} + a_0 y = u$ becomes $n$ first-order equations by taking $x_1 = y$, $x_2 = \dot{y}$, $\dots$, $x_n = y^{(n-1)}$; the state matrix takes the companion form
 
 $$
-\mathbf{A} = \begin{bmatrix}
+\begin{bmatrix}
 0 & 1 & 0 & \cdots & 0 \\
 0 & 0 & 1 & \cdots & 0 \\
 \vdots & & & \ddots & \vdots \\
@@ -197,7 +130,7 @@ rearranged into the familiar second-order ODE
 
 $$m\ddot{x} + b\dot{x} + kx = -mg.$$
 
-**Step 4 — reduce to first order** With the states of Step 1:
+**Step 4 — reduce to first order.** With the states of Step 1:
 
 $$\dot{x}_1 = x_2, \qquad \dot{x}_2 = -\frac{k}{m}x_1 - \frac{b}{m}x_2 - g.$$
 
@@ -207,7 +140,7 @@ $$
 \dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\vec{x} + \begin{bmatrix} 0 \\ -\frac{1}{m} \end{bmatrix} u.
 $$
 
-**Physical meaning of the states.** $x_1$ is the body's vertical position, $x_2$ its vertical velocity. The $\mathbf{A}$ matrix is the same companion form as the higher-order ODE example: one state per derivative. The constant input does not change the dynamics — it only sets the equilibrium (the static deflection of Step 2); measure $x$ from that equilibrium and $mg$ drops out entirely.
+**Physical meaning of the states.** $x_1$ is the body's vertical position, $x_2$ its vertical velocity. The state matrix is the same companion form as in the higher-order ODE example: one state per derivative. The constant input does not change the dynamics — it only sets the equilibrium (the static deflection of Step 2); measure $x$ from that equilibrium and $mg$ drops out entirely.
 
 ```{=latex}
 \end{example}
@@ -221,7 +154,7 @@ A car of mass $m$ moving at speed $v_0$ hits a rigid barrier cushioned by a spri
 
 $$m\ddot{x} = -kx - b\dot{x}, \qquad m\ddot{x} + b\dot{x} + kx = 0.$$
 
-With states $x_1 = x$, $x_2 = \dot{x}$ this is the same $\mathbf{A}$ with no input:
+With states $x_1 = x$, $x_2 = \dot{x}$ this is the same state matrix with no input:
 
 $$\dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\vec{x}.$$
 
@@ -239,19 +172,18 @@ The same equations with $x \to \theta$, $v \to \omega$, $F \to \tau$, $m \to J$:
 
 ## State-space modeling of electrical circuits
 
-For this example we want to write down the state-space equations of the circuit in matrix form
-$\dot{\vec{x}} = \mathbf{A} \vec{x} + \mathbf{B} \vec{u}$ and $\vec{y} = \mathbf{C} \vec{x} + \mathbf{D} \vec{u}$,
-where $\vec{x} = \begin{bmatrix} i_L \\ v_C \end{bmatrix}$ and $\vec{u} = \begin{bmatrix} v_g \end{bmatrix}$ and $\vec{y} = \begin{bmatrix} v_{R_1} \\ v_L \end{bmatrix}$.
+For this example we want to write down the state-space equations of the circuit in matrix form,
+with state vector $\vec{x} = \begin{bmatrix} i_L \\ v_C \end{bmatrix}$, input $\vec{u} = \begin{bmatrix} v_g \end{bmatrix}$, and output $\vec{y} = \begin{bmatrix} v_{R_1} \\ v_L \end{bmatrix}$.
 
 ```{=latex}
 \input{tikz/modeling-circuit.tex}
 ```
 
-Let's select one node as ground. Although any node can be ground, we try to choose it in a way that will make the resulting equation as easy as possible. Generally, pick the node with the most element connections to reduce the number of unknown node voltages. Prefer to ground a terminal of a voltage source: then the other terminal is fixed by the source ($V_1 = v_g$), so we never write the KCL equation at that node and the source current $i_{v_g}$ never enters the equations as an unknown. If a voltage source instead floats between two non-grounded nodes, its current appears in both node equations with opposite signs — eliminate it by adding the two node equations (the *supernode*) and closing the pair with the source constraint $V_2 - V_1 = v_g$. In our case, we can select the bottom node as ground.\footnote{In simulation software (e.g., SPICE), the ground node choice can influence numerical stability, but picking the one with most connections is a still good rule of thumb.}
+Let's select one node as ground. Although any node can be ground, we try to choose it in a way that will make the resulting equation as easy as possible. Generally, pick the node with the most element connections to reduce the number of unknown node voltages. Prefer to ground a terminal of a voltage source: then the other terminal is fixed by the source ($V_1 = v_g$), so we never write the KCL equation at that node and the source current $i_{v_g}$ never enters the equations as an unknown. If a voltage source instead floats between two non-grounded nodes, its current appears in both node equations with opposite signs — eliminate it by adding the two node equations (the *supernode*) and closing the pair with the source constraint $V_2 - V_1 = v_g$. In our case, we can select the bottom node as ground.\footnote{In simulation software (e.g., SPICE), the ground node choice can influence numerical stability, but picking the one with the most connections is still a good rule of thumb.}
 
 Then we proceed to mark the remaining nodes.
 
-Passive sign convention (PSC) defines an element’s voltage positive at the terminal where the reference current enters; then power is positive when the element absorbs energy. For voltage source, according to PSC, we must mark the reference current in such a way that current entering the element will absorb power and when leaving (minus sign) give power to the rest of the circuit. That means that arrow should point into the + of voltage source. For capacitor we have defined polarity: we apply the PSC convention to $i_C$ (arrow into +). And for the inductor we have defined the current $i_L$. Although $v_L$ is not required here, we could define its polarity according to PSC as well ($V_2$ is positive in relation to $V_3$).
+Passive sign convention (PSC) defines an element’s voltage positive at the terminal where the reference current enters; then power is positive when the element absorbs energy. For a voltage source, according to PSC, we must mark the reference current so that current entering the element absorbs power and current leaving (minus sign) delivers power to the rest of the circuit. That means the arrow should point into the + terminal of the voltage source. For capacitor we have defined polarity: we apply the PSC convention to $i_C$ (arrow into +). And for the inductor we have defined the current $i_L$. Although $v_L$ is not required here, we could define its polarity according to PSC as well ($V_2$ is positive in relation to $V_3$).
 
 ```{=latex}
 \input{tikz/modeling-circuit-nodes.tex}
@@ -271,7 +203,7 @@ $$\frac{V_2 - V_1}{R_1} + i_L = 0$$
 
 And the same for capacitors: we express the current through the capacitor as a state variable. For the capacitor we take its voltage $v_C$ as the state variable (more standard); current follows $i_C = C\,\dot{v}_C$ under PSC.
 
-Next, we write down the equations for the energy-storing elements using their constitutive relations. Note that $i_L$ is chosen from $V_2$ to $V_3$. Lenz’s law is not ignored; its effect was already built into the sign of the inductor’s voltage when we adopted PSC. Faraday’s law gives $v = L\,\dot{i}$ for the chosen polarity (voltage drop in the direction of the reference current). If you had defined the voltage polarity opposite to the current reference, the relation would appear as $v = -L\,\dot{i}$. Thus no extra minus is added later - the orientation choices at the start encode it.
+Next, we write down the equations for the energy-storing elements using their constitutive relations. Note that $i_L$ is chosen from $V_2$ to $V_3$. Lenz’s law is not ignored; its effect was already built into the sign of the inductor’s voltage when we adopted PSC. Faraday’s law gives $v = L\,\dot{i}$ for the chosen polarity (voltage drop in the direction of the reference current). If you had defined the voltage polarity opposite to the current reference, the relation would appear as $v = -L\,\dot{i}$. Thus no extra minus is added later — the orientation choices at the start encode it.
 
 $$ v_L = L \frac{di_L}{dt} = V_2 - V_3 $$
 
@@ -315,7 +247,7 @@ $v_{R_1}=R_1 i_L - v_g$, $v_L = L\,\dfrac{di_L}{dt}$.
 \input{tikz/example-circuit.tex}
 ```
 
-For the circuit above, we want to write down the state-space equations  in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where the state vector $\vec{x} = [i_L, v_C]^T$ and $\vec{u} = [v_g, i_g]^T$.
+For the circuit above, we want to write the state-space equations in matrix form, with state vector $\vec{x} = [i_L, v_C]^T$ and input $\vec{u} = [v_g, i_g]^T$.
 
 **Step 1** Decide on nodes.
 
@@ -339,7 +271,7 @@ And we note that $V_1 = v_g$ and $i_{g'} = i_L$ (the current through the source 
 
 Instead of trying to rearrange the node equations from the start, start with the equations that already contain the derivatives — the constitutive relations of the two energy-storing elements, $i_C = C\dot{v}_C$ and $v_L = L\dot{i}_L$. They give the state derivatives directly; the node equations are only used to fill in whatever current or voltage they still need.
 
-**Step 4 — Capacitor** What we need is: **$\dot{v}_C$** expressed as a function of the states and the inputs.
+**Step 3 — Capacitor.** What we need is **$\dot{v}_C$**, expressed as a function of the states and the inputs.
 
 To get it from $i_C = C\dot{v}_C$ we need the capacitor current $i_C$:
 
@@ -353,7 +285,7 @@ $$C\,\dot{v}_C = - \frac{v_C}{R_2} + i_g - i_L
 \quad\Longrightarrow\quad
 \dot{v}_C = -\frac{1}{C}\,i_L - \frac{1}{CR_2}\,v_C + \frac{1}{C}\,i_g$$
 
-**Step 5 — Inductor** What we need is: **$\dot{i}_L$**.
+**Step 4 — Inductor.** What we need is **$\dot{i}_L$**.
 
 From $v_L = L\dot{i}_L$ we need $v_L$, and the inductor relation already tells us $v_L = -V_3$ — so we need the node voltage $V_3$.
 
@@ -375,9 +307,9 @@ $$L\,\dot{i}_L = -v_g - R_1 i_L + v_C
 \quad\Longrightarrow\quad
 \dot{i}_L = -\frac{R_1}{L}\,i_L + \frac{1}{L}\,v_C - \frac{1}{L}\,v_g$$
 
-**Step 6** Collect the equations into matrix form.
+**Step 5** Collect the equations into matrix form.
 
-The two scalar equations from Steps 4 and 5 are exactly the two rows of $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$. Written out in full, the left-hand side is the derivative of the state vector, so both state derivatives appear explicitly:
+The two scalar equations from Steps 3 and 4 are exactly the two rows of the state equation. Written out in full, the left-hand side is the derivative of the state vector, so both state derivatives appear explicitly:
 
 $$
 \frac{d}{dt}\begin{bmatrix} i_L \\ v_C \end{bmatrix} =

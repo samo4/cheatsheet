@@ -18,6 +18,11 @@
       "runIn": "terminal"
     },
     {
+      "match": "as[\\\\/]00-introduction\\.md$",
+      "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch0",
+      "runIn": "terminal"
+    },
+    {
       "match": "as[\\\\/]01-modeling\\.md$",
       "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch1",
       "runIn": "terminal"
