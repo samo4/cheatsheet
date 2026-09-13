@@ -18,7 +18,7 @@
   }
 }
 \renewcommand{\arraystretch}{1.4}
-\usepackage{titlesec}
+\usepackage[nobottomtitles*]{titlesec}
 \newcommand{\sectionbreak}{\clearpage}
 \widowpenalty=10000
 \clubpenalty=10000
@@ -40,4 +40,11 @@
 \makeatletter
 \renewcommand{\paragraph}{\@startsection{paragraph}{4}{\z@}{1.0em \@plus 0.3em \@minus 0.2em}{0.5em}{\normalfont\normalsize\bfseries\color{black!70}}}
 \renewcommand{\subparagraph}{\@startsection{subparagraph}{5}{\z@}{1.0em \@plus 0.3em \@minus 0.2em}{0.5em}{\normalfont\normalsize\bfseries\color{black!70}}}
+% never let a page break fall between a frame title and the first thing inside the box
+\patchcmd{\mdf@@frametitlerule}{\vskip\mdf@innertopmargin@length}%
+  {\penalty10000\vskip\mdf@innertopmargin@length}{}%
+  {\PackageWarning{as-preamble}{mdframed frametitle patch 1 failed (mdframed changed?)}}
+\patchcmd{\mdf@@frametitlerule}{\vskip\mdf@splittopskip@length}%
+  {\penalty10000\vskip\mdf@splittopskip@length}{}%
+  {\PackageWarning{as-preamble}{mdframed frametitle patch 2 failed (mdframed changed?)}}
 \makeatother
