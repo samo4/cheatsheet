@@ -97,7 +97,7 @@ $$
 \frac{\partial^2 u}{\partial t^2} = c^2\left(\frac{\partial^2 u}{\partial r^2} + \frac{1}{r}\frac{\partial u}{\partial r} + \frac{1}{r^2}\frac{\partial^2 u}{\partial \theta^2}\right),
 $$
 
-whose modes are Bessel-function shapes (you can visualize them by remembering ripples on a pond). Hitting the drum excites all of those modes at once, and no finite system of ODEs reproduces what you hear. A lumped model could keep only a few of them. A plucked guitar string has the same problem in one dimension, though its harmonics fall on integers. Neither can be analyzed by the LTI toolbox.
+whose modes are Bessel-function shapes. Hitting the drum excites all of those modes at once, and no finite system of ODEs reproduces what you hear. A lumped model could keep only a few of them. A plucked guitar string has the same problem in one dimension, though its harmonics fall on integers. Neither can be analyzed by the LTI toolbox.
 
 ### Stochastic systems
 

@@ -18,7 +18,9 @@ Everything that follows — stability, controllability, observability — is dec
 
 A system $(\mathbf{A}, \mathbf{B})$ is **controllable** if, for any initial state $\vec{x}_0$ and any target state $\vec{x}_1$, there exists an input $\vec{u}(t)$ that drives the state from $\vec{x}_0$ to $\vec{x}_1$ in finite time — the input can steer the state anywhere in state space.
 
-The **controllability matrix** collects the columns that matter:
+This is not just a theoretical concept, but a practical requirement for being able to control a system in real-world applications. Please forgive the crude example, but imagine trying to steer a car that doesn't have a throttle — you might be able to command it to reach a certain position for a while, but you'll never control it completely. You have the $\mathbf{D}$ matrix, but you don't have the $\mathbf{B}$ matrix, so you can't influence the state through the input and depdending on the $\mathbf{C}$ matrix, the lack of control of the internal state (the rpm of the motor) will have different level of inconvinece for your task of parking the car. 
+
+Obviously only the $\mathbf{A}$ and $\mathbf{B}$ matrices matter for controllability. The **controllability matrix** collects the columns that matter:
 
 $$
 \mathcal{C} = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}
@@ -26,7 +28,7 @@ $$
 
 and the system is controllable iff $\operatorname{rank}\mathcal{C} = n$.
 
-Why exactly those columns? Take the state response with $\vec{x}(0) = \vec{0}$; reaching $\vec{x}$ at time $t$ requires
+Take the state response with $\vec{x}(0) = \vec{0}$; reaching $\vec{x}(t)$ at time $t$ requires
 
 $$
 \vec{x}(t) = \int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\vec{u}(\tau)\, d\tau
@@ -109,7 +111,7 @@ so $\operatorname{rank}\mathcal{C} = 2 < n$ and the system is **not** controllab
 
 A system $(\mathbf{A}, \mathbf{C})$ is **observable** if the initial state $\vec{x}_0$ can be reconstructed from the output $\vec{y}(t)$ (and the known input $\vec{u}(t)$) over a finite time interval — every mode eventually shows up in the output.
 
-The **observability matrix** collects the rows that matter:
+Rolling on our car example from the previous chapter, we can easily observer (pun intended) that the ability to reconstruct the internal state from the outputs depends on the $\mathbf{C}$ and $\mathbf{A}$ matrices. The **observability matrix** collects the rows that matter:
 
 $$
 \mathcal{O} = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}
@@ -185,6 +187,12 @@ For the example system of the State-space chapter, $\dot{\vec{x}} = \begin{bmatr
 
 ```{=latex}
 \input{tikz/phase-portrait-focus.tex}
+```
+
+The same response, read one state at a time, is two decaying sinusoids — the spiral is those two oscillations stitched together. The real part of the eigenvalues sets the decay, the imaginary part the oscillation:
+
+```{=latex}
+\input{tikz/state-components.tex}
 ```
 
 Whether trajectories actually end up at the equilibrium is exactly what the next section, Stability, formalizes.

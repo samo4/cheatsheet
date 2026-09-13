@@ -8,7 +8,7 @@ A system is captured by its state — the smallest set of variables that fully s
 \input{tikz/state-space-mimo.tex}
 ```
 
-$\vec{u}$ collects the inputs, $\vec{y}$ the outputs, and $\vec{x}$ the states. In general (nonlinear, time-varying) systems the state and output equations read
+$\vec{u}$ collects the inputs, $\vec{y}$ the outputs, and $\vec{x}$ the states. In general (nonlinear, time-varying) systems the state and output equations read:
 
 $$
 \dot{\vec{x}} = \mathbf{f}(\vec{x}, \vec{u}, t), \qquad
@@ -26,10 +26,10 @@ $$
 
 with $\mathbf{A}$ the dynamics, $\mathbf{B}$ the input coupling, $\mathbf{C}$ the output coupling, and $\mathbf{D}$ the direct feedthrough — often, but certainly not always, $\mathbf{D} = \mathbf{0}$. The outputs are generally not the states themselves — that is exactly what $\mathbf{C}$ and $\mathbf{D}$ capture.
 
-The state variables are not unique. Relabeling is the dull case — reordering $x_1 = y$, $x_2 = \dot{y}$ changes nothing but the row order. The interesting case is swapping one physical quantity for another: the first example shows that the choice is genuinely free, the second that it can pay off.
+The state variables are not unique. Relabeling is the dull case — reordering $x_1 = y$, $x_2 = \dot{y}$ changes nothing but the row order. The interesting case is swapping one physical quantity for another, which is a genuine choice rather than a relabeling.
 
 ```{=latex}
-\begin{example}[frametitle={Example - state variables are not unique: rescaling}]
+\begin{example}[frametitle={Example - state variables are not unique}]
 ```
 
 Two elements give a state, a third gives a choice. A current source $i_g$ and a capacitor $C$ sit in parallel, and that pair drives a series $L$–$R$ branch.
@@ -68,118 +68,48 @@ What the second choice buys is bookkeeping. Both components of $\tilde{\vec{x}}$
 \end{example}
 ```
 
-```{=latex}
-\begin{example}[frametitle={Example - state variables are not unique: modes}]
-```
-
-Two identical RC sections — capacitance $C$ and leakage $R$ to ground each — joined by a coupling resistor $R_c$.
-
-```{=latex}
-\input{tikz/state-nonunique-modes.tex}
-```
-
-Writing $v_1, v_2$ for the capacitor voltages and $\alpha = \frac{1}{RC}$, $\beta = \frac{1}{R_cC}$, KCL at the two nodes gives
+## Homogeneous solution
 
 $$
-\dot{\vec{v}} = \begin{bmatrix} -(\alpha+\beta) & \beta \\ \beta & -(\alpha+\beta) \end{bmatrix}\vec{v}.
+\dot{\vec{x}} = \mathbf{A}\vec{x}, \qquad \vec{x}(t_0) = \vec{x}_0
 $$
 
-The coupling ties the two equations together, and a rescaling cannot break it: scaling the two states multiplies one off-diagonal entry up and the other down by the same factor, leaving their product — and the coupling it represents — untouched. Only a change that *mixes* the two states can separate them. So add and subtract the two equations — that is, choose the *common* and *differential* combinations $w_1 = v_1 + v_2$ and $w_2 = v_1 - v_2$:
+is a linear ODE with no input ($\vec{u} = \vec{0}$), which is what *homogeneous* means here. The scalar case is the one you already know: $\dot{x} = ax$ has the solution $x(t) = x_0\,e^{a(t-t_0)}$. The vector case is the same with $a$ replaced by $\mathbf{A}$,
 
 $$
-\dot{\vec{w}} = \begin{bmatrix} -\alpha & 0 \\ 0 & -(\alpha+2\beta) \end{bmatrix}\vec{w},
+\vec{x}(t) = \vec{x}_0\, e^{\mathbf{A}(t-t_0)},
 $$
 
-two independent first-order systems. The physics explains why: in common mode $v_1 = v_2$, no current flows through $R_c$, and each capacitor discharges through its own $R$ with time constant $RC$; in differential mode $v_1 = -v_2$, the coupling resistor sees the full $2v_1$ and shortens the time constant to $\frac{1}{\alpha+2\beta}$ — exactly as if $\frac{R_c}{2}$ sat in parallel with $R$.
-
-So the new states are not the old ones relabeled; they are coordinates along the eigenvectors of $\mathbf{A}$ — the *modes* of the system, found here by inspection, and in the diagonalization section below by construction.
-
-```{=latex}
-\end{example}
-```
-
-## State-space representation
-
-The state-space representation is a geometric view of the dynamics: at every instant the system sits at a point $\vec{x}(t)$ in state space, and the equations $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$ push that point along a curve — the *trajectory*. For the example system from the Modeling chapter, $\dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -3 & -2 \end{bmatrix}\vec{x}$ with $\vec{x}(0) = (1, 0)$, the state spirals into the origin — the same motion, plotted one state at a time, is two decaying sinusoids (markers at integer times):
-
-```{=latex}
-\input{tikz/state-spiral.tex}
-```
-
-The decay and the oscillation come straight from the eigenvalues of $\mathbf{A}$ — here $-1 \pm j\sqrt{2}$, the negative real part damping the spiral, the imaginary part driving the rotation.
-
-## Homogeneous Solution
-
-$$\dot{\vec{x}} = \mathbf{A}\vec{x}$$ 
-
-with initial condition $\vec{x}(0) = \vec{x}_0$ is a linear ODE. The solution can be expressed in terms of the matrix exponential:
-
-For the trivial case of homogeneous equations (homogeneous: no input, $\vec{u} = \vec{0}$), let's try solving it with scalars first:
-
-$$
-\dot{x} = a x
-$$
-$$
-\dot{x} - a x = 0
-$$
-
-Then we insert $x = e^{\lambda t}$ (which per chain rule gives $\dot{x} = \lambda e^{\lambda t}$) and get:
-
-$$
-\lambda e^{\lambda t} - a e^{\lambda t} = 0
-$$
-$$
-\lambda - a = 0
-$$
-$$
-\lambda = a
-$$
-
-So $\lambda = a$ is the only root and the general solution is $x(t) = C e^{at}$, with $C$ fixed by the initial condition $x(0) = x_0$:
-
-$$
-x(t_0) = C e^{a{t_0}} \quad\Longrightarrow\quad C = x_0 e^{-a{t_0}} \quad\Longrightarrow\quad x(t) = x_0 e^{a(t-t_0)}.
-$$
-
-Where the last part is the solution of scalar homogeneous ODE. The solution of the vector case is a straightforward generalization.
-
-By the analogy with the scalar case, we can try the same exponential solution for the vector case $\dot{\vec{x}} = \mathbf{A}\vec{x}$ (still homogeneous, $\vec{u} = \vec{0}$). Try the same exponential:
-
-
-$$
-\vec{X}_H = \vec{x}_0\, e^{\mathbf{A}(t-t_0)}
-$$
-
-which indeed satisfies $\vec{X}_H(t_0) = \vec{x}_0\, e^{\mathbf{A}(t_0-t_0)} = \vec{x}_0\, \mathbf{I} = \vec{x}_0$.
-
-Solutions for the scalar case can be expressed as a Taylor series:
+provided we can make sense of the exponential of a matrix. The scalar exponential is the Taylor series
 
 $$
 e^{at} = 1 + at + \frac{(at)^2}{2!} + \frac{(at)^3}{3!} + \dots
 $$
 
-And since matrices are happily multipliable:
+and matrices add and multiply like numbers, so we define
 
 $$
-e^{\mathbf{A}t} = \sum_{k=0}^{\infty} \frac{(\mathbf{A}t)^k}{k!}
+e^{\mathbf{A}t} = \mathbf{I} + \mathbf{A}t + \frac{(\mathbf{A}t)^2}{2!} + \frac{(\mathbf{A}t)^3}{3!} + \dots = \sum_{k=0}^{\infty} \frac{(\mathbf{A}t)^k}{k!}.
 $$
 
-And because mathematicians don't like writing/typing they decided to shorthand the $e^{\mathbf{A}(t-t_0)}$ to $\Phi(t)$ and call it the state transition matrix. So we can write the solution as:
+Differentiating the series term by term brings one power of $\mathbf{A}$ down from every term:
 
 $$
-\vec{X}_H = \Phi(t) \vec{x}_0
+\frac{d}{dt} e^{\mathbf{A}t} = \sum_{k=1}^{\infty} \frac{(\mathbf{A}t)^{k-1}}{(k-1)!}\,\mathbf{A} = e^{\mathbf{A}t}\mathbf{A} = \mathbf{A}e^{\mathbf{A}t},
 $$
 
-State transition matrix has the following properties:
+where both orders agree because a matrix commutes with itself. At $t = 0$ the series gives $\mathbf{I}$. So $e^{\mathbf{A}(t-t_0)}$ differentiates to $\mathbf{A}\,e^{\mathbf{A}(t-t_0)}$ and equals $\mathbf{I}$ at $t = t_0$: it satisfies both the ODE and the initial condition, which is all we needed.
 
-1. $\Phi(0) = \mathbf{I}$
-2. $\Phi(t_1 + t_2) = \Phi(t_1)\Phi(t_2)$
-3. $\Phi(t_1 - t_2) = \Phi(t_1)\Phi^{-1}(t_2)$
-4. $\frac{d}{dt}\Phi(t) = \mathbf{A}\Phi(t)$
+Because mathematicians don't like writing/typing $e^{\mathbf{A}t}$, they shorthand it to $\Phi(t)$ and call it the state transition matrix — it carries the state from one time to another, $\vec{x}(t) = \Phi(t-t_0)\,\vec{x}_0$.
 
-PS: Matrix multiplication is associative ($\mathbf{A}\mathbf{B}\mathbf{C} = (\mathbf{A}\mathbf{B})\mathbf{C} = \mathbf{A}(\mathbf{B}\mathbf{C})$) but not commutative ($\mathbf{A}\mathbf{B} \ne \mathbf{B}\mathbf{A}$ in general). Even though it's associative, in many fields the rightmost matrix "acts first", so we usually multiply from right to left.
+The state transition matrix has the following properties:
 
-## Nonhomogeneous Solution
+1. $\Phi(0) = \mathbf{I}$ — the series at $t = 0$.
+2. $\Phi(t_1 + t_2) = \Phi(t_1)\Phi(t_2)$ — multiplying the two series. This is where it matters that every factor is the *same* matrix: matrices do not commute in general, so $e^{\mathbf{A}}e^{\mathbf{B}} \ne e^{\mathbf{A}+\mathbf{B}}$ for different $\mathbf{A}$ and $\mathbf{B}$, but a matrix always commutes with itself. Multiplication is associative, so bracketing never matters; with only one matrix in play the order of the factors is never in question either.
+3. $\Phi(t_1 - t_2) = \Phi(t_1)\Phi^{-1}(t_2)$ — property 2 with $t_2 \to -t_2$, since $\Phi(-t) = \Phi^{-1}(t)$.
+4. $\frac{d}{dt}\Phi(t) = \mathbf{A}\Phi(t)$ — the derivative above.
+
+## Nonhomogeneous solution
 
 $$
 \dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}, \qquad \vec{x}(t_0) = \vec{x}_0
@@ -235,21 +165,21 @@ $$
 ```{=latex}
 \begin{example}[frametitle={Example - mass on a spring}]
 ```
-Drop a weight on a spring with $v_0$. How will the weight move?
+A weight is dropped onto a spring, moving downward with speed $v_0$. Take $x$ as the downward displacement from the unstretched position, so at $t = 0$ we have $x = 0$ and $v = v_0$. How will the weight move?
 
 The equation of motion is:
 
-$$m\ddot{x} = -kx - mg$$
+$$m\ddot{x} = -kx + mg$$
 
 Introduce $v = \dot{x}$ and write it in state space:
 
 $$
 \begin{bmatrix} \dot{x} \\ \dot{v} \end{bmatrix}
 = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & 0 \end{bmatrix}\begin{bmatrix} x \\ v \end{bmatrix}
-+ \begin{bmatrix} 0 \\ -g \end{bmatrix}
++ \begin{bmatrix} 0 \\ g \end{bmatrix}
 $$
 
-**Step 1 — $\Phi$ by the defining series.** At this point the only tool for a concrete $\Phi$ is Taylor series\footnote{The same $\Phi$ drops out faster through Laplace, $\mathcal{L}^{-1}\{(s\mathbf{I}-\mathbf{A})^{-1}\}$ — an identity we derive in Section 5, where the hanging-mass example works exactly that route.} Compute the first powers:
+**Step 1 — $\Phi$ by the defining series.** At this point the only tool for a concrete $\Phi$ is Taylor series\footnote{The same $\Phi$ drops out faster through Laplace, $\mathcal{L}^{-1}\{(s\mathbf{I}-\mathbf{A})^{-1}\}$ — an identity we derive in the Laplace transform subsection below, where the hanging-mass example works exactly that route.} Compute the first powers:
 
 $$
 \mathbf{A}^2 = \mathbf{A}\mathbf{A} = \begin{bmatrix} -\frac{k}{m} & 0 \\ 0 & -\frac{k}{m} \end{bmatrix} = -\frac{k}{m}\mathbf{I}
@@ -285,7 +215,7 @@ $$
 
 That is the whole homogeneous response: the free ring of the initial kick, starting at $x = 0$ with speed $v_0$ and oscillating forever (no damping yet).
 
-**Step 3 — the forced part: gravity, via the $\tau$ trick.** The homogeneous piece is done; the input term remains. Gravity is a constant input, $\mathbf{B}\vec{u} = \tvec{0,-g}$, so the forced integral is
+**Step 3 — the forced part: gravity, via the $\tau$ trick.** The homogeneous piece is done; the input term remains. Gravity is a constant input, $\mathbf{B}\vec{u} = \tvec{0,g}$, so the forced integral is
 
 $$
 \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
@@ -300,18 +230,18 @@ $$
 This is exactly the trick that only works because we start at $0$ — a nonzero lower limit $t_0$ would leave the shifted window $[t-t_0,\, t]$. With $\tau$ gone, what remains is an ordinary integral of $\Phi(u)\mathbf{B}$:
 
 $$
-\int_0^t \Phi(u)\mathbf{B}\,du = \int_0^t \begin{bmatrix} -\frac{g}{\omega_0}\sin\omega_0 u \\[2pt] -g\cos\omega_0 u \end{bmatrix}du
-= \begin{bmatrix} \frac{g}{\omega_0^2}(\cos\omega_0 t - 1) \\[2pt] -\frac{g}{\omega_0}\sin\omega_0 t \end{bmatrix}
+\int_0^t \Phi(u)\mathbf{B}\,du = \int_0^t \begin{bmatrix} \frac{g}{\omega_0}\sin\omega_0 u \\[2pt] g\cos\omega_0 u \end{bmatrix}du
+= \begin{bmatrix} \frac{g}{\omega_0^2}(1-\cos\omega_0 t) \\[2pt] \frac{g}{\omega_0}\sin\omega_0 t \end{bmatrix}
 $$
 
 **Putting it together** — the full motion is the sum of the two pieces:
 
 $$
 \vec{x}(t) = \begin{bmatrix} \frac{v_0}{\omega_0}\sin\omega_0 t \\[2pt] v_0\cos\omega_0 t \end{bmatrix}
-+ \begin{bmatrix} \frac{g}{\omega_0^2}(\cos\omega_0 t - 1) \\[2pt] -\frac{g}{\omega_0}\sin\omega_0 t \end{bmatrix}
++ \begin{bmatrix} \frac{g}{\omega_0^2}(1-\cos\omega_0 t) \\[2pt] \frac{g}{\omega_0}\sin\omega_0 t \end{bmatrix}
 $$
 
-Sanity check at $t = 0$: $x(0) = 0$ (both position terms vanish) and $v(0) = v_0$ (only the homogeneous $\cos$ survives), just as dropped. The gravity piece makes the mass ring about the lowered point — its constant part $-\frac{g}{\omega_0^2} = -\frac{mg}{k}$ is the static stretch that balances the weight — while the $\frac{v_0}{\omega_0}\sin\omega_0 t$ term is the free oscillation of the initial kick superimposed on top.
+Sanity check at $t = 0$: $x(0) = 0$ (both position terms vanish) and $v(0) = v_0$ (only the homogeneous $\cos$ survives), just as dropped. The gravity piece makes the mass ring about the lowered point — its constant part $\frac{g}{\omega_0^2} = \frac{mg}{k}$ is the static stretch that balances the weight — while the $\frac{v_0}{\omega_0}\sin\omega_0 t$ term is the free oscillation of the initial kick superimposed on top.
 
 ```{=latex}
 \end{example}
@@ -411,7 +341,7 @@ $}
 \]
 ```
 
-The first term is the homogeneous response, the second is the convolution with $\vec{u}$, so comparing with the boxed solution of Section 4 identifies
+The first term is the homogeneous response, the second is the convolution with $\vec{u}$, so comparing with the boxed nonhomogeneous solution above identifies
 
 ```{=latex}
 \[
@@ -449,11 +379,11 @@ e^{-t} - e^{-2t} & e^{-t}
 \end{bmatrix}
 $$
 
-which (shockingly, I know!) matches the Taylor result.
+which matches the Taylor result.
 
 Now let's do something useful with $\Phi$: **the step response**.
 
-Take zero initial state $\vec{x}(0) = \vec{0}$, a step input $u(t) = 5$ (constant for $t \ge 0$), and $\mathbf{B}^{\mathsf{T}} = \left[1\ 0\right]$. The homogeneous term in the boxed solution of Section 4 dies, leaving the forced convolution:
+Take zero initial state $\vec{x}(0) = \vec{0}$, a step input $u(t) = 5$ (constant for $t \ge 0$), and $\mathbf{B}^{\mathsf{T}} = \left[1\ 0\right]$. The homogeneous term in the boxed solution above dies, leaving the forced convolution:
 
 $$
 \vec{x}(t) = \int_0^t \underbrace{e^{\mathbf{A}(t-\tau)}}_{\Phi(t-\tau)}\,\mathbf{B}\,u(\tau)\,d\tau = e^{\mathbf{A}t}\int_0^t e^{-\mathbf{A}\tau}\,\mathbf{B}\,u(\tau)\,d\tau = 5\,e^{\mathbf{A}t}\int_0^t e^{-\mathbf{A}\tau}\,\mathbf{B}\,d\tau
@@ -489,10 +419,10 @@ $$
 \begin{example}[frametitle={Example - hanging mass on a spring with damper, now with time solution}]
 ```
 
-A mass $m$ hangs from the ceiling on a spring of constant $k$ with a damper of coefficient $b$. The equation of motion is
+A mass $m$ hangs from the ceiling on a spring of constant $k$ with a damper of coefficient $b$; $x$ is the downward displacement from the unstretched length. The equation of motion is
 
 $$
-m\ddot{x} = -kx - b\dot{x} - mg
+m\ddot{x} = -kx - b\dot{x} + mg
 $$
 
 Introduce $v = \dot{x}$ and write it as a first-order system:
@@ -500,19 +430,12 @@ Introduce $v = \dot{x}$ and write it as a first-order system:
 $$
 \begin{bmatrix} \dot{x} \\ \dot{v} \end{bmatrix}
 = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\begin{bmatrix} x \\ v \end{bmatrix}
-+ \begin{bmatrix} 0 \\ -g \end{bmatrix}
++ \begin{bmatrix} 0 \\ g \end{bmatrix}
 $$
 
-The constant gravity term is the input, $\mathbf{B}\vec{u} = \tvec{0,-g}$. This is the boxed solution above in action: build the kernel $\Phi(t) = e^{\mathbf{A}t}$, then run the convolution integral.
+The constant gravity term is the input, $\mathbf{B}\vec{u} = \tvec{0,g}$. This is the boxed solution above in action: build the kernel $\Phi(t) = e^{\mathbf{A}t}$, then run the convolution integral.
 
-**Step 1 — $\Phi$ via Laplace.** $\det(s\mathbf{I} - \mathbf{A}) = s^2 + \frac{b}{m}s + \frac{k}{m}$, which we complete into a sum of squares:
-
-$$
-s^2 + \frac{b}{m}s + \frac{k}{m}
-= \left(s + \frac{b}{2m}\right)^2 + \frac{k}{m}\left(1 - \frac{b^2}{4km}\right)
-$$
-
-Define the natural frequency and damping ratio,
+**Step 1 — $\Phi$ via Laplace.** $\det(s\mathbf{I} - \mathbf{A}) = s^2 + \frac{b}{m}s + \frac{k}{m}$. Define the natural frequency and damping ratio,
 
 $$
 \omega_0 = \sqrt{\frac{k}{m}}, \qquad
@@ -526,7 +449,7 @@ $$
 = (s + \zeta\omega_0)^2 + \omega_0^2(1-\zeta^2)
 $$
 
-Take the **critically damped case $\zeta = 1$** (damper tuned so $b = 2\sqrt{km}$): then $\omega_d = \omega_0\sqrt{1-\zeta^2} = 0$, the two poles collide at $s = -\omega_0$, and the resolvent is
+Take the **critically damped case $\zeta = 1$** (damper tuned so $b = 2\sqrt{km}$): then the damped frequency $\omega_d = \omega_0\sqrt{1-\zeta^2}$ vanishes, the two poles collide at $s = -\omega_0$, and the resolvent is
 
 $$
 (s\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{(s + \omega_0)^2}\begin{bmatrix} s + 2\omega_0 & 1 \\[2pt] -\omega_0^2 & s \end{bmatrix}
@@ -541,7 +464,7 @@ $$
 \end{bmatrix}
 $$
 
-**Step 2 — solve the state equation.** Plug $\Phi$ into the boxed nonhomogeneous solution above ($t_0 = 0$, $\vec{u} = 1$, $\mathbf{B} = [0, -g]^T$):
+**Step 2 — solve the state equation.** Plug $\Phi$ into the boxed nonhomogeneous solution above ($t_0 = 0$, $\vec{u} = 1$, $\mathbf{B} = [0, g]^T$):
 
 $$
 \vec{x}(t) = \Phi(t)\vec{x}_0 + \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
@@ -550,43 +473,43 @@ $$
 With the critical $\Phi$, the kernel dotted with the input is
 
 $$
-\Phi(t-\tau)\mathbf{B} = g\,e^{-\omega_0(t-\tau)}\begin{bmatrix} -(t-\tau) \\[2pt] \omega_0(t-\tau) - 1 \end{bmatrix}
+\Phi(t-\tau)\mathbf{B} = g\,e^{-\omega_0(t-\tau)}\begin{bmatrix} t-\tau \\[2pt] 1 - \omega_0(t-\tau) \end{bmatrix}
 $$
 
 so the gravity term reads
 
 $$
 \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
-= g\,e^{-\omega_0 t}\int_0^t \begin{bmatrix} (-t+\tau)e^{\omega_0\tau} \\[2pt] (\omega_0(t-\tau)-1)e^{\omega_0\tau} \end{bmatrix} d\tau
+= g\,e^{-\omega_0 t}\int_0^t \begin{bmatrix} (t-\tau)e^{\omega_0\tau} \\[2pt] (1-\omega_0(t-\tau))e^{\omega_0\tau} \end{bmatrix} d\tau
 $$
 
-Evaluating entry by entry — this is the alternative to the $\tau$ trick of the spring example: no substitution, we integrate in $\tau$ directly and watch each $\tau$ vanish. The $t$ inside the integrand is a *constant* as far as the $\tau$-integration is concerned, and a $\tau$ disappears only when its antiderivative is evaluated at the limits. First entry — using $\int \tau e^{\omega_0\tau}d\tau = \left(\frac{\tau}{\omega_0}-\frac{1}{\omega_0^2}\right)e^{\omega_0\tau}$:
+Evaluating entry by entry — this is the alternative to the $\tau$ trick of the spring example: no substitution, we integrate in $\tau$ directly and watch each $\tau$ vanish. The $t$ inside the integrand is a *constant* as far as the $\tau$-integration is concerned, and a $\tau$ disappears only when its antiderivative is evaluated at the limits. First entry — using $\int (t-\tau)e^{\omega_0\tau}\,d\tau = \left(\frac{1}{\omega_0^2}+\frac{t-\tau}{\omega_0}\right)e^{\omega_0\tau}$:
 
 $$
-\int_0^t (-t+\tau)e^{\omega_0\tau}\,d\tau
-= \left[-\frac{t}{\omega_0}e^{\omega_0\tau} + \left(\frac{\tau}{\omega_0}-\frac{1}{\omega_0^2}\right)e^{\omega_0\tau}\right]_{0}^{t}
-= \frac{t}{\omega_0} - \frac{e^{\omega_0 t}-1}{\omega_0^2}
+\int_0^t (t-\tau)e^{\omega_0\tau}\,d\tau
+= \left[\left(\frac{1}{\omega_0^2}+\frac{t-\tau}{\omega_0}\right)e^{\omega_0\tau}\right]_{0}^{t}
+= \frac{e^{\omega_0 t}-1}{\omega_0^2} - \frac{t}{\omega_0}
 $$
 
-Second entry — here the antiderivative is simply $(t-\tau)e^{\omega_0\tau}$, because its $\tau$-derivative is $(\omega_0(t-\tau)-1)e^{\omega_0\tau}$:
+Second entry — here the antiderivative is simply $(\tau-t)e^{\omega_0\tau}$, because its $\tau$-derivative is $(1-\omega_0(t-\tau))e^{\omega_0\tau}$:
 
 $$
-\int_0^t \big(\omega_0(t-\tau)-1\big)e^{\omega_0\tau}\,d\tau
-= \Big[(t-\tau)e^{\omega_0\tau}\Big]_{0}^{t}
-= -t
+\int_0^t \big(1-\omega_0(t-\tau)\big)e^{\omega_0\tau}\,d\tau
+= \Big[(\tau-t)e^{\omega_0\tau}\Big]_{0}^{t}
+= t
 $$
 
 Assembling both rows under the common factor $g\,e^{-\omega_0 t}$:
 
 $$
 \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
-= e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0}t - \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) \\[2pt] -g\,t \end{bmatrix}
+= e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) - \frac{g}{\omega_0}t \\[2pt] g\,t \end{bmatrix}
 $$
 
 so the full motion is
 
 $$
-\vec{x}(t) = \Phi(t)\vec{x}_0 + e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0}t - \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) \\[2pt] -g\,t \end{bmatrix}
+\vec{x}(t) = \Phi(t)\vec{x}_0 + e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) - \frac{g}{\omega_0}t \\[2pt] g\,t \end{bmatrix}
 $$
 
 ```{=latex}
@@ -683,7 +606,7 @@ v_3 = 0,\ v_2 = 0,\ v_1 \text{ free}
 \vec{v}_1 = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}
 $$
 
-As always, any scalar multiple of $\vec{v}_1$ is also an eigenvector — the eigenspace is the whole line through $\vec{v_1}$.
+As always, any scalar multiple of $\vec{v}_1$ is also an eigenvector — the eigenspace is the whole line through $\vec{v}_1$.
 
 For $\lambda_2 = 2$, solve $(\mathbf{A} - 2\mathbf{I})\vec{v} = \vec{0}$:
 
@@ -789,6 +712,36 @@ $}
 *$\boldsymbol{\Lambda}$ is fully diagonal; $\Phi$ generally is not.* Diagonalization, when it works, lands on a genuinely diagonal $\boldsymbol{\Lambda}$ — that's the whole deal. The triangular-looking $\Phi$'s below are an accident of the triangular example $\mathbf{A}$'s — triangular in, triangular out.
 
 ```{=latex}
+\begin{example}[frametitle={Example - modes of a coupled RC pair}]
+```
+
+Diagonalization is worth this much machinery because a good choice of state splits a coupled system into independent pieces. Two identical RC sections — capacitance $C$ and leakage $R$ to ground each — joined by a coupling resistor $R_c$ show it.
+
+```{=latex}
+\input{tikz/state-nonunique-modes.tex}
+```
+
+Writing $v_1, v_2$ for the capacitor voltages and $\alpha = \frac{1}{RC}$, $\beta = \frac{1}{R_cC}$, KCL at the two nodes gives
+
+$$
+\dot{\vec{v}} = \begin{bmatrix} -(\alpha+\beta) & \beta \\ \beta & -(\alpha+\beta) \end{bmatrix}\vec{v}.
+$$
+
+The coupling ties the two equations together, and no rescaling of the states can break it: scaling multiplies one off-diagonal entry up and the other down by the same factor, leaving their product — and the coupling it represents — untouched. Only a change that *mixes* the two states can separate them. So add and subtract the two equations — that is, choose the *common* and *differential* combinations $w_1 = v_1 + v_2$ and $w_2 = v_1 - v_2$:
+
+$$
+\dot{\vec{w}} = \begin{bmatrix} -\alpha & 0 \\ 0 & -(\alpha+2\beta) \end{bmatrix}\vec{w},
+$$
+
+two independent first-order systems. The physics explains why: in common mode $v_1 = v_2$, no current flows through $R_c$, and each capacitor discharges through its own $R$ with time constant $RC$; in differential mode $v_1 = -v_2$, the coupling resistor sees the full $2v_1$ and shortens the time constant to $\frac{1}{\alpha+2\beta}$ — exactly as if $\frac{R_c}{2}$ sat in parallel with $R$.
+
+So the new states are not the old ones relabeled; they are coordinates along the eigenvectors of $\mathbf{A}$ — the *modes* of the system. Here they were read off by inspection; in general they are $\mathbf{V}^{-1}\vec{x}$, the same state expressed in the eigenvector basis.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
 \begin{example}[frametitle={Example - obtaining $\Phi$ via diagonalization}]
 ```
 
@@ -864,7 +817,7 @@ $$
 = \begin{bmatrix} e^{-2t} & 0 \\ e^{-t} - e^{-2t} & e^{-t} \end{bmatrix}
 $$
 
-which (surprise, surprise) matches the Taylor and Laplace results. 
+which matches the Taylor and Laplace results. 
 
 ```{=latex}
 \end{example}
@@ -994,7 +947,7 @@ $$
 
 Think of it as interpolation: $r(\lambda) = \alpha_0 + \alpha_1\lambda + \cdots$ is the unique degree-$(n-1)$ polynomial whose graph passes through $(\lambda_i,\, e^{\lambda_i t})$ at every eigenvalue. Matching there fixes all $n$ unknowns $\alpha_j(t)$ — no infinite series needed.
 
-Solving this Vandermonde system gives the $\alpha_j(t)$. If an eigenvalue $\lambda_i$ has algebraic multiplicity $m_{a,i}$, evaluating at $\lambda_i$ yields only one equation; the missing $m_{a,i}-1$ come from differentiating $f(\lambda) = r(\lambda)$ with respect to $\lambda$, $m_{a,i}-1$ times — each eigenvalue contributes exactly as many equations as its multiplicity. Unlike diagonalization, this works even for defective matrices (see the eigenvalues example).
+Solving this Vandermonde system gives the $\alpha_j(t)$. If an eigenvalue $\lambda_i$ has algebraic multiplicity $m_{a,i}$, evaluating at $\lambda_i$ yields only one equation; the missing $m_{a,i}-1$ come from differentiating $f(\lambda) = r(\lambda)$ with respect to $\lambda$, $m_{a,i}-1$ times — each eigenvalue contributes exactly as many equations as its multiplicity. Unlike diagonalization, this works even for defective matrices (see the defective-matrix example below).
 
 ```{=latex}
 \begin{example}[frametitle={Example - obtaining $\Phi$ via Cayley–Hamilton}]
@@ -1035,7 +988,7 @@ $$
 = \begin{bmatrix} e^{-2t} & 0 \\ e^{-t} - e^{-2t} & e^{-t} \end{bmatrix}
 $$
 
-which (you guessed it) matches all previous methods. 
+which (you guessed it) matches all previous methods — as it must. $\Phi$ is pinned down by $\dot{\Phi} = \mathbf{A}\Phi$ and $\Phi(0) = \mathbf{I}$, so a given $\mathbf{A}$ has exactly one state transition matrix, and every method has to return it.
 
 ```{=latex}
 \end{example}
@@ -1096,11 +1049,11 @@ $$
 \end{example}
 ```
 
-### Final remarks on obtaining $\Phi$
+### Choosing between the four methods
 
 We have shown four ways to skin a cat, but at the end you still have the same dead cat. The Taylor series is the most general, flows nicely from rudimentary principles, but it is tedious. Diagonalization is elegant, but fails for defective matrices. Laplace transform is a nice trick, but requires some algebraic manipulation (in other words: much harder to implement in computers). Cayley–Hamilton is a clever method, but requires solving a Vandermonde system.
 
-In practice, the choice of method depends on the specific matrix $\mathbf{A}$ and the context of the problem — but Cayley–Hamilton specifically will come in very handy when we talk about controllability and observability, and it earns its keep in a few recurring situations. CH shines when:
+In practice the choice depends on $\mathbf{A}$ and on the problem. Cayley–Hamilton (CH) is the one that keeps coming back — it is the method behind controllability and observability later in these notes — and it wins when:
 
 - The matrix is *defective* — diagonalization is out entirely, and CH, with the derivative trick for the repeated eigenvalue, picks up where it fails.
 - The matrix has *repeated eigenvalues* but is still diagonalizable — CH avoids eigenvector hunting.
@@ -1175,7 +1128,7 @@ $$
 = (\lambda+1)^2 + 1 = \lambda^2 + 2\lambda + 2
 $$
 
-after you apply quadratic formula you get conjugate pair solution $\lambda = -1 \pm i$ — the $\pm i$. Cayley–Hamilton doesn't care: $\mathbf{A}^2 + 2\mathbf{A} + 2\mathbf{I} = \mathbf{0}$, so with $n = 2$
+the quadratic formula gives the conjugate pair $\lambda = -1 \pm i$. Cayley–Hamilton doesn't care: $\mathbf{A}^2 + 2\mathbf{A} + 2\mathbf{I} = \mathbf{0}$, so with $n = 2$
 
 $$e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A}$$
 $$e^{\lambda t} = \alpha_0 + \alpha_1\lambda$$
