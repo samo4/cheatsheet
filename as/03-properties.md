@@ -2,175 +2,19 @@
 
 ## Modes of an LTI system
 
-The (free) response of an LTI system is set entirely by the eigenvalues of $\mathbf{A}$. From the homogeneous solution, $\vec{x}(t) = e^{\mathbf{A}t}\vec{x}_0$, and diagonalizing gives $e^{\mathbf{A}t} = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$, so the response is a linear combination of the exponentials
+The shape of the (free) response of an LTI system is set by the eigenvalues of $\mathbf{A}$. From the homogeneous solution, $\vec{x}(t) = e^{\mathbf{A}t}\vec{x}_0$, and diagonalizing gives $e^{\mathbf{A}t} = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$, so the response is a linear combination of the exponentials
 
 $$
 e^{\lambda_1 t},\; e^{\lambda_2 t},\; \dots,\; e^{\lambda_n t}
 $$
 
-each a **mode** of the system. The spectrum of $\mathbf{A}$ — its eigenvalues $\lambda_i$ — therefore maps one-to-one onto the modes of the response: to the $n$ eigenvalues of $\mathbf{A}$ belong $n$ modes of the system. A real $\lambda$ gives a growing or decaying exponential; a conjugate pair $\sigma \pm j\omega$ gives an oscillation with envelope $e^{\sigma t}$.
+each a **mode** of the system, so the eigenvalues of $\mathbf{A}$ are the modes of the response. A real $\lambda$ gives a growing or decaying exponential; a conjugate pair $\sigma \pm j\omega$ gives an oscillation with envelope $e^{\sigma t}$.
 
-These eigenvalues are also the **poles** of the transfer function $G(s) = \mathbf{C}(s\mathbf{I}-\mathbf{A})^{-1}\mathbf{B} + \mathbf{D}$: its denominator is $\det(s\mathbf{I}-\mathbf{A})$, so the poles are exactly the eigenvalues of $\mathbf{A}$ — at least for a minimal (controllable and observable) realization. An eigenvalue belonging to an uncontrollable or unobservable mode cancels out of $G(s)$ and is not a pole.
+The exception is a defective $\mathbf{A}$: with fewer independent eigenvectors than eigenvalues, a repeated eigenvalue brings a factor $t$ instead of a second independent exponential, so $n$ eigenvalues need not give $n$ modes.
 
-Everything that follows — stability, controllability, observability — is decided by these modes.
+These eigenvalues are also the **poles** of the transfer function $G(s) = \mathbf{C}(s\mathbf{I}-\mathbf{A})^{-1}\mathbf{B} + \mathbf{D}$ (which we get to properly in the transfer-function chapter): its denominator is $\det(s\mathbf{I}-\mathbf{A})$, so the poles are exactly the eigenvalues of $\mathbf{A}$ — at least for a minimal realization (controllable and observable, both defined below). An eigenvalue belonging to an uncontrollable or unobservable mode cancels out of $G(s)$ and is not a pole.
 
-## Controllability
-
-A system $(\mathbf{A}, \mathbf{B})$ is **controllable** if, for any initial state $\vec{x}_0$ and any target state $\vec{x}_1$, there exists an input $\vec{u}(t)$ that drives the state from $\vec{x}_0$ to $\vec{x}_1$ in finite time — the input can steer the state anywhere in state space.
-
-This is not just a theoretical concept, but a practical requirement for being able to control a system in real-world applications. Please forgive the crude example, but imagine trying to steer a car that doesn't have a throttle — you might be able to command it to reach a certain position for a while, but you'll never control it completely. You have the $\mathbf{D}$ matrix, but you don't have the $\mathbf{B}$ matrix, so you can't influence the state through the input and depdending on the $\mathbf{C}$ matrix, the lack of control of the internal state (the rpm of the motor) will have different level of inconvinece for your task of parking the car. 
-
-Obviously only the $\mathbf{A}$ and $\mathbf{B}$ matrices matter for controllability. The **controllability matrix** collects the columns that matter:
-
-$$
-\mathcal{C} = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}
-$$
-
-and the system is controllable iff $\operatorname{rank}\mathcal{C} = n$.
-
-Take the state response with $\vec{x}(0) = \vec{0}$; reaching $\vec{x}(t)$ at time $t$ requires
-
-$$
-\vec{x}(t) = \int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\vec{u}(\tau)\, d\tau
-$$
-
-(for LTI, reachability from the origin is the same as controllability, since $e^{\mathbf{A}t}$ is always invertible). By Cayley–Hamilton, $e^{\mathbf{A}s}$ is a polynomial in $\mathbf{A}$ of degree at most $n-1$:
-
-$$
-e^{\mathbf{A}s} = \sum_{k=0}^{n-1}\alpha_k(s)\mathbf{A}^k
-$$
-
-Substituting and pulling $\mathbf{A}^k\mathbf{B}$ out of the integral,
-
-$$
-\vec{x}(t) = \sum_{k=0}^{n-1} \mathbf{A}^k\mathbf{B} \underbrace{\int_0^t \alpha_k(t-\tau)\vec{u}(\tau)\, d\tau}_{\vec{w}_k}
-= \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}\vec{w}
-$$
-
-Cayley–Hamilton alone gives the easy direction: reachable states lie in the column space of $\mathcal{C}$. For the converse — that $\operatorname{rank}\mathcal{C} = n$ really makes every state reachable — an explicit input is needed, and the **controllability Gramian**
-
-$$
-\mathbf{W}_c(t) = \int_0^t e^{\mathbf{A}\tau}\mathbf{B}\mathbf{B}^T e^{\mathbf{A}^T\tau}\, d\tau
-$$
-
-provides it. $\mathbf{W}_c(t)$ is nonsingular iff $\operatorname{rank}\mathcal{C} = n$: if $\vec{v}^T\mathbf{W}_c\vec{v} = \int_0^t \lVert\mathbf{B}^T e^{\mathbf{A}^T\tau}\vec{v}\rVert^2\, d\tau = 0$, then $\mathbf{B}^T e^{\mathbf{A}^T\tau}\vec{v} = \vec{0}$ for all $\tau$, and differentiating at $\tau = 0$ yields $\mathbf{B}^T(\mathbf{A}^T)^k\vec{v} = \vec{0}$, i.e. $\mathcal{C}^T\vec{v} = \vec{0}$. When it is nonsingular, choosing
-
-$$
-\vec{u}(\tau) = \mathbf{B}^T e^{\mathbf{A}^T(t-\tau)}\mathbf{W}_c^{-1}(t)\,\vec{x}_1
-$$
-
-drives $\vec{0} \to \vec{x}_1$ in exactly time $t$, since $\int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\vec{u}(\tau)\, d\tau = \mathbf{W}_c(t)\mathbf{W}_c^{-1}(t)\vec{x}_1 = \vec{x}_1$. So full column rank means every state is reachable. Powers $\mathbf{A}^k$ with $k \ge n$ contribute nothing new — Cayley–Hamilton folds them back into $\mathbf{A}^0, \dots, \mathbf{A}^{n-1}$.
-
-The same condition phrased as **steering to the origin**: requiring $\vec{x}(t) = \vec{0}$ in the general solution,
-
-$$
-\vec{x}(t) = e^{\mathbf{A}t}\vec{x}_0 + \int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\vec{u}(\tau)\, d\tau = \vec{0}
-$$
-
-and left-multiplying by $e^{-\mathbf{A}t}$ (which commutes with the integrand, so $e^{-\mathbf{A}t}e^{\mathbf{A}(t-\tau)} = e^{-\mathbf{A}\tau}$),
-
-$$
--\vec{x}_0 = \int_0^t e^{-\mathbf{A}\tau}\mathbf{B}\vec{u}(\tau)\, d\tau
-$$
-
-Expanding $e^{-\mathbf{A}\tau} = \sum_{k=0}^{n-1}\alpha_k(\tau)\mathbf{A}^k$ by Cayley–Hamilton and pulling $\mathbf{A}^k\mathbf{B}$ out of the integral,
-
-$$
--\vec{x}_0 = \sum_{k=0}^{n-1}\mathbf{A}^k\mathbf{B}\int_0^t \alpha_k(\tau)\vec{u}(\tau)\, d\tau
-= \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}\vec{w}
-$$
-
-with the integrals collected explicitly in the multiplying vector
-
-$$
-\vec{w} = \begin{bmatrix} \int_0^t \alpha_0(\tau)\vec{u}(\tau)\, d\tau \\ \int_0^t \alpha_1(\tau)\vec{u}(\tau)\, d\tau \\ \vdots \\ \int_0^t \alpha_{n-1}(\tau)\vec{u}(\tau)\, d\tau \end{bmatrix}
-$$
-
-So $\vec{x}_0$ can be driven to $\vec{0}$ iff it lies in the column space of $\mathcal{C}$ — and since $\vec{x}_0$ ranges over all of $\mathbb{R}^n$, this is again exactly $\operatorname{rank}\mathcal{C} = n$. Controllability therefore involves only $(\mathbf{A}, \mathbf{B})$: the output matrices $\mathbf{C}$ and $\mathbf{D}$ are irrelevant, since they say nothing about where the state can be driven.
-
-```{=latex}
-\begin{example}[frametitle={Example - controllability of a diagonal system}]
-```
-
-$\mathbf{A} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -2 & 0 \\ 0 & 0 & -3 \end{bmatrix}$, $\mathbf{B} = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}$.
-
-$$
-\mathcal{C} = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} \end{bmatrix}
-= \begin{bmatrix} 1 & -1 & 1 \\ 1 & -2 & 4 \\ 0 & 0 & 0 \end{bmatrix}
-$$
-
-so $\operatorname{rank}\mathcal{C} = 2 < n$ and the system is **not** controllable. Note the test is $\operatorname{rank}\mathcal{C} = n$, not a determinant: since $\mathbf{B}$ is $n \times m$, $\mathcal{C}$ is $n \times nm$ — square only for a single input ($m = 1$), so in general $\det\mathcal{C}$ is not even defined. Here the zero third row already shows $\operatorname{rank}\mathcal{C} \le 2 < n$: the columns span a subspace of $\mathbb{R}^3$ but not all of it, so the input cannot reach every state.
-
-**Interpretation** — the zero in the third row of $\mathbf{B}$ disconnects the third state from the input. Because $\mathbf{A}$ is diagonal, the input reaches state $i$ only through the entry $b_i$ of $\mathbf{B}$; with $b_3 = 0$ the third mode evolves on its own, untouched by $\vec{u}$. That is why the entire third row of $\mathcal{C}$ is zeros — the input can never get a grip on that mode.
-
-```{=latex}
-\end{example} 
-```
-
-## Observability
-
-A system $(\mathbf{A}, \mathbf{C})$ is **observable** if the initial state $\vec{x}_0$ can be reconstructed from the output $\vec{y}(t)$ (and the known input $\vec{u}(t)$) over a finite time interval — every mode eventually shows up in the output.
-
-Rolling on our car example from the previous chapter, we can easily observer (pun intended) that the ability to reconstruct the internal state from the outputs depends on the $\mathbf{C}$ and $\mathbf{A}$ matrices. The **observability matrix** collects the rows that matter:
-
-$$
-\mathcal{O} = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}
-$$
-
-and the system is observable iff $\operatorname{rank}\mathcal{O} = n$.
-
-Why exactly those rows? With $\vec{u} = \vec{0}$, the output is
-
-$$
-\vec{y}(t) = \mathbf{C}e^{\mathbf{A}t}\vec{x}_0
-$$
-
-and by Cayley–Hamilton, $e^{\mathbf{A}t}$ is a polynomial in $\mathbf{A}$ of degree at most $n-1$:
-
-$$
-e^{\mathbf{A}t} = \sum_{k=0}^{n-1}\alpha_k(t)\mathbf{A}^k
-$$
-
-so the output becomes
-
-$$
-\vec{y}(t) = \sum_{k=0}^{n-1}\alpha_k(t)\,\mathbf{C}\mathbf{A}^k\vec{x}_0
-$$
-
-The known functions $\alpha_k(t)$ let the output pin down each $\mathbf{C}\mathbf{A}^k\vec{x}_0$; stacking them,
-
-$$
-\begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}\vec{x}_0 = \vec{z}
-$$
-
-is a linear system for $\vec{x}_0$ with a unique solution iff $\mathcal{O}$ has full column rank $n$. Powers $\mathbf{A}^k$ with $k \ge n$ add nothing new — Cayley–Hamilton folds them back into $\mathbf{A}^0, \dots, \mathbf{A}^{n-1}$.
-
-Note the duality: observability of $(\mathbf{A}, \mathbf{C})$ is controllability of $(\mathbf{A}^T, \mathbf{C}^T)$ — here, with $\mathbf{C} = \mathbf{B}^T$, the observability matrix is exactly $\mathcal{O} = \mathcal{C}^T$.
-
-```{=latex}
-\begin{example}[frametitle={Example - observability of a diagonal system}]
-```
-
-Same $\mathbf{A} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -2 & 0 \\ 0 & 0 & -3 \end{bmatrix}$, $\mathbf{C} = \begin{bmatrix} 1 & 1 & 1 \end{bmatrix}$.
-
-$$
-\mathcal{O}_1 = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \end{bmatrix}
-= \begin{bmatrix} 1 & 1 & 1 \\ -1 & -2 & -3 \\ 1 & 4 & 9 \end{bmatrix}, \qquad
-\det\mathcal{O}_1 = -2 \ne 0
-$$
-
-so $\operatorname{rank}\mathcal{O}_1 = 3 = n$ and the system is observable — every mode shows up in the output. With $\mathbf{C} = \begin{bmatrix} 1 & 0 & 1 \end{bmatrix}$ the second mode is invisible in the output:
-
-$$
-\mathcal{O}_2 = \begin{bmatrix} 1 & 0 & 1 \\ -1 & 0 & -3 \\ 1 & 0 & 9 \end{bmatrix}, \qquad
-\operatorname{rank}\mathcal{O}_2 = 2 < 3
-$$
-
-so the system is **not** observable.
-
-```{=latex}
-\end{example}
-```
+Everything that follows is decided by these modes and by how the inputs and outputs couple to them: the equilibrium behaviour and stability first, then controllability and observability.
 
 ## Equilibrium states and phase portraits
 
@@ -199,7 +43,22 @@ Whether trajectories actually end up at the equilibrium is exactly what the next
 
 ## Stability
 
-For $\dot{\vec{x}} = \mathbf{A}\vec{x}$ stability is decided by the eigenvalues of $\mathbf{A}$ — the poles — i.e. by where they sit relative to the imaginary axis. All plots below use the family $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -3 & a \end{bmatrix}$, whose poles are $\lambda = \frac{a \pm j\sqrt{12-a^2}}{2}$; the grey half-plane is the stable region, the dashed line its boundary.
+For $\dot{\vec{x}} = \mathbf{A}\vec{x}$ stability is decided by the eigenvalues of $\mathbf{A}$ — the poles — i.e. by where they sit relative to the imaginary axis. All plots below use the family $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -3 & a \end{bmatrix}$, whose poles are $\lambda = \frac{a \pm j\sqrt{12-a^2}}{2}$ — complex while $a^2 < 12$, real beyond that; the grey half-plane is the stable region, the dashed line its boundary:
+
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+\begin{array}{lcl}
+\operatorname{Re}\lambda_i < 0 \ \ \forall i & \iff & \text{asymptotically stable} \\[3pt]
+\operatorname{Re}\lambda_i \le 0, \ \text{imaginary-axis eigenvalues simple} & \iff & \text{marginal (stable)} \\[3pt]
+\text{otherwise} & \iff & \text{unstable}
+\end{array}
+$}
+\endgroup
+\]
+```
 
 ### Asymptotically stable
 
@@ -236,3 +95,155 @@ The eigenvalues depend continuously on the entries of $\mathbf{A}$, so a small c
 - **Asymptotic stability is robust**: the circles stay entirely inside the shaded left half-plane, so small perturbations keep the poles there (the margin is the distance from the boundary).
 - **Marginal stability is not**: the circles straddle the dashed boundary, so a tiny change (here, $a$ crossing $0$) pushes the poles into one half-plane or the other — the system becomes asymptotically stable or unstable.
 - **Instability is robust**: the circles stay in the right half-plane — pushing a pole back across the axis takes a finite change.
+
+### Bounded-input bounded-output stability
+
+The three classes above are about the state. A different question is whether a bounded input can ever produce an unbounded output — **BIBO stability** — and it is answered by the poles of the transfer function rather than by the eigenvalues: every pole of $G(s)$ must lie in the left half-plane.
+
+For a minimal realization the poles are the eigenvalues, so BIBO stability and asymptotic stability coincide. They part company when a pole cancels against a zero. Take
+
+$$
+\mathbf{A} = \begin{bmatrix} 1 & 0 \\ 0 & -2 \end{bmatrix}, \qquad
+\mathbf{B} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}, \qquad
+\mathbf{C} = \begin{bmatrix} 0 & 1 \end{bmatrix}, \qquad
+\mathbf{D} = 0,
+$$
+
+for which $G(s) = \mathbf{C}(s\mathbf{I}-\mathbf{A})^{-1}\mathbf{B} = \frac{1}{s+2}$: BIBO stable, since the only pole sits at $s = -2$. The state, however, runs away from $\vec{x}_0 = \tvec{1,0}$ — the eigenvalue $+1$ is a mode that no input can excite and no output reveals.
+
+BIBO stability is a statement about the input–output map, asymptotic stability about the state, and the second is the stronger of the two. This example is why the modes above come with a minimality caveat, and the next two sections say exactly when a mode escapes through the input or the output.
+
+## Controllability
+
+A system $(\mathbf{A}, \mathbf{B})$ is **controllable** if, for any initial state $\vec{x}_0$ and any target state $\vec{x}_1$, there exists an input $\vec{u}(t)$ that drives the state from $\vec{x}_0$ to $\vec{x}_1$ in finite time — the input can steer the state anywhere in state space.
+
+Controllability is a practical requirement, not just a theoretical one. Take a car with no throttle: you might get it to drift to a position, but you can never place it where you want. The input reaches the state only through $\mathbf{B}$, and with no throttle that path is missing, so no input moves the state; how much that hurts depends on the output matrices, since the engine rpm can do as it likes while you try to park.
+
+The *controllability matrix* collects the columns that matter:
+
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+\mathcal{C} = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}, \qquad
+\operatorname{rank}\mathcal{C} = n \iff \text{controllable}
+$}
+\endgroup
+\]
+```
+
+Take the state response with $\vec{x}(0) = \vec{0}$; reaching $\vec{x}(t)$ at time $t$ requires
+
+$$
+\vec{x}(t) = \int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\vec{u}(\tau)\, d\tau
+$$
+
+(for LTI, reachability from the origin is the same as controllability, since $e^{\mathbf{A}t}$ is always invertible). By Cayley–Hamilton, $e^{\mathbf{A}s}$ is a polynomial in $\mathbf{A}$ of degree at most $n-1$:
+
+$$
+e^{\mathbf{A}s} = \sum_{k=0}^{n-1}\alpha_k(s)\mathbf{A}^k
+$$
+
+Substituting and pulling $\mathbf{A}^k\mathbf{B}$ out of the integral,
+
+$$
+\vec{x}(t) = \sum_{k=0}^{n-1} \mathbf{A}^k\mathbf{B} \underbrace{\int_0^t \alpha_k(t-\tau)\vec{u}(\tau)\, d\tau}_{\vec{w}_k}
+= \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}\vec{w}
+$$
+
+Cayley–Hamilton alone gives the easy direction: reachable states lie in the column space of $\mathcal{C}$.\footnote{The converse — that full column rank really makes every state reachable — needs an explicit input. The controllability Gramian $\mathbf{W}_c(t) = \int_0^t e^{\mathbf{A}\tau}\mathbf{B}\mathbf{B}^T e^{\mathbf{A}^T\tau}\,d\tau$ provides one: it is nonsingular exactly when $\operatorname{rank}\mathcal{C} = n$, and $\vec{u}(\tau) = \mathbf{B}^T e^{\mathbf{A}^T(t-\tau)}\mathbf{W}_c^{-1}(t)\,\vec{x}_1$ drives $\vec{0} \to \vec{x}_1$ in exactly time $t$.}
+
+Controllability therefore involves only $(\mathbf{A}, \mathbf{B})$: the output matrices $\mathbf{C}$ and $\mathbf{D}$ are irrelevant, since they say nothing about where the state can be driven.
+
+```{=latex}
+\begin{example}[frametitle={Example - controllability of a diagonal system}]
+```
+
+$\mathbf{A} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -2 & 0 \\ 0 & 0 & -3 \end{bmatrix}$, $\mathbf{B} = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}$.
+
+$$
+\mathcal{C} = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} \end{bmatrix}
+= \begin{bmatrix} 1 & -1 & 1 \\ 1 & -2 & 4 \\ 0 & 0 & 0 \end{bmatrix}
+$$
+
+so $\operatorname{rank}\mathcal{C} = 2 < n$ and the system is not controllable. Note the test is $\operatorname{rank}\mathcal{C} = n$, not a determinant: since $\mathbf{B}$ is $n \times m$, $\mathcal{C}$ is $n \times nm$ — square only for a single input ($m = 1$), so in general $\det\mathcal{C}$ is not even defined. Here the zero third row already shows $\operatorname{rank}\mathcal{C} \le 2 < n$: the columns span a subspace of $\mathbb{R}^3$ but not all of it, so the input cannot reach every state.
+
+**Interpretation** — the zero in the third row of $\mathbf{B}$ disconnects the third state from the input. Because $\mathbf{A}$ is diagonal, the input reaches state $i$ only through the entry $b_i$ of $\mathbf{B}$; with $b_3 = 0$ the third mode evolves on its own, untouched by $\vec{u}$. That is why the entire third row of $\mathcal{C}$ is zeros — the input can never get a grip on that mode.
+
+```{=latex}
+\end{example}
+```
+
+## Observability
+
+A system $(\mathbf{A}, \mathbf{C})$ is **observable** if the initial state $\vec{x}_0$ can be reconstructed from the output $\vec{y}(t)$ (and the known input $\vec{u}(t)$) over a finite time interval — every mode eventually shows up in the output.
+
+Rolling on the car example from the previous section, the sensors are the $\mathbf{C}$: what never reaches them can never be reconstructed, so observability (pun intended) is about $\mathbf{A}$ and $\mathbf{C}$ alone. The **observability matrix** collects the rows that matter:
+
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+\mathcal{O} = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}, \qquad
+\operatorname{rank}\mathcal{O} = n \iff \text{observable}
+$}
+\endgroup
+\]
+```
+
+Why exactly those rows? With $\vec{u} = \vec{0}$, the output is
+
+$$
+\vec{y}(t) = \mathbf{C}e^{\mathbf{A}t}\vec{x}_0
+$$
+
+and by Cayley–Hamilton, $e^{\mathbf{A}t}$ is a polynomial in $\mathbf{A}$ of degree at most $n-1$:
+
+$$
+e^{\mathbf{A}t} = \sum_{k=0}^{n-1}\alpha_k(t)\mathbf{A}^k
+$$
+
+so the output becomes
+
+$$
+\vec{y}(t) = \sum_{k=0}^{n-1}\alpha_k(t)\,\mathbf{C}\mathbf{A}^k\vec{x}_0
+$$
+
+The known output pins down each $\mathbf{C}\mathbf{A}^k\vec{x}_0$ — differentiating $\vec{y}$ $k$ times at $t = 0$ gives exactly $\vec{y}^{(k)}(0) = \mathbf{C}\mathbf{A}^k\vec{x}_0$ — so stacking them,
+
+$$
+\begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}\vec{x}_0 = \vec{z}
+$$
+
+is a linear system for $\vec{x}_0$ with a unique solution iff $\mathcal{O}$ has full column rank $n$. Powers $\mathbf{A}^k$ with $k \ge n$ add nothing new — Cayley–Hamilton folds them back into $\mathbf{A}^0, \dots, \mathbf{A}^{n-1}$.
+
+Note the duality: observability of $(\mathbf{A}, \mathbf{C})$ is controllability of $(\mathbf{A}^T, \mathbf{C}^T)$ — the controllability matrix of that transposed pair is exactly $\mathcal{O}^T$, so the two tests are one and the same condition.
+
+```{=latex}
+\begin{example}[frametitle={Example - observability of a diagonal system}]
+```
+
+Same $\mathbf{A} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -2 & 0 \\ 0 & 0 & -3 \end{bmatrix}$, $\mathbf{C} = \begin{bmatrix} 1 & 1 & 1 \end{bmatrix}$.
+
+$$
+\mathcal{O}_1 = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \end{bmatrix}
+= \begin{bmatrix} 1 & 1 & 1 \\ -1 & -2 & -3 \\ 1 & 4 & 9 \end{bmatrix}, \qquad
+\det\mathcal{O}_1 = -2 \ne 0
+$$
+
+so $\operatorname{rank}\mathcal{O}_1 = 3 = n$ and the system is observable — every mode shows up in the output. With $\mathbf{C} = \begin{bmatrix} 1 & 0 & 1 \end{bmatrix}$ the second mode is invisible in the output:
+
+$$
+\mathcal{O}_2 = \begin{bmatrix} 1 & 0 & 1 \\ -1 & 0 & -3 \\ 1 & 0 & 9 \end{bmatrix}, \qquad
+\operatorname{rank}\mathcal{O}_2 = 2 < 3
+$$
+
+so the system is **not** observable.
+
+```{=latex}
+\end{example}
+```
+
+Everything in this chapter is decided by one spectrum: the stability classes by where the eigenvalues sit relative to the imaginary axis, controllability and observability by how $\mathbf{B}$ and $\mathbf{C}$ couple to the eigenvectors. The next chapter views the same system from the outside — the transfer function $G(s)$ and the frequency domain.
