@@ -20,10 +20,10 @@
 - [x] Homogeneous vs. non-homogeneous: what does "homogeneous" mean for the state equation?
 - [x] Black box test: how would you find out whether a system is static or dynamic without opening it? *Hint: send an excitation in and look at the response — instantaneous means static, a transient means dynamic.* PS: pedantic answer is: you can't tell if it's static, but you can tell if it's dynamic.
   - [x] Which input signals are best for that test? *Hint: the step was accepted, but the professor wanted to hear unit impulse.*
-- [ ] Convolution:
-  - [ ] what is it
-  - [ ] what does it let you do for an LTI system
-  - [ ] how does it connect to the impulse response?
+- [x] Convolution:
+  - [x] what is it *Hint: convolution is the superposition integral — it takes every past value of the input, scales it by how the system answers a kick, and adds the lot up*
+  - [x] what does it let you do for an LTI system *Hint: one measurment gives you everything you need to predict the response to any input*
+  - [x] how does it connect to the impulse response?
 
 ## 2. Modeling
 

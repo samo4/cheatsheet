@@ -156,11 +156,45 @@ $}
 \]
 ```
 
-Where the first part is the homogeneous solution (response to initial conditions) and the second part is the particular solution (response to the input signal) in the form of a convolution integral:
+Where the first part is the homogeneous solution (response to initial conditions) and the second part is the particular solution (response to the input signal). The second part is a convolution,
 
 $$
-\int f(t-\tau) g(\tau) d\tau = f * g
+\vec{x}(t) = e^{\mathbf{A}(t-t_0)} \vec{x}(t_0) + \big(\Phi * \mathbf{B}\vec{u}\big)(t),
+\qquad
+(f * g)(t) = \int_{t_0}^{t} f(t - \tau)\, g(\tau)\, d\tau,
 $$
+
+and the shape of that integral is not an accident — the figure below is the whole mechanism in one picture.
+
+Over a short interval $d\tau$ at time $\tau$ the input delivers a scaled, delayed impulse, $\vec{u}(\tau)\,d\tau$. A "kick" at time $\tau$ enters the state through $\mathbf{B}$ and then free-evolves for the remaining time $t - \tau$:
+
+$$
+\text{kick at } \tau \;\longmapsto\; \Phi(t-\tau)\,\mathbf{B}\,\vec{u}(\tau)\, d\tau
+$$
+
+That kernel $\Phi(t-\tau)\mathbf{B}$ is the *impulse response*: the bare reaction to a unit kick, which is the homogeneous solution re-used with the clock shifted.
+
+Linearity is the *sine qua non*: it is what lets the contributions to add at all, and it is why the response to the whole input is the sum over all past $\tau$. Time invariance supplies the second half: every part is answered by the same function, merely shifted. Together they turn that sum over a continuum into the integral above, and make it a *convolution*: each contribution depends on the present time $t$ and the kick time $\tau$ only through their difference $t - \tau$, so the system cares only about how long ago the input arrived, not about what the clock read.
+
+```{=latex}
+\input{tikz/convolution-kicks.tex}
+```
+
+The input $u(\tau) = 2^{-\tau}$, sliced into three slices of width $\Delta\tau = 1$, so the slices carry the areas $u(\tau_i)\Delta\tau = 1,\ 0.5,\ 0.25$. Below, each slice draws its own curve $u(\tau_i)\Delta\tau\,\phi(t-\tau_i)$ — the same kick response $\phi(t) = e^{-t}$, scaled by the slice's area and shifted to the slice's time — and the bold curve is their sum: the response to the sliced input. Every kick makes that sum jump, because a kick arrives in no time at all; slice thinner and there are more, smaller kicks, the jumps shrink, and the sum settles onto the integral above.
+
+*Why the lower limit matters?* The integral starts at $t_0$ because that is where our knowledge of the input starts; anything earlier must already be accounted for in $\vec{x}(t_0)$. Starting it at $0$ when the experiment did not begin at $0$ silently charges the whole pre-history of the system to the initial state — the usual home of missing-term errors.
+
+With $\vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}$ the state is seen through $\mathbf{C}$ and the direct path $\mathbf{D}\vec{u}$ is added on top, so a single input/output pair gives
+
+$$
+y(t) = \underbrace{(\mathbf{C}\Phi * \mathbf{B}u)(t)}_{\text{through the state}} + \underbrace{\mathbf{D}\,u(t)}_{\text{direct path}} = (h * u)(t),
+\qquad
+h(t) = \mathbf{C}\Phi(t)\mathbf{B} + \mathbf{D}\delta(t),
+$$
+
+which is the same $h(t)$ the Transfer functions chapter defines as $\mathcal{L}^{-1}\{G(s)\}$. A system with no memory at all has $h(t) = \mathbf{D}\delta(t)$ and the convolution collapses to $y = \mathbf{D}u$ — the static case, with no integral in sight.
+
+*From here on, the clock starts with the experiment.* The examples below all take $t_0 = 0$, with $\vec{x}(0)$ the state at that instant and the input applied from then on. For an LTI system this costs no generality — the general form above is this one with the origin moved, $t \mapsto t - t_0$ — but it is not free for a time-varying system, where $\Phi(t, t_0)$ cannot be written as a function of $t - t_0$ alone and the integral stops being a convolution.
 
 ```{=latex}
 \begin{example}[frametitle={Example - mass on a spring}]
