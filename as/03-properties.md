@@ -117,7 +117,36 @@ A system is **controllable** if, for any initial state $\vec{x}_0$ and any targe
 
 Controllability is a practical requirement, not just a theoretical one. Take a car with no throttle: you might get it to drift to a position, but you can never place it where you want. The input reaches the state only through $\mathbf{B}$, and with no throttle that path is missing, so no input moves the state; how much that hurts depends on the output matrices, since the engine rpm can do as it likes while you try to park.
 
-The *controllability matrix* collects the columns that matter:
+Following @ogata2002modern, the reachable states fall out of the state response: with $\vec{x}(0) = \vec{0}$, reaching $\vec{x}(t)$ at time $t$ requires
+
+$$
+\vec{x}(t) = \int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\vec{u}(\tau)\, d\tau
+$$
+
+For LTI, reachability from the origin is the same as controllability, since $e^{\mathbf{A}t}$ is always invertible. And we can exploit Cayley–Hamilton to express $e^{\mathbf{A}s}$ as a polynomial:
+
+$$
+e^{\mathbf{A}s} = \alpha_0(s)\mathbf{I} + \alpha_1(s)\mathbf{A} + \cdots + \alpha_{n-1}(s)\mathbf{A}^{n-1}
+$$
+
+Substituting and pulling the constant matrices $\mathbf{A}^k\mathbf{B}$ out of the integral leaves $n$ fixed directions, each scaled by a weight the input alone decides:
+
+$$
+\vec{x}(t) = \sum_{k=0}^{n-1} \mathbf{A}^k\mathbf{B} \underbrace{\int_0^t \alpha_k(t-\tau)\vec{u}(\tau)\, d\tau}_{\vec{w}_k}
+= \mathbf{B}\vec{w}_0 + \mathbf{A}\mathbf{B}\vec{w}_1 + \cdots + \mathbf{A}^{n-1}\mathbf{B}\vec{w}_{n-1}
+$$
+
+Each weight is the $k$-th Cayley–Hamilton coefficient convolved with the input, $\vec{w}_k(t) = (\alpha_k * \vec{u})(t)$. Stacking the weights into a single vector turns the sum into one matrix product, in which only the vector depends on the input:
+
+$$
+\vec{x}(t) = \underbrace{\begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}}_{\mathcal{C}}
+\underbrace{\begin{bmatrix} \vec{w}_0 \\ \vec{w}_1 \\ \vdots \\ \vec{w}_{n-1} \end{bmatrix}}_{\vec{w}}
+= \mathcal{C}\vec{w}
+$$
+
+Vary $\vec{u}$ over $[0,t]$ and $\vec{w} \in \mathbb{R}^{nm}$ ($n$ blocks of length $m$, with $m$ the number of inputs) ranges over whatever that input can produce. The direction, though, is out of the input's hands: every reachable state is $\mathcal{C}\vec{w}$ for some $\vec{w}$ — the easy direction of Cayley–Hamilton, that reachable states lie in the column space of $\mathcal{C}$.
+
+The containment is the half Cayley–Hamilton gives directly; the converse — that full row rank really is enough, with no direction wasted — is the classical theorem, taken as given here. Either way, the input reaches *every* state of $\mathbb{R}^n$ exactly when the $nm$ columns of $\mathcal{C}$ span it, i.e. when $\mathcal{C}$ has full row rank $n$. The matrix collecting exactly those columns is the *controllability matrix*:
 
 ```{=latex}
 \[
@@ -131,28 +160,9 @@ $}
 \]
 ```
 
-Take the state response with $\vec{x}(0) = \vec{0}$; reaching $\vec{x}(t)$ at time $t$ requires
+When the rank falls short, the directions it misses are exactly the uncontrollable modes from the chapter opening: in the BIBO example above $\mathcal{C} = \begin{bmatrix} 0 & 0 \\ 1 & -2 \end{bmatrix}$ has rank $1 < 2$, and the direction the input never gets a grip on is the runaway mode $+1$.
 
-$$
-\vec{x}(t) = \int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\vec{u}(\tau)\, d\tau
-$$
-
-(for LTI, reachability from the origin is the same as controllability, since $e^{\mathbf{A}t}$ is always invertible). By Cayley–Hamilton, $e^{\mathbf{A}s}$ is a polynomial in $\mathbf{A}$ of degree at most $n-1$:
-
-$$
-e^{\mathbf{A}s} = \sum_{k=0}^{n-1}\alpha_k(s)\mathbf{A}^k
-$$
-
-Substituting and pulling $\mathbf{A}^k\mathbf{B}$ out of the integral,
-
-$$
-\vec{x}(t) = \sum_{k=0}^{n-1} \mathbf{A}^k\mathbf{B} \underbrace{\int_0^t \alpha_k(t-\tau)\vec{u}(\tau)\, d\tau}_{\vec{w}_k}
-= \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}\vec{w}
-$$
-
-Cayley–Hamilton alone gives the easy direction: reachable states lie in the column space of $\mathcal{C}$.\footnote{The converse — that full column rank really makes every state reachable — needs an explicit input. The controllability Gramian $\mathbf{W}_c(t) = \int_0^t e^{\mathbf{A}\tau}\mathbf{B}\mathbf{B}^T e^{\mathbf{A}^T\tau}\,d\tau$ provides one: it is nonsingular exactly when $\operatorname{rank}\mathcal{C} = n$, and $\vec{u}(\tau) = \mathbf{B}^T e^{\mathbf{A}^T(t-\tau)}\mathbf{W}_c^{-1}(t)\,\vec{x}_1$ drives $\vec{0} \to \vec{x}_1$ in exactly time $t$.}
-
-Controllability therefore involves only $(\mathbf{A}, \mathbf{B})$: the output matrices $\mathbf{C}$ and $\mathbf{D}$ are irrelevant, since they say nothing about where the state can be driven.
+As you could intuitively deduce, controllability therefore involves only $(\mathbf{A}, \mathbf{B})$: the output matrices $\mathbf{C}$ and $\mathbf{D}$ are irrelevant, since they say nothing about where the state can be driven.
 
 ```{=latex}
 \begin{example}[frametitle={Example - controllability of a diagonal system}]
@@ -177,7 +187,54 @@ so $\operatorname{rank}\mathcal{C} = 2 < n$ and the system is not controllable. 
 
 A system is **observable** if the initial state $\vec{x}_0$ can be reconstructed from the output $\vec{y}(t)$ (and the known input $\vec{u}(t)$) over a finite time interval — every mode eventually shows up in the output.
 
-Rolling on the car example from the previous section, the sensors are the $\mathbf{C}$: what never reaches them can never be reconstructed, so observability (pun intended) is about $\mathbf{A}$ and $\mathbf{C}$ alone. The **observability matrix** collects the rows that matter:
+Rolling on the car example from the previous section, the sensors are the $\mathbf{C}$: what never reaches them can never be reconstructed, so observability (pun intended) is about $\mathbf{A}$ and $\mathbf{C}$ alone.
+
+Following @ogata2002modern again, but from the other end of the loop — the sensor equation itself. The state is what we cannot see, the output is what we can:
+
+$$
+\underbrace{\vec{y}(t)}_{\text{measured}} = \mathbf{C}\underbrace{\vec{x}(t)}_{\text{hidden}} + \mathbf{D}\vec{u}(t)
+$$
+
+Feeding in the state solution of the State-space chapter,
+
+$$
+\vec{x}(t) = e^{\mathbf{A}t}\vec{x}(0) + \int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\vec{u}(\tau)\, d\tau
+$$
+
+leaves the unknown in a single term:
+
+$$
+\underbrace{\vec{y}(t)}_{\text{measured}} = \underbrace{\mathbf{C}e^{\mathbf{A}t}\vec{x}(0)}_{\text{initial-state response}} + \underbrace{\mathbf{C}\int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\vec{u}(\tau)\, d\tau + \mathbf{D}\vec{u}(t)}_{\text{known, given the input}}
+$$
+
+The record is the sum of two responses: one driven by the initial state, one by the input. The input is ours, so its contribution can be computed and subtracted off — from here on we take $\vec{u} = \vec{0}$ and keep only
+
+$$
+\vec{y}(t) = \mathbf{C}e^{\mathbf{A}t}\vec{x}(0)
+$$
+
+Everything on the left is known for every $t$; the right side hides the one thing we want. Cayley–Hamilton again, this time with $\mathbf{C}$ distributed over the terms, expands the record into $n$ known functions of time, each multiplying one unknown vector:
+
+$$
+\vec{y}(t) = \alpha_0(t)\,\mathbf{C}\vec{x}(0) + \alpha_1(t)\,\mathbf{C}\mathbf{A}\vec{x}(0) + \cdots + \alpha_{n-1}(t)\,\mathbf{C}\mathbf{A}^{n-1}\vec{x}(0)
+$$
+
+The record is known, so each of those coefficients is recoverable on its own: differentiating brings down one power of $\mathbf{A}$ at a time, since $\frac{d^k}{dt^k}e^{\mathbf{A}t} = \mathbf{A}^k e^{\mathbf{A}t}$, and at $t = 0$ the exponential is the identity,
+
+$$
+\vec{y}^{(k)}(t) = \mathbf{C}\mathbf{A}^k e^{\mathbf{A}t}\vec{x}(0)
+\quad\Longrightarrow\quad
+\vec{y}^{(k)}(0) = \mathbf{C}\mathbf{A}^k\vec{x}(0)
+$$
+
+Stacking the first $n$ of these known vectors,
+
+$$
+\begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}\vec{x}(0)
+= \underbrace{\begin{bmatrix} \vec{y}(0) \\ \vec{y}'(0) \\ \vdots \\ \vec{y}^{(n-1)}(0) \end{bmatrix}}_{\vec{z}}
+$$
+
+leaves one linear system for $\vec{x}(0)$, with a unique solution iff $\mathcal{O}$ has full column rank $n$. Powers $\mathbf{A}^k$ with $k \ge n$ add nothing new — Cayley–Hamilton folds them back into $\mathbf{A}^0, \dots, \mathbf{A}^{n-1}$. The matrix collecting exactly those rows is the *observability matrix*:
 
 ```{=latex}
 \[
@@ -191,54 +248,54 @@ $}
 \]
 ```
 
-Why exactly those rows? With $\vec{u} = \vec{0}$, the output is
-
-$$
-\vec{y}(t) = \mathbf{C}e^{\mathbf{A}t}\vec{x}_0
-$$
-
-and by Cayley–Hamilton, $e^{\mathbf{A}t}$ is a polynomial in $\mathbf{A}$ of degree at most $n-1$:
-
-$$
-e^{\mathbf{A}t} = \sum_{k=0}^{n-1}\alpha_k(t)\mathbf{A}^k
-$$
-
-so the output becomes
-
-$$
-\vec{y}(t) = \sum_{k=0}^{n-1}\alpha_k(t)\,\mathbf{C}\mathbf{A}^k\vec{x}_0
-$$
-
-The known output pins down each $\mathbf{C}\mathbf{A}^k\vec{x}_0$ — differentiating $\vec{y}$ $k$ times at $t = 0$ gives exactly $\vec{y}^{(k)}(0) = \mathbf{C}\mathbf{A}^k\vec{x}_0$ — so stacking them,
-
-$$
-\begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}\vec{x}_0 = \vec{z}
-$$
-
-is a linear system for $\vec{x}_0$ with a unique solution iff $\mathcal{O}$ has full column rank $n$. Powers $\mathbf{A}^k$ with $k \ge n$ add nothing new — Cayley–Hamilton folds them back into $\mathbf{A}^0, \dots, \mathbf{A}^{n-1}$.
+When the rank falls short, the rows it misses are exactly the unobservable modes from the chapter opening: in the example below $\det\mathcal{O}$ vanishes, and the mode that never reaches the sensor is $\lambda = -1$ — the very factor $(s+1)$ that cancels out of the transfer functions.
 
 Note the duality: observability of $(\mathbf{A}, \mathbf{C})$ is controllability of $(\mathbf{A}^T, \mathbf{C}^T)$ — the controllability matrix of that transposed pair is exactly $\mathcal{O}^T$, so the two tests are one and the same condition.
 
 ```{=latex}
-\begin{example}[frametitle={Example - observability of a diagonal system}]
+\begin{example}[frametitle={Example - observability, and a pole that cancels}]
 ```
 
-Same $\mathbf{A} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -2 & 0 \\ 0 & 0 & -3 \end{bmatrix}$, $\mathbf{C} = \begin{bmatrix} 1 & 1 & 1 \end{bmatrix}$.
+This is Ogata's example: $\mathbf{A} = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ -6 & -11 & -6 \end{bmatrix}$, $\mathbf{B} = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$, $\mathbf{C} = \begin{bmatrix} 4 & 5 & 1 \end{bmatrix}$, $\mathbf{D} = 0$. Only $\mathbf{A}$ and $\mathbf{C}$ enter the test; $\mathbf{B}$ rides along for the transfer functions below.
 
 $$
-\mathcal{O}_1 = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \end{bmatrix}
-= \begin{bmatrix} 1 & 1 & 1 \\ -1 & -2 & -3 \\ 1 & 4 & 9 \end{bmatrix}, \qquad
-\det\mathcal{O}_1 = -2 \ne 0
+\mathcal{O} = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \end{bmatrix}
+= \begin{bmatrix} 4 & 5 & 1 \\ -6 & -7 & -1 \\ 6 & 5 & -1 \end{bmatrix}, \qquad
+\det\mathcal{O} = 0, \qquad \operatorname{rank}\mathcal{O} = 2 < 3
 $$
 
-so $\operatorname{rank}\mathcal{O}_1 = 3 = n$ and the system is observable — every mode shows up in the output. With $\mathbf{C} = \begin{bmatrix} 1 & 0 & 1 \end{bmatrix}$ the second mode is invisible in the output:
+The third row is $-6$ times the first minus $5$ times the second, so the rows are dependent and the system is **not** observable. (A single output makes $\mathcal{O}$ square, so this is one of the cases where the determinant is meaningful — it vanishes.) The pair $(\mathbf{A}, \mathbf{B})$ is nonetheless controllable, so this is purely an observability failure.
+
+Which mode is lost? The characteristic polynomial factors,
 
 $$
-\mathcal{O}_2 = \begin{bmatrix} 1 & 0 & 1 \\ -1 & 0 & -3 \\ 1 & 0 & 9 \end{bmatrix}, \qquad
-\operatorname{rank}\mathcal{O}_2 = 2 < 3
+\det(s\mathbf{I}-\mathbf{A}) = s^3 + 6s^2 + 11s + 6 = (s+1)(s+2)(s+3)
 $$
 
-so the system is **not** observable.
+and the driven states carry all three modes, while the output keeps only two. With $\mathbf{B} = \vec{e}_3$ the state solution gives, with zero initial state,
+
+$$
+\frac{X_1(s)}{U(s)} = \frac{1}{(s+1)(s+2)(s+3)}, \qquad
+\frac{X_2(s)}{U(s)} = \frac{s}{(s+1)(s+2)(s+3)}, \qquad
+\frac{X_3(s)}{U(s)} = \frac{s^2}{(s+1)(s+2)(s+3)}
+$$
+
+so $X_1$ holds every mode — the pair $(\mathbf{A}, \mathbf{B})$ being controllable, the input can excite all of them. What $\mathbf{C}$ then does to the first state has a zero sitting exactly on the pole $s = -1$:
+
+$$
+\frac{Y(s)}{X_1(s)} = s^2 + 5s + 4 = (s+1)(s+4)
+$$
+
+Multiplying the two,
+
+$$
+\frac{Y(s)}{U(s)} = \frac{Y(s)}{X_1(s)}\cdot\frac{X_1(s)}{U(s)}
+= \frac{\xcancel{(s+1)}(s+4)}{\xcancel{(s+1)}(s+2)(s+3)}
+$$
+
+the $(s+1)$ is gone: the state does carry the mode $e^{-t}$, but the zero at $s = -1$ in the $x_1 \to y$ map annihilates it, and the input–output transfer function ends up one order thinner than the system.
+
+Where it hides: $\lambda = -1$ has eigenvector $\vec{v} = \tvec{-1,1,-1}$ — check $\mathbf{A}\vec{v} = -\vec{v}$ — and $\mathbf{C}\vec{v} = -4+5-1 = 0$. The sensor is blind to it for all time, since $\mathbf{C}\mathbf{A}^k\vec{v} = (-1)^k\mathbf{C}\vec{v} = \vec{0}$, which is exactly $\mathcal{O}\vec{v} = \vec{0}$: the rank drops by one, and the state combination $-x_1 + x_2 - x_3$ decays as $e^{-t}$ unseen. The cancelled $(s+1)$ is that blindness, read in the frequency domain.
 
 ```{=latex}
 \end{example}
