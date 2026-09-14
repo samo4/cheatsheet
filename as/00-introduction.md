@@ -2,7 +2,7 @@
 
 The mental model behind these notes follows the chain **modeling → analysis → control**, but notes stops at just hinting the last part. Modeling (the next chapter) turns a physical system into equations, analysis squeezes behaviour out of those equations, and control runs the other way, from desired behaviour to a system that delivers it. All of it rests on one class of systems, the linear time-invariant (LTI) ones.
 
-## Prerequisites
+## Common vocabulary
 
 This is material you have met before; it is here only as a reminder and to fix the notation.
 
