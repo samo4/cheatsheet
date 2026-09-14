@@ -164,6 +164,15 @@ the same state matrix, with the input removed. Here $x_1$ is how deep the car ha
 
 The same equations with $x \to \theta$, $v \to \omega$, $F \to \tau$, $m \to J$: torque $\tau = J\alpha$, torsional spring $\tau = k(\theta_2 - \theta_1)$, rotational damper $\tau = b(\omega_2 - \omega_1)$. Gears and transmissions just scale torque and angular speed by the gear ratio.
 
+The inertia term is also what picks the states, exactly as for a mass:
+
+$$
+\dot{\theta} = \omega, \qquad
+\tau = J\ddot{\theta} = J\dot{\omega} = J\alpha
+$$
+
+so angle and angular velocity play the role of position and velocity, and a rotational model again reduces to two first-order equations. The torque of a gear pair acts on both shafts with opposite signs, the same action–reaction bookkeeping as in the translational recipe.
+
 ## Modeling of electrical circuits
 
 Let's skip how resistors, capacitors and inductors are modeled. Electrical modeling rests on Kirchhoff's laws, and since there are two of them — both able to generate independent equations — two methods were taught: node-voltage and mesh-current. In principle either one suffices; in practice you use whichever leaves fewer unknowns, and in the examples below we mix them where it is convenient.

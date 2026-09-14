@@ -16,7 +16,7 @@ This is material you have met before; it is here only as a reminder and to fix t
 Only a few distinctions actually change the mathematics, so these are the ones we keep:
 
 - *Static* — memoryless, the output depending only on the present input, $y = f(u)$, versus *dynamic* with memory, where the past lingers and forces a differential equation and a state.
-- *Lumped*: finitely many state variables obeying an ODE, so the model is finite-dimensional. *Distributed*: the state is a function of space as well as time, obeying a PDE, so there are infinitely many states.
+- *Lumped*: finitely many state variables obeying an ODE, so the model is finite-dimensional. *Distributed*: the state is a function of space as well as time, obeying a PDE, so there are infinitely many states. Limit between the two: connections $d < \frac{\lambda}{20}$
 - *Continuous-time*: signals are defined at every instant. *Discrete-time*: only at samples $kT$.
 - *Deterministic*: the same initial state and input always produce the same trajectory. *Stochastic*: randomness enters, and only statistics are predictable.
 - *Homogeneous*: no input; the system runs on its initial state alone. *Non-homogeneous*: an input drives it.
@@ -27,9 +27,7 @@ To get our mathematical tools, we need two properties: *linear*, *time-invariant
 
 A system is linear when it obeys **superposition**: adding inputs adds their responses, and scaling an input scales its response. That is the linear-map condition you already know — for any $u_1, u_2$ and any constants $a, b$,
 
-$$
-L(a u_1 + b u_2) = a\,L(u_1) + b\,L(u_2).
-$$
+$$L(a u_1 + b u_2) = a\,L(u_1) + b\,L(u_2).$$
 
 The two halves have names — additivity, $L(u_1 + u_2) = L(u_1) + L(u_2)$, and homogeneity, $L(a u) = a\,L(u)$ — and both must hold.
 

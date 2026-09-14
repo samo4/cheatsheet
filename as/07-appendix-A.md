@@ -338,6 +338,148 @@ Sanity check: $\mathbf{A}\vec{x}_1 = \vec{x}_1$, $\mathbf{A}\vec{x}_2 = 2\vec{x}
 
 Obviously a single eigenvalue can occur multiple times. We call this algebraic multiplicity and denote it as $m_a$. The number of linearly independent eigenvectors belonging to it is the geometric multiplicity $m_g$, always $1 \le m_g \le m_a$.
 
+### Cayley–Hamilton: an arbitrary function of a matrix
+
+**The question.** How do you compute an arbitrary function $f(\mathbf{A})$ of a matrix with Cayley–Hamilton? This is the general case of the $\Phi$ computation in the State-space chapter (there the scalar function was $e^{\lambda t}$); here it is on $\sin\mathbf{A}$.
+
+#### The idea
+
+Cayley–Hamilton says $\mathbf{A}$ satisfies its own characteristic equation, so every power $\mathbf{A}^k$ with $k \ge n$ folds back into $\mathbf{I}, \mathbf{A}, \dots, \mathbf{A}^{n-1}$. Dividing $f$ by the characteristic polynomial $g(\lambda) = \det(\lambda\mathbf{I} - \mathbf{A})$ therefore leaves a remainder of degree at most $n - 1$ — and the $q$-term dies when the matrix is substituted:
+
+$$
+f(\lambda) = q(\lambda)\,g(\lambda) + \alpha_0 + \alpha_1\lambda + \cdots + \alpha_{n-1}\lambda^{n-1}
+\qquad\Longrightarrow\qquad
+f(\mathbf{A}) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \cdots + \alpha_{n-1}\mathbf{A}^{n-1}
+$$
+
+because $g(\mathbf{A}) = \mathbf{0}$. So any analytic matrix function collapses to a polynomial of degree at most $n-1$ in $\mathbf{A}$, and the only unknowns are the $n$ scalars $\alpha_j$.
+
+#### The recipe
+
+1. Write the characteristic polynomial $g(\lambda) = \lambda^n + c_{n-1}\lambda^{n-1} + \cdots + c_0$, i.e. find the eigenvalues **with their multiplicities**.
+2. Ansatz: $f(\mathbf{A}) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \cdots + \alpha_{n-1}\mathbf{A}^{n-1}$, together with its scalar twin $f(\lambda) = \alpha_0 + \alpha_1\lambda + \cdots + \alpha_{n-1}\lambda^{n-1}$.
+3. Substitute each distinct eigenvalue. At $\lambda_i$ the $q$-term dies too ($g(\lambda_i) = 0$), which gives one linear equation per eigenvalue:
+   $$f(\lambda_i) = \alpha_0 + \alpha_1\lambda_i + \cdots + \alpha_{n-1}\lambda_i^{n-1}$$
+4. If $\lambda_i$ has algebraic multiplicity $m_i$, that one equation is not enough — differentiate the scalar identity $m_i - 1$ times, matching the derivatives as well:
+   $$f^{(j)}(\lambda_i) = \left.\frac{d^j}{d\lambda^j}\left(\alpha_0 + \alpha_1\lambda + \cdots + \alpha_{n-1}\lambda^{n-1}\right)\right|_{\lambda = \lambda_i}, \qquad j = 0, 1, \dots, m_i - 1$$
+5. Solve the resulting $n \times n$ Vandermonde system for the $\alpha_j$ and put them back into the ansatz.
+
+Read it as **interpolation**: $f(\mathbf{A})$ is the unique degree-$\le n-1$ polynomial in $\mathbf{A}$ that matches $f$ — and, at a repeated eigenvalue, also matches $f', f'', \dots$ — at the eigenvalues. Nothing here is special to $e^{\lambda t}$; the same five steps give $e^{\mathbf{A}t}$, $\sin\mathbf{A}$, $\cos\mathbf{A}$, $\sqrt{\mathbf{A}}$, $\mathbf{A}^{-1}$.
+
+#### $2\times2$ closed forms
+
+Distinct eigenvalues $\lambda_1 \ne \lambda_2$:
+
+$$
+f(\mathbf{A}) = \frac{f(\lambda_1)(\mathbf{A} - \lambda_2\mathbf{I}) - f(\lambda_2)(\mathbf{A} - \lambda_1\mathbf{I})}{\lambda_1 - \lambda_2}
+$$
+
+which is the same as $\alpha_1 = \dfrac{f(\lambda_1) - f(\lambda_2)}{\lambda_1 - \lambda_2}$ and $\alpha_0 = \dfrac{\lambda_1 f(\lambda_2) - \lambda_2 f(\lambda_1)}{\lambda_1 - \lambda_2}$.
+
+Double eigenvalue $\lambda$ (the two eigenvalues of the Vandermonde system merge into a value and a slope):
+
+$$
+f(\mathbf{A}) = f(\lambda)\mathbf{I} + f'(\lambda)(\mathbf{A} - \lambda\mathbf{I})
+$$
+
+#### Example — $\sin$ of a $2\times2$ matrix, distinct eigenvalues
+
+Take
+
+$$
+\mathbf{A} = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \qquad
+g(\lambda) = \det(\lambda\mathbf{I} - \mathbf{A}) = \lambda^2 - 1 = (\lambda - 1)(\lambda + 1), \qquad \lambda_{1,2} = \pm 1
+$$
+
+With $n = 2$, $\sin\mathbf{A} = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}$ and $\sin\lambda = \alpha_0 + \alpha_1\lambda$. Two eigenvalues, two equations — evaluating at the eigenvalues is the only place the actual $f$ enters:
+
+$$
+\lambda = 1: \quad \sin 1 = \alpha_0 + \alpha_1, \qquad
+\lambda = -1: \quad \sin(-1) = -\sin 1 = \alpha_0 - \alpha_1
+$$
+
+Adding gives $2\alpha_0 = 0$; subtracting gives $2\alpha_1 = 2\sin 1$:
+
+$$
+\alpha_0 = 0, \qquad \alpha_1 = \sin 1
+\qquad\Longrightarrow\qquad
+\sin\mathbf{A} = (\sin 1)\,\mathbf{A} = \begin{bmatrix} 0 & \sin 1 \\ \sin 1 & 0 \end{bmatrix}
+$$
+
+**Check without Cayley–Hamilton.** $\mathbf{A}^2 = \mathbf{I}$, so every even power is $\mathbf{I}$ and every odd power is $\mathbf{A}$, and the series collapses term by term:
+
+$$
+\sin\mathbf{A} = \mathbf{A} - \frac{\mathbf{A}^3}{3!} + \frac{\mathbf{A}^5}{5!} - \cdots
+= \left(1 - \frac{1}{3!} + \frac{1}{5!} - \cdots\right)\mathbf{A} = (\sin 1)\,\mathbf{A}
+$$
+
+#### Example — $\sin$ of a $2\times2$ matrix with a double eigenvalue
+
+$$
+\mathbf{A} = \begin{bmatrix} \pi/2 & 1 \\ 0 & \pi/2 \end{bmatrix}, \qquad
+g(\lambda) = \left(\lambda - \frac{\pi}{2}\right)^2
+$$
+
+Now $m = 2$ for the single eigenvalue $\lambda = \pi/2$, so evaluating $\sin\lambda = \alpha_0 + \alpha_1\lambda$ at $\pi/2$ gives only one equation; the second one comes from differentiating it, i.e. from $\cos\lambda = \alpha_1$:
+
+$$
+\sin\frac{\pi}{2} = \alpha_0 + \alpha_1\frac{\pi}{2}, \qquad
+\cos\frac{\pi}{2} = \alpha_1
+$$
+
+So $\alpha_1 = 0$ (that is why no $\mathbf{A}$ survives) and $\alpha_0 = 1$:
+
+$$
+\sin\mathbf{A} = \mathbf{I} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+$$
+
+**Check without Cayley–Hamilton.** Write $\mathbf{A} = \frac{\pi}{2}\mathbf{I} + \mathbf{N}$ with $\mathbf{N} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}$ and $\mathbf{N}^2 = \mathbf{0}$. Since $\mathbf{N}$ is nilpotent, $\sin\mathbf{N} = \mathbf{N}$ and $\cos\mathbf{N} = \mathbf{I}$, so
+
+$$
+\sin\left(\frac{\pi}{2}\mathbf{I} + \mathbf{N}\right)
+= \sin\frac{\pi}{2}\cos\mathbf{N} + \cos\frac{\pi}{2}\sin\mathbf{N}
+= \mathbf{I}\cdot\mathbf{I} + 0\cdot\mathbf{N} = \mathbf{I}
+$$
+
+The same $f'$ pattern holds for a Jordan block with any $\lambda$:
+
+$$
+\sin\begin{bmatrix} \lambda & 1 \\ 0 & \lambda \end{bmatrix}
+= \begin{bmatrix} \sin\lambda & \cos\lambda \\ 0 & \sin\lambda \end{bmatrix}
+$$
+
+#### Example — complex eigenvalues
+
+Complex eigenvalues need no special machinery — the same two equations, only the scalar identities change. For
+
+$$
+\mathbf{A} = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}, \qquad \lambda_{1,2} = \pm i
+$$
+
+$$
+\alpha_1 = \frac{\sin i - \sin(-i)}{i - (-i)} = \frac{\sin i}{i} = \sinh 1, \qquad
+\alpha_0 = \sin i - \alpha_1 i = i\sinh 1 - i\sinh 1 = 0
+$$
+
+using $\sin(-z) = -\sin z$ and $\sin i = i\sinh 1$. Hence
+
+$$
+\sin\mathbf{A} = (\sinh 1)\,\mathbf{A} = \begin{bmatrix} 0 & -\sinh 1 \\ \sinh 1 & 0 \end{bmatrix}
+$$
+
+**Check without Cayley–Hamilton.** $\mathbf{A}^2 = -\mathbf{I}$, so $\mathbf{A}^{2k+1} = \mathbf{A}(\mathbf{A}^2)^k = (-1)^k\mathbf{A}$ and the two sign flips cancel:
+
+$$
+\sin\mathbf{A} = \mathbf{A} - \frac{\mathbf{A}^3}{3!} + \frac{\mathbf{A}^5}{5!} - \cdots
+= \mathbf{A}\left(1 + \frac{1}{3!} + \frac{1}{5!} + \cdots\right) = (\sinh 1)\,\mathbf{A}
+$$
+
+#### The exam answer in three sentences
+
+- Cayley–Hamilton makes $\mathbf{A}$ satisfy its own characteristic polynomial, so any analytic function of $\mathbf{A}$ reduces to a polynomial of degree at most $n-1$ in $\mathbf{A}$ — that is the remainder of dividing $f(\lambda)$ by $g(\lambda)$.
+- The $n$ coefficients are fixed by matching $f$ at the eigenvalues, one equation per eigenvalue, plus $f', f'', \dots$ at any eigenvalue that repeats (multiplicity $m$: differentiate $m-1$ times).
+- Then solve the Vandermonde system and substitute back — for a matrix with eigenvalues $\pm 1$ it gives $\sin\mathbf{A} = (\sin 1)\mathbf{A}$.
+
 ## Continuous-time math
 
 ### ODE
