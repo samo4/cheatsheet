@@ -15,7 +15,7 @@ $$
 \vec{y} = \mathbf{g}(\vec{x}, \vec{u}, t)
 $$
 
-For LTI systems they collapse to Kalman's matrix form:
+For LTI systems they collapse to the state-space form:
 
 $$
 \dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}
@@ -25,6 +25,8 @@ $$
 $$
 
 with $\mathbf{A}$ the dynamics, $\mathbf{B}$ the input coupling, $\mathbf{C}$ the output coupling, and $\mathbf{D}$ the direct feedthrough — often, but certainly not always, $\mathbf{D} = \mathbf{0}$. The outputs are generally not the states themselves — that is exactly what $\mathbf{C}$ and $\mathbf{D}$ capture.
+
+The idea is Kalman's: recasting a linear system as matrices acting on a state vector is what he did in 1960 [@kalman1960general], the year usually called the birth of modern system theory [@bernhard2019kalman].
 
 The state variables are not unique. Relabeling is the dull case — reordering $x_1 = y$, $x_2 = \dot{y}$ changes nothing but the row order. The interesting case is swapping one physical quantity for another, which is a genuine choice rather than a relabeling.
 
