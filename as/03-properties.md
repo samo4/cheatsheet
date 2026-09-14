@@ -51,9 +51,7 @@ For $\dot{\vec{x}} = \mathbf{A}\vec{x}$ stability is decided by the eigenvalues 
 \setlength{\fboxsep}{1.2em}
 \fbox{$\displaystyle
 \begin{array}{lcl}
-\operatorname{Re}\lambda_i < 0 \ \ \forall i & \iff & \text{asymptotically stable} \\[3pt]
-\operatorname{Re}\lambda_i \le 0, \ \text{imaginary-axis eigenvalues simple} & \iff & \text{marginal (stable)} \\[3pt]
-\text{otherwise} & \iff & \text{unstable}
+\operatorname{Re}\lambda_i < 0 \ \ \forall i & \iff & \text{asymptotically stable}
 \end{array}
 $}
 \endgroup

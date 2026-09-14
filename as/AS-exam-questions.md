@@ -7,20 +7,19 @@
 
 ## 1. System classification and properties
 
-- [x] What is a observable system? 
+- [x] What is an observable system? 
 - [x] Static vs. dynamic
   - [x] Give an electrical-circuit example of each
-- [ ] Define time-invariant vs. time-varying
-  - [ ] What does time invariance require physically? *Hint: an ideal circuit — one that does not age and whose parameters do not drift.*
-  - [ ] Give an electrical example
-  - [ ] Give an electrical example for the four combinations of static/dynamic and time-invariant/time-varying.
-- [ ] What does it mean for a system to be linear?
-  - [ ] Write the condition down and "prove" it
-- [ ] Show why a constant offset breaks linearity
-- [ ] Deterministic vs. stochastic: what changes? *Hint: same state and input give the same trajectory, versus only statistics being predictable.*
-- [ ] Homogeneous vs. non-homogeneous: what does "homogeneous" mean for the state equation?
-- [ ] Black box test: how would you find out whether a system is static or dynamic without opening it? *Hint: send an excitation in and look at the response — instantaneous means static, a transient means dynamic.*
-  - [ ] Which input signals are best for that test? *Hint: the step was accepted, but the professor wanted to hear unit impulse.*
+- [x] Define time-invariant vs. time-varying
+  - [x] What does time invariance require physically? *Hint: an ideal circuit — one that does not age and whose parameters do not drift.*
+  - [x] Give an electrical example
+- [x] What does it mean for a system to be linear?
+  - [x] Write the condition down and "prove" it
+- [x] Show why a constant offset breaks linearity
+- [x] Deterministic vs. stochastic: what changes? *Hint: same state and input give the same trajectory, versus only statistics being predictable.*
+- [x] Homogeneous vs. non-homogeneous: what does "homogeneous" mean for the state equation?
+- [x] Black box test: how would you find out whether a system is static or dynamic without opening it? *Hint: send an excitation in and look at the response — instantaneous means static, a transient means dynamic.* PS: pedantic answer is: you can't tell if it's static, but you can tell if it's dynamic.
+  - [x] Which input signals are best for that test? *Hint: the step was accepted, but the professor wanted to hear unit impulse.*
 - [ ] Convolution:
   - [ ] what is it
   - [ ] what does it let you do for an LTI system

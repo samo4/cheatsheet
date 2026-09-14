@@ -171,7 +171,7 @@ $$
 \tau = J\ddot{\theta} = J\dot{\omega} = J\alpha
 $$
 
-so angle and angular velocity play the role of position and velocity, and a rotational model again reduces to two first-order equations. The torque of a gear pair acts on both shafts with opposite signs, the same action–reaction bookkeeping as in the translational recipe.
+so angle and angular velocity play the role of position and velocity, and a rotational model again reduces to two first-order equations.
 
 ## Modeling of electrical circuits
 

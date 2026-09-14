@@ -640,9 +640,7 @@ Everything mirrors the continuous case:
   \setlength{\fboxsep}{1.2em}
   \fbox{$\displaystyle
   \begin{array}{lcl}
-  |\lambda_i| < 1 \ \ \forall i & \iff & \text{asymptotically stable} \\[3pt]
-  |\lambda_i| \le 1, \ \text{unit-circle eigenvalues simple} & \iff & \text{marginal (stable)} \\[3pt]
-  \text{otherwise} & \iff & \text{unstable}
+  |\lambda_i| < 1 \ \ \forall i & \iff & \text{asymptotically stable}
   \end{array}
   $}
   \endgroup
