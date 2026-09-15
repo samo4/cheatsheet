@@ -1,5 +1,26 @@
 # Appendix A: Math review
 
+## Calculus
+
+### Taylor series
+
+Near a point $x_0$ a smooth function is its polynomial expansion — value, slope, curvature and all higher derivatives matched there:
+
+$$
+f(x) = \sum_{k=0}^{\infty} \frac{f^{(k)}(x_0)}{k!}(x-x_0)^k
+= f(x_0) + f'(x_0)(x-x_0) + \frac{f''(x_0)}{2!}(x-x_0)^2 + \cdots
+$$
+
+The $k!$ is the leftover from differentiating $x^k$ $k$ times, and the coefficients are read off the derivatives at $x_0$. Expanding at $x_0 = 0$ is the Maclaurin series, and three of those do all the work in these notes:
+
+$$
+e^{x} = \underbrace{1}_{\cos} + \underbrace{x}_{\sin} + \underbrace{\frac{x^{2}}{2!}}_{\cos} + \underbrace{\frac{x^{3}}{3!}}_{\sin} + \underbrace{\frac{x^{4}}{4!}}_{\cos} + \underbrace{\frac{x^{5}}{5!}}_{\sin} + \cdots
+$$
+
+The underbraces sort the terms by parity — the even powers build $\cos$, the odd powers build $\sin$.
+
+Cutting after the linear term leaves the tangent line $f(x) \approx f(x_0) + f'(x_0)(x-x_0)$, good while the deviation $|x - x_0|$ is small and off by the size of the first discarded term — see the Linearization chapter.
+
 ## Linear algebra
 
 ### Matrix multiplication
@@ -205,9 +226,9 @@ which matches the Gauss result.
 
 The rank $r = \operatorname{rank}\mathbf{A}$ is the number of linearly independent rows (or columns). Vectors are linearly independent when none of them is a linear combination of the others. For a system $\mathbf{A}\vec{x} = \vec{b}$ with $n$ unknowns:
 
-- **No solution** if $\operatorname{rank}[\mathbf{A}\mid\vec{b}] > \operatorname{rank}\mathbf{A}$ (inconsistent).
-- **Exactly one solution** if $\operatorname{rank}\mathbf{A} = \operatorname{rank}[\mathbf{A}\mid\vec{b}] = n$.
-- **Infinitely many solutions** if $\operatorname{rank}\mathbf{A} = \operatorname{rank}[\mathbf{A}\mid\vec{b}] < n$; then there are $n - r$ free variables.
+- No solutio if $\operatorname{rank}[\mathbf{A}\mid\vec{b}] > \operatorname{rank}\mathbf{A}$ (inconsistent).
+- Exactly one solution if $\operatorname{rank}\mathbf{A} = \operatorname{rank}[\mathbf{A}\mid\vec{b}] = n$.
+- Infinitely many solutions if $\operatorname{rank}\mathbf{A} = \operatorname{rank}[\mathbf{A}\mid\vec{b}] < n$; then there are $n - r$ free variables.
 
 The homogeneous system $\mathbf{A}\vec{x} = \vec{0}$ always has the trivial solution $\vec{x} = \vec{0}$, and has nontrivial ones exactly when $\operatorname{rank}\mathbf{A} < n$, i.e. when $\mathbf{A}$ is singular ($\det\mathbf{A} = 0$). That is the exact condition behind the eigenvalue problem below.
 
@@ -340,9 +361,7 @@ Obviously a single eigenvalue can occur multiple times. We call this algebraic m
 
 ### Cayley–Hamilton: an arbitrary function of a matrix
 
-**The question.** How do you compute an arbitrary function $f(\mathbf{A})$ of a matrix with Cayley–Hamilton? This is the general case of the $\Phi$ computation in the State-space chapter (there the scalar function was $e^{\lambda t}$); here it is on $\sin\mathbf{A}$.
-
-#### The idea
+How do you compute an arbitrary function $f(\mathbf{A})$ of a matrix with Cayley–Hamilton? Let's take $\sin\mathbf{A}$ for example.
 
 Cayley–Hamilton says $\mathbf{A}$ satisfies its own characteristic equation, so every power $\mathbf{A}^k$ with $k \ge n$ folds back into $\mathbf{I}, \mathbf{A}, \dots, \mathbf{A}^{n-1}$. Dividing $f$ by the characteristic polynomial $g(\lambda) = \det(\lambda\mathbf{I} - \mathbf{A})$ therefore leaves a remainder of degree at most $n - 1$ — and the $q$-term dies when the matrix is substituted:
 
@@ -354,146 +373,58 @@ $$
 
 because $g(\mathbf{A}) = \mathbf{0}$. So any analytic matrix function collapses to a polynomial of degree at most $n-1$ in $\mathbf{A}$, and the only unknowns are the $n$ scalars $\alpha_j$.
 
-#### The recipe
-
-1. Write the characteristic polynomial $g(\lambda) = \lambda^n + c_{n-1}\lambda^{n-1} + \cdots + c_0$, i.e. find the eigenvalues **with their multiplicities**.
-2. Ansatz: $f(\mathbf{A}) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \cdots + \alpha_{n-1}\mathbf{A}^{n-1}$, together with its scalar twin $f(\lambda) = \alpha_0 + \alpha_1\lambda + \cdots + \alpha_{n-1}\lambda^{n-1}$.
-3. Substitute each distinct eigenvalue. At $\lambda_i$ the $q$-term dies too ($g(\lambda_i) = 0$), which gives one linear equation per eigenvalue:
-   $$f(\lambda_i) = \alpha_0 + \alpha_1\lambda_i + \cdots + \alpha_{n-1}\lambda_i^{n-1}$$
-4. If $\lambda_i$ has algebraic multiplicity $m_i$, that one equation is not enough — differentiate the scalar identity $m_i - 1$ times, matching the derivatives as well:
-   $$f^{(j)}(\lambda_i) = \left.\frac{d^j}{d\lambda^j}\left(\alpha_0 + \alpha_1\lambda + \cdots + \alpha_{n-1}\lambda^{n-1}\right)\right|_{\lambda = \lambda_i}, \qquad j = 0, 1, \dots, m_i - 1$$
-5. Solve the resulting $n \times n$ Vandermonde system for the $\alpha_j$ and put them back into the ansatz.
-
-Read it as **interpolation**: $f(\mathbf{A})$ is the unique degree-$\le n-1$ polynomial in $\mathbf{A}$ that matches $f$ — and, at a repeated eigenvalue, also matches $f', f'', \dots$ — at the eigenvalues. Nothing here is special to $e^{\lambda t}$; the same five steps give $e^{\mathbf{A}t}$, $\sin\mathbf{A}$, $\cos\mathbf{A}$, $\sqrt{\mathbf{A}}$, $\mathbf{A}^{-1}$.
-
-#### $2\times2$ closed forms
-
-Distinct eigenvalues $\lambda_1 \ne \lambda_2$:
+```{=latex}
+\begin{example}[frametitle={Example - use C-H to calculate $\sin\mathbf{A}$}]
+```
 
 $$
-f(\mathbf{A}) = \frac{f(\lambda_1)(\mathbf{A} - \lambda_2\mathbf{I}) - f(\lambda_2)(\mathbf{A} - \lambda_1\mathbf{I})}{\lambda_1 - \lambda_2}
+\mathbf{A}= \begin{bmatrix} -3 & -1  \\ 0 & -2 \end{bmatrix}
 $$
 
-which is the same as $\alpha_1 = \dfrac{f(\lambda_1) - f(\lambda_2)}{\lambda_1 - \lambda_2}$ and $\alpha_0 = \dfrac{\lambda_1 f(\lambda_2) - \lambda_2 f(\lambda_1)}{\lambda_1 - \lambda_2}$.
+**Step 1 —** find the eigenvalues
 
-Double eigenvalue $\lambda$ (the two eigenvalues of the Vandermonde system merge into a value and a slope):
+We immediately clock that the matrix is triangular, so the eigenvalues are the diagonal entries: $\lambda_1 = -3$, $\lambda_2 = -2$.
 
-$$
-f(\mathbf{A}) = f(\lambda)\mathbf{I} + f'(\lambda)(\mathbf{A} - \lambda\mathbf{I})
-$$
-
-#### Example — $\sin$ of a $2\times2$ matrix, distinct eigenvalues
-
-Take
+With $n = 2$, C-H makes every higher power fold back — here $g(\lambda) = (\lambda+3)(\lambda+2) = \lambda^2 + 5\lambda + 6$, so $\mathbf{A}^2 = -5\mathbf{A} - 6\mathbf{I}$ — leaving a polynomial of degree at most $1$ in $\mathbf{A}$:
 
 $$
-\mathbf{A} = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \qquad
-g(\lambda) = \det(\lambda\mathbf{I} - \mathbf{A}) = \lambda^2 - 1 = (\lambda - 1)(\lambda + 1), \qquad \lambda_{1,2} = \pm 1
+\sin\mathbf{A} = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}
 $$
 
-With $n = 2$, $\sin\mathbf{A} = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}$ and $\sin\lambda = \alpha_0 + \alpha_1\lambda$. Two eigenvalues, two equations — evaluating at the eigenvalues is the only place the actual $f$ enters:
+**Step 2 —** the two unknowns need two equations. They come from the scalar twin $\sin\lambda = \alpha_0 + \alpha_1\lambda$ evaluated at the eigenvalues, where the $q(\lambda)g(\lambda)$ term dies — that is the whole reason C-H works — giving one equation per eigenvalue:
 
 $$
-\lambda = 1: \quad \sin 1 = \alpha_0 + \alpha_1, \qquad
-\lambda = -1: \quad \sin(-1) = -\sin 1 = \alpha_0 - \alpha_1
+\sin(-3) = \alpha_0 - 3\alpha_1, \qquad \sin(-2) = \alpha_0 - 2\alpha_1
 $$
 
-Adding gives $2\alpha_0 = 0$; subtracting gives $2\alpha_1 = 2\sin 1$:
+**Step 3 —** solve for $\alpha_0$ and $\alpha_1$. Subtracting the two equations kills $\alpha_0$, and what is left is the difference quotient:
 
 $$
-\alpha_0 = 0, \qquad \alpha_1 = \sin 1
-\qquad\Longrightarrow\qquad
-\sin\mathbf{A} = (\sin 1)\,\mathbf{A} = \begin{bmatrix} 0 & \sin 1 \\ \sin 1 & 0 \end{bmatrix}
+\alpha_1 = \frac{\sin(-3) - \sin(-2)}{-3 - (-2)} = \sin(-2) - \sin(-3) = \sin 3 - \sin 2
 $$
 
-**Check without Cayley–Hamilton.** $\mathbf{A}^2 = \mathbf{I}$, so every even power is $\mathbf{I}$ and every odd power is $\mathbf{A}$, and the series collapses term by term:
+then back-substitute into either equation, $\alpha_0 = \sin(-2) + 2\alpha_1 = 2\sin 3 - 3\sin 2$.
+
+**Step 4 —** substitute back into the ansatz:
 
 $$
-\sin\mathbf{A} = \mathbf{A} - \frac{\mathbf{A}^3}{3!} + \frac{\mathbf{A}^5}{5!} - \cdots
-= \left(1 - \frac{1}{3!} + \frac{1}{5!} - \cdots\right)\mathbf{A} = (\sin 1)\,\mathbf{A}
-$$
-
-#### Example — $\sin$ of a $2\times2$ matrix with a double eigenvalue
-
-$$
-\mathbf{A} = \begin{bmatrix} \pi/2 & 1 \\ 0 & \pi/2 \end{bmatrix}, \qquad
-g(\lambda) = \left(\lambda - \frac{\pi}{2}\right)^2
-$$
-
-Now $m = 2$ for the single eigenvalue $\lambda = \pi/2$, so evaluating $\sin\lambda = \alpha_0 + \alpha_1\lambda$ at $\pi/2$ gives only one equation; the second one comes from differentiating it, i.e. from $\cos\lambda = \alpha_1$:
-
-$$
-\sin\frac{\pi}{2} = \alpha_0 + \alpha_1\frac{\pi}{2}, \qquad
-\cos\frac{\pi}{2} = \alpha_1
-$$
-
-So $\alpha_1 = 0$ (that is why no $\mathbf{A}$ survives) and $\alpha_0 = 1$:
-
-$$
-\sin\mathbf{A} = \mathbf{I} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
-$$
-
-**Check without Cayley–Hamilton.** Write $\mathbf{A} = \frac{\pi}{2}\mathbf{I} + \mathbf{N}$ with $\mathbf{N} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}$ and $\mathbf{N}^2 = \mathbf{0}$. Since $\mathbf{N}$ is nilpotent, $\sin\mathbf{N} = \mathbf{N}$ and $\cos\mathbf{N} = \mathbf{I}$, so
-
-$$
-\sin\left(\frac{\pi}{2}\mathbf{I} + \mathbf{N}\right)
-= \sin\frac{\pi}{2}\cos\mathbf{N} + \cos\frac{\pi}{2}\sin\mathbf{N}
-= \mathbf{I}\cdot\mathbf{I} + 0\cdot\mathbf{N} = \mathbf{I}
-$$
-
-The same $f'$ pattern holds for a Jordan block with any $\lambda$:
-
-$$
-\sin\begin{bmatrix} \lambda & 1 \\ 0 & \lambda \end{bmatrix}
-= \begin{bmatrix} \sin\lambda & \cos\lambda \\ 0 & \sin\lambda \end{bmatrix}
-$$
-
-#### Example — complex eigenvalues
-
-Complex eigenvalues need no special machinery — the same two equations, only the scalar identities change. For
-
-$$
-\mathbf{A} = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}, \qquad \lambda_{1,2} = \pm i
+\sin\mathbf{A} = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}
+= (2\sin 3 - 3\sin 2)\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
++ (\sin 3 - \sin 2)\begin{bmatrix} -3 & -1 \\ 0 & -2 \end{bmatrix}
 $$
 
 $$
-\alpha_1 = \frac{\sin i - \sin(-i)}{i - (-i)} = \frac{\sin i}{i} = \sinh 1, \qquad
-\alpha_0 = \sin i - \alpha_1 i = i\sinh 1 - i\sinh 1 = 0
+= \begin{bmatrix} 2\sin 3 - 3\sin 2 - 3\sin 3 + 3\sin 2 & -(\sin 3 - \sin 2) \\ 0 & 2\sin 3 - 3\sin 2 - 2\sin 3 + 2\sin 2 \end{bmatrix}
+= \begin{bmatrix} -\sin 3 & \sin 2 - \sin 3 \\ 0 & -\sin 2 \end{bmatrix}
 $$
 
-using $\sin(-z) = -\sin z$ and $\sin i = i\sinh 1$. Hence
+Sanity check: $\mathbf{A}$ is triangular, so the answer must be triangular with $f$ applied on the diagonal — and it is, $-\sin 3$ and $-\sin 2$.
 
-$$
-\sin\mathbf{A} = (\sinh 1)\,\mathbf{A} = \begin{bmatrix} 0 & -\sinh 1 \\ \sinh 1 & 0 \end{bmatrix}
-$$
-
-**Check without Cayley–Hamilton.** $\mathbf{A}^2 = -\mathbf{I}$, so $\mathbf{A}^{2k+1} = \mathbf{A}(\mathbf{A}^2)^k = (-1)^k\mathbf{A}$ and the two sign flips cancel:
-
-$$
-\sin\mathbf{A} = \mathbf{A} - \frac{\mathbf{A}^3}{3!} + \frac{\mathbf{A}^5}{5!} - \cdots
-= \mathbf{A}\left(1 + \frac{1}{3!} + \frac{1}{5!} + \cdots\right) = (\sinh 1)\,\mathbf{A}
-$$
-
-#### The exam answer in three sentences
-
-- Cayley–Hamilton makes $\mathbf{A}$ satisfy its own characteristic polynomial, so any analytic function of $\mathbf{A}$ reduces to a polynomial of degree at most $n-1$ in $\mathbf{A}$ — that is the remainder of dividing $f(\lambda)$ by $g(\lambda)$.
-- The $n$ coefficients are fixed by matching $f$ at the eigenvalues, one equation per eigenvalue, plus $f', f'', \dots$ at any eigenvalue that repeats (multiplicity $m$: differentiate $m-1$ times).
-- Then solve the Vandermonde system and substitute back — for a matrix with eigenvalues $\pm 1$ it gives $\sin\mathbf{A} = (\sin 1)\mathbf{A}$.
+```{=latex}
+\end{example}
+```
 
 ## Continuous-time math
-
-### ODE
-
-A linear ODE is one whose left-hand side is a linear operator $L$. Linearity is two properties bundled together:
-
-- **Additivity**: $L[y_1 + y_2] = L[y_1] + L[y_2]$
-- **Homogeneity**: $L[cy] = c\,L[y]$
-
-Together, $L[c_1 y_1 + c_2 y_2] = c_1 L[y_1] + c_2 L[y_2]$. The key consequence is **superposition**: if $y_1, y_2$ solve the homogeneous equation $L[y] = 0$, so does any linear combination $c_1 y_1 + c_2 y_2$. For example, $L[y] = \ddot{y} + 2\dot{y} + y$ is linear, whereas $L[y] = \dot{y}^2$ is not.
-
-**Time invariance** means the system does not care when we start the clock: if $x(t)$ is the response to input $u(t)$, then $x(t - \tau)$ is the response to $u(t - \tau)$.
-
-The state-space equation $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$ is a linear, time-invariant (LTI) system — these two properties are exactly what let us use the Laplace transform and the matrix exponential below.
 
 ### Laplace
 
@@ -528,9 +459,9 @@ $$
 
 Inverse Laplace transforms are read off a table, so the goal is to split a rational function $F(s) = N(s)/D(s)$ (with $\deg N < \deg D$) into pieces that match table entries. Factor $D(s)$ and decompose:
 
-- **Distinct linear factors** $(s-a)(s-b)$: $\ \dfrac{A}{s-a} + \dfrac{B}{s-b}$
-- **Repeated factors** $(s-a)^2$: $\ \dfrac{A}{s-a} + \dfrac{B}{(s-a)^2}$
-- **Irreducible quadratic** $s^2 + \omega^2$: $\ \dfrac{As + B}{s^2 + \omega^2}$ ($\to$ sines and cosines)
+- Distinct linear factors $(s-a)(s-b)$: $\ \dfrac{A}{s-a} + \dfrac{B}{s-b}$
+- Repeated factors $(s-a)^2$: $\ \dfrac{A}{s-a} + \dfrac{B}{(s-a)^2}$
+- Irreducible quadratic $s^2 + \omega^2$: $\ \dfrac{As + B}{s^2 + \omega^2}$ ($\to$ sines and cosines)
 
 ```{=latex}
 \begin{example}[frametitle={Example - partial fractions}]
