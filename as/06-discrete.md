@@ -7,7 +7,9 @@ Sampled-time systems evolve in discrete steps rather than continuously. The cont
 The discrete analogue of an ODE is a **difference equation**. In matrix form it is the discrete state-space equations — next state on the left, the direct counterpart of the continuous $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, $\vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}$:
 
 $$
-\underbrace{\vec{x}[k+1]}_{\text{next}} = \mathbf{A}\underbrace{\vec{x}[k]}_{\text{current}} + \mathbf{B}\underbrace{\vec{u}[k]}_{\text{current}}, \qquad
+\underbrace{\vec{x}[k+1]}_{\text{next}} = \mathbf{A}\underbrace{\vec{x}[k]}_{\text{current}} + \mathbf{B}\underbrace{\vec{u}[k]}_{\text{current}}
+$$
+$$
 \vec{y}[k] = \mathbf{C}\vec{x}[k] + \mathbf{D}\vec{u}[k]
 $$
 

@@ -18,8 +18,8 @@
 - [x] Show why a constant offset breaks linearity
 - [x] Deterministic vs. stochastic: what changes? *Hint: same state and input give the same trajectory, versus only statistics being predictable.*
 - [x] Homogeneous vs. non-homogeneous: what does "homogeneous" mean for the state equation?
-- [x] Black box test: how would you find out whether a system is static or dynamic without opening it? *Hint: send an excitation in and look at the response — instantaneous means static, a transient means dynamic.* PS: pedantic answer is: you can't tell if it's static, but you can tell if it's dynamic.
-  - [x] Which input signals are best for that test? *Hint: the step was accepted, but the professor wanted to hear unit impulse.*
+- [x] Black box test: how would you find out whether a system is static or dynamic without opening it? *Hint: kill the excitation and watch — a static system sits at 0 while anything still settling means a state. Or use best testing signal: the unit impulse: anything shown in output after t=0 indicates a dynamic system.* PS: pedantic answer is: you can't tell if it's static, but you can tell if it's dynamic.
+  - [x] Which input signals are best for that test? *Hint: unit impulse — it is the shortest probe, no probllem if the system is integrating and it reaveals syetem memory instantly.*
 - [x] Convolution:
   - [x] what is it *Hint: convolution is the superposition integral — it takes every past value of the input, scales it by how the system answers a kick, and adds the lot up*
   - [x] what does it let you do for an LTI system *Hint: one measurment gives you everything you need to predict the response to any input*
@@ -31,73 +31,66 @@
   - [x] what are the potentials
   - [x] what are the node equations
   - [x] what are the unknowns?
-- [ ] How do we get the additional equations beyond KCL at the nodes?
-- [ ] Why do we need one extra equation per voltage source, and which new variable does a voltage source bring into the circuit? *Hint: the source current, e.g. $i_g$.*
-- [ ] Why do we need an extra equation per reactive element?
-- [ ] Why does a capacitor need two equations, and why does its current appear in two node equations?
-- [ ] Why are the state variables of an inductor/capacitor network the inductor current and the capacitor voltage, and not the other way round?
-- [ ] Only resistive circuits:
-  - [ ] potentials
-  - [ ] node equations
-  - [ ] what the unknowns are
-  - [ ] how the extra equations are produced
-- [ ] Given a circuit, in what way would you solve it — which route (node equations, state equations, impedance/divider) and why?
-- [ ] Mechanical and rotational modeling: how do you get from the physical system to the first-order state equations?
-- [ ] Modeling a pandemic (SIR): derive the model, then use it.
-  - [ ] Reported chain: *difference between a static and a dynamic model → derive the SIR model → how do you get the discrete state-transition matrix at the end?*
+- [x] How do we get the additional equations beyond KCL at the nodes? *Hint: from the elements — $v = Ri$, $i_C = C\dot{v}_C$, $v_L = L\dot{i}_L$.*
+- [x] Why do we need one extra equation per voltage source, and which new variable does a voltage source bring into the circuit? *Hint: $i_g$.*
+- [x] Why do we need an extra equation per reactive element? *Hint: each brings a new unknown (a state), and with it its own law, $C\dot{v}_C = i_C$.*
+- [x] Why does a capacitor need two equations, and why does its current appear in two node equations? *Hint: two unknowns — its voltage (a state) and its current (a branch current, so KCL at both ends mentions it).*
+- [x] Why are the state variables of an inductor/capacitor network the inductor current and the capacitor voltage, and not the other way round? *Hint: energy variable cannot jump and we need equations that include non-derviative and derviative $C\dot{v}_C = i_C$ works*
+- [x] Only resistive circuits:
+  - [x] potentials *Hint: node voltages, one node grounded.*
+  - [x] node equations *Hint: KCL at every non-ground node, currents as $V/R$.*
+  - [x] what the unknowns are *Hint: only the node potentials.*
+  - [x] how the extra equations are produced *Hint: none — every element is already known through $V/R$.*
+- [x] Given a circuit, in what way would you solve it — which route (node equations, state equations, impedance/divider) and why? *Hint: whichever leaves fewest unknowns; state equations only if states are asked for.*
+- [x] Mechanical and rotational modeling: how do you get from the physical system to the first-order state equations? *Hint: one state per storage, so position and velocity; signs from the elements, then $x_1 = x$, $x_2 = \dot{x}$.*
+- [x] Modeling a pandemic (SIR): 
+  - [x] derive the model, then use it.
+  - [x] how do you get the discrete state-transition matrix at the end?
 - [ ] Frequency-domain circuit example:
   - [ ] inductor in series with a capacitor that has a resistor in parallel; express the voltage across the resistor in the frequency domain. *Hint: combine the parallel RC into a single impedance, then treat it as a voltage divider between the inductor impedance and that impedance, and read the voltage across the RC impedance — no state equations needed.*
 
 ### Kindly provided by LLM
 
-- [ ] Turn a third-order ODE into a system of first-order equations.
-  - [ ] Why is that always possible, and what ends up in the state vector?
-- [ ] Why is the choice of state variables not unique?
-  - [ ] Produce a second valid state vector for the same circuit and the invertible map between them.
-- [ ] In the car suspension model, why does $mg$ disappear once $x$ is measured from the static equilibrium, and what does the constant input do to the equilibrium if it is not?
-- [ ] Why are the inductor current and the capacitor voltage the natural state variables?
-- [ ] Show that a purely resistive network has no state at all.
+- [x] Turn a third-order ODE into a system of first-order equations. *Hint: $x_1 = y$, $x_2 = \dot{y}$, $x_3 = \ddot{y}$*
+  - [x] Why is that always possible, and what ends up in the state vector? *Hint: solve the ODE for its highest derivative; the state is the variable plus its derivatives up to $n-1$.*
+- [x] Why is the choice of state variables not unique? *Hint: any invertible $\vec{z} = \mathbf{T}\vec{x}$ is another valid state.*
+- [x] In the car suspension model, why does $mg$ disappear once $x$ is measured from the static equilibrium, and what does the constant input do to the equilibrium if it is not? *Hint: the static spring force already carries the weight, so the two cancel; otherwise $mg$ only shifts the equilibrium.*
+- [ ] Why are the inductor current and the capacitor voltage the natural state variables? *Hint: same reason as above — the energy variables that cannot jump.*
+- [x] Show that a purely resistive network has no state at all.
 
 ## 3. State equations and the state-transition matrix (continuous time)
 
-- [ ] Write the general state equation (and the output equation)
-  - [ ] say what each matrix means
-- [ ] General solution of the state equation — homogeneous and non-homogeneous parts.
-- [ ] What is the state-transition matrix $\Phi(t)$, and what properties does it have?
-- [ ] All the methods for determining $\Phi$ (reported "all three"): know them and know when to pick which.
-- [ ] Cayley–Hamilton: what does the theorem actually say, and how do we use it to produce the forms we then apply to the exercises? *Hint: it turns any matrix function (or a power $A^k$) into a polynomial of degree at most $n-1$, with the coefficients from the scalar eigenvalue identities.*
-- [ ] Controllability: what does it mean, and derive the criterion.
-- [ ] How do you compute an arbitrary function of a matrix with Cayley–Hamilton?
+- [x] Write the general state equation (and the output equation)
+  - [x] say what each matrix means
+- [x] General solution of the state equation — homogeneous and non-homogeneous parts.
+- [x] What is the state-transition matrix $\Phi(t)$, and what properties does it have? *Hint: 1. $\Phi(0)=\mathbf{I}$ (with $\dot\Phi=\mathbf{A}\Phi$ this is the definition) 2. $\Phi(t+\tau)=\Phi(t)\Phi(\tau)$ 3. $\Phi^{-1}(t)=\Phi(-t)$, so nonsingular for every $t$ — it is not diagonal in general, that is only the case $\mathbf{A}$ diagonal 4. $\dot\Phi=\mathbf{A}\Phi=\Phi\mathbf{A}$, both orders.*
+- [ ] All the methods for determining $\Phi$ *Hint: Taylor (terminates only for nilpotent, or $\lambda\mathbf{I}+\mathbf{N}$), diagonalization $\mathbf{V}e^{\boldsymbol\Lambda t}\mathbf{V}^{-1}$ (fastest when eigenvectors are easy, dies on defectiveness), Cayley–Hamilton $e^{\mathbf{A}t}=\sum_{k<n}\alpha_k(t)\mathbf{A}^k$ (always works — the only option when defective), Laplace $\mathcal L^{-1}\{(s\mathbf{I}-\mathbf{A})^{-1}\}$ (small matrices, repeated poles, and it hands you $G(s)$ too).*
+- [x] Cayley–Hamilton: what does the theorem actually say, and how do we use it to produce the forms we then apply to the exercises? *Hint: $p(\mathbf{A})=\mathbf{0}$ kills every power $k\ge n$, so $g(\mathbf{A})=\sum_{k<n}c_k\mathbf{A}^k$; the $c_k$ come from matching $g$ at the eigenvalues, $r(\lambda_i)=g(\lambda_i)$ — plus the derivative conditions $r^{(m)}(\lambda_i)=g^{(m)}(\lambda_i)$ when an eigenvalue repeats, which is where $te^{\lambda t}$ enters. Eigenvalue-wise it reads $\operatorname{eig}(g(\mathbf{A}))=g(\operatorname{eig}(\mathbf{A}))$, and it works without eigenvectors, so it is the only route that survives a defective $\mathbf{A}$.*
+- [x] Controllability: what does it mean, and derive the criterion.
+- [x] How do you compute an arbitrary function of a matrix with Cayley–Hamilton?
 
 ### Kindly provided by LLM
 
 - [ ] Verify the properties of $\Phi(t)$: $\Phi(0)=\mathbf{I}$, $\Phi(t+\tau)=\Phi(t)\Phi(\tau)$, $\Phi^{-1}(t)=\Phi(-t)$, and the two forms of its derivative.
 - [ ] Derive the non-homogeneous solution.
   - [ ] Why does the substitution trick give the convolution integral with $\Phi(t-\tau)$, and what breaks when the lower limit is not $0$?
-- [ ] Solve the hanging-mass example by the Taylor series route, then check the initial position and velocity as a sanity check.
-- [ ] Laplace route: get $\Phi$ from the inverse transform of $(s\mathbf{I}-\mathbf{A})^{-1}$.
-  - [ ] Why is the resolvent such a useful object?
-- [ ] Diagonalization route:
-  - [ ] what does it require
-  - [ ] what do $\mathbf{V}$ and $\mathbf{V}^{-1}$ do
-  - [ ] what is different when $\mathbf{A}$ is defective?
 - [ ] Why is a triangular $\mathbf{A}$ "half the jackpot" when computing $\Phi$?
 - [ ] Compare the four methods.
   - [ ] Which do you reach for when, and which one is the only option in some cases?
 
 ## 4. State equations and the state-transition matrix (discrete time)
 
-- [ ] Write the discrete state equation.
+- [x] Write the discrete state equation.
   - [ ] How would you compute $x[m]$ (or $x[k]$)?
 - [ ] Difference equation versus differential equation: write one down and say which it is, and why.
-- [ ] How is the index $k$ in a discrete equation related to time?
-- [ ] What is the discrete state-transition matrix $A^k$, and how do you compute it? *(asked repeatedly)*
+- [x] How is the index $k$ in a discrete equation related to time?
+- [ ] What is the discrete state-transition matrix $A^k$, and how do you compute it? *asked repeatedly*
 - [ ] General solution for $x[k]$ — homogeneous plus forced part.
 - [ ] Deriving the discrete state-transition matrix at the end of a modeling derivation (e.g. after the SIR model).
 
 ### Kindly provided by LLM
 
-- [ ] Are the equilibrium, controllability and observability criteria the same in discrete time as in continuous time?
+- [x] Are the equilibrium, controllability and observability criteria the same in discrete time as in continuous time?
 
 ## 5. Transfer functions, stability, and the toolbox
 
