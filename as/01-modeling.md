@@ -20,7 +20,7 @@ with $\vec{x}$ the state vector, $\vec{u}$ the input, $\vec{y}$ the output, and 
 
 These notes work with LTI, lumped, deterministic systems — the class carved out in the Introduction. Given the state and the input, such a model predicts the behaviour for all future time; outside that class the predictions fall back to local approximations (nonlinear and time-varying systems, via the Linearization chapter) or give out altogether (distributed and stochastic ones).
 
-Building a model is not always a paper exercise — it often needs data. A car suspension model, for instance, needs the spring rate, damping, and mass. Given a good model structure, the parameters can be fitted to measurements of the real system. This is *system identification*, the often-forgotten counterpart of modeling.
+Building a model is not always a paper exercise — it often needs data. A car suspension model, for instance, needs the spring rate, damping, and mass — not all of these can be easily measured, but given a good model structure, the parameters can be fitted to measurements of the real system. This is *system identification*, the often-forgotten counterpart of modeling.
 
 ## Higher-order ODEs as first-order systems
 
@@ -34,7 +34,13 @@ $$
 \dot{x}_1 = x_2
 $$
 
-But just looking at the example it's easier: take the second-order ODE
+But the recipe is easier to see on one concrete case.
+
+```{=latex}
+\begin{example}[frametitle={Example - second-order ODE to state space}]
+```
+
+Take the second-order ODE
 
 $$
 \ddot{y} + 2\dot{y} + 3y = 4u
@@ -42,10 +48,9 @@ $$
 
 and define the states $x_1 = y$, $x_2 = \dot{y}$. The system is then just
 
-$$
-\dot{x}_1 = x_2, \qquad
-\dot{x}_2 = \ddot{y} = -3x_1 - 2x_2 + 4u
-$$
+
+$$\dot{x}_1 = x_2$$
+$$\dot{x}_2 = \ddot{y} = -3x_1 - 2x_2 + 4u$$
 
 which is exactly the state-space shape we are after:
 
@@ -53,6 +58,10 @@ $$
 \begin{bmatrix} \dot{x_1} \\ \dot{x_2} \end{bmatrix} = \begin{bmatrix} 0 & 1 \\ -3 & -2 \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} + \begin{bmatrix} 0 \\ 4 \end{bmatrix}u, \qquad
 y = \begin{bmatrix} 1 & 0 \end{bmatrix}\vec{x}
 $$
+
+```{=latex}
+\end{example}
+```
 
 In general, an $n$-th order ODE $y^{(n)} + a_{n-1}y^{(n-1)} + \cdots + a_1\dot{y} + a_0 y = u$ becomes $n$ first-order equations by taking $x_1 = y$, $x_2 = \dot{y}$, $\dots$, $x_n = y^{(n-1)}$; the state matrix takes the companion form
 
@@ -158,7 +167,63 @@ the same state matrix, with the input removed. Here $x_1$ is how deep the car ha
 \end{example}
 ```
 
-**Real forces you will meet.** Friction comes as a stick–slip pair: static (stiction) while at rest, $F \le \mu_s N$, kinetic once moving, $F = \mu_k N$; both oppose motion, so their sign is $-\operatorname{sign}(\dot{x})$. Rolling resistance is roughly constant, $F = c_r N$. Air drag is viscous at low speed, $F = c_v \dot{x}$, and quadratic at high speed, $F = \tfrac{1}{2}\rho C_d A \dot{x}^2$ — the Reynolds number decides which regime applies.
+### Real forces you will meet
+
+#### Static friction
+
+At rest, friction is whatever it has to be: it matches the applied tangential force up to a limit,
+
+$$|F_s| \le \mu_s N .$$
+
+So it is not a function of the state but an *inequality on it*, and that is what makes it awkward: while the limit holds the body simply does not move, and the equation that would describe the motion is never used.
+
+#### Kinetic friction
+
+Once the body slides, the force saturates and always opposes the motion,
+
+$$F_k = -\mu_k N \operatorname{sign}(\dot{x}), \qquad \mu_k < \mu_s .$$
+
+The $\operatorname{sign}$ makes the term nonlinear and discontinuous at $\dot{x} = 0$. Linearized about a moving operating point it gives a *constant* force, not a damping coefficient, so dry friction never turns into a $b\dot{x}$ term in an LTI model: only when the direction can flip does it stay a genuine nonlinearity — if the direction of travel is known, $-\mu_k N \operatorname{sign}(\dot{x}_0)$ is just a constant force and enters $\mathbf{B}$ exactly as the weight $mg$ did above. The drop $\mu_s \to \mu_k$ is what produces stick–slip: squealing brakes, squeaking chalk, the violin bow.
+
+#### Rolling resistance
+
+A rolling wheel still loses energy, to the deformation of wheel and surface, and the resistance is nearly constant,
+
+$$F_r = -c_r N \operatorname{sign}(\dot{x}), \qquad c_r \approx 0.01\text{–}0.015 \ \text{(tyre on asphalt)}, \qquad \approx 0.001\text{–}0.002 \ \text{(steel on rail)}.$$
+
+It has the same sign structure as kinetic friction, but no $\mu_s > \mu_k$ jump — so no stick–slip, just a steady loss.
+
+#### Air drag
+
+Drag switches regime with the Reynolds number, the ratio of inertial to viscous forces,
+
+$$Re = \frac{\rho v L}{\mu} = \frac{vL}{\nu},$$
+
+with $L$ the characteristic length — the diameter of a sphere or disc, the side of a plate. In the two limits,
+
+$$
+F_d \approx
+\begin{cases}
+c_v\,\dot{x}, & Re \lesssim 1 \quad \text{(Stokes: flow attached, viscous)}\\[2pt]
+\tfrac{1}{2}\rho C_d A\,\dot{x}\,|\dot{x}|, & Re \gtrsim 10^3 \quad \text{(separated flow, inertial)}
+\end{cases}
+$$
+
+The first line is *linear*, so the model stays LTI — the regime of dust, aerosols, and MEMS (for a sphere $c_v = 3\pi\mu D$). The second is written with $|\dot{x}|$ rather than $\dot{x}^2$ so that the sign survives: drag always opposes the motion. In between, neither form holds, and $C_d$ is not constant even in the quadratic regime — for a smooth sphere it drops four- to fivefold at the *drag crisis*, $Re \approx 3\cdot 10^5$, which is why golf balls are dimpled.
+
+Quadratic drag is a nonlinearity, so a body falling through air is outside the LTI class; linearizing about its terminal velocity $v_t$ brings it back, where the approach is exponential with $\tau = \dfrac{v_t}{2g}$.
+
+*Shape factor.* $C_d$ is a blunt, orientation-dependent summary. Order of magnitude, with the body facing the flow:
+
+$$
+C_d \approx
+\begin{cases}
+1.1 & \text{square plate}\\[2pt]
+1.4 & \text{triangle, flat side upstream}\\[2pt]
+1.1 & \text{circular disc}\\[2pt]
+0.3 & \text{half-circle (dome, convex side upstream)}
+\end{cases}
+$$
 
 ### Rotational systems
 
@@ -172,6 +237,44 @@ $$
 $$
 
 so angle and angular velocity play the role of position and velocity, and a rotational model again reduces to two first-order equations.
+
+```{=latex}
+\begin{example}[frametitle={Example - motor rotor}]
+```
+
+A motor shaft carries a rotor of moment of inertia $J$. The bearings resist rotation with a viscous torque $b\omega$, and the motor drives the shaft with a torque $\tau_m(t)$ — the input. We want the rotor's motion.
+
+**Step 1 — states.** Angle and angular velocity, exactly as translation used position and velocity:
+
+$$x_1 = \theta \quad \text{(shaft angle)}, \qquad x_2 = \omega = \dot{\theta} \quad \text{(angular velocity)}.$$
+
+**Step 2 — torques with the correct signs.** Take positive $\omega$ in the motor's direction of rotation, so the same directional bookkeeping applies with $\dot{x} \to \omega$ and $m \to J$.
+
+- *Viscous bearing torque* — opposes rotation, so $\tau_b = -b\omega$.
+- *Motor torque* — external, and we define it positive in the chosen direction: $\tau_m$, the input.
+- *Load torque* — add $-\tau_L$ if a fan or pump hangs on the shaft; it is a second input, not a new state.
+
+**Step 3 — rotational form of Newton's law.** $\sum \tau = J\alpha$:
+
+$$J\dot{\omega} = \tau_m - b\omega \qquad\Longrightarrow\qquad J\ddot{\theta} + b\dot{\theta} = \tau_m .$$
+
+No spring appears — nothing stores torsional potential energy — so the equation is first order in $\omega$ and second order only because $\theta$ integrates it.
+
+**Step 4 — matrix form.** With $\vec{x} = \begin{bmatrix} \theta \\ \omega \end{bmatrix}$ and input $\tau_m$,
+
+$$
+\dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ 0 & -\frac{b}{J} \end{bmatrix}\vec{x} + \begin{bmatrix} 0 \\ \frac{1}{J} \end{bmatrix}\tau_m, \qquad y = \begin{bmatrix} 1 & 0 \end{bmatrix}\vec{x}
+$$
+
+if the output of interest is the angle.
+
+**Sanity check.** With a constant torque the speed settles at $\omega_\infty = \tau_m/b$, while the angle grows without bound — a steady torque pins the *speed*, never the *position*, because the rotor has no torsional spring to define one. The eigenvalues say the same: $-b/J$, the reciprocal of the mechanical time constant $J/b$ (the rotor's version of an RC circuit), and $0$, the free integrator in $\dot{\theta} = \omega$.
+
+**Two things that attach without adding a state.** The motor torque itself is made from current, $\tau_m = K_t i$, and the spinning rotor generates the back-EMF $K_e\omega$ that limits that current — so the electrical side enters through the input, and the two together carry the current as a second state. A gearbox adds none either: referred to one shaft ($\omega_2 = n\omega_1$, $\tau_1 = n\tau_2$), the two inertias collapse into a single $J = J_1 + n^2 J_2$.
+
+```{=latex}
+\end{example}
+```
 
 ## Modeling of electrical circuits
 

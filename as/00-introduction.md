@@ -16,7 +16,7 @@ This is material you have met before; it is here only as a reminder and to fix t
 Only a few distinctions actually change the mathematics, so these are the ones we keep:
 
 - *Static* — memoryless, the output depending only on the present input, $y = f(u)$, versus *dynamic* with memory, where the past lingers and forces a differential equation and a state.
-- *Lumped*: finitely many state variables obeying an ODE, so the model is finite-dimensional. *Distributed*: the state is a function of space as well as time, obeying a PDE, so there are infinitely many states. Limit between the two: connections $d < \frac{\lambda}{20}$
+- *Lumped*: finitely many state variables obeying an ODE, so the model is finite-dimensional. *Distributed*: the state is a field $w(t, \vec{r})$, a function of space as well as time, obeying a PDE, so there are infinitely many states. Limit between the two: connections $d < \frac{\lambda}{20}$
 - *Continuous-time*: signals are defined at every instant. *Discrete-time*: only at samples $kT$.
 - *Deterministic*: the same initial state and input always produce the same trajectory. *Stochastic*: randomness enters, and only statistics are predictable.
 - *Homogeneous*: no input; the system runs on its initial state alone. *Non-homogeneous*: an input drives it.
@@ -89,10 +89,10 @@ Two kinds of systems fall outside.
 
 ### Distributed systems
 
-A drum is one the two classical archetypes of a *distributed* system (the other beeing telegrapher's equation). Its skin is a membrane: every point can move, so it has infinitely many states, not a finite vector $\vec{x}$. The governing equation is the two-dimensional wave equation, a partial differential equation in space and time,
+A drum is one of the two classical archetypes of a *distributed* system (the other being the telegrapher's equation). Its skin is a membrane: every point can move, so it has infinitely many states — not a finite vector $\vec{x}$ but a field $w(t, r, \theta)$, the displacement of each point. The governing equation is the two-dimensional wave equation, a partial differential equation in space and time,
 
 $$
-\frac{\partial^2 u}{\partial t^2} = c^2\left(\frac{\partial^2 u}{\partial r^2} + \frac{1}{r}\frac{\partial u}{\partial r} + \frac{1}{r^2}\frac{\partial^2 u}{\partial \theta^2}\right),
+\frac{\partial^2 w}{\partial t^2} = c^2\left(\frac{\partial^2 w}{\partial r^2} + \frac{1}{r}\frac{\partial w}{\partial r} + \frac{1}{r^2}\frac{\partial^2 w}{\partial \theta^2}\right),
 $$
 
 whose modes are Bessel-function shapes. Hitting the drum excites all of those modes at once, and no finite system of ODEs reproduces what you hear. A lumped model could keep only a few of them. A plucked guitar string has the same problem in one dimension, though its harmonics fall on integers. Neither can be analyzed by the LTI toolbox.
@@ -107,7 +107,7 @@ When you add randomness, the same initial state and input no longer give the sam
 
 Thermal agitation of the electrons in a resistor puts a random voltage across it — Johnson–Nyquist noise — with zero mean and a flat spectrum $S_v = 4 k_B T R$. The RC low-pass filter is the textbook LTI system — one capacitor, one state — yet its output cannot be predicted, only described statistically.
 
-**Why it fails the toolbox.** The dynamics are perfectly LTI, but the *input* is not. Two identical experiments give different traces, though nothing about the circuit changed. The toolbox predicts trajectories; here only the statistics are predictable.
+The dynamics are perfectly LTI, but the *input* is not. Two identical experiments give different traces, though nothing about the circuit changed. The toolbox predicts trajectories; here only the statistics are predictable.
 
 ```{=latex}
 \end{example}
@@ -119,7 +119,7 @@ Thermal agitation of the electrons in a resistor puts a random voltage across it
 
 Packets arrive at a router buffer at random instants and are served one at a time at mean rate $\mu$; the state is the number of packets in the system, an integer. There is no differential equation to write — the count sits still, then jumps by one at a random time — and the questions worth asking are already probabilistic: the mean delay, or the probability that the buffer overflows and a packet is lost.
 
-**Why it fails the toolbox.** There is nothing to linearize. The state is a count, not a real vector, and the jump times are random, so two runs of the same experiment give different sample paths.
+There is nothing to linearize. The state is a count, not a real vector, and the jump times are random, so two runs of the same experiment give different sample paths.
 
 ```{=latex}
 \end{example}
@@ -131,24 +131,25 @@ Packets arrive at a router buffer at random instants and are served one at a tim
 \begin{example}[frametitle={Example - classifying three systems}]
 ```
 
-**1. $\dot{y} = 5y + 4t$.**
+$$\dot{y} = 5y + 4t$$
 
 - *Linear* — the forcing $4t$ involves no output or input, so it does not count as a nonlinearity.
 - *Time-varying* — that forcing is pinned to the clock.
 - Also *lumped*, *continuous-time*, *deterministic*, *non-homogeneous*.
 
-**2. $\dot{y} = e^y + 4y + g$.**
+$$\dot{y} = e^y + 4y + g$$
 
 - *Nonlinear* — the term $e^y$ alone settles it.
 - *Time-invariant* — the coefficients are constant and $g$ is the input, so any dependence on $t$ lives in the input, not in the system.
 - Also *lumped*, *continuous-time*, *deterministic*, *non-homogeneous*.
 - Around an equilibrium $y_e$ (where $e^{y_e} + 4y_e + g = 0$) the tangent to $e^y$ gives an LTI model valid nearby (Linearization chapter).
 
-**3. $y'' = c^2\,\dfrac{\partial^2 u(t,x)}{\partial x^2}$.**
+$$\frac{\partial^2 w(t,x)}{\partial t^2} = c^2\,\frac{\partial^2 w(t,x)}{\partial x^2}, \qquad x \in (0, L), \; t > 0$$
 
-- *Linear* — differentiation is a linear operator, so the right-hand side is linear in $u$.
-- *Time-invariant* — the wave speed $c$ is constant.
-- *Distributed* — the unknown depends on space as well as time, so the state is a field, not a finite vector: infinitely many states, no finite-dimensional model.
+- *Linear* — $\partial^2/\partial t^2$ and $\partial^2/\partial x^2$ are linear operators, so the equation is linear in the field $w$.
+- *Time-invariant* — the wave speed $c$ is constant, and no coefficient depends explicitly on $t$.
+- *Homogeneous* — no input term; the field moves only under its boundary and initial conditions.
+- *Distributed* — the unknown $w(t,x)$ depends on space as well as time, so the state is a field, not a finite vector $\vec{x}$: infinitely many states, no finite-dimensional model.
 - Its only lumped approximation is a discretization of $x$ on a grid (the method of lines, as in finite elements).
 
 ```{=latex}
@@ -181,8 +182,8 @@ It passes both tests, so the integrator is LTI.
 \end{example}
 ```
 
-## So, what can't we do with the toolbox and what can we do?
+## What can we then do with the toolbox and what can't?
 
 The drum fails because it is distributed, stochastic systems because they are random; either way there is no finite deterministic ODE, and both stay outside the toolbox of these notes. The honest title of these notes would be *lumped deterministic LTI systems*.
 
-**What we can do.** Together, linearity and time invariance give far more than either does alone. Any input can be split into delayed, scaled copies of one elementary test signal: linearity makes the responses add, and time invariance makes every copy respond identically. So one experiment is enough — measure the response to a single short kick, the *impulse response* — and the response to any other input follows by superposition. The whole input–output behaviour is fixed by that one measurement.
+Together, linearity and time invariance give far more than either does alone. Any input can be split into delayed, scaled copies of one elementary test signal: linearity makes the responses add, and time invariance makes every copy respond identically. So one experiment is enough — measure the response to a single short kick, the *impulse response* — and the response to any other input follows by superposition. The whole input–output behaviour is fixed by that one measurement.

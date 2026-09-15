@@ -253,6 +253,46 @@ When the rank falls short, the rows it misses are exactly the unobservable modes
 Note the duality: observability of $(\mathbf{A}, \mathbf{C})$ is controllability of $(\mathbf{A}^T, \mathbf{C}^T)$ — the controllability matrix of that transposed pair is exactly $\mathcal{O}^T$, so the two tests are one and the same condition.
 
 ```{=latex}
+\begin{example}[frametitle={Example - observability, the Taylor route}]
+```
+
+Same starting point, same unknown:
+
+$$
+\vec{y}(t) = \mathbf{C}e^{\mathbf{A}t}\vec{x}(0), \qquad
+e^{\mathbf{A}t} = \sum_{k=0}^{\infty} \frac{(\mathbf{A}t)^k}{k!}
+$$
+
+Inserting the defining series and collecting by powers of $t$ puts one unknown vector behind each known coefficient:
+
+$$
+\vec{y}(t) = \sum_{k=0}^{\infty} \frac{t^k}{k!}\,\underbrace{\mathbf{C}\mathbf{A}^k\vec{x}(0)}_{\text{unknown}}
+$$
+
+Nothing has to be regrouped first: differentiate term by term and set $t = 0$, where only the $k$-th term of the $k$-th derivative survives,
+
+$$
+\vec{y}^{(k)}(0) = \mathbf{C}\mathbf{A}^k\vec{x}(0),
+$$
+
+so the rows are read straight off the coefficients. Let's cheat and ask ourselves what Cayley–Hamilton has to say: $\mathbf{A}^k$ folds back into $\mathbf{I}, \dots, \mathbf{A}^{n-1}$ so powers $k \ge n$ add nothing and stacking the first $n$ gives
+
+$$
+\underbrace{\begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}}_{\mathcal{O}}\vec{x}(0)
+= \begin{bmatrix} \vec{y}(0) \\ \vec{y}'(0) \\ \vdots \\ \vec{y}^{(n-1)}(0) \end{bmatrix},
+$$
+
+so $\vec{x}(0)$ is recoverable iff $\operatorname{rank}\mathcal{O} = n$ — the same matrix, without ever solving for an $\alpha_k(t)$.
+
+The two routes are the same derivation in two orders: Cayley–Hamilton regroups the series into $n$ known functions of $t$ and then differentiates, Taylor differentiates first and reads the rows off the coefficients. Taylor is shorter; Cayley–Hamilton is what tells you $n$ rows suffice. 
+
+Taylor route also exists for controllability test.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
 \begin{example}[frametitle={Example - observability, and a pole that cancels}]
 ```
 
