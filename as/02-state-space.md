@@ -24,7 +24,7 @@ $$
 \vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}
 $$
 
-with $\mathbf{A}$ the dynamics, $\mathbf{B}$ the input coupling, $\mathbf{C}$ the output coupling, and $\mathbf{D}$ the direct feedthrough — often, but certainly not always, $\mathbf{D} = \mathbf{0}$. The outputs are generally not the states themselves — that is exactly what $\mathbf{C}$ and $\mathbf{D}$ capture.
+with $\mathbf{A}$ the dynamics, $\mathbf{B}$ the input coupling, $\mathbf{C}$ the output coupling, and $\mathbf{D}$ the direct feedthrough — often, but certainly not always, $\mathbf{D} = \mathbf{0}$. The outputs are generally not the states themselves.
 
 The idea is Kalman's: recasting a linear system as matrices acting on a state vector is what he did in 1960 [@kalman1960general], the year usually called the birth of modern system theory [@bernhard2019kalman].
 
@@ -104,12 +104,41 @@ where both orders agree because a matrix commutes with itself. At $t = 0$ the se
 
 Because mathematicians don't like writing/typing $e^{\mathbf{A}t}$, they shorthand it to $\Phi(t)$ and call it the state transition matrix — it carries the state from one time to another, $\vec{x}(t) = \Phi(t-t_0)\,\vec{x}_0$.
 
-The state transition matrix has the following properties:
+### Properties of the state-transition matrix
 
-1. $\Phi(0) = \mathbf{I}$ — the series at $t = 0$.
-2. $\Phi(t_1 + t_2) = \Phi(t_1)\Phi(t_2)$ — multiplying the two series. This is where it matters that every factor is the *same* matrix: matrices do not commute in general, so $e^{\mathbf{A}}e^{\mathbf{B}} \ne e^{\mathbf{A}+\mathbf{B}}$ for different $\mathbf{A}$ and $\mathbf{B}$, but a matrix always commutes with itself. Multiplication is associative, so bracketing never matters; with only one matrix in play the order of the factors is never in question either.
-3. $\Phi(t_1 - t_2) = \Phi(t_1)\Phi^{-1}(t_2)$ — property 2 with $t_2 \to -t_2$, since $\Phi(-t) = \Phi^{-1}(t)$.
-4. $\frac{d}{dt}\Phi(t) = \mathbf{A}\Phi(t)$ — the derivative above.
+Four properties, and taken together they answer a plain question: what *is* $\Phi$? A family of matrices you can multiply, that has a do-nothing member, and whose members can all be undone — everything built out of the one matrix $\mathbf{A}$. That is the payoff: knowing $\mathbf{A}$ is knowing how the state moves at every later time.
+
+#### The identity
+
+$$
+\Phi(0) = \mathbf{I}
+$$
+
+The cheapest of the four, and obvious once said: at time zero nothing has happened yet, so the state is the same as the initial state. It's also very usefull as sanity check after every computation of $\Phi$.
+
+#### The semigroup property
+
+$$
+\Phi(t_1 + t_2) = \Phi(t_1)\Phi(t_2)
+$$
+
+Evolve for $t_1$, then evolve for another $t_2$, and the state lands exactly where a single run of $t_1 + t_2$ would have left it. How the state reached $\vec{x}(t_1)$ is irrelevant to what happens next: **the state is a complete summary of the past**.
+
+#### Inverses
+
+$$
+\Phi(t_1 - t_2) = \Phi(t_1)\Phi^{-1}(t_2)
+$$
+
+The semigroup property read in reverse. Nothing is assumed here, the inverse is handed to you: take $t_1 = t$ and $t_2 = -t$, and you get $\Phi(t)\Phi(-t) = \Phi(0) = \mathbf{I}$. So every $\Phi$ is invertible, nothing was computed to learn that — no determinant anywhere — and it stays true even when $\mathbf{A}$ itself is singular.
+
+#### The defining ODE
+
+$$
+\dot{\Phi}(t) = \mathbf{A}\Phi(t)
+$$
+
+The derivative worked out above, with the order free: $\mathbf{A}\Phi(t) = \Phi(t)\mathbf{A}$. *Defining*, because this is $\Phi$ written as an equation.
 
 ## Nonhomogeneous solution
 
