@@ -185,7 +185,7 @@ so $\operatorname{rank}\mathcal{C} = 2 < n$ and the system is not controllable. 
 
 ## Observability
 
-A system is **observable** if the initial state $\vec{x}_0$ can be reconstructed from the output $\vec{y}(t)$ (and the known input $\vec{u}(t)$) over a finite time interval — every mode eventually shows up in the output.
+A system is **observable** if the initial state $\vec{x}_0(t_0)$ can be reconstructed from the output $\vec{y}(t)$ measured over finite interval $$[t_0, t_1]$ together with the known input $\vec{u}(t)$).
 
 Rolling on the car example from the previous section, the sensors are the $\mathbf{C}$: what never reaches them can never be reconstructed, so observability (pun intended) is about $\mathbf{A}$ and $\mathbf{C}$ alone.
 
