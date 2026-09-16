@@ -97,7 +97,7 @@ so $f[k]$ is the coefficient of $z^{-k}$, and $z^{-1}$ is the delay operator. It
 - Z-transforms are *linear*, so transform piece by piece and add: $\mathcal{Z}\{a f + b g\} = aF + bG$.
 - *Delay* aka shift to the right — each sample of delay costs $z^{-1}$: $\mathcal{Z}\{f[k-1]\} = z^{-1}F$.
 - *Advance* aka shift to the left — pull it one sample earlier and multiply by $z$, but the sample that falls off the front has to be subtracted back in: $\mathcal{Z}\{f[k+1]\} = zF - zf[0]$.
-- *Convolution* — multiplying two transforms convolves the sequences in time: $\mathcal{Z}\{f * g\} = FG$, exactly the same trade as with Laplace: convolution in time is multiplication in frequency, and vice versa.
+- *Convolution* — multiplying two transforms convolves the sequences in time: $\mathcal{Z}\{f * g\} = FG$, exactly the same trade as with Laplace: **convolution in time is multiplication in frequency, and vice versa**.
 
 A few workhorse pairs (inversion by partial fractions, as with Laplace):
 
@@ -115,7 +115,7 @@ $$
 y[z] = \frac{z(z-1)}{\left(z+\frac{1}{2}\right)\left(z-\frac{1}{2}\right)(z+1)}
 $$
 
-This one is quite tricky as a first example. We could just do the PFE straight on $y[z]$ — for simple poles that gives the standard terms $K/(z-p)$, no $z$ on top\footnote{This is not one of the pairs above — it is just what partial-fraction decomposition hands us.} — but inverting those costs a borrowed $z^{-1}$: a one-sample delay that leaves a stray $K p^{k-1}$ in the answer. The pair we want, $a^k \leftrightarrow \frac{z}{z-a}$, wants a $z$ on top, so instead expand $\frac{y[z]}{z}$. Dividing by $z$ is exactly a one-sample delay ($\frac{y[z]}{z} \leftrightarrow y[k-1]$), but we undo it immediately by multiplying back by $z$ before inverting — so no shift ever reaches the final answer. All that survives is the $z$ in the numerator, exactly where the pair wants it:
+This one is tricky as a first example. Doing it the Laplace way looks completely sane. Expanding $y[z]$ as it stands gives terms $K/(z-p)$ — exactly the shape $\frac{K}{s-p}$ had in continuous time — and a Laplace-trained eye reads them off without blinking. But there is no such pair in the bible: every pair above carries a $z$ on top. Reading those terms off anyway means quietly inventing a transform pair that isn't there, and the answer comes out wrong. So we cheat: expand $\frac{y[z]}{z}$ instead, which does come out as clean $K/(z-p)$ pieces, and multiply back by $z$ before inverting. The divide and the multiply cancel, leaving the $z$ in the numerator, exactly where the pair wants it:
 
 $$
 \frac{y[z]}{z} = \frac{z-1}{\left(z+\frac{1}{2}\right)\left(z-\frac{1}{2}\right)(z+1)} = \frac{A}{z+\frac{1}{2}} + \frac{B}{z-\frac{1}{2}} + \frac{C}{z+1}
@@ -162,7 +162,7 @@ The example above picked a numerator with a $z$ to spare, so dividing by $z$ cos
 
 $$Y(z) = \frac{6z+6}{6z^2 - 7z + 2} = \frac{z+1}{\left(z-\frac{2}{3}\right)\left(z-\frac{1}{2}\right)}$$
 
-**The Laplace habit.** In continuous time we would partial-fraction $F(s)$ as it stands and read each $\frac{K}{s-p}$ straight off the table. Doing the same here:
+**The Laplace habit.** Expand $Y(z)$ as it stands, exactly as we would $F(s)$:
 
 $$\frac{z+1}{\left(z-\frac{2}{3}\right)\left(z-\frac{1}{2}\right)} = \frac{A}{z-\frac{2}{3}} + \frac{B}{z-\frac{1}{2}}$$
 
@@ -178,7 +178,7 @@ From the first, $A = 1 - B$; substituting into the second gives $-\frac{1}{2}(1-
 
 $$Y(z) = \frac{10}{z-\frac{2}{3}} - \frac{9}{z-\frac{1}{2}}$$
 
-Algebraically this is a perfectly good decomposition. But it is a dead end for inversion, and that is the subtle difference from Laplace: **there is no $\frac{K}{z-a}$ pair**. Laplace can invert $\frac{K}{s-p}$ directly because $\frac{1}{s-a} \leftrightarrow e^{at}$ is in its table; every pair in the Z-transform table above keeps the pole with a $z$ on top, $\frac{z}{z-a} \leftrightarrow a^k$, and $\frac{10}{z-\frac{2}{3}}$ is not of that shape.
+Algebraically this is a perfectly good decomposition — and a dead end for inversion, the same trap as the previous example: there is no $\frac{K}{z-a}$ pair, and $\frac{10}{z-\frac{2}{3}}$ has the wrong shape for the ones the table does have.
 
 **The fix — pay for the missing $z$ with a delay.** The $z$ has to come from somewhere, and the only place it can come from is an explicit factor $\frac{1}{z}$:
 
@@ -359,6 +359,8 @@ and since $\vec{u}[k] = 0$:
 $$\vec{y}[k] = \mathbf{C}\mathbf{A}^k\vec{x}[0]$$
 
 $\mathbf{A}^k$ is the **discrete state-transition matrix**, mapping the initial state to the state at step $k$.
+
+One place where the discrete case is *not* a copy of the continuous one: **$\mathbf{A}^k$ need not be invertible.**
 
 ```{=latex}
 \begin{example}[frametitle={Note - how to solve the response to an initial state}]

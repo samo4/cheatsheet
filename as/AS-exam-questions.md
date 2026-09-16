@@ -71,7 +71,6 @@
 
 ### Kindly provided by LLM
 
-- [ ] Verify the properties of $\Phi(t)$: $\Phi(0)=\mathbf{I}$, $\Phi(t+\tau)=\Phi(t)\Phi(\tau)$, $\Phi^{-1}(t)=\Phi(-t)$, and the two forms of its derivative.
 - [ ] Derive the non-homogeneous solution.
   - [ ] Why does the substitution trick give the convolution integral with $\Phi(t-\tau)$, and what breaks when the lower limit is not $0$?
 - [ ] Why is a triangular $\mathbf{A}$ "half the jackpot" when computing $\Phi$?
@@ -81,8 +80,8 @@
 ## 4. State equations and the state-transition matrix (discrete time)
 
 - [x] Write the discrete state equation.
-  - [ ] How would you compute $x[m]$ (or $x[k]$)?
-- [ ] Difference equation versus differential equation: write one down and say which it is, and why.
+  - [x] How would you compute $x[m]$ (or $x[k]$)?
+- [x] Difference equation versus differential equation: write one down and say which it is, and why.*PS: they are only analogues, not identical.*
 - [x] How is the index $k$ in a discrete equation related to time?
 - [ ] What is the discrete state-transition matrix $A^k$, and how do you compute it? *asked repeatedly*
 - [ ] General solution for $x[k]$ — homogeneous plus forced part.
