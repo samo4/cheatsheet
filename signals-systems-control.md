@@ -6,10 +6,10 @@ author: "Samo F."
 
 # About this
 
-> **A plan, not a text.** This is a table of contents with intent: fifty-nine chapters
-> building one continuous argument, from the mathematics of signals to the design of
-> systems that behave. Each chapter is described by the questions it answers rather
-> than by the material it reviews.
+> **A plan, not a text.** This is a table of contents with intent: fifty-nine chapters,
+> ≈ 50 ECTS, building one continuous argument, from the mathematics of signals to the
+> design of systems that behave. Each chapter is described by the questions it answers
+> rather than by the material it reviews.
 >
 > The sequence is one-directional on purpose. Nothing appears before it is needed,
 > and nothing is needed before it appears: mathematics first, then uncertainty and
