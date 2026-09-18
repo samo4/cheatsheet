@@ -31,9 +31,9 @@ DEFAULTS: dict[str, tuple[float, float, str, str]] = {
     # load and compliance
     "i_max":       (2.0,   1.0,  "A",   "maximum lens current"),
     "i_op":        (2.0,   1.0,  "A",   "operating current for the budget"),
-    "r_coil":      (3.5,   1.0,  "Ω",   "objective lens coil resistance, cold"),
+    "r_coil":      (16.0,  1.0,  "Ω",   "lens coil resistance, cold (old SEM: 8 or 16)"),
     "l_coil":      (40e-3, 1e-3, "mH",  "lens coil inductance"),
-    "v_rail":      (12.0,  1.0,  "V",   "pass-element rail"),
+    "v_rail":      (30.0,  1.0,  "V",   "pass-element rail"),
     "r_sense":     (0.1,   1.0,  "Ω",   "sense resistor"),
     # 1 h drift budget: assume a settled box in a ±0.5 K/h room
     "target":      (1.0,   1.0,  "ppm", "1 h drift budget"),
@@ -140,8 +140,19 @@ def report(p: dict[str, float], markdown: bool) -> int:
           f"(+20 % for a 50 K rise)")
     print(f"  V_sense {v_sense * 1e3:.0f} mV in {p['r_sense']:.2f} Ω, "
           f"{p['r_sense'] * p['i_op'] ** 2:.2f} W")
-    print(f"  rail {p['v_rail']:.0f} V -> {headroom:.1f} V of headroom, "
-          f"{p_fet:.1f} W in the pass element, {v_coil_hot * p['i_op']:.1f} W in the coil")
+    if headroom >= 0:
+        print(f"  rail {p['v_rail']:.0f} V -> {headroom:.1f} V of headroom, "
+              f"{p_fet:.1f} W in the pass element, {v_coil_hot * p['i_op']:.1f} W in the coil")
+    else:
+        print(f"  at {p['i_op']:.1f} A the rail is {-headroom:.1f} V SHORT of the "
+              f"{v_coil_hot + v_sense:.1f} V the hot coil plus sense drop needs")
+    need = p["i_max"] * p["r_coil"] * 1.2 + v_sense + 1.0
+    if need > p["v_rail"]:
+        print(f"  !! at I_max {p['i_max']:.1f} A the hot coil plus sense plus 1 V of "
+              f"saturation needs {need:.1f} V: lower the current, raise the rail, or add a "
+              f"{(need - p['v_rail']) / p['i_max']:.2f} Ω series ballast outside the pass element")
+    else:
+        print(f"  compliance at I_max: {need:.1f} V of the {p['v_rail']:.0f} V rail used")
 
     print(f"\n1 h drift budget (target {p['target']:.1f} ppm, V_sense "
           f"{v_sense * 1e3:.0f} mV)")

@@ -25,15 +25,14 @@ specification: hold the objective lens current to about **2 ppm**, of which **1 
 of drift** and **1 ppm rms of ripple** (the two together are 1.4 ppm by RSS, inside the 2 ppm
 spec with 30 % to spare). This note is the supply that has to hit it.
 
-| Load and compliance | Value | Why it matters |
+| Load and compliance | Measured on the old column | Why it matters |
 |---|---|---|
-| $I_{\max}$ | 2 A | the highest excitation / smallest spot |
-| Coil resistance | 3.5 $\Omega$ (measure yours) | sets the compliance voltage |
-| Coil inductance | 40 mH | sets the loop dynamics, not the drift |
-| $V$ across the coil | 7.0 V cold, 8.4 V hot | copper is +0.4 %/K: a 50 K rise is +20 % |
-| $V_{\mathrm{sense}}$ | 200 mV | the measurement's own scale |
-| Rail | 12 V | leaves 3.4 V of headroom for the pass element |
-| Dissipation | 16.8 W coil, 6.8 W pass element, 0.4 W shunt | the box is a heater |
+| Coil resistance | 8 or 16 $\Omega$ (16 $\Omega$ used below) | sets the whole compliance budget |
+| Coil inductance | 40 mH (measure it) | sets the loop dynamics, not the drift |
+| Current | 1.5 A into 16 $\Omega$ | 24.0 V cold, 28.8 V hot |
+| Rail | 30 V | leaves ~1.2 V: about 1 V for the pass element, 0.2 V for the sense drop |
+| $V_{\mathrm{sense}}$ | 0.15 V at 1.5 A, 0.20 V at 2 A (into 0.1 $\Omega$) | the budget tables use the 200 mV figure; see the trade table, because this rail has no room for a large one |
+| Dissipation | 36-43 W in the coil, ~1.5 W in the pass element, 0.4 W in the shunt | the coil is water-cooled, the electronics are not |
 
 The whole design follows from one sentence: **the loop rejects everything it does not
 measure.** Rail sag, MOSFET drift, the coil's resistance rising 20 % when it warms up, cable
@@ -43,6 +42,51 @@ measuring chain, and that chain *is* the drift budget:
 $$\frac{\Delta I}{I} \;=\; \frac{\Delta V_{\mathrm{ref}}}{V_{\mathrm{ref}}}
   \;+\; \frac{\Delta V_{\mathrm{os}}}{V_{\mathrm{sense}}}
   \;-\; \frac{\Delta R_{\mathrm{sense}}}{R_{\mathrm{sense}}}$$
+
+# Reality check: what the old SEM actually did
+
+An old column is worth reading as a specification, and the first thing it settles is the
+compliance. 30 V is not odd — it is *matched*:
+
+| Load | cold | hot (+20 %) | + sense | fits 30 V? |
+|---|---|---|---|---|
+| 16 $\Omega$ at 1.5 A | 24.0 V | 28.8 V | 29.0 V | yes, ~1 V left |
+| 16 $\Omega$ at 2 A | 32.0 V | 38.4 V | 38.6 V | no — needs ~40 V |
+| 8 $\Omega$ at 2 A | 16.0 V | 19.2 V | 19.4 V | yes, but 10.6 V spare = 21 W in the pass element |
+
+That last column is the whole art of a linear current source: leave the pass element just enough
+voltage to stay in saturation — about a volt — and not a volt more. So the 30 V is a design
+sized for a 16 $\Omega$ coil at roughly 1.5 A, with ~1 V for the MOSFET and ~0.2 V for the sense
+drop. Which also means:
+
+> **The compliance bounds the sense voltage.** With only ~1.2 V of margin, $V_{\mathrm{sense}}$
+> has to stay small (0.1-0.25 $\Omega$ at 1.5 A). The cheap 5x improvement in offset sensitivity
+> that a large $V_{\mathrm{sense}}$ would buy is simply not affordable on 30 V, so the old
+> design's TO-3 foils are more likely a ~0.1 $\Omega$ sense resistor and the gain network than a
+> 1 V sense resistor. If the coil current is well below 1.5 A there is room, and the schematic's
+> sense-resistor value and servo divider will say which.
+
+**Take these from the old design.**
+
+- **The architecture.** LM399 plus bulk-metal-foil TO-3 parts is the measuring chain derived
+  here, arrived at independently — and the TO-3 class (0.05-2 ppm/K, 5-30 W) is exactly what the
+  budget asks for.
+- **Compliance sized for the hot coil.** The rail includes the +20 % resistance rise. That is
+  what the load table above is for, and it is the step easiest to forget.
+- **A pass element idling at a watt or two.** Because the rail is matched, the MOSFET is not a
+  heater, which also keeps its thermal gradients away from the measuring chain.
+
+**Do not copy these.**
+
+- **The reference — or rather the requirement it was chosen for.** An LM399 has 1 ppm pp of
+  0.1-10 Hz noise, the largest single term in the budget here. The old instrument got away with
+  it because its *requirement* was looser: a column aimed at micrometre work, whose focus budget,
+  working distance and magnification were nothing like a 200 000x, 1 nm probe. The schematic is
+  not evidence that a ppm was ever demonstrated end-to-end.
+- **Its rail, unexamined.** With 30 V the pass element's output conductance leaks more in
+  absolute terms, so rail clean-up matters *more* here than at 12 V. Find what made the rail
+  quiet — the pre-regulator, the LC, the transformer taps. The taps are probably how the
+  8 $\Omega$ lens avoids burning 21 W in the MOSFET.
 
 # Why one hour
 
@@ -78,7 +122,7 @@ reaching temperature) is a *bias*, not drift — the operator re-sets the curren
                                        v
   V_sense ----------------------> [error amp] --> gate of M1
                                        ^
-  +12 V --> LDO --> coil --> M1 drain --- M1 source --> R_sense --> GND
+  +30 V --> LDO --> coil --> M1 drain --- M1 source --> R_sense --> GND
                                                         (4-terminal)
                                                               |
                                                               +--> V_sense (Kelvin pair)
@@ -627,8 +671,8 @@ holding the pass element's $V_{ds}$ constant, so rail ripple never reaches the c
 
 ## Thermal layout is a first-class part of the budget
 
-The box holds a 6.8 W pass element and a 0.4 W shunt, and the instrument holds a 16.8 W coil
-(usually water-cooled, and usually in the same room). The reference is a thermometer.
+The box holds a 1.5 W pass element and a 0.4 W shunt, while the instrument holds a 36-43 W coil
+(water-cooled, and usually in the same room). The reference is a thermometer.
 Concretely: reference, amp and Kelvin pair on one isothermal island; the pass element's
 heatsink dumping heat *outside* the box; the shunt out of the reference's warm air plume; and
 **no fans or drafts inside**, because a draft makes the shunt's temperature wander at exactly
@@ -664,7 +708,8 @@ no load current, so copper's 3900 ppm/K never appears in the measurement.
 
 # The loop
 
-- **Plant:** a current source into an inductive load, a single pole at $R_c/L_c$ = 14 Hz.
+- **Plant:** a current source into an inductive load, a single pole at $R_c/L_c$ = 64 Hz with
+the measured 16 $\Omega$ coil (14 Hz if it really were 3.5 $\Omega$).
 - **Compensator:** type II — an integrator with a zero at the plant pole, which keeps a -1
   slope through the 1 kHz crossover and leaves roughly 90 degrees of phase margin.
 - **DC loop gain:** the amp's open-loop gain times transconductance times
@@ -783,7 +828,7 @@ with this setup, which is the sensible stopping point for the design.
 | reference | $\le 0.5$ ppm/K | LM399 (ovenized; its ~250 mW heater must not sit next to the shunt), LTZ1000 for 0.05 ppm/K |
 | DAC | 16-20 bit, external reference, gain TC $\le 0.5$ ppm/K | AD5689R, AD5541A |
 | error amp | zero-drift, offset drift $\le 0.05$ µV/K | OPA189, ADA4522, ADA4528 |
-| pass element | linear-mode rated, TO-247 with heatsink | IRFP150N / IRFP240 for 6.8 W; a linear-rated device if the rail goes higher |
+| pass element | linear-mode rated, TO-247 with heatsink | IRFP150N / IRFP240, which idles at ~1.5 W on a matched 30 V rail — but 21 W if an 8 $\Omega$ lens is driven at 2 A off it, hence a tap or ballast |
 | sense resistor | 4-terminal foil, $\le 0.2$ ppm/K, 5 W | Vishay Z-foil / Y-series current sense, 4-terminal |
 | pre-regulator | low noise, high PSRR at 100 Hz | LT3045 class plus a bulk LC |
 | ADC (optional servo) | 24 bit, ratiometric | ADS1262, LTC2508 |
