@@ -26,6 +26,35 @@ $$
 
 with $\mathbf{A}$ the dynamics, $\mathbf{B}$ the input coupling, $\mathbf{C}$ the output coupling, and $\mathbf{D}$ the direct feedthrough — often, but certainly not always, $\mathbf{D} = \mathbf{0}$. The outputs are generally not the states themselves.
 
+A single second-order ODE is enough to show where the four matrices come from.
+
+```{=latex}
+\begin{example}[frametitle={Example - second-order ODE to state space}]
+```
+
+Take the second-order ODE
+
+$$
+\ddot{y} + 2\dot{y} + 3y = 4u
+$$
+
+and define the states $x_1 = y$, $x_2 = \dot{y}$. The system is then just
+
+
+$$\dot{x}_1 = x_2$$
+$$\dot{x}_2 = \ddot{y} = -3x_1 - 2x_2 + 4u$$
+
+which is exactly the state-space shape we are after:
+
+$$
+\begin{bmatrix} \dot{x_1} \\ \dot{x_2} \end{bmatrix} = \begin{bmatrix} 0 & 1 \\ -3 & -2 \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} + \begin{bmatrix} 0 \\ 4 \end{bmatrix}u, \qquad
+y = \begin{bmatrix} 1 & 0 \end{bmatrix}\vec{x}
+$$
+
+```{=latex}
+\end{example}
+```
+
 The idea is Kalman's: recasting a linear system as matrices acting on a state vector is what he did in 1960 [@kalman1960general], the year usually called the birth of modern system theory [@bernhard2019kalman].
 
 The state variables are not unique. Relabeling is the dull case — reordering $x_1 = y$, $x_2 = \dot{y}$ changes nothing but the row order. The interesting case is swapping one physical quantity for another, which is a genuine choice rather than a relabeling.

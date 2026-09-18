@@ -34,35 +34,6 @@ $$
 \dot{x}_1 = x_2
 $$
 
-But the recipe is easier to see on one concrete case.
-
-```{=latex}
-\begin{example}[frametitle={Example - second-order ODE to state space}]
-```
-
-Take the second-order ODE
-
-$$
-\ddot{y} + 2\dot{y} + 3y = 4u
-$$
-
-and define the states $x_1 = y$, $x_2 = \dot{y}$. The system is then just
-
-
-$$\dot{x}_1 = x_2$$
-$$\dot{x}_2 = \ddot{y} = -3x_1 - 2x_2 + 4u$$
-
-which is exactly the state-space shape we are after:
-
-$$
-\begin{bmatrix} \dot{x_1} \\ \dot{x_2} \end{bmatrix} = \begin{bmatrix} 0 & 1 \\ -3 & -2 \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} + \begin{bmatrix} 0 \\ 4 \end{bmatrix}u, \qquad
-y = \begin{bmatrix} 1 & 0 \end{bmatrix}\vec{x}
-$$
-
-```{=latex}
-\end{example}
-```
-
 In general, an $n$-th order ODE $y^{(n)} + a_{n-1}y^{(n-1)} + \cdots + a_1\dot{y} + a_0 y = u$ becomes $n$ first-order equations by taking $x_1 = y$, $x_2 = \dot{y}$, $\dots$, $x_n = y^{(n-1)}$; the state matrix takes the companion form
 
 $$
@@ -155,7 +126,7 @@ $$
 \dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\vec{x} + \begin{bmatrix} 0 \\ -\frac{1}{m} \end{bmatrix} u.
 $$
 
-**Physical meaning of the states.** $x_1$ is the body's vertical position, $x_2$ its vertical velocity. The state matrix is the same companion form as in the higher-order ODE example: one state per derivative. The constant input does not change the dynamics — it only sets the equilibrium (the static deflection of Step 2); measure $x$ from that equilibrium and $mg$ drops out entirely.
+**Physical meaning of the states.** $x_1$ is the body's vertical position, $x_2$ its vertical velocity. The state matrix is the same companion form as in *Higher-order ODEs as first-order systems*: one state per derivative. The constant input does not change the dynamics — it only sets the equilibrium (the static deflection of Step 2); measure $x$ from that equilibrium and $mg$ drops out entirely.
 
 **Variant — the same system with no input.** Replace the weight by a crash: a car of mass $m$ entering a rigid barrier at speed $v_0$, cushioned by the same spring $k$ and damper $b$ in parallel. Take $x$ as the *compression* of the buffer, positive into the barrier. The motion now resists itself — the spring pushes back ($F_k = -kx$) and the damper pushes back harder the faster the car is still moving ($F_b = -b\dot{x}$) — so
 
