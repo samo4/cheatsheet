@@ -306,6 +306,65 @@ This also reconciles the two halves of the 2 ppm specification: the 1 ppm rms fi
 1 ppm/h figure is the 1/f part. They are not two budgets for two phenomena but two bands of one
 budget, and a single source can be charged in both.
 
+# The error amplifier: which parameters matter, and how many
+
+## Ranked by what they cost the budget
+
+| Parameter | Enters the current as | Cost here | Verdict |
+|---|---|---|---|
+| **1/f noise, 0.1-10 Hz** | $V_n/V_{\mathrm{sense}}$, 1:1 | 0.25 ppm at 200 mV, 0.10 ppm at 500 mV | the dominant amplifier term; a chopper's forte |
+| **offset drift with temperature** | $V_{os}\Delta T/V_{\mathrm{sense}}$, 1:1 | 0.07 ppm for a 0.02 µV/K part, but **3.5 ppm** for a 1 µV/K one | forces a zero-drift part unless $V_{\mathrm{sense}}$ is large |
+| **PSRR, and the amplifier's own rails** | $\Delta V_{\mathrm{rail}}/\mathrm{PSRR}\,/\,V_{\mathrm{sense}}$ | 1 V of rail ripple through 100 dB is 10 µV = **50 ppm** | load-bearing: the measuring chain needs its own quiet rails |
+| input bias current × source impedance | $I_b R_{\mathrm{sense}}$ | 10 nA × 0.1 $\Omega$ = 1 nV: nothing | and it is why a chopper's charge injection is *safe* here — the usual objection to choppers needs a high-impedance source |
+| CMRR | both inputs sit near ground, so the common mode hardly moves | negligible | — |
+| gain, GBW, $R_o$ | set the crossover and the gate pole | designed, then simulated | see *What to simulate* |
+| **absolute input offset** | a fixed $V_{os}$ in series with the setpoint | 100 µV on 200 mV = 500 ppm of *setpoint* error — and irrelevant | **free**: the operator absorbs it with the focus knob, or one trim absorbs it permanently |
+| aging | the calibration interval | not in the hour | — |
+
+So the ranking is **noise first, drift second, supply rejection third** — and the *absolute*
+offset, the parameter people reach for first, is the one that does not matter at all. What
+matters about it is only how far it moves.
+
+That reframes the choice: the reason to use a chopper is not its 5 µV offset (irrelevant) but its
+~0.1 µVpp of 0.1-10 Hz noise and its 0.02 µV/K drift — and the reason it is *safe* here is the
+0.1 $\Omega$ source impedance.
+
+## Is one op-amp really best? Yes — inside the control loop
+
+The 1:1 servo exists precisely to avoid a gain network, and every extra amplifier in the control
+path re-introduces what that avoids:
+
+- its own offset and 1/f noise appearing **1:1** — nothing divides them, and a second stage buys
+  no averaging;
+- if it has any *gain*, a resistor ratio whose temperature coefficient is 0.5-2 ppm/K for a
+  matched pair and far worse for discrete parts: **larger than the entire budget**;
+- one more 1/f source in the 0.1-10 Hz band, which does not average down.
+
+A second op-amp is worth having *outside* the fast loop, in three roles: a **monitor** tap (below),
+the front end of the **slow digital servo** (whose errors largely cancel, because it is
+ratiometric to the same $V_{\mathrm{ref}}$), and **protection** — an overcurrent comparator, where
+accuracy is irrelevant.
+
+## A second, monitoring amplifier: yes, with four rules
+
+Monitoring the actual current with its own amplifier is a good idea, and arguably required, since
+the verification plan wants a tap on the current that the control loop does not share:
+
+1. **Sense the same Kelvin points** — never the MOSFET's or the trace's drop. The monitor must
+   see exactly what the loop sees.
+2. **Do not inject.** High-impedance inputs, so the node the loop is servoing on stays untouched;
+   a few pF against 0.1 $\Omega$ is harmless.
+3. **Return its ground to the same star point**, or use a fully differential input, so the
+   monitor's supply and ground currents cannot appear as a differential error.
+4. **Know what it proves.** A second amplifier on the *same* shunt cross-checks the *electronics*
+   — it would catch a control-amplifier fault — but it cannot see the shunt itself. For that the
+   set needs an independent sensor, which is the fluxgate: the most informative number in the
+   whole verification is the *difference* between the resistive and the magnetic reading of the
+   same current.
+
+And if the monitor closes a slow trim loop, its drift joins the budget — through its ADC's
+stability, which is why that ADC must be ratiometric to $V_{\mathrm{ref}}$.
+
 # Choosing the sense resistor
 
 This is the only real design choice in the measuring chain, because two groups of terms pull
@@ -838,6 +897,84 @@ the measured 16 $\Omega$ coil (14 Hz if it really were 3.5 $\Omega$).
   resistance rise (200 000 ppm) into 0.4 ppm of current error, and it is the same number the
   rail-step test measures.
 - **Settling:** milliseconds small-signal, about 24 ms for a full-scale step (the inductor).
+
+# What to simulate, in what order
+
+Two models, not one, because the time constants are five decades apart — roughly 1 ms of loop
+dynamics against 100 s of thermal dynamics. Co-simulating them is a stiff problem with no
+payoff; hand the electrical model's *results* (bandwidth, rejection) to the thermal model as
+assumptions instead.
+
+## 1. The electrical loop, in LTspice — half a day, and it gates the hardware
+
+This is the only *stability* question in the project, and the only simulation whose failure
+changes the schematic.
+
+| Element | Model | Sweep |
+|---|---|---|
+| lens | $R_c + L_c$ in series | $R_c$ = 12.8 / 16 / 19.2 $\Omega$ (cold / nominal / hot), $L_c$ = 20-60 mH |
+| sense resistor | 0.1 $\Omega$ with the Kelvin tap | — |
+| pass element | *first* behavioral, $i = g_m(v_g - V_{th}) + g_{ds}v_{ds}$; the vendor model second | $g_m$ 2-20 S, $g_{ds}$ = 0.02-0.2 S (= 0.1-1 %/V at 2 A) |
+| error amp | ideal integrator with finite GBW; add $R_o$ in the second run | GBW 1-10 MHz, $R_o$ 50-200 $\Omega$ |
+| compensator | type II — integrator plus a zero at the plant pole | zero at $R_c/2\pi L_c$ = 64 Hz, crossover 0.3-3 kHz |
+
+**Why behavioral first:** a vendor MOSFET model is not the datasheet, and $g_{ds}$ is precisely
+the number the rail-ripple arithmetic rests on — you want to *set* it, not inherit it. Then run
+the vendor model for the two things the behavioral one cannot show: the gate-drive pole
+($C_{iss}$ against the op-amp's $R_o$) and whether the device is still in saturation at the
+voltages the loop will actually use.
+
+Analyses, in this order:
+
+1. **Loop gain** — inject at the summing node (Tian probe or Middlebrook injection) and plot
+   $T(s)$ for all three coil resistances. Target 45-60 degrees of phase margin, no peaking in the
+   closed-loop response; and first, a sanity check that the model *reproduces the notes'*
+   numbers: $|T| = 11$ at 100 Hz with a 1 kHz crossover.
+2. **Setpoint step** — 2 A to 0.4 A and back: settle to 1 ppm inside ~100 ms, and confirm that
+   the setpoint's 0.16 Hz RC slows the step without touching the margin (it is feedforward,
+   which is why it is allowed).
+3. **Rail step** — 1 V on the rail, measuring the current excursion. It should reproduce ~90 ppm
+   (1000 ppm/V divided by $1+T = 11$), which is the argument that the rail has to be quiet.
+   Sweeping the crossover and $g_{ds}$ here is what tells you the *required* rail cleanliness
+   instead of assuming it.
+4. **Noise gain** — one noise analysis, only to confirm the amplifier's own noise is not
+   amplified between 10 Hz and 1 kHz. The absolute 1/f numbers are not believable in SPICE; the
+   shape is.
+
+## 2. The thermal network, in OpenModelica — a day, and it tests the notes' assumptions
+
+Every thermal claim in this note is arithmetic with assumed $\theta$, $C$ and coupling. This is
+the model that either confirms them or finds the parameter range where they break.
+
+An acausal network, which is what Modelica is for: ambient → island (lumped $C$) → shunt/heater →
+reference, with the pair coupling (0.01-0.1 K/W inside one package against ~10 K/W to ambient),
+a heat input for the pass element, and $P_{shunt} = I^2 R_{sense}(T)$ — the temperature
+dependence of the resistance being the link back to the electrical domain, which is the whole
+point. The three control laws are switchable: none, the power servo $I_h = \sqrt{S^2 - I^2}$,
+and a temperature servo with its own loop gain.
+
+1. **One-hour transient, ambient $\pm 0.5$ K** — read the resistance drift in ppm and compare it
+   with the 0.10 ppm the note assumes. This is the joint check on $\theta$ and $\phi$.
+2. **A magnification change** (2 A → 0.4 A) — the thermal step, its settling, and how far it
+   pushes the reference. This is where the pair either earns its 0.04 ppm or does not.
+3. **The oven loop** — including its authority: can it absorb the 1-2 W step when the current
+   changes, and does the servo's own noise or limit cycle stay under the 0.1 ppm it is bought for?
+4. **PWM the heater**, to confirm the thermal pole really filters it. That claim deserves twenty
+   seconds of simulation.
+5. **Sensitivity**, the real value of having the model: sweep $\theta$, the coupling and $\phi$
+   and find where the pair stops helping and where the oven stops being necessary. Those
+   boundaries are the design's operating envelope and they are in no datasheet.
+
+## 3. What not to simulate — and the cheap third model
+
+- **Not the error budget**: it is arithmetic, and the script already does it.
+- **Not the noise floor to ppm**: the models' 1/f parameters are guesses; the datasheets and the
+  DMM6500 are the truth.
+- **Not EMI, rectification or ground displacement**: that wants field tools. Measure it with the
+  switcher-on / switcher-off drift comparison instead.
+- **Do** consider a Monte Carlo over the budget script: perturb every datasheet figure a few per
+  cent and see which term dominates the *variance* of the RSS. That answers "which part do I
+  upgrade next" more directly than any SPICE run, and it costs an hour.
 
 # How we would know we got there
 
