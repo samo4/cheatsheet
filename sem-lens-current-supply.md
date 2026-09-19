@@ -337,6 +337,43 @@ The table prefers a large resistor, and it is right — up to the point where it
   terminals connected as a matched, isothermal copper pair. Copper is 3900 ppm/K; the Kelvin
   pair is what keeps copper's tempco out of the measurement, but only if it is truly a pair.
 
+### The optimum, and why one topology does not have one
+
+Two error terms trade against each other in $R_{\mathrm{sense}}$:
+
+$$\varepsilon_{\mathrm{meas}} = \frac{V_n}{I\,R}, \qquad
+  \varepsilon_{\mathrm{therm}} = \mathrm{TCR}\,\phi\,\theta\,I^2 R$$
+
+where $V_n$ is everything referred to the sense node (offset drift, thermal EMF, amplifier
+noise), and $\phi$ is the fraction of the shunt's $\theta I^2R$ temperature rise that actually
+*varies* over the hour — drafts, plus the residual settling. Setting the two derivatives equal:
+
+$$R^{*} = \sqrt{\frac{V_n}{I^3\,\mathrm{TCR}\,\phi\,\theta}}$$
+
+With this design's numbers — $V_n = 0.114$ µV, $I = 2$ A, $\mathrm{TCR} = 0.2$ ppm/K,
+$\phi = 5$ %, $\theta = 10$ K/W — that is **0.38 $\Omega$**: $V_{\mathrm{sense}} = 0.75$ V,
+0.15 ppm from each side, 0.26 ppm for the pair. Useful, but read the two conditions:
+
+- **If $\phi \to 0$ the optimum runs away to infinity.** In a genuinely still, sealed box the
+  thermal term stops depending on $R$ and big is simply better; the limits left are compliance
+  and dissipation. This design is *not* at its drift optimum — it sits at 0.1 $\Omega$ because
+  the 30 V rail's ~1.1 V of margin caps $V_{\mathrm{sense}}$ near 0.15 V, so it is
+  **compliance-limited, not drift-limited**.
+- **The heated pair and the oven have no optimum at all**, because they remove the right-hand
+  term. With nothing left to balance $1/R$ against, $R_{\mathrm{sense}}$ should be as large as
+  three things allow:
+  1. **compliance** — the same ~0.15 V ceiling on this rail, unless the rail is raised;
+  2. **power** — $P = I^2R$, and the pair doubles it, so its standing heat is $2I^2R$ (0.8 W at
+     0.1 $\Omega$, 2 W at 0.25 $\Omega$ at 2 A) and lands in the box's thermal budget;
+  3. **the reference's noise**, the one term that does *not* divide by $V_{\mathrm{sense}}$ — so
+     more sense voltage buys nothing once the $V_n$ group has fallen below it. With the LM399
+     that point is $V_{\mathrm{sense}} \approx 0.23$ V; with a quiet 0.125 ppm reference it is
+     $\approx 0.9$ V.
+
+That third condition is the practical rule, and it is why 0.25 $\Omega$ (0.5 V of sense) is the
+sweet spot rather than the biggest resistor that fits: it puts the $V_n$ group at 0.15 ppm,
+comfortably under a quiet reference's noise, for 1 W of standing heat through the pair.
+
 # A heated pair: can a sibling resistor hold the shunt still?
 
 The proposal: put a second resistor next to the sense resistor, drive it so that the pair's
@@ -472,6 +509,46 @@ tempco as a bonus. That, rather than any multiplier, is what makes the scheme pr
 (If "multiplier" meant the *setpoint* multiplier instead: that is a voltage-mode multiplying
 DAC, whose output is $V_{\mathrm{ref}} \times D$. Nothing to design, and its relative noise
 and gain drift pass through 1:1 exactly as the reference's do.)
+
+### Feeding the heater: the one place a switcher is the right answer
+
+The heater changes the power-supply calculus, and it makes the switching argument easy rather
+than marginal — because the heater is a *low-voltage, high-current* load:
+
+| | at 2 A | at 0.4 A |
+|---|---|---|
+| heater current $I_h = \sqrt{S^2 - I^2}$ | 2.00 A | 2.80 A |
+| heater power (0.1 $\Omega$ pair) | 0.40 W | 0.78 W |
+| heater voltage | 0.20 V | 0.28 V |
+
+Three things follow.
+
+- **It cannot be driven linearly from the rail.** Dropping 30 V to 0.28 V at 2.8 A wastes 83 W
+to deliver 0.8 W, and even from a 5 V auxiliary it wastes 13 W. The heater needs its own
+low-voltage source: a separate 2 V/3 A transformer winding with a small linear regulator (quiet,
+~1.4 W lost), or a buck from the 30 V rail (~0.2 W lost, with a post-LC to keep its edges out of
+the box). What it must *not* be is a linear drop from the main rail.
+- **Its accuracy requirement is 0.6 %** — the loosest number in this design — and its *ripple* is
+filtered by thermal inertia: the pair's thermal pole is $1/(2\pi\tau)$ with $\tau$ of tens of
+seconds, a few millihertz, so switching ripple at any frequency is attenuated by more than
+1000x before it reaches the temperature that matters. A crude PWM is ideal for the heater; only
+its *average* power has to be right.
+- **The EMI caveat is unchanged.** The heater's edges never reach the current through the thermal
+path, but they can through ground: give the heater its own return, keep the loop area small, and
+return it outside the measuring island.
+
+The honest architecture is therefore a hybrid: **switcher-grade supplies for whatever needs
+current at low voltage or coarse accuracy — the heater, and the pass element's compliance if you
+want tracking — and linear rails for everything whose error appears in the budget.** Note which
+block in this design actually wants a switcher: the one whose requirement is 0.6 %. That is a
+division of labour rather than a compromise.
+
+**The variant that avoids a second supply, and why it loses.** A series element in the lens path
+— a MOSFET whose $R_{DS}$ is servo'd so the pair's total dissipation stays constant — needs no
+second source at all, and it sits outside the Kelvin measurement so it cannot corrupt it. But
+its drop comes out of the compliance, worst at the *lowest* current (1-2 V), and those volts get
+burned at full current: about 2.7 W spent to deliver 0.5 W of heat. The buck does the same job
+for 0.2 W, so the series variant is a good idea that loses on economics.
 
 ## So when is the second resistor worth it?
 
@@ -668,6 +745,50 @@ of gain left when the crossover is at 1 kHz.
 
 If the measured leakage turns out worse than 0.1 %/V, the fix is a cascode: a second MOSFET
 holding the pass element's $V_{ds}$ constant, so rail ripple never reaches the current.
+
+### A switcher feeding the linear stage: fine, with three conditions
+
+Every high-power precision current source does this. The question is only whether the switcher
+*is* the rail or a *pre-regulator* for the pass element — and the answer is: pre-regulator.
+
+**At switcher frequencies the coil does the filtering that the loop cannot.** The current loop
+has ~20 dB of gain at 100 Hz and nothing above its 1 kHz crossover, so a 30 V switching rail
+would leak straight through the pass element's output conductance — except that the *lens
+inductance* opposes it. The disturbance current becomes
+$\Delta I = \Delta V\,g_{ds}/(1 + g_{ds}\omega L)$, which starts rolling off at
+$1/(2\pi g_{ds}L) \approx 2$ kHz and gives:
+
+| Switcher | ripple | coil attenuation | current ripple |
+|---|---|---|---|
+| 100 kHz | 50 mV | 51x | 0.98 ppm |
+| 300 kHz | 50 mV | 152x | 0.33 ppm |
+| 1 MHz | 20 mV | 504x | 0.04 ppm |
+
+And a modest post-filter — 10 µH plus 100 µF, a 5 kHz second-order corner — adds another 3553x
+at 300 kHz, which makes the switching ripple a non-issue even with a leaky pass element. Note
+this is the *opposite* of the 100 Hz case, where the loop has only ~11x and the coil contributes
+nothing.
+
+**Three things an SMPS does badly here.**
+
+| Failure | Mechanism | Fix |
+|---|---|---|
+| burst / PFM at light load | an envelope of hundreds of Hz to a few kHz: *in band*, below the coil's 2 kHz corner, and invisible when you scope the switching waveform | a forced-PWM (continuous-conduction) part, or a minimum load — **check this one first** |
+| EMI rectification | the switcher's ground-displacement currents and near field rectify in the sense chain's junctions, giving a *DC offset that drifts* with duty cycle and temperature — worse than noise, because it looks like drift | separate compartment, shielded or bifilar wiring, one star point at the shunt, reference alone on its isothermal island |
+| rail impedance in band | the switcher's output impedance rises near its own 10-50 kHz bandwidth | not a problem: the current loop's gain rejects rail impedance below 1 kHz by $1+T$ |
+
+**Keep $V_{ds}$ above saturation, always.** Ripple and load transients need 1.5-2 V of
+$V_{ds}$, so a switcher rail for the 16 $\Omega$ / 1.5 A load should sit at 31-32 V rather than
+the matched 29.9 V — 4.5 W in the pass element instead of 1.6 W. The elegant version is a
+*tracking* pre-regulator, whose output follows the coil's drop plus a fixed 1.5 V, keeping the
+dissipation low across the whole current range. That is what the old column's transformer taps
+were doing, discretely.
+
+**Keep the measuring chain linear.** Split the architecture: the switcher makes the
+high-current compliance, small linear rails (or LDOs off the switcher) feed the reference, DAC
+and amplifier. Then verify with the test that costs nothing — run the same one-hour drift log
+with the switcher running and again from a bench linear supply. That single comparison settles
+whether your particular switcher and layout are acceptable, and no calculation can replace it.
 
 ## Thermal layout is a first-class part of the budget
 

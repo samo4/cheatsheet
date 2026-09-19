@@ -163,10 +163,11 @@ def report(p: dict[str, float], markdown: bool) -> int:
 
     print("\nsense resistor trade")
     print(f"  {'R_sense':>8}{'V_sense':>11}{'P':>8}{'dT':>7}{'offset':>9}{'TCR':>8}{'RSS':>8}")
+    theta = 10.0                      # shunt thermal resistance to ambient, K/W
     for r in (0.05, 0.1, 0.2, 0.5):
         vs = p["i_op"] * r
         power = p["i_op"] ** 2 * r
-        dT = 10.0 * power
+        dT = theta * power
         offset = (p["vos_K"] * p["dT_amp"] + p["emf_K"] * p["dT_ambient"]
                   + p["noise_1h"]) / vs
         tcr = p["tc_shunt"] * (p["dT_ambient"] + p["dT_settle"])
@@ -177,6 +178,25 @@ def report(p: dict[str, float], markdown: bool) -> int:
               f"{offset:>9.2f}{tcr:>8.2f}{combo:>8.2f}")
     print("  (offset column: offset + EMF + noise drift, all divided by V_sense)")
     print("  (draft column folded into RSS: 5 % of the rise, as airflow varies)")
+
+    # the drift optimum: d/dR of [V_n/(I R) + TCR*phi*theta*I^2*R] = 0
+    # NB DEFAULTS keeps tempcos as ppm/K numbers and voltages as µV numbers, so convert here
+    v_n = (p["vos_K"] * p["dT_amp"] + p["emf_K"] * p["dT_ambient"] + p["noise_1h"]) * 1e-6
+    tcr = p["tc_shunt"] * 1e-6
+    r_opt = math.sqrt(v_n / (p["i_op"] ** 3 * tcr * p["draft_frac"] * theta))
+    each = v_n / (p["i_op"] * r_opt) / 1e-6              # ppm from each side of the trade
+    tcr_amb = p["tc_shunt"] * (p["dT_ambient"] + p["dT_settle"])    # ppm, independent of R
+    print(f"\n  drift optimum: R* = sqrt(V_n / (I^3 TCR phi theta)) = {r_opt:.2f} Ω")
+    print(f"    V_n {v_n * 1e6:.3f} µV, V_sense there {p['i_op'] * r_opt:.2f} V, "
+          f"{each:.2f} ppm from each side, {math.sqrt(2 * each ** 2 + tcr_amb ** 2):.2f} ppm "
+          f"in total")
+    print(f"    phi is {p['draft_frac']:.0%} of a {theta:.0f} K/W rise: in a still sealed box "
+          f"phi -> 0 and the optimum runs away -- bigger is simply better")
+    print(f"    the pair and the oven remove the right-hand term, so they have no optimum; "
+          f"the limit becomes the reference's own noise")
+    print(f"    beyond V_sense {v_n / (p['noise_ref'] / 2 * 1e-6):.2f} V a "
+          f"{p['noise_ref'] / 2:.2f} ppm reference dominates, so more sense voltage buys "
+          f"nothing")
 
     print("\nsetpoint resolution: one LSB, in ppm of full scale")
     for bits in (12, 16, 18, 20, 24):
@@ -193,6 +213,18 @@ def report(p: dict[str, float], markdown: bool) -> int:
           f"for {p['ripple_ok']:.1f} ppm")
     print(f"  a raw rectifier (2 V ripple) gives "
           f"{leak * 2 / (1 + p['loop_100Hz']):.0f} ppm: an LDO stage is mandatory")
+
+    # at switcher frequencies the loop is gone, but the lens inductance takes over:
+    #   dI = dV * g_ds / (1 + g_ds*w*L)
+    g_ds_abs = p["g_ds"] / 100 * p["i_op"]                    # A/V
+    print("\n  switcher rails, where the coil does the filtering instead of the loop")
+    for f_sw, ripple in ((1e5, 50e-3), (3e5, 50e-3), (1e6, 20e-3)):
+        att = 1 + g_ds_abs * 2 * math.pi * f_sw * p["l_coil"]
+        print(f"    {f_sw / 1e3:>5.0f} kHz, {ripple * 1e3:>3.0f} mV ripple: coil gives "
+              f"{att:>4.0f}x -> {leak * ripple / att:>5.2f} ppm")
+    lc_corner = 1 / (2 * math.pi * math.sqrt(10e-6 * 100e-6))
+    print(f"    a 10 µH + 100 µF post-filter ({lc_corner / 1e3:.0f} kHz corner, second order) "
+          f"would add {(3e5 / lc_corner) ** 2:.0f}x more at 300 kHz")
 
     print("\nrefocus interval at the 30 kV / 200 000x working point")
     for label, cc, dz in (("objective", 2.5e-3, 83e-9), ("default 15 kV", 10e-3, 500e-9)):
@@ -306,6 +338,20 @@ def thermal_report(p: dict[str, float], markdown: bool) -> int:
     print(f"  {'imbalance x':>12}{'dP/P':>9}{'dT':>8}{'drift':>10}")
     for x, dp, dT, drift in imbalance:
         print(f"  {x:>12.2f}{100 * dp:>8.0f}%{dT:>7.2f}K{drift:>9.3f}ppm")
+
+    # the heater is a low-voltage, high-current load, which is what rules out driving it
+    # linearly from the rail: the volts dropped there are burned at full current
+    s2 = 2 * p["i_max"] ** 2
+    print(f"\n  heater envelope, holding the pair at {p_bal:.2f} W")
+    for i in (p["i_max"], p["i_max"] / 5):
+        i_h = math.sqrt(max(s2 - i ** 2, 0.0))
+        print(f"    signal {i:.1f} A -> heater {i_h:.2f} A, "
+              f"{i_h ** 2 * p['r_sense']:.2f} W, {i_h * p['r_sense']:.2f} V")
+    i_h_worst = math.sqrt(s2 - (p["i_max"] / 5) ** 2)
+    p_h = i_h_worst ** 2 * p["r_sense"]
+    waste = (p["v_rail"] - i_h_worst * p["r_sense"]) * i_h_worst
+    print(f"    driving that linearly from {p['v_rail']:.0f} V would waste {waste:.0f} W to "
+          f"deliver {p_h:.2f} W -- hence a separate low-voltage winding or a buck")
     return 0
 
 
