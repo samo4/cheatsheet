@@ -343,7 +343,7 @@ $$
 \mathbf{A}\vec{x} = \lambda\vec{x}
 $$
 
-The scalar $\lambda$ is the eigenvalue. Rearranging gives $(\mathbf{A} - \lambda\mathbf{I})\vec{x} = \vec{0}$, which has a nontrivial solution iff $\mathbf{A} - \lambda\mathbf{I}$ is singular (square, not invertable). Hence the eigenvalues are the roots of the characteristic polynomial
+The scalar $\lambda$ is the eigenvalue. Rearranging gives $(\mathbf{A} - \lambda\mathbf{I})\vec{x} = \vec{0}$, so the eigenvectors are the null space of $\mathbf{A} - \lambda\mathbf{I}$ (without $\vec{0}$), called the eigenspace. A nonzero one exists iff that null space is nontrivial, i.e. $\mathbf{A} - \lambda\mathbf{I}$ is singular (rank below $n$, not invertible). Hence the eigenvalues are the roots of the characteristic polynomial
 
 $$
 \det(\mathbf{A} - \lambda\mathbf{I}) = 0
