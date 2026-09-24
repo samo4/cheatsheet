@@ -1,6 +1,18 @@
 # Transfer functions
 
-A transfer function is the input–output description of a system in the $s$-domain: it keeps only how inputs map to outputs, hiding the internal state.
+To connect components into a system, each one needs a description of its input–output behaviour alone, independent of how it is built. As we have seen, the impulse response fully characterizes an LTI system. Every input is a superposition of shifted, scaled impulses, so the output is the *convolution*
+
+$$
+y(t) = (h * u)(t) = \int_0^t h(t-\tau)\, u(\tau)\, d\tau
+$$
+
+But, no matter how beautiful it is (or becuase of it), convolution is inconvenient to work with: systems in series give nested integrals, and a feedback loop gives an integral equation. We use the mathemtatical trick to move everything into another space, where finding solutions becomes easier. The Laplace transform in one of those tricks. It turns convolution into multiplication,
+
+$$
+Y(s) = G(s)\,U(s), \qquad G(s) = \mathcal{L}\{h(t)\}
+$$
+
+and $G(s)$ is what we call the transfer function. Interconnections of systems become algebra on transfer functions. The same property holds for many other transformation, as most prominent examples: for the Fourier and Z (see next chapter). These transformations  give $G(j\omega)$ and $G[k]$ respecitvely. This chapter uses Laplace.
 
 ## Heaviside and Dirac
 
@@ -19,7 +31,7 @@ $$
 
 ## Scalar transfer function
 
-For a constant-coefficient ODE $a_n y^{(n)} + \cdots + a_0 y = b_m u^{(m)} + \cdots + b_0 u$, Laplace-transform with zero initial conditions. This is the Laplace $\leftrightarrow$ time connection: differentiation in time becomes multiplication by $s$, so the ODE turns into an algebraic equation,
+In practice $G(s)$ is rarely found by transforming $h(t)$; it comes directly from the system's ODE. For a constant-coefficient ODE $a_n y^{(n)} + \cdots + a_0 y = b_m u^{(m)} + \cdots + b_0 u$, Laplace-transform with zero initial conditions. This is the Laplace $\leftrightarrow$ time connection: differentiation in time becomes multiplication by $s$, so the ODE turns into an algebraic equation,
 
 $$
 \underbrace{(a_n s^n + \cdots + a_0)}_{D(s)}Y(s) = \underbrace{(b_m s^m + \cdots + b_0)}_{N(s)}U(s)
