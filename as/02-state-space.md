@@ -1145,7 +1145,7 @@ $$
 
 ### Choosing between the four methods
 
-We have shown four ways to skin a cat, but at the end you still have the same dead cat. The Taylor series is the most general, flows nicely from rudimentary principles, but it is tedious. Diagonalization is elegant, but plain diagonalization fails for defective matrices, and its Jordan-form rescue is laborious. Laplace transform is a nice trick, but requires some algebraic manipulation (in other words: much harder to implement in computers). Cayley–Hamilton is a clever method, but requires solving a Vandermonde system.
+We have shown four ways to skin a cat, but at the end you still have the same dead cat. The Taylor series is the most general, flows nicely from rudimentary principles, but it is tedious. Diagonalization is elegant, and with its Jordan extension it shows how the system works: independent modes along the eigenvectors. Defective matrices make it laborious, though. Laplace transform is a nice trick, but requires some algebraic manipulation (in other words: much harder to implement in computers). Cayley–Hamilton is a clever method, but requires solving a Vandermonde system, and it is a black box: $\Phi$ comes out, insight into the structure doesn't.
 
 In practice the choice depends on $\mathbf{A}$ and on the problem. Cayley–Hamilton (CH) is the one that keeps coming back — it is the method behind controllability and observability later in these notes — and it wins when:
 
@@ -1153,6 +1153,8 @@ In practice the choice depends on $\mathbf{A}$ and on the problem. Cayley–Hami
 - The matrix has *repeated eigenvalues* but is still diagonalizable — CH avoids eigenvector hunting.
 - You want a closed form without computing $\mathbf{V}^{-1}$ — CH never inverts a matrix, only multiplies out powers of $\mathbf{A}$.
 - You're working with *symbolic parameters*, where eigenvectors get messy — they come out as rational expressions in the parameters, while CH's coefficients stay clean.
+
+In short: **Cayley–Hamilton to compute, eigenvectors to understand.**
 
 ```{=latex}
 \begin{example}[frametitle={Example - diagonalization and Cayley–Hamilton on the same matrix}]
