@@ -411,6 +411,148 @@ Sanity check: $\mathbf{A}\vec{x}_1 = \vec{x}_1$, $\mathbf{A}\vec{x}_2 = 2\vec{x}
 
 Obviously a single eigenvalue can occur multiple times. We call this algebraic multiplicity and denote it as $m_a$. The number of linearly independent eigenvectors belonging to it is the geometric multiplicity $m_g$, always $1 \le m_g \le m_a$.
 
+### Similarity transformation
+
+A matrix describes a linear map *in a particular basis*. Change the basis with an invertible $\mathbf{T}$, $\vec{x} = \mathbf{T}\tilde{\vec{x}}$ (the columns of $\mathbf{T}$ are the new basis vectors written in the old coordinates), and $\vec{y} = \mathbf{A}\vec{x}$ becomes $\tilde{\vec{y}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}\,\tilde{\vec{x}}$. Two matrices related this way are called similar:
+
+$$
+\tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}
+$$
+
+Same map, different coordinates. So everything that belongs to the map, not to the coordinates, is left unchanged. The characteristic polynomial carries over because $\mathbf{T}^{-1}\mathbf{T} = \mathbf{I}$ can be slipped under the determinant:
+
+$$
+\det(\tilde{\mathbf{A}} - \lambda\mathbf{I}) = \det\!\big(\mathbf{T}^{-1}(\mathbf{A} - \lambda\mathbf{I})\mathbf{T}\big) = \det\mathbf{T}^{-1}\,\det(\mathbf{A} - \lambda\mathbf{I})\,\det\mathbf{T} = \det(\mathbf{A} - \lambda\mathbf{I})
+$$
+
+and with it everything the polynomial encodes:
+
+- the eigenvalues with their algebraic multiplicities,
+- $\det\tilde{\mathbf{A}} = \det\mathbf{A} = \prod_i \lambda_i$ and $\operatorname{tr}\tilde{\mathbf{A}} = \operatorname{tr}\mathbf{A} = \sum_i \lambda_i$,
+- the rank, and the geometric multiplicities (since $\tilde{\mathbf{A}} - \lambda\mathbf{I}$ is similar to $\mathbf{A} - \lambda\mathbf{I}$).
+
+The eigenvectors are *not* unchanged. They are the same arrows, but their coordinates change: if $\mathbf{A}\vec{v} = \lambda\vec{v}$, then $\tilde{\mathbf{A}}(\mathbf{T}^{-1}\vec{v}) = \lambda(\mathbf{T}^{-1}\vec{v})$.
+
+*Functions pass through.* In a power the inner $\mathbf{T}\mathbf{T}^{-1}$ pairs cancel, $\tilde{\mathbf{A}}^k = \mathbf{T}^{-1}\mathbf{A}^k\mathbf{T}$, and so does every power series built from powers:
+
+$$
+f(\mathbf{T}^{-1}\mathbf{A}\mathbf{T}) = \mathbf{T}^{-1}f(\mathbf{A})\,\mathbf{T}, \qquad\text{e.g.}\quad e^{\mathbf{A}t} = \mathbf{T}\,e^{\tilde{\mathbf{A}}t}\,\mathbf{T}^{-1}
+$$
+
+This is the practical reason to change basis: pick $\mathbf{T}$ so that $\tilde{\mathbf{A}}$ makes $f$ easy, compute $f(\tilde{\mathbf{A}})$, and transform back. The best case is diagonal. Put $n$ independent eigenvectors in the columns of $\mathbf{T} = \mathbf{V}$, then $\mathbf{A}\mathbf{V} = \mathbf{V}\boldsymbol{\Lambda}$ column by column, i.e.
+
+$$
+\mathbf{V}^{-1}\mathbf{A}\mathbf{V} = \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n), \qquad f(\mathbf{A}) = \mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}
+$$
+
+For the example above, $\mathbf{V} = [\vec{x}_1\ \vec{x}_2\ \vec{x}_3]$ gives $\mathbf{V}^{-1}\mathbf{A}\mathbf{V} = \operatorname{diag}(1, 2, 3)$. This needs $n$ independent eigenvectors, i.e. $m_g = m_a$ for every eigenvalue. When some eigenvalue falls short, the best achievable form is the Jordan form below.
+
+In state space a similarity is simply a new choice of state variables, $\vec{x} = \mathbf{T}\tilde{\vec{x}}$: $(\mathbf{A}, \mathbf{B}, \mathbf{C}, \mathbf{D}) \mapsto (\mathbf{T}^{-1}\mathbf{A}\mathbf{T},\ \mathbf{T}^{-1}\mathbf{B},\ \mathbf{C}\mathbf{T},\ \mathbf{D})$. Poles, stability and the transfer function do not notice it.
+
+### Jordan form
+
+Every square matrix, defective or not, is similar to a *Jordan matrix*, which is block-diagonal with Jordan blocks on the diagonal:
+
+$$
+\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J} = \begin{bmatrix} \mathbf{J}_{k_1}(\lambda_1) & & \\ & \ddots & \\ & & \mathbf{J}_{k_p}(\lambda_p) \end{bmatrix}, \qquad
+\mathbf{J}_k(\lambda) = \begin{bmatrix} \lambda & 1 & & \\ & \lambda & \ddots & \\ & & \ddots & 1 \\ & & & \lambda \end{bmatrix}_{k\times k}
+$$
+
+The eigenvalue is on the diagonal, $1$s are on the superdiagonal, and zeros are everywhere else. The $\lambda$s in different blocks may repeat. Read it as "as diagonal as possible": a diagonalizable matrix has only $1\times1$ blocks, so $\mathbf{J} = \boldsymbol{\Lambda}$.
+
+*Counting the blocks.* For each eigenvalue $\lambda_i$:
+
+- number of blocks $= m_{g,i}$ (each block owns exactly one eigenvector),
+- total size of its blocks $= m_{a,i}$,
+- the individual sizes follow from the ranks of powers of $\mathbf{N} = \mathbf{A} - \lambda_i\mathbf{I}$: the number of blocks of size $\ge k$ is $\operatorname{rank}\mathbf{N}^{k-1} - \operatorname{rank}\mathbf{N}^{k}$ (with $\mathbf{N}^0 = \mathbf{I}$, rank $n$).
+
+For $m_a \le 3$ the first two rules already fix the sizes. For example, $m_a = 3$ with $m_g = 2$ can only be blocks of size $2 + 1$. The rank rule is needed only from $m_a = 4$ on, where $m_g = 2$ could mean $3+1$ or $2+2$.
+
+*Generalized eigenvectors.* The columns of $\mathbf{T}$ that belong to one $k\times k$ block form a chain. It starts at an ordinary eigenvector $\vec{v}_1$, and each next vector is mapped by $\mathbf{N}$ onto the previous one:
+
+$$
+(\mathbf{A} - \lambda\mathbf{I})\vec{v}_1 = \vec{0}, \qquad (\mathbf{A} - \lambda\mathbf{I})\vec{v}_2 = \vec{v}_1, \qquad \dots, \qquad (\mathbf{A} - \lambda\mathbf{I})\vec{v}_k = \vec{v}_{k-1}
+$$
+
+Rewritten as $\mathbf{A}\vec{v}_j = \lambda\vec{v}_j + \vec{v}_{j-1}$, this is column $j$ of $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$: the $\lambda$ on the diagonal and the $1$ right above it. In practice it is easier to build the chain from the top. Pick $\vec{v}_k$ with $\mathbf{N}^{k}\vec{v}_k = \vec{0}$ but $\mathbf{N}^{k-1}\vec{v}_k \ne \vec{0}$, then go down with $\vec{v}_{j-1} = \mathbf{N}\vec{v}_j$. This way you never have to solve a singular system for a right-hand side that might not be in its range.
+
+*Functions of a Jordan block.* Split the block as $\mathbf{J}_k(\lambda) = \lambda\mathbf{I} + \mathbf{N}_k$, where $\mathbf{N}_k$ holds only the superdiagonal $1$s. $\mathbf{N}_k$ is nilpotent: each power shifts the $1$s one diagonal up, and $\mathbf{N}_k^k = \mathbf{0}$. Since $\lambda\mathbf{I}$ commutes with everything, the exponential factors, and the series for $e^{\mathbf{N}_k t}$ stops after $k$ terms:
+
+$$
+e^{\mathbf{J}_k(\lambda)t} = e^{\lambda t}\left(\mathbf{I} + \mathbf{N}_k t + \frac{\mathbf{N}_k^2 t^2}{2!} + \cdots + \frac{\mathbf{N}_k^{k-1} t^{k-1}}{(k-1)!}\right)
+= e^{\lambda t}\begin{bmatrix} 1 & t & \frac{t^2}{2!} & \cdots & \frac{t^{k-1}}{(k-1)!} \\ & 1 & t & \ddots & \vdots \\ & & \ddots & \ddots & \frac{t^2}{2!} \\ & & & 1 & t \\ & & & & 1 \end{bmatrix}
+$$
+
+This is where the $t e^{\lambda t}, t^2 e^{\lambda t}, \dots$ modes of a defective system come from: a $k\times k$ block produces powers of $t$ up to $t^{k-1}$. It also explains the derivative trick in Cayley–Hamilton, since $\frac{d^j}{d\lambda^j}e^{\lambda t} = t^j e^{\lambda t}$ produces exactly these terms. For a stable eigenvalue the polynomial loses to the exponential anyway, so $t^j e^{\lambda t} \to 0$. For an eigenvalue on the imaginary axis ($\operatorname{Re}\lambda = 0$) a block of size $\ge 2$ makes the response grow without bound. This is why a repeated pole on the imaginary axis is unstable, while a simple one is only marginally stable.
+
+The same holds in discrete time. With $\binom{j}{i} = 0$ for $i > j$, the binomial expansion gives $\mathbf{J}_k(\lambda)^j = \sum_{i=0}^{k-1}\binom{j}{i}\lambda^{j-i}\mathbf{N}_k^i$, so the modes are $\lambda^j, j\lambda^{j-1}, \dots$.
+
+```{=latex}
+\begin{example}[frametitle={Example - Jordan form of a defective matrix}]
+```
+
+$$
+\mathbf{A} = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & -3 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+This is the matrix whose $\Phi(t)$ the State space chapter gets from Cayley–Hamilton. Here we get it from the Jordan form instead.
+
+*Step 1 — eigenvalues and block structure.* $\det(\mathbf{A} - \lambda\mathbf{I}) = (1-\lambda)^3$ (expand along the first row), so $\lambda = 1$ with $m_a = 3$. With
+
+$$
+\mathbf{N} = \mathbf{A} - \mathbf{I} = \begin{bmatrix} 0 & 0 & 0 \\ 1 & 0 & -3 \\ 0 & 0 & 0 \end{bmatrix}, \qquad \mathbf{N}^2 = \mathbf{0}
+$$
+
+the ranks are $3, 1, 0$ for $\mathbf{N}^0, \mathbf{N}^1, \mathbf{N}^2$. That gives $3 - 1 = 2$ blocks of size $\ge 1$ (this is $m_g = 2$) and $1 - 0 = 1$ block of size $\ge 2$, so one $2\times2$ and one $1\times1$ block:
+
+$$
+\mathbf{J} = \begin{bmatrix} 1 & 1 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+*Step 2 — the chain for the $2\times2$ block.* Take $\vec{v}_2$ with $\mathbf{N}\vec{v}_2 \ne \vec{0}$. The first column of $\mathbf{N}$ is nonzero, so $\vec{v}_2 = \tvec{1, 0, 0}$ works, and
+
+$$
+\vec{v}_1 = \mathbf{N}\vec{v}_2 = \tvec{0, 1, 0}
+$$
+
+is automatically an eigenvector, because $\mathbf{N}\vec{v}_1 = \mathbf{N}^2\vec{v}_2 = \vec{0}$.
+
+*Step 3 — the eigenvector for the $1\times1$ block.* The eigenspace is $\ker\mathbf{N}$: $x_1 - 3x_3 = 0$, which is two-dimensional. We need a second eigenvector independent of $\vec{v}_1$, e.g. $\vec{v}_3 = \tvec{3, 0, 1}$.
+
+*Step 4 — assemble $\mathbf{T}$ and check.* Order the columns chain-first, bottom up:
+
+$$
+\mathbf{T} = [\vec{v}_1\ \vec{v}_2\ \vec{v}_3] = \begin{bmatrix} 0 & 1 & 3 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}, \qquad
+\mathbf{T}^{-1} = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & -3 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+Column by column, $\mathbf{A}\vec{v}_1 = \vec{v}_1$, $\mathbf{A}\vec{v}_2 = \tvec{1, 1, 0} = \vec{v}_1 + \vec{v}_2$ and $\mathbf{A}\vec{v}_3 = \vec{v}_3$. That is $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$.
+
+*Step 5 — the exponential.* The $2\times2$ block contributes $e^{t}\begin{bmatrix} 1 & t \\ 0 & 1 \end{bmatrix}$ and the $1\times1$ block $e^{t}$, so
+
+$$
+e^{\mathbf{A}t} = \mathbf{T}e^{\mathbf{J}t}\mathbf{T}^{-1}
+= e^{t}\begin{bmatrix} 0 & 1 & 3 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\begin{bmatrix} 1 & t & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & -3 \\ 0 & 0 & 1 \end{bmatrix}
+= \begin{bmatrix} e^t & 0 & 0 \\ t e^t & e^t & -3t e^t \\ 0 & 0 & e^t \end{bmatrix}
+$$
+
+This is the same $\Phi(t)$ as with Cayley–Hamilton. The largest block is $2\times2$, so the highest power of $t$ is $t^1$. Shortcut: here $\mathbf{A} = \mathbf{I} + \mathbf{N}$ with $\mathbf{N}^2 = \mathbf{0}$ already, so $e^{\mathbf{A}t} = e^{t}(\mathbf{I} + \mathbf{N}t)$ in one line.
+
+```{=latex}
+\end{example}
+```
+
+*A caveat.* The Jordan form is a tool for thinking, not for numerical computation. It is discontinuous: perturb a Jordan block by $\varepsilon$ and the repeated eigenvalue splits, the matrix becomes diagonalizable, and $\mathbf{J}$ jumps to a diagonal matrix. Rounding errors do exactly this, so numerical software avoids Jordan form (MATLAB's `jordan` is symbolic-only). It uses the Schur form $\mathbf{Q}^{*}\mathbf{A}\mathbf{Q}$ instead, which is triangular with orthogonal (unitary) $\mathbf{Q}$.
+
+*Jordan form: where to go from here.* In LTI analysis you rarely compute $\mathbf{J}$, but it answers the questions that eigenvalues alone leave open:
+
+- **Modes.** The block sizes tell you in advance which terms the free response can contain. A $k\times k$ block at $\lambda$ contributes $e^{\lambda t}, t e^{\lambda t}, \dots, t^{k-1}e^{\lambda t}$. This is the defective case mentioned under Modes of an LTI system, and the state-space version of a repeated pole in partial fractions.
+- **Stability on the imaginary axis.** The one case where the eigenvalues do not decide stability. Strictly, marginal stability needs every eigenvalue with $\operatorname{Re}\lambda = 0$ to have only $1\times1$ blocks ($m_g = m_a$), not necessarily to be simple. $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ (two separate integrators, blocks $1+1$) stays put and is marginally stable. The double integrator $\ddot{x} = 0$, with $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}$ (one $2\times2$ block), drifts as $x(t) = x_0 + \dot{x}_0 t$ and is unstable. Both have the same eigenvalues, $\lambda = 0, 0$.
+- **Controllability and observability.** In Jordan coordinates you can read them off $\mathbf{B}$ and $\mathbf{C}$ (Gilbert's criterion). A useful consequence: if one eigenvalue has two or more Jordan blocks ($m_g \ge 2$), a single input cannot control the system, and a single output cannot observe it, whatever $\mathbf{B}$ or $\mathbf{C}$ is. The input has to reach independent modes that share one $\lambda$, and they respond identically to it. In general, a system with $m$ inputs needs $m \ge \max_i m_{g,i}$. For actual testing, use the rank tests of the Properties chapter.
+- **Functions of matrices.** Every method for $f(\mathbf{A})$ (Laplace, Cayley–Hamilton with derivatives, Taylor series) reduces, in Jordan coordinates, to applying $f$ to the individual blocks as above. Jordan form is the reason they all agree.
+
 ### Cayley–Hamilton: an arbitrary function of a matrix
 
 How do you compute an arbitrary function $f(\mathbf{A})$ of a matrix with Cayley–Hamilton? Let's take $\sin\mathbf{A}$ for example.

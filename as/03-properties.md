@@ -68,7 +68,7 @@ $\operatorname{Re}\lambda_i < 0$ for all $i$: every mode decays, so from any ini
 
 ### Stable (marginal / Lyapunov)
 
-No eigenvalue with $\operatorname{Re}\lambda_i > 0$, and the eigenvalues on the imaginary axis are simple. Trajectories stay bounded (e.g. the center of the previous section — closed orbits) but need not converge. The poles sit exactly on the dashed boundary:
+No eigenvalue with $\operatorname{Re}\lambda_i > 0$, and the eigenvalues on the imaginary axis are simple.^[There's more to it than meets the eye. "Simple" is sufficient but not necessary. The exact condition is that every eigenvalue on the axis has only $1\times1$ Jordan blocks ($m_g = m_a$). $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ has $\lambda = 0$ twice and is still marginally stable, while the double integrator, which has the same eigenvalues, drifts off as $t$. See Jordan form in Appendix A.] Trajectories stay bounded (e.g. the center of the previous section — closed orbits) but need not converge. The poles sit exactly on the dashed boundary:
 
 ```{=latex}
 \input{tikz/stability-marginal.tex}
