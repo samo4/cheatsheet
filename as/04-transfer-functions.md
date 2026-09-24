@@ -43,19 +43,15 @@ $$
 G(s) = \frac{Y(s)}{U(s)} = \frac{N(s)}{D(s)} = \frac{b_m s^m + \cdots + b_0}{a_n s^n + \cdots + a_0}
 $$
 
-## Impulse response and convolution
+## Impulse response
 
-Feed in a unit impulse, $u(t) = \delta(t)$: since $\mathcal{L}\{\delta(t)\} = 1$, the output transform is just $G(s)$, so
+The inverse transform leads back to the time domain. A unit impulse input, $u(t) = \delta(t)$, has $U(s) = 1$, so $Y(s) = G(s)$ and
 
 $$
 h(t) = \mathcal{L}^{-1}\{G(s)\}
 $$
 
-is the **impulse response** — the output to a single kick, and the complete fingerprint of the system. By linearity and time invariance, the response to any input is a superposition of time-shifted, scaled kicks, i.e. the convolution
-
-$$
-y(t) = (h * u)(t) = \int_0^t h(t-\tau)\, u(\tau)\, d\tau
-$$
+is the impulse response from the introduction.
 
 ```{=latex}
 \begin{example}[frametitle={Example - impulse response}]
@@ -68,7 +64,7 @@ G(s) = \frac{s+3}{s^2 + 3s + 2} = \frac{s+3}{(s+1)(s+2)}
 = \frac{2}{s+1} - \frac{1}{s+2}
 $$
 
-(partial fractions: $s=-1$ gives $A = 2$, $s=-2$ gives $B = -1$), so
+(partial fractions $\frac{A}{s+1} + \frac{B}{s+2}$: covering up at $s=-1$ gives $A = 2$, at $s=-2$ gives $B = -1$), so
 
 $$
 h(t) = \mathcal{L}^{-1}\{G(s)\} = 2e^{-t} - e^{-2t}
@@ -80,12 +76,14 @@ $$
 
 ## Transfer function from state space
 
-Laplace-transform the state equations $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, $\vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}$ with zero initial conditions:
+The state-space chapter gave the impulse response of $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, $\vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}$ as $h(t) = \mathbf{C}\Phi(t)\mathbf{B} + \mathbf{D}\delta(t)$. By the introduction, its transform is the transfer function, and with $\mathcal{L}\{\Phi(t)\} = (s\mathbf{I} - \mathbf{A})^{-1}$ (see $\Phi$ via the Laplace transform) and $\mathcal{L}\{\delta(t)\} = 1$, $\mathbf{G}(s) = \mathcal{L}\{h(t)\}$ is the boxed formula below. The same result follows from transforming the state equations directly with zero initial conditions:
 
 $$
 s\mathbf{X}(s) = \mathbf{A}\mathbf{X}(s) + \mathbf{B}\mathbf{U}(s)
 \quad\Longrightarrow\quad
-\mathbf{Y}(s) = \underbrace{\left[\mathbf{C}(s\mathbf{I} - \mathbf{A})^{-1}\mathbf{B} + \mathbf{D}\right]}_{\mathbf{G}(s)}\mathbf{U}(s)
+\mathbf{X}(s) = (s\mathbf{I} - \mathbf{A})^{-1}\mathbf{B}\mathbf{U}(s)
+\quad\Longrightarrow\quad
+\mathbf{Y}(s) = \left[\mathbf{C}(s\mathbf{I} - \mathbf{A})^{-1}\mathbf{B} + \mathbf{D}\right]\mathbf{U}(s)
 $$
 
 ```{=latex}
@@ -126,25 +124,31 @@ The poles are the eigenvalues of $\mathbf{A}$ ($-1, -2, -3$ — see Modes of an 
 
 ## Block diagrams
 
-Block diagrams exist, and they are boring. Boxes and arrows just redraw the same transfer functions — series $G_1G_2$, parallel $G_1 + G_2$, feedback $G_1/(1 + G_1H)$ — without saying anything the transfer functions don't already.
+A block diagram is the drawn form of the transfer-function algebra from the introduction. Each block is a transfer function, arrows are signals, summing junctions add or subtract signals, and pickoff points copy a signal. It is how engineers communicate a system without anyone's internal equations.
 
-Commonly used in causal control design, they are a convenient shorthand for the algebra of transfer functions, but they are not a fundamental representation of the system.
+The basic connections each reduce to a single transfer function:
 
-Their real use is *communication*. But in order to understand block diagrams, some exercises involving  *manipulation* will help you read what a block diagram is trying to communicate to you.
+$$
+\text{series: } G_1 G_2, \qquad \text{parallel: } G_1 + G_2, \qquad \text{feedback: } \frac{G}{1 + GH}
+$$
+
+Repeating these reductions, together with moving summing junctions and pickoff points, collapses any diagram into one transfer function. Reading a diagram runs the other way, from boxes and arrows back to equations.
 
 ## Feedback
 
-The one interconnection that genuinely creates something new is **feedback** — a signal derived from the output is fed back to the input and subtracted before the system acts:
+In **feedback**, a signal derived from the output is fed back and subtracted from the input:
 
 ```{=latex}
 \input{tikz/feedback-loop.tex}
 ```
 
-The summing junction forms the error $e = u - Hy$, so
+The summing junction forms the error $E = U - HY$, so
 
 $$
-y = G(u - Hy) \quad\Longrightarrow\quad \frac{Y(s)}{U(s)} = \frac{G(s)}{1 + G(s)H(s)}
+Y = G(U - HY) \quad\Longrightarrow\quad \frac{Y(s)}{U(s)} = \frac{G(s)}{1 + G(s)H(s)}
 $$
+
+Unlike series and parallel connections, feedback changes the poles. The closed-loop poles are the roots of $1 + G(s)H(s) = 0$, not the poles of $G$, so choosing $H$ moves them. This is how feedback stabilizes an unstable system or speeds up a slow one.
 
 ## Movement of summing junctions and pickoff points
 
@@ -166,45 +170,43 @@ leaves the tapped branch carrying $u$ instead of $y = Gu$, so a copy of $G$ goes
 
 ## Conversion to and from state space
 
-Block diagrams are basically encoding equations, and by reading the block diagram you can build them back. Step one in both cases is to identify your variables, especially the state variables. 
+A block diagram encodes equations, so the equations can be read back off it, and a set of equations can be drawn as a diagram. In both directions the first step is to choose the variables, in particular the state variables.
 
-The single most important block for state space conversions is the integrator, here represented as a block with $1/s$. If you place $\dot{x}$ on the input of this block, you get $x$ on the output. This already takes care of the A part of the state equation.
-
-Initial state can be packed into the integrator as an initial condition, or you can add it in as a separate input.
+The key block is the integrator $\frac{1}{s}$: with $\dot{x}$ at its input, its output is $x$. Each integrator therefore holds one state, and the state equations are whatever the rest of the diagram feeds into the integrator inputs. An initial state can be kept as the integrator's initial condition or added as a separate input.
 
 ```{=latex}
 \input{tikz/integrator-block.tex}
 ```
 
-If you wrap it into a feedback loop, you get a first-order system, $G(s) = \frac{1}{s + a}$:
+Wrapping an integrator in a feedback loop with gain $a$ gives a first-order system:
 
 ```{=latex}
 \input{tikz/first-order-loop.tex}
 ```
- 
-Working backwards from the transfer function shows where the loop comes from: for $G(s) = \frac{1}{s+4}$,
 
-$$
-(s+4)Y = U \;\Rightarrow\; sY = U - 4Y \;\Rightarrow\; Y = \frac{1}{s}(U - 4Y)
-$$
-
-The last line says $Y$ is the integral of $U - 4Y$: feed $U$ into an integrator, subtract the feedback $4Y$, and out comes the loop above (with $a = 4$).
-
-Reading the diagram: the summing junction subtracts the feedback $a x$ from $u$, so the integrator input — the state derivative — is
+The summing junction subtracts the feedback $ax$ from $u$, so the integrator input, the state derivative, is
 
 $$
 \dot{x} = u - a x
 $$
 
-and the output taps the state, $y = x$. Compared with $\dot{x} = \mathbf{A}x + \mathbf{B}u$, $y = \mathbf{C}x + \mathbf{D}u$: $\mathbf{A} = -a$, $\mathbf{B} = 1$, $\mathbf{C} = 1$, $\mathbf{D} = 0$.
+and the output taps the state, $y = x$. Compared with $\dot{x} = \mathbf{A}x + \mathbf{B}u$, $y = \mathbf{C}x + \mathbf{D}u$: $\mathbf{A} = -a$, $\mathbf{B} = 1$, $\mathbf{C} = 1$, $\mathbf{D} = 0$. In the $s$-domain this is the feedback formula with $G = \frac{1}{s}$ and $H = a$, which gives $\frac{1/s}{1 + a/s} = \frac{1}{s + a}$.
 
-Higher order is the same story with more integrators: one state per integrator, feedback wrapping in the denominator coefficients, feedforward summing the numerator ones. Read the equations off the diagram, integrator by integrator.
+Going the other way, start from a transfer function such as $G(s) = \frac{1}{s+4}$ and rearrange until $sY$ stands alone:
+
+$$
+(s+4)Y = U \;\Rightarrow\; sY = U - 4Y \;\Rightarrow\; Y = \frac{1}{s}(U - 4Y)
+$$
+
+The last form says $Y$ is the integral of $U - 4Y$, which is the loop above with $a = 4$.
+
+Higher orders work the same way with more integrators, one state per integrator. The feedback gains carry the denominator coefficients and the feedforward paths carry the numerator coefficients. Read the equations off the diagram one integrator at a time.
 
 ```{=latex}
 \begin{example}[frametitle={Example - converting a two-core block diagram to state space}]
 ```
 
-Two first-order cores: core 1 is an integrator $\frac{1}{s}$ with negative feedback $3$ (net $\frac{1}{s+3}$), core 2 is a $\frac{1}{s+4}$ block driven by $u_1$ plus the coupling $3x_1$ from core 1. The outputs mix the states and feed $u_2$ straight through:
+Two first-order cores: core 1 is an integrator $\frac{1}{s}$ driven by $u_2$ with negative feedback $3$ (net $\frac{1}{s+3}$), core 2 is a $\frac{1}{s+4}$ block driven by $u_1$ plus the coupling $3x_1$ from core 1. The outputs mix the states and feed $u_2$ straight through:
 
 ```{=latex}
 \input{tikz/two-core-ss.tex}
