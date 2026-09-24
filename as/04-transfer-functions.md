@@ -6,13 +6,13 @@ $$
 y(t) = (h * u)(t) = \int_0^t h(t-\tau)\, u(\tau)\, d\tau
 $$
 
-But, no matter how beautiful it is (or becuase of it), convolution is inconvenient to work with: systems in series give nested integrals, and a feedback loop gives an integral equation. We use the mathemtatical trick to move everything into another space, where finding solutions becomes easier. The Laplace transform in one of those tricks. It turns convolution into multiplication,
+But, no matter how beautiful it is (or because of it), convolution is inconvenient to work with: systems in series give nested integrals, and a feedback loop gives an integral equation. We use a mathematical trick to move everything into another space, where finding solutions becomes easier. The Laplace transform is one of those tricks. It turns convolution into multiplication,
 
 $$
 Y(s) = G(s)\,U(s), \qquad G(s) = \mathcal{L}\{h(t)\}
 $$
 
-and $G(s)$ is what we call the transfer function. Interconnections of systems become algebra on transfer functions. The same property holds for many other transformation, as most prominent examples: for the Fourier and Z (see next chapter). These transformations  give $G(j\omega)$ and $G[k]$ respecitvely. This chapter uses Laplace.
+and $G(s)$ is what we call the transfer function. Interconnections of systems become algebra on transfer functions. The same property holds for other transforms, most prominently Fourier and Z. The Fourier transform gives the frequency response $G(j\omega)$, which is $G(s)$ evaluated on the imaginary axis. The Z-transform does the same job for sampled signals and gives $G(z)$ (see Discrete systems). This chapter uses Laplace.
 
 ## Heaviside and Dirac
 
@@ -156,13 +156,13 @@ Summing junctions and pickoff points slide through a diagram, but only if the br
 
 puts a copy of $G$ on *every* branch through the junction, because $G(u_1 + u_2) = Gu_1 + Gu_2$. Moving it the other way — from after the block back to before — divides the bypassed branches by $G$ instead.
 
-A pickoff point moves the other way. Tapping the signal before $G$ instead of after it,
+Pickoff points compensate the opposite way. Moving the tap from after $G$ to before it,
 
 ```{=latex}
 \input{tikz/block-diagram-pickoff-move.tex}
 ```
 
-forces the tapped branch through $1/G$ so the tapped signal is unchanged.
+leaves the tapped branch carrying $u$ instead of $y = Gu$, so a copy of $G$ goes on that branch to keep the tapped signal unchanged. Moving the tap from before $G$ to after it divides the tapped branch by $G$ instead.
 
 ## Conversion to and from state space
 
