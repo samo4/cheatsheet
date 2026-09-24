@@ -105,7 +105,7 @@ $$
 \dot{\vec{x}} = \mathbf{A}\vec{x}, \qquad \vec{x}(t_0) = \vec{x}_0
 $$
 
-is a linear ODE with no input ($\vec{u} = \vec{0}$), which is what *homogeneous* means here. The scalar case is the one you already know: $\dot{x} = ax$ has the solution $x(t) = x_0\,e^{a(t-t_0)}$. The vector case is the same with $a$ replaced by $\mathbf{A}$,
+is a linear ODE with no input ($\vec{u} = \vec{0}$), which is what *homogeneous* means here. The scalar case is the one you already know. Now we just add little arrows to scalar equation and replace $a$ with matrix $\mathbf{A}$:
 
 $$
 \vec{x}(t) = \vec{x}_0\, e^{\mathbf{A}(t-t_0)},
@@ -1154,7 +1154,7 @@ In practice the choice depends on $\mathbf{A}$ and on the problem. Cayley–Hami
 - You want a closed form without computing $\mathbf{V}^{-1}$ — CH never inverts a matrix, only multiplies out powers of $\mathbf{A}$.
 - You're working with *symbolic parameters*, where eigenvectors get messy — they come out as rational expressions in the parameters, while CH's coefficients stay clean.
 
-In short: **Cayley–Hamilton to compute, diagonalization to understand.**
+In short: **Cayley–Hamilton to compute, diagonalization to understand.**^[In the spirit of Hamming's motto, "The purpose of computing is insight, not numbers" [@hamming1962numerical]. For many more ways to compute $e^{\mathbf{A}t}$, and why most of them are numerically dubious, see @moler2003nineteen.]
 
 ```{=latex}
 \begin{example}[frametitle={Example - diagonalization and Cayley–Hamilton on the same matrix}]
