@@ -1,6 +1,6 @@
 # Transfer functions
 
-To connect components into a system, each one needs a description of its input–output behaviour alone, independent of how it is built. As we have seen, the impulse response fully characterizes an LTI system. Every input is a superposition of shifted, scaled impulses, so the output is the *convolution*
+To connect components into a system, each one needs a description of its input–output behaviour, independent of how it is built. As we have seen, the impulse response fully characterizes an LTI system. Every input is a superposition of shifted, scaled impulses, so the output is the *convolution*
 
 $$
 y(t) = (h * u)(t) = \int_0^t h(t-\tau)\, u(\tau)\, d\tau
@@ -12,22 +12,9 @@ $$
 Y(s) = G(s)\,U(s), \qquad G(s) = \mathcal{L}\{h(t)\}
 $$
 
-and $G(s)$ is what we call the transfer function. Interconnections of systems become algebra on transfer functions. The same property holds for other transforms, most prominently Fourier and Z. The Fourier transform gives the frequency response $G(j\omega)$, which is $G(s)$ evaluated on the imaginary axis. The Z-transform does the same job for sampled signals and gives $G(z)$ (see Discrete systems). This chapter uses Laplace.
+and $G(s)$ is what we call the transfer function. Interconnections of systems become algebra on transfer functions. The same property holds for other transforms, most prominently Fourier and Z. 
 
-## Heaviside and Dirac
-
-The two building blocks of signal analysis are the **unit step** (Heaviside) and the **unit impulse** (Dirac delta):
-
-$$
-u(t) = \begin{cases} 1 & t \ge 0 \\ 0 & t < 0 \end{cases}, \qquad
-\delta(t): \quad \int_{-\infty}^{\infty} \delta(t)\, dt = 1, \; \delta(t) = 0 \text{ for } t \ne 0
-$$
-
-with the sifting property $\int f(t)\delta(t)\, dt = f(0)$ and Laplace transforms
-
-$$
-\mathcal{L}\{u(t)\} = \frac{1}{s}, \qquad \mathcal{L}\{\delta(t)\} = 1
-$$
+The Fourier transform gives the frequency response $G(j\omega)$, which has the most direct meaning: a sinusoid of frequency $\omega$ comes out as a sinusoid of the same frequency, scaled by $|G(j\omega)|$ and shifted by $\angle G(j\omega)$. This is how we think about signals as spectra and systems as filters, and it can be measured directly. Its limitation is convergence. As an ordinary integral, Fourier converges only for signals that die out, which rules out steps, ramps and unstable systems. Laplace adds a decaying factor $e^{-\sigma t}$ with $s = \sigma + j\omega$ and so handles all of them. Where both exist, $G(j\omega)$ is $G(s)$ on the imaginary axis. The Z-transform does the same job for sampled signals and gives $G(z)$ (see Discrete systems). This chapter uses Laplace.
 
 ## Scalar transfer function
 
@@ -45,13 +32,19 @@ $$
 
 ## Impulse response
 
-The inverse transform leads back to the time domain. A unit impulse input, $u(t) = \delta(t)$, has $U(s) = 1$, so $Y(s) = G(s)$ and
+The inverse transform leads back to the time domain. The two test signals have the simplest transforms,
+
+$$
+\mathcal{L}\{\delta(t)\} = 1, \qquad \mathcal{L}\{1(t)\} = \frac{1}{s}
+$$
+
+so a unit impulse input gives $Y(s) = G(s)$ and
 
 $$
 h(t) = \mathcal{L}^{-1}\{G(s)\}
 $$
 
-is the impulse response from the introduction.
+is the impulse response from the introduction. A unit step gives the step response $\mathcal{L}^{-1}\{G(s)/s\}$, which is the integral of $h$.
 
 ```{=latex}
 \begin{example}[frametitle={Example - impulse response}]

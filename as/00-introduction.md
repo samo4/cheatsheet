@@ -9,6 +9,7 @@ This is material you have met before; it is here only as a reminder and to fix t
 - System — a box that turns inputs into outputs. Where the box ends is the modeler's choice.
 - Element — the smallest part we do not split further. An ideal element is *lumped* and dimensionless: one relation between the quantities at its terminals.
 - Signal — a variable carrying information. The input $u(t)$ and the output $y(t)$ are what crosses the border; the state $\vec{x}(t)$ is the internal signal that remembers the past. A water tank: inflow rate, outflow rate, and level.
+- Test signals — the unit step $1(t)$ (Heaviside), equal to $1$ for $t \ge 0$ and $0$ before, switches an input on. The unit impulse $\delta(t)$ (Dirac) is zero everywhere except at $t = 0$ and has unit area, $\int \delta(t)\,dt = 1$. It picks out a value, $\int f(t)\,\delta(t - \tau)\,dt = f(\tau)$ (the sifting property), and it is the derivative of the step.
 - Direction of travel — *analysis* goes from system to behaviour; *synthesis* goes from desired behaviour to a system. Neither works without a model, and you cannot design what you cannot analyze.
 
 ## Classification of systems
