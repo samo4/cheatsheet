@@ -144,7 +144,7 @@ $$
 = \mathcal{C}\vec{w}
 $$
 
-Vary $\vec{u}$ over $[0,t]$ and $\vec{w} \in \mathbb{R}^{nm}$ ($n$ blocks of length $m$, with $m$ the number of inputs) ranges over whatever that input can produce. The direction, though, is out of the input's hands: every reachable state is $\mathcal{C}\vec{w}$ for some $\vec{w}$ — the easy direction of Cayley–Hamilton, that reachable states lie in the column space of $\mathcal{C}$.
+Vary $\vec{u}$ over $[0,t]$ and $\vec{w} \in \mathbb{R}^{nm}$ ($n$ blocks of length $m$, with $m$ the number of inputs) ranges over whatever that input can produce. The direction, though, is out of the input's hands: every reachable state is $\mathcal{C}\vec{w}$ for some $\vec{w}$ — the easy direction of Cayley–Hamilton, that reachable states lie in the range space of $\mathcal{C}$.
 
 The containment is the half Cayley–Hamilton gives directly; the converse — that full row rank really is enough, with no direction wasted — is the classical theorem, taken as given here. Either way, the input reaches *every* state of $\mathbb{R}^n$ exactly when the $nm$ columns of $\mathcal{C}$ span it, i.e. when $\mathcal{C}$ has full row rank $n$. The matrix collecting exactly those columns is the *controllability matrix*:
 

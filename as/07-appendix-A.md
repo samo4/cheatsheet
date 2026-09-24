@@ -25,23 +25,7 @@ Cutting after the linear term leaves the tangent line $f(x) \approx f(x_0) + f'(
 
 ### Matrix multiplication
 
-Two matrices can be multiplied only when the number of columns of the left one equals the number of rows of the right one. If $\mathbf{A}$ is $m \times n$ and $\mathbf{B}$ is $n \times p$, then $\mathbf{C} = \mathbf{A}\mathbf{B}$ is $m \times p$ with entries
-
-$$
-c_{ij} = \sum_{k=1}^{n} a_{ik} b_{kj},
-$$
-
-i.e. entry $(i,j)$ is the dot product of row $i$ of $\mathbf{A}$ with column $j$ of $\mathbf{B}$.
-
-```{=latex}
-\begin{example}[frametitle={Remember - row by column}]
-```
-
-Matrix multiplication is **row by column**: row $i$ of the left matrix against column $j$ of the right matrix, entry by entry. The inner dimensions must match: columns of the left = rows of the right.
-
-```{=latex}
-\end{example}
-```
+Matrix multiplication is *row by column*: entry $(i,j)$ of $\mathbf{A}\mathbf{B}$ is row $i$ of $\mathbf{A}$ dotted with column $j$ of $\mathbf{B}$. The inner dimensions must match, $(m \times n)(n \times p) = (m \times p)$.
 
 ```{=latex}
 \begin{example}[frametitle={Example - 2×3 times 3×2}]
@@ -65,7 +49,7 @@ $$
 \mathbf{A}\mathbf{B} = \begin{bmatrix} 58 & 64 \\ 139 & 154 \end{bmatrix}.
 $$
 
-Note the order matters: $\mathbf{B}\mathbf{A}$ is $3\times3$, so it cannot equal the $2\times2$ $\mathbf{A}\mathbf{B}$. Matrix multiplication is **not** commutative.
+Note the order matters: $\mathbf{B}\mathbf{A}$ is $3\times3$, so it cannot equal the $2\times2$ $\mathbf{A}\mathbf{B}$. Matrix multiplication is *not* commutative.
 
 ```{=latex}
 \end{example}
@@ -194,7 +178,7 @@ $$
 
 The left block is $\mathbf{I}$, so the augmented column is the solution — read it off directly, because row swaps cannot scramble your variables: a row is one *equation*, and columns keep their meaning, so $A,B,C$ stay glued to columns 1, 2, 3 no matter how you shuffle the rows. Only swapping *columns* would relabel the variables — and then you'd have to swap the names $A,B,C$ to match. $(A, B, C) = (-1, \ 3, \ -2)$
 
-Side note: strictly, Gauss elimination is not the same as the (eigen)diagonalization below. Row reduction only left-multiplies $\mathbf{A}$ by elementary matrices, so it does **not** preserve eigenvalues — diagonalization is a similarity $\mathbf{P}^{-1}\mathbf{A}\mathbf{P}$ and needs column operations too. What elimination does give you is the rank, and that is exactly what detects the singularity behind $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.
+Side note: strictly, Gauss elimination is not the same as the (eigen)diagonalization below. Row reduction only left-multiplies $\mathbf{A}$ by elementary matrices, so it does *not* preserve eigenvalues — diagonalization is a similarity $\mathbf{P}^{-1}\mathbf{A}\mathbf{P}$ and needs column operations too. What elimination does give you is the rank, and that is exactly what detects the singularity behind $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.
 
 ```{=latex}
 \end{example}
@@ -222,15 +206,66 @@ $$
 
 which matches the Gauss result.
 
-### System of equations and rank
+### Vectors, bases and norms
 
-The rank $r = \operatorname{rank}\mathbf{A}$ is the number of linearly independent rows (or columns). Vectors are linearly independent when none of them is a linear combination of the others. For a system $\mathbf{A}\vec{x} = \vec{b}$ with $n$ unknowns:
+*Linear independence.* $\vec{v}_1, \dots, \vec{v}_k$ are independent when $c_1\vec{v}_1 + \cdots + c_k\vec{v}_k = \vec{0}$ forces all $c_i = 0$, i.e. none is a combination of the others. As matrix columns: rank $k$. In $\mathbb{R}^n$ at most $n$ of them.
 
-- No solutio if $\operatorname{rank}[\mathbf{A}\mid\vec{b}] > \operatorname{rank}\mathbf{A}$ (inconsistent).
+*Basis.* $n$ independent vectors, stacked as columns of $\mathbf{T}$, form a basis; every $\vec{x}$ has unique coordinates $\tilde{\vec{x}}$ in it:
+
+$$
+\vec{x} = \mathbf{T}\tilde{\vec{x}}, \qquad \tilde{\vec{x}} = \mathbf{T}^{-1}\vec{x}, \qquad \tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}
+$$
+
+Same vector, new description.
+
+*Orthonormal basis.* Orthogonal ($\vec{q}_i^T\vec{q}_j = 0$, $i \ne j$) plus normal ($\vec{q}_i^T\vec{q}_i = 1$). Then $\mathbf{Q}^{-1} = \mathbf{Q}^T$ and coordinates are dot products, $\tilde{x}_i = \vec{q}_i^T\vec{x}$.
+
+*Vector norms.* A norm $\lVert\vec{x}\rVert$ measures the length of a vector and must satisfy:
+
+- positivity: $\lVert\vec{x}\rVert \ge 0$, and $\lVert\vec{x}\rVert = 0$ only for $\vec{x} = \vec{0}$
+- scaling: $\lVert c\vec{x}\rVert = |c|\,\lVert\vec{x}\rVert$
+- triangle inequality: $\lVert\vec{x} + \vec{y}\rVert \le \lVert\vec{x}\rVert + \lVert\vec{y}\rVert$
+
+Every norm defines a distance (a metric), $d(\vec{x}, \vec{y}) = \lVert\vec{x} - \vec{y}\rVert$, and the three properties above are exactly what a distance needs.
+
+```{=latex}
+\begin{example}[frametitle={Example - three ways to measure a street walk}]
+```
+
+In a city with a square street grid, the destination is 3 blocks east and 4 blocks north, $\vec{x} = \tvec{3, 4}$.
+
+- $\lVert\vec{x}\rVert_1 = |x_1| + |x_2| + \cdots + |x_n| = 3 + 4 = 7$: a taxi has to follow the streets (the *Manhattan* distance).
+- $\lVert\vec{x}\rVert_2 = \sqrt{x_1^2 + x_2^2 + \cdots + x_n^2} = \sqrt{3^2 + 4^2} = 5$: (as the crow flies.
+- $\lVert\vec{x}\rVert_\infty = \max(|x_1|, |x_2|, \dots, |x_n|) = \max(3, 4) = 4$: moves of a chess king.
+
+```{=latex}
+\end{example}
+```
+
+### Linear algebraic equations
+
+The rank $r = \operatorname{rank}\mathbf{A}$ is the number of linearly independent rows (or columns). For a system $\mathbf{A}\vec{x} = \vec{b}$ with $n$ unknowns:
+
+- No solution if $\operatorname{rank}[\mathbf{A}\mid\vec{b}] > \operatorname{rank}\mathbf{A}$ (inconsistent).
 - Exactly one solution if $\operatorname{rank}\mathbf{A} = \operatorname{rank}[\mathbf{A}\mid\vec{b}] = n$.
 - Infinitely many solutions if $\operatorname{rank}\mathbf{A} = \operatorname{rank}[\mathbf{A}\mid\vec{b}] < n$; then there are $n - r$ free variables.
 
 The homogeneous system $\mathbf{A}\vec{x} = \vec{0}$ always has the trivial solution $\vec{x} = \vec{0}$, and has nontrivial ones exactly when $\operatorname{rank}\mathbf{A} < n$, i.e. when $\mathbf{A}$ is singular ($\det\mathbf{A} = 0$). That is the exact condition behind the eigenvalue problem below.
+
+*Range space and null space.* Two subspaces sort out the answers:
+
+- range space (column space): all combinations of the columns, i.e. all $\mathbf{A}\vec{x}$. $\mathbf{A}\vec{x} = \vec{b}$ is solvable exactly when $\vec{b}$ lies in it. Its dimension is the rank $r$.
+- null space (kernel): $\ker\mathbf{A} = \{\vec{x} : \mathbf{A}\vec{x} = \vec{0}\}$. Its dimension, the nullity, is $n - r$, one per free variable.
+
+Together they give the rank–nullity theorem: every column is either a pivot or a free variable, so for $n$ columns
+
+$$
+n = \operatorname{rank}\mathbf{A} + \operatorname{nullity}\mathbf{A}
+$$
+
+The rank is the dimension of the range space.
+
+*Structure of the solution.* If $\vec{x}_p$ is any one solution, every solution is $\vec{x} = \vec{x}_p + \vec{x}_h$ with $\vec{x}_h \in \ker\mathbf{A}$, unique exactly when $\ker\mathbf{A} = \{\vec{0}\}$. This is the same particular-plus-homogeneous split as for linear ODEs. The notes use both spaces: eigenvectors span $\ker(\mathbf{A} - \lambda\mathbf{I})$ (geometric multiplicity is its nullity), and reachable states form the range space of $\mathcal{C}$ (controllability).
 
 ```{=latex}
 \begin{example}[frametitle={Rank}]
@@ -250,7 +285,7 @@ $$
 \operatorname{rank}\mathcal{O} = 2 = n,
 $$
 
-i.e. $\mathcal{O}$ has **full rank**.
+i.e. $\mathcal{O}$ has *full rank*.
 
 Rectangular matrices work the same way, the rank is just capped by the smaller dimension, $\operatorname{rank}\mathbf{A} \le \min(m, n)$: a $3\times4$ matrix can carry at most three pivots. Take one with a dependency planted inside — row 3 was written as row 1 $+$ row 2:
 
@@ -279,7 +314,7 @@ one short of full row rank. That is the same question the observability test $\o
 \end{example}
 ```
 
-**Square shortcut.** $full rank ⇔ \det\mathbf{A} \ne 0$ When the matrix is square, one number settles full rank: for $n\times n$ $\mathbf{A}$, $\operatorname{rank}\mathbf{A} = n$ exactly when $\det\mathbf{A} \ne 0$ — dependent rows or columns are precisely what make the determinant vanish, and their absence *is* full rank. This is the cheap route to the controllability and observability tests whenever the matrix comes out square: $\mathcal{C}$ is square only for a single input ($m = 1$), $\mathcal{O}$ only for a single output ($p = 1$). For rectangular matrices $\det$ is not even defined, so row-reduction is the only way.
+*Square shortcut.* $full rank ⇔ \det\mathbf{A} \ne 0$ When the matrix is square, one number settles full rank: for $n\times n$ $\mathbf{A}$, $\operatorname{rank}\mathbf{A} = n$ exactly when $\det\mathbf{A} \ne 0$ — dependent rows or columns are precisely what make the determinant vanish, and their absence *is* full rank. This is the cheap route to the controllability and observability tests whenever the matrix comes out square: $\mathcal{C}$ is square only for a single input ($m = 1$), $\mathcal{O}$ only for a single output ($p = 1$). For rectangular matrices $\det$ is not even defined, so row-reduction is the only way.
 
 ### Eigenvalues and eigenvectors
 
@@ -381,7 +416,7 @@ $$
 \mathbf{A}= \begin{bmatrix} -3 & -1  \\ 0 & -2 \end{bmatrix}
 $$
 
-**Step 1 —** find the eigenvalues
+*Step 1 —* find the eigenvalues
 
 We immediately clock that the matrix is triangular, so the eigenvalues are the diagonal entries: $\lambda_1 = -3$, $\lambda_2 = -2$.
 
@@ -391,13 +426,13 @@ $$
 \sin\mathbf{A} = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}
 $$
 
-**Step 2 —** the two unknowns need two equations. They come from the scalar twin $\sin\lambda = \alpha_0 + \alpha_1\lambda$ evaluated at the eigenvalues, where the $q(\lambda)g(\lambda)$ term dies — that is the whole reason C-H works — giving one equation per eigenvalue:
+*Step 2 —* the two unknowns need two equations. They come from the scalar twin $\sin\lambda = \alpha_0 + \alpha_1\lambda$ evaluated at the eigenvalues, where the $q(\lambda)g(\lambda)$ term dies — that is the whole reason C-H works — giving one equation per eigenvalue:
 
 $$
 \sin(-3) = \alpha_0 - 3\alpha_1, \qquad \sin(-2) = \alpha_0 - 2\alpha_1
 $$
 
-**Step 3 —** solve for $\alpha_0$ and $\alpha_1$. Subtracting the two equations kills $\alpha_0$, and what is left is the difference quotient:
+*Step 3 —* solve for $\alpha_0$ and $\alpha_1$. Subtracting the two equations kills $\alpha_0$, and what is left is the difference quotient:
 
 $$
 \alpha_1 = \frac{\sin(-3) - \sin(-2)}{-3 - (-2)} = \sin(-2) - \sin(-3) = \sin 3 - \sin 2
@@ -405,7 +440,7 @@ $$
 
 then back-substitute into either equation, $\alpha_0 = \sin(-2) + 2\alpha_1 = 2\sin 3 - 3\sin 2$.
 
-**Step 4 —** substitute back into the ansatz:
+*Step 4 —* substitute back into the ansatz:
 
 $$
 \sin\mathbf{A} = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}
