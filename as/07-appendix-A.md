@@ -236,7 +236,7 @@ In a city with a square street grid, the destination is 3 blocks east and 4 bloc
 
 - $\lVert\vec{x}\rVert_1 = |x_1| + |x_2| + \cdots + |x_n| = 3 + 4 = 7$: a taxi has to follow the streets (the *Manhattan* distance).
 - $\lVert\vec{x}\rVert_2 = \sqrt{x_1^2 + x_2^2 + \cdots + x_n^2} = \sqrt{3^2 + 4^2} = 5$: as the crow flies.
-- $\lVert\vec{x}\rVert_\infty = \max(|x_1|, |x_2|, \dots, |x_n|) = \max(3, 4) = 4$: moves of a chess king.
+- $\lVert\vec{x}\rVert_\infty = \max(|x_1|, |x_2|, \dots, |x_n|) = \max(3, 4) = 4$: moves of a chess king (the *Chebyshev* distance).
 
 ```{=latex}
 \end{example}
