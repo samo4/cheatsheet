@@ -244,7 +244,7 @@ In a city with a square street grid, the destination is 3 blocks east and 4 bloc
 
 ### Linear algebraic equations
 
-The rank $r = \operatorname{rank}\mathbf{A}$ is the number of linearly independent rows (or columns). For a system $\mathbf{A}\vec{x} = \vec{b}$ with $n$ unknowns:
+The rank $r = \operatorname{rank}\mathbf{A}$ is the number of linearly independent rows (or columns). Multiplying by an invertible matrix never changes it, which is why row operations (left-multiplication by invertible elementary matrices) are safe for finding the rank. For a system $\mathbf{A}\vec{x} = \vec{b}$ with $n$ unknowns:
 
 - No solution if $\operatorname{rank}[\mathbf{A}\mid\vec{b}] > \operatorname{rank}\mathbf{A}$ (inconsistent).
 - Exactly one solution if $\operatorname{rank}\mathbf{A} = \operatorname{rank}[\mathbf{A}\mid\vec{b}] = n$.
@@ -264,6 +264,23 @@ n = \operatorname{rank}\mathbf{A} + \operatorname{nullity}\mathbf{A}
 $$
 
 The rank is the dimension of the range space.
+
+```{=latex}
+\begin{example}[frametitle={Example - a range space you can see}]
+```
+
+$$
+\mathbf{A} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \\ 0 & 0 \end{bmatrix}, \qquad
+\vec{y} = \mathbf{A}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} x_1 + x_2 \\ x_2 \\ 0 \end{bmatrix}
+$$
+
+Whatever $x_1, x_2$ are, the third component of $\vec{y}$ is always $0$. The outputs live in $\mathbb{R}^3$, but they can never leave the flat plane $y_3 = 0$. That plane is the range space, and its dimension is $\operatorname{rank}\mathbf{A} = 2$.
+
+So $\mathbf{A}\vec{x} = \tvec{1, 2, 0}$ is solvable ($x_2 = 2$, $x_1 = -1$), but $\mathbf{A}\vec{x} = \tvec{1, 2, 3}$ is not, because that $\vec{b}$ is off the plane. With $n = 2$ columns and rank $2$, the nullity is $0$, so a solution, when it exists, is unique.
+
+```{=latex}
+\end{example}
+```
 
 *Structure of the solution.* If $\vec{x}_p$ is any one solution, every solution is $\vec{x} = \vec{x}_p + \vec{x}_h$ with $\vec{x}_h \in \ker\mathbf{A}$, unique exactly when $\ker\mathbf{A} = \{\vec{0}\}$. This is the same particular-plus-homogeneous split as for linear ODEs. The notes use both spaces: eigenvectors span $\ker(\mathbf{A} - \lambda\mathbf{I})$ (geometric multiplicity is its nullity), and reachable states form the range space of $\mathcal{C}$ (controllability).
 
