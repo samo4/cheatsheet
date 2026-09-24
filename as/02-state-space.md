@@ -1154,7 +1154,7 @@ In practice the choice depends on $\mathbf{A}$ and on the problem. Cayley–Hami
 - You want a closed form without computing $\mathbf{V}^{-1}$ — CH never inverts a matrix, only multiplies out powers of $\mathbf{A}$.
 - You're working with *symbolic parameters*, where eigenvectors get messy — they come out as rational expressions in the parameters, while CH's coefficients stay clean.
 
-In short: **Cayley–Hamilton to compute, eigenvectors to understand.**
+In short: **Cayley–Hamilton to compute, diagonalization to understand.**
 
 ```{=latex}
 \begin{example}[frametitle={Example - diagonalization and Cayley–Hamilton on the same matrix}]
