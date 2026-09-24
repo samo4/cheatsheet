@@ -105,7 +105,7 @@ $$
 \dot{\vec{x}} = \mathbf{A}\vec{x}, \qquad \vec{x}(t_0) = \vec{x}_0
 $$
 
-is a linear ODE with no input ($\vec{u} = \vec{0}$), which is what *homogeneous* means here. The scalar case is the one you already know. Now we just add little arrows to scalar equation and replace $a$ with matrix $\mathbf{A}$:
+is a linear ODE with no input ($\vec{u} = \vec{0}$), which is what *homogeneous* means here. The scalar case is the one you already know. Now we just add little arrows to scalar solution and replace $a$ with matrix $\mathbf{A}$:
 
 $$
 \vec{x}(t) = \vec{x}_0\, e^{\mathbf{A}(t-t_0)},
