@@ -208,7 +208,7 @@ which matches the Gauss result.
 
 ### Vectors, bases and norms
 
-*Linear independence.* $\vec{v}_1, \dots, \vec{v}_k$ are independent when $c_1\vec{v}_1 + \cdots + c_k\vec{v}_k = \vec{0}$ forces all $c_i = 0$, i.e. none is a combination of the others. As matrix columns: rank $k$. In $\mathbb{R}^n$ at most $n$ of them.
+*Linear independence.* a set of vectors is independent when $c_1\vec{v}_1 + \cdots + c_k\vec{v}_k = \vec{0}$ iff all $c_i = 0$, i.e. none is a combination of the others. As matrix columns: rank $k$. In $\mathbb{R}^n$ at most $n$ of them.
 
 *Basis.* $n$ independent vectors, stacked as columns of $\mathbf{T}$, form a basis; every $\vec{x}$ has unique coordinates $\tilde{\vec{x}}$ in it:
 
@@ -235,7 +235,7 @@ Every norm defines a distance (a metric), $d(\vec{x}, \vec{y}) = \lVert\vec{x} -
 In a city with a square street grid, the destination is 3 blocks east and 4 blocks north, $\vec{x} = \tvec{3, 4}$.
 
 - $\lVert\vec{x}\rVert_1 = |x_1| + |x_2| + \cdots + |x_n| = 3 + 4 = 7$: a taxi has to follow the streets (the *Manhattan* distance).
-- $\lVert\vec{x}\rVert_2 = \sqrt{x_1^2 + x_2^2 + \cdots + x_n^2} = \sqrt{3^2 + 4^2} = 5$: (as the crow flies.
+- $\lVert\vec{x}\rVert_2 = \sqrt{x_1^2 + x_2^2 + \cdots + x_n^2} = \sqrt{3^2 + 4^2} = 5$: as the crow flies.
 - $\lVert\vec{x}\rVert_\infty = \max(|x_1|, |x_2|, \dots, |x_n|) = \max(3, 4) = 4$: moves of a chess king.
 
 ```{=latex}
