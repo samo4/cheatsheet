@@ -997,7 +997,7 @@ Sanity check: $\Phi(0) = \mathbf{I}$, as it must.
 \end{example}
 ```
 
-The diagonalization method is perhaps the most elegant, but it fails for defective matrices. The Laplace method above and Cayley–Hamilton\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} method below both work even for defective matrices.
+The diagonalization method is perhaps the most elegant, but plain diagonalization fails for defective matrices. With generalized eigenvectors in $\mathbf{T}$, $\boldsymbol{\Lambda}$ becomes the Jordan matrix $\mathbf{J}$ ($1$s on the superdiagonal) and $\Phi(t) = \mathbf{T} e^{\mathbf{J}t} \mathbf{T}^{-1}$ works for every $\mathbf{A}$ — but the eigenvector hunt gets harder.\footnote{See Appendix A for a few words on the Jordan form, including the defective example below worked this way.} The Laplace method above and Cayley–Hamilton\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} method below both work even for defective matrices, with no eigenvectors at all.
 
 ### $\Phi$ via Cayley–Hamilton
 
@@ -1145,11 +1145,11 @@ $$
 
 ### Choosing between the four methods
 
-We have shown four ways to skin a cat, but at the end you still have the same dead cat. The Taylor series is the most general, flows nicely from rudimentary principles, but it is tedious. Diagonalization is elegant, but fails for defective matrices. Laplace transform is a nice trick, but requires some algebraic manipulation (in other words: much harder to implement in computers). Cayley–Hamilton is a clever method, but requires solving a Vandermonde system.
+We have shown four ways to skin a cat, but at the end you still have the same dead cat. The Taylor series is the most general, flows nicely from rudimentary principles, but it is tedious. Diagonalization is elegant, but plain diagonalization fails for defective matrices, and its Jordan-form rescue is laborious. Laplace transform is a nice trick, but requires some algebraic manipulation (in other words: much harder to implement in computers). Cayley–Hamilton is a clever method, but requires solving a Vandermonde system.
 
 In practice the choice depends on $\mathbf{A}$ and on the problem. Cayley–Hamilton (CH) is the one that keeps coming back — it is the method behind controllability and observability later in these notes — and it wins when:
 
-- The matrix is *defective* — diagonalization is out entirely, and CH, with the derivative trick for the repeated eigenvalue, picks up where it fails.
+- The matrix is *defective* — plain diagonalization is out, and CH, with the derivative trick for the repeated eigenvalue, picks up where it fails.
 - The matrix has *repeated eigenvalues* but is still diagonalizable — CH avoids eigenvector hunting.
 - You want a closed form without computing $\mathbf{V}^{-1}$ — CH never inverts a matrix, only multiplies out powers of $\mathbf{A}$.
 - You're working with *symbolic parameters*, where eigenvectors get messy — they come out as rational expressions in the parameters, while CH's coefficients stay clean.
