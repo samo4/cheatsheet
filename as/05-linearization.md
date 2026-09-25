@@ -31,6 +31,8 @@ $$
 
 so near the bias point the diode behaves like a small-signal resistor $r_d = 1/g_d = V_T/i_0$ (about $25\,\text{mV}/i_0$ at room temperature).
 
+Sanity check: $g_d > 0$ at every bias, so the linearized diode is never a negative resistance, and $r_d$ shrinks as the bias grows — $25\,\Omega$ at $1\,\text{mA}$, $2.5\,\Omega$ at $10\,\text{mA}$ — the exponential only gets steeper the further up it you sit.
+
 ```{=latex}
 \end{example}
 ```
@@ -55,6 +57,8 @@ f(x_1, x_2) \approx 5 + 2(x_1 - 1) + 4(x_2 - 2) = 2x_1 + 4x_2 - 5
 $$
 
 — the plane tangent to the paraboloid at $(1, 2)$.
+
+Sanity check: step off the operating point to $(1.1, 2)$. The exact value is $1.21 + 4 = 5.21$, the plane gives $2.2 + 8 - 5 = 5.20$, and the gap $0.01 = (0.1)^2$ is second order in the step — the size of error a first-order expansion is supposed to leave.
 
 ```{=latex}
 \end{example}
@@ -98,6 +102,8 @@ $$
 $$
 
 so $\delta\ddot{x} + \dfrac{k_1 + 3k_2 x_e^2}{m}\,\delta x = 0$: the cubic term simply adds a linear stiffness $3k_2 x_e^2$ at the operating point.
+
+Sanity check: with $k_2 = 0$ this collapses to the ordinary spring, $\omega^2 = \frac{k_1}{m}$. With $k_2 > 0$ the spring stiffens the more it sags — a heavier load rides on a stiffer spring, as a leaf spring should.
 
 ```{=latex}
 \end{example}

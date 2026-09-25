@@ -51,6 +51,8 @@ $$
 y = \begin{bmatrix} 1 & 0 \end{bmatrix}\vec{x}
 $$
 
+Sanity check: $\det(s\mathbf{I} - \mathbf{A}) = s(s+2) + 3 = s^2 + 2s + 3$ — the ODE's own coefficients come back, as they must for a companion matrix.
+
 ```{=latex}
 \end{example}
 ```
@@ -392,6 +394,8 @@ e^{-t} - e^{-2t} & e^{-t}
 \end{bmatrix}
 $$
 
+Sanity check: $\Phi(0) = \mathbf{I}$ and $\dot{\Phi}(0) = \begin{bmatrix} -2 & 0 \\ -1+2 & -1 \end{bmatrix} = \mathbf{A}$. The "recognizing" step can be tested one term further, too: $(\mathbf{A}^4)_{21} = \begin{bmatrix} 7 & -1 \end{bmatrix}\begin{bmatrix} -2 \\ 1 \end{bmatrix} = -15$, and the $t^4$ coefficient of $e^{-t} - e^{-2t}$ is $\frac{1 - 16}{4!} = -\frac{15}{4!}$.
+
 ```{=latex}
 \end{example}
 ```
@@ -505,6 +509,8 @@ $$
 = \frac{5}{2}\begin{bmatrix} 1 - e^{-2t} \\[2pt] 1 - 2e^{-t} + e^{-2t} \end{bmatrix}
 $$
 
+Sanity check: $\vec{x}(0) = \vec{0}$, as started. And the final value can be had without any integral — at rest $\dot{\vec{x}} = \vec{0}$, so $\vec{x}(\infty) = -\mathbf{A}^{-1}\mathbf{B}\cdot 5 = -\frac{1}{2}\begin{bmatrix} -1 & 0 \\ -1 & -2 \end{bmatrix}\begin{bmatrix} 1 \\ 0 \end{bmatrix}\cdot 5 = \frac{5}{2}\begin{bmatrix} 1 \\ 1 \end{bmatrix}$, exactly where both entries above settle.
+
 ```{=latex}
 \end{example}
 ```
@@ -605,6 +611,8 @@ so the full motion is
 $$
 \vec{x}(t) = \Phi(t)\vec{x}_0 + e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) - \frac{g}{\omega_0}t \\[2pt] g\,t \end{bmatrix}
 $$
+
+Sanity check: at $t = 0$ the gravity term vanishes, leaving $\vec{x}(0) = \vec{x}_0$. As $t \to \infty$, $\Phi(t) \to \mathbf{0}$ and every $e^{-\omega_0 t}$ and $t e^{-\omega_0 t}$ dies, so $x \to \frac{g}{\omega_0^2} = \frac{mg}{k}$ and $v \to 0$: the mass comes to rest at the static stretch where the spring carries the weight.
 
 ```{=latex}
 \end{example}
@@ -713,6 +721,8 @@ v_1 = 0,\ v_3 = 0,\ v_2 \text{ free}
 $$
 
 Here $m_{g,2} = 1 < m_{a,2} = 2$: only two linearly independent eigenvectors exist, so $\mathbf{A}$ is defective and **not** diagonalizable.
+
+Sanity check: $\mathbf{A}\vec{v}_1 = \tvec{1,0,0} = 1\cdot\vec{v}_1$ and $\mathbf{A}\vec{v}_2 = \tvec{0,2,0} = 2\vec{v}_2$.
 
 ```{=latex}
 \end{example}
@@ -1139,6 +1149,8 @@ $$
 \Phi(t) = e^{\mathbf{A}t} = \begin{bmatrix} e^t & 0 & 0 \\ t e^t & e^t & -3t e^t \\ 0 & 0 & e^t \end{bmatrix}
 $$
 
+Sanity check: $\Phi(0) = \mathbf{I}$, and differentiating at $t = 0$ ($\frac{d}{dt}te^t = 1$ there) gives back $\dot{\Phi}(0) = \mathbf{A}$ entry by entry. The Jordan-form example in Appendix A reaches the same $\Phi$ by a third route.
+
 ```{=latex}
 \end{example}
 ```
@@ -1260,6 +1272,8 @@ $$
 = e^{-t}\begin{bmatrix} \cos t & -\sin t \\ \sin t & \cos t \end{bmatrix}\begin{bmatrix} 2 \\ 1 \end{bmatrix}
 = e^{-t}\begin{bmatrix} 2\cos t - \sin t \\ 2\sin t + \cos t \end{bmatrix}
 $$
+
+Sanity check: at $t = 0^+$ this gives $\tvec{2,1} = \vec{x}(0) + \mathbf{B}$, the state right after the kick, and the $e^{-t}$ envelope pulls it back to $\vec{0}$ — the decaying spiral of part (a).
 
 ```{=latex}
 \end{example}

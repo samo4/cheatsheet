@@ -76,7 +76,9 @@ Each entry tells how much of current $x_j$ ends up in next year's $x_i$:
 - $A_{22} = \alpha(1+\beta)$ — last year's income feeds this year's through both channels: consumption $\alpha\,y[k-1]$ plus the accelerator's positive leg $\alpha\beta\,y[k-1]$.
 - $B_1 = 0,\ B_2 = 1$ — government spending enters the identity one-for-one, and only into the newest slot $y[k]$.
 
-government spending the input, the two previous incomes the initial conditions.
+So government spending is the input, and the two previous incomes are the initial conditions.
+
+Sanity check: hold spending constant, $g[k] = g$, and look for a steady income $y^*$. The difference equation gives $y^*\big(1 - \alpha(1+\beta) + \alpha\beta\big) = y^*(1 - \alpha) = g$, so $y^* = \frac{g}{1-\alpha}$ — the accelerator drops out at rest (no change in consumption, no induced investment), and what is left is the textbook Keynesian multiplier.
 
 ```{=latex}
 \end{example}
@@ -149,6 +151,8 @@ y[k] = \mathcal{Z}^{-1}\{y[z]\} = \left[3\left(-\frac{1}{2}\right)^k - \frac{1}{
 $$
 
 the two real modes decaying ($|{-}\frac{1}{2}|, |\frac{1}{2}| < 1$) and the alternating mode $(-1)^k$ — the discrete echo of a pole on the unit circle, neither decaying nor growing.
+
+Sanity check against the initial value theorem: the numerator of $y[z]$ is one degree short of the denominator, so $y[0] = \lim_{z\to\infty} y[z] = 0$ and $y[1] = \lim_{z\to\infty} z\,y[z] = 1$. The formula agrees: $y[0] = 3 - \frac{1}{3} - \frac{8}{3} = 0$ and $y[1] = -\frac{3}{2} - \frac{1}{6} + \frac{8}{3} = 1$.
 
 ```{=latex}
 \end{example}
@@ -336,6 +340,8 @@ $$\mathbf{A}_D = e^{\mathbf{A}_c T} = \mathbf{V}e^{\boldsymbol{\Lambda}T}\mathbf
 $$\mathbf{A}_c^{-1} = \begin{bmatrix} -\frac{1}{2} & 0 \\ -\frac{1}{2} & -1 \end{bmatrix}$$
 
 $$\mathbf{B}_D = (\mathbf{A}_D - \mathbf{I})\mathbf{A}_c^{-1}\mathbf{B}_c \approx \begin{bmatrix} 0 \\ 0.095 \end{bmatrix}$$
+
+Sanity check: for a short $T$ both matrices must be close to their first-order (Euler) versions, $\mathbf{A}_D \approx \mathbf{I} + \mathbf{A}_c T = \begin{bmatrix} 0.8 & 0 \\ 0.1 & 0.9 \end{bmatrix}$ and $\mathbf{B}_D \approx \mathbf{B}_c T = \begin{bmatrix} 0 \\ 0.1 \end{bmatrix}$ — and they are. The exact $\mathbf{B}_D = \begin{bmatrix} 0 \\ 1 - e^{-0.1} \end{bmatrix}$ keeps the $0$ on top: $u$ never reaches $x_1$ in continuous time, so sampling cannot make it.
 
 ```{=latex}
 \end{example}

@@ -63,6 +63,8 @@ $$
 h(t) = \mathcal{L}^{-1}\{G(s)\} = 2e^{-t} - e^{-2t}
 $$
 
+Sanity check from both ends of $G(s)$: the initial value theorem gives $h(0^+) = \lim_{s\to\infty} sG(s) = 1 = 2 - 1$, and the area under the impulse response is the DC gain, $\int_0^\infty h\,dt = 2 - \frac{1}{2} = \frac{3}{2} = G(0)$.
+
 ```{=latex}
 \end{example}
 ```
@@ -227,7 +229,9 @@ $$
 \begin{bmatrix} y_1 \\ y_2 \end{bmatrix}
 = \begin{bmatrix} 1 & 1 \\ 1 & 0 \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}
 + \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}\begin{bmatrix} u_1 \\ u_2 \end{bmatrix}
-$$ 
+$$
+
+Sanity check: $\mathbf{A}$ is triangular, so its eigenvalues $-3$ and $-4$ are read off the diagonal — exactly the poles of the two cores. And one channel end to end: $u_2 \to y_2$ is core 1 alone, $\frac{1}{s+3}$, while the matrices give $\begin{bmatrix} 1 & 0 \end{bmatrix}(s\mathbf{I} - \mathbf{A})^{-1}\begin{bmatrix} 1 \\ 0 \end{bmatrix} = \frac{1}{s+3}$.
 
 ```{=latex}
 \end{example}

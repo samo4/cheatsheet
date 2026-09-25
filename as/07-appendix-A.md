@@ -132,6 +132,8 @@ $$
 \mathbf{A}^{-1} = \begin{bmatrix} 3 & -1 \\ -5 & 2 \end{bmatrix}
 $$
 
+Sanity check: $\mathbf{A}\mathbf{A}^{-1} = \begin{bmatrix} 6-5 & -2+2 \\ 15-15 & -5+6 \end{bmatrix} = \mathbf{I}$.
+
 ```{=latex}
 \end{example}
 ```
@@ -177,6 +179,8 @@ $$
 $$
 
 The left block is $\mathbf{I}$, so the augmented column is the solution — read it off directly, because row swaps cannot scramble your variables: a row is one *equation*, and columns keep their meaning, so $A,B,C$ stay glued to columns 1, 2, 3 no matter how you shuffle the rows. Only swapping *columns* would relabel the variables — and then you'd have to swap the names $A,B,C$ to match. $(A, B, C) = (-1, \ 3, \ -2)$
+
+Sanity check: plug back into the original equations, not the reduced ones — $-1 + 3 - 2 = 0$, $7(-1) + 9(3) + 10(-2) = 0$, $2(-1) + 3(3) + 3(-2) = 1$.
 
 Side note: strictly, Gauss elimination is not the same as the (eigen)diagonalization below. Row reduction only left-multiplies $\mathbf{A}$ by elementary matrices, so it does *not* preserve eigenvalues — diagonalization is a similarity $\mathbf{P}^{-1}\mathbf{A}\mathbf{P}$ and needs column operations too. What elimination does give you is the rank, and that is exactly what detects the singularity behind $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.
 
@@ -684,6 +688,8 @@ With $\mathcal{L}^{-1}\{\frac{1}{s+a}\} = e^{-at}$ and $\mathcal{L}^{-1}\{\frac{
 $$
 \mathcal{L}^{-1}\left\{\frac{1}{(s+1)^2(s+2)}\right\} = -e^{-t} + t e^{-t} + e^{-2t}
 $$
+
+Sanity check: at a convenient point, $s = 0$, both sides give $\frac{1}{2} = -1 + 1 + \frac{1}{2}$. In time, the denominator is three degrees above the numerator, so the response must start flat, $f(0) = \dot{f}(0) = 0$ — and it does: $f(0) = -1 + 0 + 1 = 0$, $\dot{f}(0) = 1 + 1 - 2 = 0$.
 
 ```{=latex}
 \end{example}

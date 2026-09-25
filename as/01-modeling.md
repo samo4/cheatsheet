@@ -305,7 +305,7 @@ $$
 
 If the outputs are $v_{R_1}$ and $v_L$, both are algebraic combinations of the states and the input — with $V_2 = v_g - R_1 i_L$ and $V_3 = v_C$,
 
-$$v_{R_1} = R_1 i_L - v_g, \qquad v_L = V_2 - V_3 = v_g - R_1 i_L - v_C,$$
+$$v_{R_1} = V_1 - V_2 = R_1 i_L, \qquad v_L = V_2 - V_3 = v_g - R_1 i_L - v_C,$$
 
 so
 
@@ -313,10 +313,12 @@ $$
 \begin{bmatrix} v_{R_1} \\ v_L \end{bmatrix} =
 \begin{bmatrix} R_1 & 0 \\ -R_1 & -1 \end{bmatrix}
 \begin{bmatrix} i_L \\ v_C \end{bmatrix} +
-\begin{bmatrix} -1 \\ 1 \end{bmatrix} v_g.
+\begin{bmatrix} 0 \\ 1 \end{bmatrix} v_g.
 $$
 
 Note what the output equation may *not* contain: $\mathbf{C}$ and $\mathbf{D}$ are constant matrices, so no derivative can appear in them. $v_L = L\,\dot{i}_L$ is the state equation in disguise, not an output relation.
+
+Sanity check: KVL around the loop, $v_{R_1} + v_L + v_C = R_1 i_L + (v_g - R_1 i_L - v_C) + v_C = v_g$, as it must. And the circuit is passive, so every mode has to decay: $\operatorname{tr}\mathbf{A} = -\frac{R_1}{L} - \frac{1}{CR_2} < 0$ and $\det\mathbf{A} = \frac{R_1}{LCR_2} + \frac{1}{LC} > 0$ put both eigenvalues in the left half-plane.
 
 
 ```{=latex}
@@ -408,6 +410,8 @@ $$
 \end{bmatrix}
 \begin{bmatrix} v_g \\ i_g \end{bmatrix}
 $$
+
+Sanity check: with both sources off the circuit is passive, so every mode must decay. It does: $\operatorname{tr}\mathbf{A} = -\frac{R_1}{L} - \frac{1}{CR_2} < 0$ and $\det\mathbf{A} = \frac{R_1}{LCR_2} + \frac{1}{LC} > 0$, so both eigenvalues sit in the left half-plane. A sign slip in Step 3 or 4 would typically flip one of the two.
 
 ```{=latex}
 \end{example}
