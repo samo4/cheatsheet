@@ -1009,7 +1009,7 @@ Sanity check: $\Phi(0) = \mathbf{I}$, as it must.
 
 The diagonalization method is perhaps the most elegant, but it stands or falls with the eigenvectors, and a defective matrix does not have enough of them. The next section repairs that.
 
-### $\Phi$ via the Jordan form
+### $\Phi$ via the Jordan form (skip if short on time)
 
 Take the defective matrix from the eigenvalue example above, or the simplest one there is, $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. No clever choice of $\mathbf{V}$ diagonalizes it. If some $\mathbf{V}^{-1}\mathbf{A}\mathbf{V}$ were diagonal, it would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But then $\mathbf{A} = \mathbf{V}(2\mathbf{I})\mathbf{V}^{-1} = 2\mathbf{I}$, which it is not. Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
 
