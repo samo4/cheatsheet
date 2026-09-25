@@ -294,7 +294,7 @@ $$
 \operatorname{rank}(\mathbf{A}\mathbf{B}) \le \min(\operatorname{rank}\mathbf{A}, \operatorname{rank}\mathbf{B})
 $$
 
-An invertible factor gives equality, because it can be undone. That is why row operations are safe, and why controllability and observability don't change when the state coordinates change. It also caps each block of $\mathcal{C}$: $\operatorname{rank}(\mathbf{A}^k\mathbf{B}) \le \operatorname{rank}\mathbf{B} \le m$.
+Put simply, multiplying can never raise the rank, only keep it or lower it. An invertible factor keeps it, because it can be undone. That is why row operations are safe, and why controllability and observability don't change when the state coordinates change. It also caps each block of $\mathcal{C}$: $\operatorname{rank}(\mathbf{A}^k\mathbf{B}) \le \operatorname{rank}\mathbf{B} \le m$.
 
 ```{=latex}
 \begin{example}[frametitle={Rank}]
