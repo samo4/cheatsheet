@@ -270,13 +270,13 @@ The rank is the dimension of the range space.
 ```
 
 $$
-\mathbf{A} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \\ 0 & 0 \end{bmatrix}, \qquad
-\vec{y} = \mathbf{A}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} x_1 + x_2 \\ x_2 \\ 0 \end{bmatrix}
+\mathbf{A} = \begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \\ 1 & 1 & 2 \end{bmatrix}, \qquad
+\vec{y} = \mathbf{A}\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} x_1 + x_3 \\ x_2 + x_3 \\ x_1 + x_2 + 2x_3 \end{bmatrix}
 $$
 
-Whatever $x_1, x_2$ are, the third component of $\vec{y}$ is always $0$. The outputs live in $\mathbb{R}^3$, but they can never leave the flat plane $y_3 = 0$. That plane is the range space, and its dimension is $\operatorname{rank}\mathbf{A} = 2$.
+$\mathbf{A}$ is square, so its size alone would allow the whole of $\mathbb{R}^3$. But column 3 is column 1 $+$ column 2, so the third column adds no new direction. Whatever $x_1, x_2, x_3$ are, $y_3 = y_1 + y_2$: the outputs can never leave that plane. That plane is the range space, and its dimension is $\operatorname{rank}\mathbf{A} = 2$ (and $\det\mathbf{A} = 0$).
 
-So $\mathbf{A}\vec{x} = \tvec{1, 2, 0}$ is solvable ($x_2 = 2$, $x_1 = -1$), but $\mathbf{A}\vec{x} = \tvec{1, 2, 3}$ is not, because that $\vec{b}$ is off the plane. With $n = 2$ columns and rank $2$, the nullity is $0$, so a solution, when it exists, is unique.
+So $\mathbf{A}\vec{x} = \tvec{1, 2, 3}$ is solvable ($3 = 1 + 2$, e.g. $\vec{x} = \tvec{1, 2, 0}$), but $\mathbf{A}\vec{x} = \tvec{1, 2, 0}$ is not, because that $\vec{b}$ is off the plane. With $n = 3$ columns and rank $2$, the nullity is $1$: the same dependency, read as $\text{col}_1 + \text{col}_2 - \text{col}_3 = \vec{0}$, gives $\ker\mathbf{A} = \operatorname{span}\{\tvec{1, 1, -1}\}$. So a solution, when it exists, is not unique: $\vec{x} = \tvec{1, 2, 0} + t\,\tvec{1, 1, -1}$ for any $t$.
 
 ```{=latex}
 \end{example}
