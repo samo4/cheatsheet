@@ -509,14 +509,14 @@ The catch is the word *independent*: there must be $n$ of them, i.e. $m_g = m_a$
 
 ## Jordan form
 
-Every square matrix, defective or not, is similar to a *Jordan matrix*, which is block-diagonal with Jordan blocks on the diagonal:
+Some matrices with repeated eigenvalues may not be diagonalizable. But every square matrix, defective or not, can be transformed into a related form called the *Jordan form*, i.e. is similar to a *Jordan matrix*, which is block-diagonal with Jordan blocks on the diagonal:
 
 $$
 \mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J} = \begin{bmatrix} \mathbf{J}_{k_1}(\lambda_1) & & \\ & \ddots & \\ & & \mathbf{J}_{k_p}(\lambda_p) \end{bmatrix}, \qquad
 \mathbf{J}_k(\lambda) = \begin{bmatrix} \lambda & 1 & & \\ & \lambda & \ddots & \\ & & \ddots & 1 \\ & & & \lambda \end{bmatrix}_{k\times k}
 $$
 
-The eigenvalue is on the diagonal, $1$s are on the superdiagonal, and zeros are everywhere else. The $\lambda$s in different blocks may repeat. Read it as "as diagonal as possible": a diagonalizable matrix has only $1\times1$ blocks, so $\mathbf{J} = \boldsymbol{\Lambda}$.
+Zeros everywhere, except for eigenvalues on the diagonal and $1$s on the superdiagonal. And the most important feature: the $\lambda$s may repeat. Read it as "as diagonal as possible": a diagonalizable matrix has only $1\times1$ blocks, so $\mathbf{J} = \boldsymbol{\Lambda}$.
 
 *Counting the blocks.* For each eigenvalue $\lambda_i$:
 
