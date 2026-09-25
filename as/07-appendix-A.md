@@ -288,6 +288,14 @@ So $\mathbf{A}\vec{x} = \tvec{1, 2, 3}$ is solvable ($3 = 1 + 2$, e.g. $\vec{x} 
 
 *Structure of the solution.* If $\vec{x}_p$ is any one solution, every solution is $\vec{x} = \vec{x}_p + \vec{x}_h$ with $\vec{x}_h \in \ker\mathbf{A}$, unique exactly when $\ker\mathbf{A} = \{\vec{0}\}$. This is the same particular-plus-homogeneous split as for linear ODEs. The notes use both spaces: eigenvectors span $\ker(\mathbf{A} - \lambda\mathbf{I})$ (geometric multiplicity is its nullity), and reachable states form the range space of $\mathcal{C}$ (controllability).
 
+*Rank of a product.* The same two spaces cap the rank of a product. $\operatorname{range}(\mathbf{A}\mathbf{B}) \subseteq \operatorname{range}\mathbf{A}$, since every $\mathbf{A}\mathbf{B}\vec{x}$ is $\mathbf{A}(\mathbf{B}\vec{x})$. Also $\ker\mathbf{B} \subseteq \ker(\mathbf{A}\mathbf{B})$, since $\mathbf{B}\vec{x} = \vec{0}$ forces $\mathbf{A}\mathbf{B}\vec{x} = \vec{0}$, and rank–nullity turns this into a bound by $\operatorname{rank}\mathbf{B}$. Together:
+
+$$
+\operatorname{rank}(\mathbf{A}\mathbf{B}) \le \min(\operatorname{rank}\mathbf{A}, \operatorname{rank}\mathbf{B})
+$$
+
+An invertible factor gives equality, because it can be undone. That is why row operations are safe, and why controllability and observability don't change when the state coordinates change. It also caps each block of $\mathcal{C}$: $\operatorname{rank}(\mathbf{A}^k\mathbf{B}) \le \operatorname{rank}\mathbf{B} \le m$.
+
 ```{=latex}
 \begin{example}[frametitle={Rank}]
 ```
