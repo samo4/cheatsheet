@@ -58,7 +58,19 @@ $}
 \]
 ```
 
+### Marginally stable (Lyapunov)
+
+For the system to be marginally stable a.k.a stable in the sense of Lyapunov, the states may oscillate but remain bounded. 
+
+No eigenvalue with $\operatorname{Re}\lambda_i > 0$, and the eigenvalues on the imaginary axis are simple.^[There's more to it than meets the eye. "Simple" is sufficient but not necessary. The exact condition is that every eigenvalue on the axis has only $1\times1$ Jordan blocks ($m_g = m_a$). $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ has $\lambda = 0$ twice and is still marginally stable, while the double integrator, which has the same eigenvalues, drifts off as $t$. See Jordan form in Appendix A.] The poles sit exactly on the dashed boundary:
+
+```{=latex}
+\input{tikz/stability-marginal.tex}
+```
+
 ### Asymptotically stable
+
+Asymptotically stable is a "stronger" version of Lyapunov stability: not only do the states remain bounded, they converge to the equilibrium.
 
 $\operatorname{Re}\lambda_i < 0$ for all $i$: every mode decays, so from any initial condition the trajectory converges to the equilibrium $\vec{x}_e = \vec{0}$. All poles lie strictly inside the shaded left half-plane:
 
@@ -66,13 +78,6 @@ $\operatorname{Re}\lambda_i < 0$ for all $i$: every mode decays, so from any ini
 \input{tikz/stability-asymptotic.tex}
 ```
 
-### Stable (marginal / Lyapunov)
-
-No eigenvalue with $\operatorname{Re}\lambda_i > 0$, and the eigenvalues on the imaginary axis are simple.^[There's more to it than meets the eye. "Simple" is sufficient but not necessary. The exact condition is that every eigenvalue on the axis has only $1\times1$ Jordan blocks ($m_g = m_a$). $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ has $\lambda = 0$ twice and is still marginally stable, while the double integrator, which has the same eigenvalues, drifts off as $t$. See Jordan form in Appendix A.] Trajectories stay bounded (e.g. the center of the previous section — closed orbits) but need not converge. The poles sit exactly on the dashed boundary:
-
-```{=latex}
-\input{tikz/stability-marginal.tex}
-```
 
 ### Unstable
 
