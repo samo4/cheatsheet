@@ -1007,7 +1007,266 @@ Sanity check: $\Phi(0) = \mathbf{I}$, as it must.
 \end{example}
 ```
 
-The diagonalization method is perhaps the most elegant, but plain diagonalization fails for defective matrices. With generalized eigenvectors in $\mathbf{T}$, $\boldsymbol{\Lambda}$ becomes the Jordan matrix $\mathbf{J}$ ($1$s on the superdiagonal) and $\Phi(t) = \mathbf{T} e^{\mathbf{J}t} \mathbf{T}^{-1}$ works for every $\mathbf{A}$ — but the eigenvector hunt gets harder.\footnote{See Appendix A for a few words on the Jordan form, including the defective example below worked this way.} The Laplace method above and Cayley–Hamilton\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} method below both work even for defective matrices, with no eigenvectors at all.
+The diagonalization method is perhaps the most elegant, but it stands or falls with the eigenvectors, and a defective matrix does not have enough of them. The next section repairs that.
+
+### $\Phi$ via the Jordan form
+
+Take the defective matrix from the eigenvalue example above, or the simplest one there is, $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. No clever choice of $\mathbf{V}$ diagonalizes it. If some $\mathbf{V}^{-1}\mathbf{A}\mathbf{V}$ were diagonal, it would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But then $\mathbf{A} = \mathbf{V}(2\mathbf{I})\mathbf{V}^{-1} = 2\mathbf{I}$, which it is not. Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
+
+So we settle for the next best thing: a basis in which $\mathbf{A}$ is *as diagonal as possible*. That is the Jordan form.\footnote{C. Jordan published it in 1870. Not to be confused with W. Jordan of Gauss–Jordan elimination, a geodesist.} It is not really a fifth method, but diagonalization finished. It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
+
+#### Jordan blocks
+
+*Similarity in one breath.* Two matrices are *similar* if $\tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}$ for some invertible $\mathbf{T}$. They are the same map written in a different basis (the columns of $\mathbf{T}$), so they share eigenvalues and multiplicities, and $e^{\mathbf{A}t} = \mathbf{T}e^{\tilde{\mathbf{A}}t}\mathbf{T}^{-1}$. Diagonalization was the special case $\mathbf{T} = \mathbf{V}$, $\tilde{\mathbf{A}} = \boldsymbol{\Lambda}$. In state space, $\mathbf{T}$ is just a new choice of state, $\vec{x} = \mathbf{T}\tilde{\vec{x}}$ (details in Appendix A).
+
+Every square matrix, defective or not, is similar to a *Jordan matrix* $\mathbf{J}$, block-diagonal with *Jordan blocks* on the diagonal:
+
+$$
+\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J} = \begin{bmatrix} \mathbf{J}_{k_1}(\lambda_1) & & \\ & \ddots & \\ & & \mathbf{J}_{k_p}(\lambda_p) \end{bmatrix}, \qquad
+\mathbf{J}_k(\lambda) = \begin{bmatrix} \lambda & 1 & & \\ & \lambda & \ddots & \\ & & \ddots & 1 \\ & & & \lambda \end{bmatrix}_{k\times k}
+$$
+
+Zeros everywhere, except for the eigenvalues on the diagonal and $1$s on the superdiagonal *inside* each block. The same $\lambda$ may appear in several blocks. A diagonalizable matrix has only $1\times1$ blocks, so then $\mathbf{J} = \boldsymbol{\Lambda}$ and $\mathbf{T} = \mathbf{V}$.
+
+*Counting the blocks.* The multiplicities from the eigenvalue section fix most of the structure. For each eigenvalue $\lambda_i$:
+
+- the number of its blocks is $m_{g,i}$, because each block owns exactly one eigenvector,
+- their sizes add up to $m_{a,i}$,
+- the individual sizes follow from the ranks of powers of $\mathbf{N} = \mathbf{A} - \lambda_i\mathbf{I}$: the number of blocks of size $\ge k$ is $\operatorname{rank}\mathbf{N}^{k-1} - \operatorname{rank}\mathbf{N}^{k}$ (with $\mathbf{N}^0 = \mathbf{I}$, rank $n$).
+
+For $m_a \le 3$ the first two rules already fix the sizes. For example, $m_a = 3$ with $m_g = 2$ can only be blocks of size $2 + 1$. The rank rule is needed only from $m_a = 4$ on, where $m_g = 2$ could mean $3+1$ or $2+2$.
+
+#### Generalized eigenvectors
+
+The columns of $\mathbf{T}$ are found the same way as in diagonalization: read $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$ column by column. Take a single $2\times2$ block with columns $\vec{v}_1, \vec{v}_2$:
+
+$$
+\mathbf{A}\begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix}\begin{bmatrix} \lambda & 1 \\ 0 & \lambda \end{bmatrix} = \begin{bmatrix} \lambda\vec{v}_1 & \vec{v}_1 + \lambda\vec{v}_2 \end{bmatrix}
+$$
+
+The first column is the ordinary eigenvector equation. The second almost is, except for the extra $\vec{v}_1$ that the superdiagonal $1$ contributes. For a $k\times k$ block the pattern continues, and the columns form a *chain*:
+
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+(\mathbf{A} - \lambda\mathbf{I})\vec{v}_1 = \vec{0}, \quad (\mathbf{A} - \lambda\mathbf{I})\vec{v}_2 = \vec{v}_1, \quad \dots, \quad (\mathbf{A} - \lambda\mathbf{I})\vec{v}_k = \vec{v}_{k-1}
+$}
+\endgroup
+\]
+```
+
+Only $\vec{v}_1$ is a true eigenvector. The others are *generalized eigenvectors*: $\mathbf{N} = \mathbf{A} - \lambda\mathbf{I}$ does not kill them, but a power of it does, $\mathbf{N}^j\vec{v}_j = \vec{0}$.
+
+*Build the chain from the top.* Solving $\mathbf{N}\vec{v}_2 = \vec{v}_1$ bottom-up is awkward. $\mathbf{N}$ is singular, and for a badly chosen eigenvector $\vec{v}_1$ the system has no solution at all. Going down avoids this:
+
+1. Pick $\vec{v}_k$ with $\mathbf{N}^{k}\vec{v}_k = \vec{0}$ but $\mathbf{N}^{k-1}\vec{v}_k \ne \vec{0}$. Usually any vector outside $\ker\mathbf{N}^{k-1}$ does it.
+2. Go down with $\vec{v}_{j-1} = \mathbf{N}\vec{v}_j$. Each step is a matrix–vector product, nothing to solve, and the last one lands on an eigenvector automatically.
+3. Fill the remaining blocks of the same $\lambda$ with further chains (or plain eigenvectors for $1\times1$ blocks), independent of the ones you already have.
+4. Stack all chains into $\mathbf{T}$, each one bottom-up ($\vec{v}_1, \vec{v}_2, \dots$), in the order of the blocks in $\mathbf{J}$.
+
+#### The exponential of a Jordan block
+
+The similarity passes through the Taylor series exactly as before, since only $\mathbf{T}\mathbf{T}^{-1} = \mathbf{I}$ was used, never the diagonal shape. So $e^{\mathbf{A}t} = \mathbf{T}e^{\mathbf{J}t}\mathbf{T}^{-1}$. A block-diagonal matrix raised to a power stays block-diagonal, so $e^{\mathbf{J}t}$ is simply the exponentials of the individual blocks placed on the diagonal. It remains to exponentiate one block.
+
+Split it as $\mathbf{J}_k(\lambda) = \lambda\mathbf{I} + \mathbf{N}_k$, where $\mathbf{N}_k$ holds only the superdiagonal $1$s. $\mathbf{N}_k$ is *nilpotent*: each power shifts the $1$s one diagonal further up, until they fall off the corner,
+
+$$
+\mathbf{N}_3 = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix}, \qquad
+\mathbf{N}_3^2 = \begin{bmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}, \qquad
+\mathbf{N}_3^3 = \mathbf{0}
+$$
+
+Since $\lambda\mathbf{I}$ commutes with everything, $e^{(\lambda\mathbf{I} + \mathbf{N}_k)t} = e^{\lambda t}e^{\mathbf{N}_k t}$ (for matrices that do *not* commute this factoring fails). The series for $e^{\mathbf{N}_k t}$ stops after $k$ terms:
+
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+e^{\mathbf{J}_k(\lambda)t} = e^{\lambda t}\left(\mathbf{I} + \mathbf{N}_k t + \frac{\mathbf{N}_k^2 t^2}{2!} + \cdots + \frac{\mathbf{N}_k^{k-1} t^{k-1}}{(k-1)!}\right)
+$}
+\endgroup
+\]
+```
+
+Written out, the powers of $t$ climb the superdiagonals:
+
+$$
+e^{\mathbf{J}_k(\lambda)t} = e^{\lambda t}\begin{bmatrix} 1 & t & \frac{t^2}{2!} & \cdots & \frac{t^{k-1}}{(k-1)!} \\ & 1 & t & \ddots & \vdots \\ & & \ddots & \ddots & \frac{t^2}{2!} \\ & & & 1 & t \\ & & & & 1 \end{bmatrix}
+$$
+
+and with it, for every $\mathbf{A}$,
+
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+\Phi(t) = e^{\mathbf{A}t} = \mathbf{T} e^{\mathbf{J}t} \mathbf{T}^{-1} = \mathbf{T} \begin{bmatrix}
+e^{\mathbf{J}_{k_1}(\lambda_1) t} & & \\
+& \ddots & \\
+& & e^{\mathbf{J}_{k_p}(\lambda_p) t}
+\end{bmatrix} \mathbf{T}^{-1}
+$}
+\endgroup
+\]
+```
+
+This is where the $t e^{\lambda t}, t^2 e^{\lambda t}, \dots$ of a defective system come from: a $k\times k$ block produces powers of $t$ up to $t^{k-1}$, and nothing else does.
+
+*Shortcut for a single eigenvalue.* If $\mathbf{A}$ has only one eigenvalue $\lambda$ (with $m_a = n$), then $\mathbf{N} = \mathbf{A} - \lambda\mathbf{I}$ is nilpotent itself, because its only eigenvalue is $0$. The splitting trick then works on $\mathbf{A}$ directly, with no $\mathbf{T}$ at all:
+
+$$
+e^{\mathbf{A}t} = e^{\lambda t}\left(\mathbf{I} + \mathbf{N}t + \frac{\mathbf{N}^2t^2}{2!} + \cdots\right)
+$$
+
+The series stops as soon as a power of $\mathbf{N}$ vanishes, at the latest after $\mathbf{N}^{n-1}$.
+
+```{=latex}
+\begin{example}[frametitle={Example - a matrix already in Jordan form}]
+```
+
+The defective matrix from the eigenvalue example,
+
+$$
+\mathbf{A} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 2 & 1 \\ 0 & 0 & 2 \end{bmatrix}
+$$
+
+is already a Jordan matrix: a $1\times1$ block $\mathbf{J}_1(1)$ and a $2\times2$ block $\mathbf{J}_2(2)$. That fits the counting rules, $m_{g,2} = 1$ block of total size $m_{a,2} = 2$. With $\mathbf{T} = \mathbf{I}$, $\Phi$ follows by inspection, block by block:
+
+$$
+\Phi(t) = e^{\mathbf{A}t} = \begin{bmatrix} e^{t} & 0 & 0 \\ 0 & e^{2t} & t e^{2t} \\ 0 & 0 & e^{2t} \end{bmatrix}
+$$
+
+*Where the $t$ comes from.* Write the $2\times2$ block out as equations: $\dot{x}_3 = 2x_3$ and $\dot{x}_2 = 2x_2 + x_3$. So $x_3 = e^{2t}x_3(0)$ drives $x_2$ like an input, and it does so at exactly $x_2$'s own rate. This is resonance, and resonance produces the factor $t$. Compare with the coupled RC pair: there a change of state decoupled the modes completely. Here no change of state can separate $x_2$ from $x_3$, and the superdiagonal $1$ is exactly that coupling.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
+\begin{example}[frametitle={Example - the critically damped oscillator via Jordan form}]
+```
+
+Back to the hanging mass from the Laplace section, with $\zeta = 1$:
+
+$$
+\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -\omega_0^2 & -2\omega_0 \end{bmatrix}
+$$
+
+**Step 1 — eigenvalues and block structure.** $\det(\lambda\mathbf{I} - \mathbf{A}) = \lambda^2 + 2\omega_0\lambda + \omega_0^2 = (\lambda + \omega_0)^2$, so $\lambda = -\omega_0$ with $m_a = 2$. Then
+
+$$
+\mathbf{N} = \mathbf{A} + \omega_0\mathbf{I} = \begin{bmatrix} \omega_0 & 1 \\ -\omega_0^2 & -\omega_0 \end{bmatrix}
+$$
+
+has rank $1$ (the second row is $-\omega_0\times$ the first), so $m_g = 2 - 1 = 1$. That is one $2\times2$ block:
+
+$$
+\mathbf{J} = \begin{bmatrix} -\omega_0 & 1 \\ 0 & -\omega_0 \end{bmatrix}
+$$
+
+This is no accident. For a matrix built from a scalar ODE like this one (companion form), $\mathbf{A} - \lambda\mathbf{I}$ always has rank at least $n - 1$, so $m_g = 1$ for every eigenvalue. A repeated root of an ODE therefore *always* gives a single Jordan block. This is why the textbook recipe for repeated characteristic roots adds $t e^{\lambda t}$.
+
+**Step 2 — the chain.** Pick $\vec{v}_2$ with $\mathbf{N}\vec{v}_2 \ne \vec{0}$, e.g. $\vec{v}_2 = \tvec{0, 1}$, and go down:
+
+$$
+\vec{v}_1 = \mathbf{N}\vec{v}_2 = \begin{bmatrix} 1 \\ -\omega_0 \end{bmatrix}
+$$
+
+It is an eigenvector, as promised. It is also the one straight-line trajectory of the system: start with $v(0) = -\omega_0 x(0)$ and the mass creeps back as a pure $e^{-\omega_0 t}$. Every other start picks up a $t e^{-\omega_0 t}$ as well.
+
+**Step 3 — assemble $\Phi(t)$.**
+
+$$
+\mathbf{T} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ -\omega_0 & 1 \end{bmatrix}, \qquad
+\mathbf{T}^{-1} = \begin{bmatrix} 1 & 0 \\ \omega_0 & 1 \end{bmatrix}
+$$
+
+$$
+\Phi(t) = \mathbf{T}e^{\mathbf{J}t}\mathbf{T}^{-1}
+= e^{-\omega_0 t}\begin{bmatrix} 1 & 0 \\ -\omega_0 & 1 \end{bmatrix}\begin{bmatrix} 1 & t \\ 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & 0 \\ \omega_0 & 1 \end{bmatrix}
+= e^{-\omega_0 t}\begin{bmatrix} 1 + \omega_0 t & t \\[2pt] -\omega_0^2 t & 1 - \omega_0 t \end{bmatrix}
+$$
+
+This is the Laplace result, without a single partial fraction. With the single-eigenvalue shortcut it takes even less work: $\mathbf{N}^2 = \mathbf{0}$, so $e^{\mathbf{A}t} = e^{-\omega_0 t}(\mathbf{I} + \mathbf{N}t)$, which is the same matrix.
+
+```{=latex}
+\end{example}
+```
+
+```{=latex}
+\begin{example}[frametitle={Example - Jordan form of a defective 3×3 matrix}]
+```
+
+$$
+\mathbf{A} = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & -3 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+The same matrix comes back in the Cayley–Hamilton section below, so we can compare the two routes.
+
+**Step 1 — eigenvalues and block structure.** $\det(\mathbf{A} - \lambda\mathbf{I}) = (1-\lambda)^3$ (expand along the first row), so $\lambda = 1$ with $m_a = 3$. With
+
+$$
+\mathbf{N} = \mathbf{A} - \mathbf{I} = \begin{bmatrix} 0 & 0 & 0 \\ 1 & 0 & -3 \\ 0 & 0 & 0 \end{bmatrix}, \qquad \mathbf{N}^2 = \mathbf{0}
+$$
+
+the ranks are $3, 1, 0$ for $\mathbf{N}^0, \mathbf{N}^1, \mathbf{N}^2$. That gives $3 - 1 = 2$ blocks of size $\ge 1$ (this is $m_g = 2$) and $1 - 0 = 1$ block of size $\ge 2$, so one $2\times2$ and one $1\times1$ block:
+
+$$
+\mathbf{J} = \begin{bmatrix} 1 & 1 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+**Step 2 — the chain for the $2\times2$ block.** Take $\vec{v}_2$ with $\mathbf{N}\vec{v}_2 \ne \vec{0}$. The first column of $\mathbf{N}$ is nonzero, so $\vec{v}_2 = \tvec{1, 0, 0}$ works, and
+
+$$
+\vec{v}_1 = \mathbf{N}\vec{v}_2 = \tvec{0, 1, 0}
+$$
+
+is automatically an eigenvector, because $\mathbf{N}\vec{v}_1 = \mathbf{N}^2\vec{v}_2 = \vec{0}$.
+
+**Step 3 — the eigenvector for the $1\times1$ block.** The eigenspace is $\ker\mathbf{N}$: $x_1 - 3x_3 = 0$, which is two-dimensional. We need a second eigenvector independent of $\vec{v}_1$, e.g. $\vec{v}_3 = \tvec{3, 0, 1}$.
+
+**Step 4 — assemble $\mathbf{T}$ and check.** Order the columns chain-first, bottom up:
+
+$$
+\mathbf{T} = [\vec{v}_1\ \vec{v}_2\ \vec{v}_3] = \begin{bmatrix} 0 & 1 & 3 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}, \qquad
+\mathbf{T}^{-1} = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & -3 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+Column by column, $\mathbf{A}\vec{v}_1 = \vec{v}_1$, $\mathbf{A}\vec{v}_2 = \tvec{1, 1, 0} = \vec{v}_1 + \vec{v}_2$ and $\mathbf{A}\vec{v}_3 = \vec{v}_3$. That is $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$.
+
+**Step 5 — the exponential.** The $2\times2$ block contributes $e^{t}\begin{bmatrix} 1 & t \\ 0 & 1 \end{bmatrix}$ and the $1\times1$ block $e^{t}$, so
+
+$$
+\Phi(t) = e^{\mathbf{A}t} = \mathbf{T}e^{\mathbf{J}t}\mathbf{T}^{-1}
+= e^{t}\begin{bmatrix} 0 & 1 & 3 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\begin{bmatrix} 1 & t & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & -3 \\ 0 & 0 & 1 \end{bmatrix}
+= \begin{bmatrix} e^t & 0 & 0 \\ t e^t & e^t & -3t e^t \\ 0 & 0 & e^t \end{bmatrix}
+$$
+
+The largest block is $2\times2$, so the highest power of $t$ is $t^1$, even though $m_a = 3$. Shortcut: a single eigenvalue again, and $\mathbf{N}^2 = \mathbf{0}$, so $e^{\mathbf{A}t} = e^{t}(\mathbf{I} + \mathbf{N}t)$ in one line.
+
+```{=latex}
+\end{example}
+```
+
+#### What the blocks tell you (TODO: distrubute these insights throughout the following chapters)
+
+In LTI analysis you rarely need $\mathbf{T}$, but the block sizes answer questions that the eigenvalues alone leave open.
+
+- **Modes.** The blocks tell you in advance which terms the free response can contain. A $k\times k$ block at $\lambda$ contributes $e^{\lambda t}, t e^{\lambda t}, \dots, t^{k-1}e^{\lambda t}$. This is the defective case under Modes of an LTI system, and the state-space version of a repeated pole in partial fractions.
+- **Stability on the imaginary axis.** For a stable eigenvalue the polynomial loses to the exponential, and $t^j e^{\lambda t} \to 0$. With $\operatorname{Re}\lambda = 0$ there is no decay to win against, and a block of size $\ge 2$ makes the response grow without bound. This is the one case where the eigenvalues do not decide stability. Marginal stability needs every eigenvalue with $\operatorname{Re}\lambda = 0$ to have only $1\times1$ blocks ($m_g = m_a$). The eigenvalue does not have to be simple. $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ (two separate integrators, blocks $1+1$) stays put and is marginally stable. The double integrator $\ddot{x} = 0$, with $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}$ (one $2\times2$ block), drifts as $x(t) = x_0 + \dot{x}_0 t$ and is unstable. Both have the same eigenvalues, $\lambda = 0, 0$.
+- **Controllability and observability.** In Jordan coordinates you can read them off $\mathbf{B}$ and $\mathbf{C}$ (Gilbert's criterion). A useful consequence: if one eigenvalue has two or more Jordan blocks ($m_g \ge 2$), a single input cannot control the system, and a single output cannot observe it, whatever $\mathbf{B}$ or $\mathbf{C}$ is. The input has to reach independent modes that share one $\lambda$, and they respond identically to it. In general, a system with $m$ inputs needs $m \ge \max_i m_{g,i}$. For actual testing, use the rank tests of the Properties chapter.
+- **Discrete time.** The same blocks rule $\mathbf{A}^k$. With $\binom{k}{i} = 0$ for $i > k$, the binomial expansion gives $\mathbf{J}_q(\lambda)^k = \sum_{i=0}^{q-1}\binom{k}{i}\lambda^{k-i}\mathbf{N}_q^i$, so the modes are $\lambda^k, k\lambda^{k-1}, \dots$.
+- **Functions of matrices.** Every method for $f(\mathbf{A})$ (Taylor, Laplace, Cayley–Hamilton with derivatives) reduces, in Jordan coordinates, to applying $f$ to the individual blocks as above. That is why they all agree. It also explains the derivative trick of Cayley–Hamilton below: $\frac{d^j}{d\lambda^j}e^{\lambda t} = t^j e^{\lambda t}$ produces exactly the terms a Jordan block needs.
+
+*A caveat.* The Jordan form is a tool for thinking, not for numerical computation. It is discontinuous: perturb a Jordan block by $\varepsilon$ and the repeated eigenvalue splits, the matrix becomes diagonalizable, and $\mathbf{J}$ jumps to a diagonal matrix. Rounding errors do exactly this, so numerical software avoids the Jordan form (MATLAB's `jordan` is symbolic-only). It uses the Schur form $\mathbf{Q}^{*}\mathbf{A}\mathbf{Q}$ instead, which is triangular with orthogonal (unitary) $\mathbf{Q}$.
+
+By hand, the chain hunt is the laborious part. The Laplace method above and the Cayley–Hamilton\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} method below both handle defective matrices with no eigenvectors at all.
 
 ### $\Phi$ via Cayley–Hamilton
 
@@ -1108,7 +1367,7 @@ we find that it's not diagonalizable:
 $$
 \det(\mathbf{A} - \lambda\mathbf{I}) = \det\begin{bmatrix} 1-\lambda & 0 & 0 \\ 1 & 1-\lambda & -3 \\ 0 & 0 & 1-\lambda \end{bmatrix} = (1-\lambda)^3
 $$
-so the only eigenvalue is $\lambda = 1$ with algebraic multiplicity $m_a = 3$, and geometric multiplicity $m_g = n - \operatorname{rank}(\mathbf{A} - \mathbf{I}) = 3 - 1 = 2 < 3 = m_a$ — defective, so diagonalization is out. We could use Laplace, but we're in the mood for Cayley–Hamilton. Algebraic multiplicity greater than one introduces another complication: we'll need to differentiate to get enough equations.
+so the only eigenvalue is $\lambda = 1$ with algebraic multiplicity $m_a = 3$, and geometric multiplicity $m_g = n - \operatorname{rank}(\mathbf{A} - \mathbf{I}) = 3 - 1 = 2 < 3 = m_a$ — defective, so plain diagonalization is out. The Jordan section above already found its $\Phi$ through a chain of generalized eigenvectors. This time we skip the eigenvectors entirely. Algebraic multiplicity greater than one introduces another complication: we'll need to differentiate to get enough equations.
 
 **Step 1: set up the ansatz.** With $n = 3$ the exponential reduces to a degree-2 polynomial in $\mathbf{A}$:
 
@@ -1149,7 +1408,7 @@ $$
 \Phi(t) = e^{\mathbf{A}t} = \begin{bmatrix} e^t & 0 & 0 \\ t e^t & e^t & -3t e^t \\ 0 & 0 & e^t \end{bmatrix}
 $$
 
-Sanity check: $\Phi(0) = \mathbf{I}$, and differentiating at $t = 0$ ($\frac{d}{dt}te^t = 1$ there) gives back $\dot{\Phi}(0) = \mathbf{A}$ entry by entry. The Jordan-form example in Appendix A reaches the same $\Phi$ by a third route.
+Sanity check: $\Phi(0) = \mathbf{I}$, and differentiating at $t = 0$ ($\frac{d}{dt}te^t = 1$ there) gives back $\dot{\Phi}(0) = \mathbf{A}$ entry by entry. It is the same $\Phi$ as in the Jordan-form example: no eigenvectors here, but no insight into the block structure either.
 
 ```{=latex}
 \end{example}
@@ -1161,12 +1420,12 @@ We have shown four ways to skin a cat, but at the end you still have the same de
 
 In practice the choice depends on $\mathbf{A}$ and on the problem. Cayley–Hamilton (CH) is the one that keeps coming back — it is the method behind controllability and observability later in these notes — and it wins when:
 
-- The matrix is *defective* — plain diagonalization is out, and CH, with the derivative trick for the repeated eigenvalue, picks up where it fails.
+- The matrix is *defective* — plain diagonalization is out, and the Jordan chains are laborious. CH, with the derivative trick for the repeated eigenvalue, needs no eigenvectors at all.
 - The matrix has *repeated eigenvalues* but is still diagonalizable — CH avoids eigenvector hunting.
 - You want a closed form without computing $\mathbf{V}^{-1}$ — CH never inverts a matrix, only multiplies out powers of $\mathbf{A}$.
 - You're working with *symbolic parameters*, where eigenvectors get messy — they come out as rational expressions in the parameters, while CH's coefficients stay clean.
 
-In short: **Cayley–Hamilton to compute, diagonalization to understand.**^[In the spirit of Hamming's motto, "The purpose of computing is insight, not numbers" [@hamming1962numerical]. For many more ways to compute $e^{\mathbf{A}t}$, and why most of them are numerically dubious, see @moler2003nineteen.]
+In short: **Cayley–Hamilton to compute, diagonalization (and its Jordan extension) to understand.**^[In the spirit of Hamming's motto, "The purpose of computing is insight, not numbers" [@hamming1962numerical]. For many more ways to compute $e^{\mathbf{A}t}$, and why most of them are numerically dubious, see @moler2003nineteen.]
 
 ```{=latex}
 \begin{example}[frametitle={Example - diagonalization and Cayley–Hamilton on the same matrix}]

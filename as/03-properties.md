@@ -10,7 +10,7 @@ $$
 
 each a **mode** of the system, so the eigenvalues of $\mathbf{A}$ are the modes of the response. A real $\lambda$ gives a growing or decaying exponential; a conjugate pair $\sigma \pm j\omega$ gives an oscillation with envelope $e^{\sigma t}$.
 
-The exception is a defective $\mathbf{A}$: with fewer independent eigenvectors than eigenvalues, a repeated eigenvalue brings a factor $t$ instead of a second independent exponential, so $n$ eigenvalues need not give $n$ modes.
+The exception is a defective $\mathbf{A}$: with fewer independent eigenvectors than eigenvalues, a repeated eigenvalue brings a factor $t$ instead of a second independent exponential, so $n$ eigenvalues need not give $n$ modes. The Jordan form (State-space chapter) says exactly which: a $k	imes k$ Jordan block at $\lambda$ contributes $e^{\lambda t}, t e^{\lambda t}, \dots, t^{k-1}e^{\lambda t}$.
 
 These eigenvalues are also the **poles** of the transfer function $G(s) = \mathbf{C}(s\mathbf{I}-\mathbf{A})^{-1}\mathbf{B} + \mathbf{D}$ (which we get to properly in the transfer-function chapter): its denominator is $\det(s\mathbf{I}-\mathbf{A})$, so the poles are exactly the eigenvalues of $\mathbf{A}$ — at least for a minimal realization (controllable and observable, both defined below). An eigenvalue belonging to an uncontrollable or unobservable mode cancels out of $G(s)$ and is not a pole.
 
@@ -62,7 +62,7 @@ $}
 
 For the system to be marginally stable a.k.a stable in the sense of Lyapunov, the states may oscillate but remain bounded. 
 
-No eigenvalue with $\operatorname{Re}\lambda_i > 0$, and the eigenvalues on the imaginary axis are simple.^[There's more to it than meets the eye. "Simple" is sufficient but not necessary. The exact condition is that every eigenvalue on the axis has only $1\times1$ Jordan blocks ($m_g = m_a$). $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ has $\lambda = 0$ twice and is still marginally stable, while the double integrator, which has the same eigenvalues, drifts off as $t$. See Jordan form in Appendix A.] The poles sit exactly on the dashed boundary:
+No eigenvalue with $\operatorname{Re}\lambda_i > 0$, and the eigenvalues on the imaginary axis are simple.^[There's more to it than meets the eye. "Simple" is sufficient but not necessary. The exact condition is that every eigenvalue on the axis has only $1\times1$ Jordan blocks ($m_g = m_a$). $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ has $\lambda = 0$ twice and is still marginally stable, while the double integrator, which has the same eigenvalues, drifts off as $t$. See $\Phi$ via the Jordan form in the State-space chapter.] The poles sit exactly on the dashed boundary:
 
 ```{=latex}
 \input{tikz/stability-marginal.tex}
