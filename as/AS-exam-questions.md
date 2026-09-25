@@ -184,7 +184,7 @@ One-liners for the questions above; the numbers match.
 - **4.3** — $k$ counts samples, so the actual time is $kT$, with $T$ the sampling period (dropped from the notation).
 - **4.4** — $\mathbf{A}^k$ is the discrete state-transition matrix, $\vec{x}[k] = \mathbf{A}^k\vec{x}[0]$. Three ways: $\mathcal{Z}^{-1}\{z(z\mathbf{I}-\mathbf{A})^{-1}\}$, or $\mathbf{V}\boldsymbol{\Lambda}^k\mathbf{V}^{-1}$, or Cayley–Hamilton with $\lambda_i^k$ in place of $e^{\lambda_i t}$.
 - **4.5** — $\vec{x}[k] = \mathbf{A}^k\vec{x}[0] + \sum_{i=0}^{k-1}\mathbf{A}^{k-1-i}\mathbf{B}\vec{u}[i]$ — the discrete twin of the $\Phi$ solution.
-- **4.6** — Model → $\vec{x}[k+1] = \mathbf{A}\vec{x}[k] + \mathbf{B}\vec{u}[k]$ → $\mathbf{A}^k$ via the $z$-transform (split $X(z)/z$, cover-up, then $\frac{z}{z-a} \leftrightarrow a^k$) → $\vec{x}[k] = \mathbf{A}^k\vec{x}[0]$, then read the physics off the modes $\lambda_i^k$. Worked end-to-end in appendix B (tank battle).
+- **4.6** — Model → $\vec{x}[k+1] = \mathbf{A}\vec{x}[k] + \mathbf{B}\vec{u}[k]$ → $\mathbf{A}^k$ via the $z$-transform (split $X(z)/z$, cover-up, then $\frac{z}{z-a} \leftrightarrow a^k$) → $\vec{x}[k] = \mathbf{A}^k\vec{x}[0]$, then read the physics off the modes $\lambda_i^k$. Worked end-to-end in appendix C (tank battle).
 - **4.7** — Yes, with the boundary moved: $|\lambda_i| < 1$ (strictly inside the unit circle) in place of $\operatorname{Re}\lambda_i < 0$, and the controllability and observability matrices and rank tests unchanged.
 
 ## 5. Transfer functions, stability, and the toolbox

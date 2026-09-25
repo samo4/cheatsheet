@@ -1,29 +1,6 @@
-# Appendix A: Math review
+# Appendix A: Linear algebra review
 
-## Calculus
-
-### Taylor series
-
-Near a point $x_0$ a smooth function is its polynomial expansion — value, slope, curvature and all higher derivatives matched there:
-
-$$
-f(x) = \sum_{k=0}^{\infty} \frac{f^{(k)}(x_0)}{k!}(x-x_0)^k
-= f(x_0) + f'(x_0)(x-x_0) + \frac{f''(x_0)}{2!}(x-x_0)^2 + \cdots
-$$
-
-The $k!$ is the leftover from differentiating $x^k$ $k$ times, and the coefficients are read off the derivatives at $x_0$. Expanding at $x_0 = 0$ is the Maclaurin series, and three of those do all the work in these notes:
-
-$$
-e^{x} = \underbrace{1}_{\cos} + \underbrace{x}_{\sin} + \underbrace{\frac{x^{2}}{2!}}_{\cos} + \underbrace{\frac{x^{3}}{3!}}_{\sin} + \underbrace{\frac{x^{4}}{4!}}_{\cos} + \underbrace{\frac{x^{5}}{5!}}_{\sin} + \cdots
-$$
-
-The underbraces sort the terms by parity — the even powers build $\cos$, the odd powers build $\sin$.
-
-Cutting after the linear term leaves the tangent line $f(x) \approx f(x_0) + f'(x_0)(x-x_0)$, good while the deviation $|x - x_0|$ is small and off by the size of the first discarded term — see the Linearization chapter.
-
-## Linear algebra
-
-### Matrix multiplication
+## Matrix multiplication
 
 Matrix multiplication is *row by column*: entry $(i,j)$ of $\mathbf{A}\mathbf{B}$ is row $i$ of $\mathbf{A}$ dotted with column $j$ of $\mathbf{B}$. The inner dimensions must match, $(m \times n)(n \times p) = (m \times p)$.
 
@@ -55,7 +32,7 @@ Note the order matters: $\mathbf{B}\mathbf{A}$ is $3\times3$, so it cannot equal
 \end{example}
 ```
 
-### Matrix determinant
+## Matrix determinant
 
 The determinant is a single number attached to a square matrix. It decides invertibility ($\det\mathbf{A} \ne 0$) and, geometrically, how much the matrix scales volumes.
 
@@ -78,11 +55,11 @@ $\det\mathbf{A} = 0$ means the rows (or columns) are linearly dependent — the 
 
 Also useful later: $\det(\mathbf{A}\mathbf{B}) = \det\mathbf{A}\,\det\mathbf{B}$ and $\det(\mathbf{A}^{-1}) = 1/\det\mathbf{A}$. Swapping two rows or two columns multiplies the determinant by $-1$ — so reordering the columns of an eigenvector matrix only flips the sign.
 
-### Inverse of a matrix
+## Inverse of a matrix
 
 The inverse $\mathbf{A}^{-1}$ is the matrix with $\mathbf{A}\mathbf{A}^{-1} = \mathbf{A}^{-1}\mathbf{A} = \mathbf{I}$. Two standard ways to compute it.
 
-#### Existence of inverse
+### Existence of inverse
 
 A square matrix is invertible (nonsingular) iff $\det\mathbf{A} \ne 0$.
 
@@ -102,7 +79,7 @@ so $\mathbf{A}$ is invertible exactly for $a \ne 5$. At $a = 5$ the third row is
 \end{example}
 ```
 
-#### Gauss elimination
+### Gauss elimination
 
 Row-reduce the augmented matrix $[\mathbf{A} \mid \mathbf{I}]$ until the left block is $\mathbf{I}$; the right block is then $\mathbf{A}^{-1}$.
 
@@ -188,7 +165,7 @@ Side note: strictly, Gauss elimination is not the same as the (eigen)diagonaliza
 \end{example}
 ```
 
-#### With cofactors
+### With cofactors
 
 The adjugate formula
 
@@ -210,7 +187,7 @@ $$
 
 which matches the Gauss result.
 
-### Vectors, bases and norms
+## Vectors, bases and norms
 
 *Linear independence.* a set of vectors is independent when $c_1\vec{v}_1 + \cdots + c_k\vec{v}_k = \vec{0}$ iff all $c_i = 0$, i.e. none is a combination of the others. As matrix columns: rank $k$. In $\mathbb{R}^n$ at most $n$ of them.
 
@@ -246,7 +223,7 @@ In a city with a square street grid, the destination is 3 blocks east and 4 bloc
 \end{example}
 ```
 
-### Linear algebraic equations
+## Linear algebraic equations
 
 The rank $r = \operatorname{rank}\mathbf{A}$ is the number of linearly independent rows (or columns). Multiplying by an invertible matrix never changes it, which is why row operations (left-multiplication by invertible elementary matrices) are safe for finding the rank. For a system $\mathbf{A}\vec{x} = \vec{b}$ with $n$ unknowns:
 
@@ -345,7 +322,7 @@ one short of full row rank. That is the same question the observability test $\o
 
 *Square shortcut.* $full rank ⇔ \det\mathbf{A} \ne 0$ When the matrix is square, one number settles full rank: for $n\times n$ $\mathbf{A}$, $\operatorname{rank}\mathbf{A} = n$ exactly when $\det\mathbf{A} \ne 0$ — dependent rows or columns are precisely what make the determinant vanish, and their absence *is* full rank. This is the cheap route to the controllability and observability tests whenever the matrix comes out square: $\mathcal{C}$ is square only for a single input ($m = 1$), $\mathcal{O}$ only for a single output ($p = 1$). For rectangular matrices $\det$ is not even defined, so row-reduction is the only way.
 
-### Eigenvalues and eigenvectors
+## Eigenvalues and eigenvectors
 
 A common use for matrices is to describe linear transformations. A transformation $\vec{x}  \mapsto \mathbf{A}\vec{x}$ can stretch, shrink, rotate, or reflect vectors. Eigenvectors are the special directions that are only stretched or shrunk, not rotated.
 
@@ -423,7 +400,7 @@ Sanity check: $\mathbf{A}\vec{x}_1 = \vec{x}_1$, $\mathbf{A}\vec{x}_2 = 2\vec{x}
 
 Obviously a single eigenvalue can occur multiple times. We call this algebraic multiplicity and denote it as $m_a$. The number of linearly independent eigenvectors belonging to it is the geometric multiplicity $m_g$, always $1 \le m_g \le m_a$.
 
-### Similarity transformation
+## Similarity transformation
 
 A matrix describes a linear map *in a particular basis*. Take the map $\vec{y} = \mathbf{A}\vec{x}$ and describe both vectors in a new basis. With an invertible $\mathbf{T}$ whose columns are the new basis vectors written in the old coordinates, the old coordinates follow from the new ones as
 
@@ -530,7 +507,7 @@ The 45° example was exactly this with $\mathbf{V} = \mathbf{T}$. For the eigenv
 
 The catch is the word *independent*: there must be $n$ of them, i.e. $m_g = m_a$ for every eigenvalue. A defective matrix has too few, and then *no* $\mathbf{T}$ at all makes it diagonal. Take $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. If it were similar to a diagonal matrix, that matrix would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But $\mathbf{T}^{-1}(2\mathbf{I})\mathbf{T} = 2\mathbf{I} \ne \mathbf{A}$ for every $\mathbf{T}$. The best one can do is the Jordan form, and this $\mathbf{A}$ already is one.
 
-### Jordan form
+## Jordan form
 
 Every square matrix, defective or not, is similar to a *Jordan matrix*, which is block-diagonal with Jordan blocks on the diagonal:
 
@@ -634,7 +611,7 @@ This is the same $\Phi(t)$ as with Cayley–Hamilton. The largest block is $2\ti
 - **Controllability and observability.** In Jordan coordinates you can read them off $\mathbf{B}$ and $\mathbf{C}$ (Gilbert's criterion). A useful consequence: if one eigenvalue has two or more Jordan blocks ($m_g \ge 2$), a single input cannot control the system, and a single output cannot observe it, whatever $\mathbf{B}$ or $\mathbf{C}$ is. The input has to reach independent modes that share one $\lambda$, and they respond identically to it. In general, a system with $m$ inputs needs $m \ge \max_i m_{g,i}$. For actual testing, use the rank tests of the Properties chapter.
 - **Functions of matrices.** Every method for $f(\mathbf{A})$ (Laplace, Cayley–Hamilton with derivatives, Taylor series) reduces, in Jordan coordinates, to applying $f$ to the individual blocks as above. Jordan form is the reason they all agree.
 
-### Cayley–Hamilton: an arbitrary function of a matrix
+## Cayley–Hamilton: an arbitrary function of a matrix
 
 How do you compute an arbitrary function $f(\mathbf{A})$ of a matrix with Cayley–Hamilton? Let's take $\sin\mathbf{A}$ for example.
 
@@ -694,79 +671,6 @@ $$
 $$
 
 Sanity check: $\mathbf{A}$ is triangular, so the answer must be triangular with $f$ applied on the diagonal — and it is, $-\sin 3$ and $-\sin 2$.
-
-```{=latex}
-\end{example}
-```
-
-## Continuous-time math
-
-### Laplace
-
-The Laplace transform maps a time function to a function of the complex variable $s$:
-
-$$
-F(s) = \mathcal{L}\{f(t)\} = \int_0^\infty f(t)\, e^{-st}\, dt
-$$
-
-Its superpower is that it turns differentiation into algebra (integration by parts):
-
-$$
-\mathcal{L}\{\dot{f}(t)\} = sF(s) - f(0)
-$$
-
-the $f(0)$ term carrying the initial condition. Along with linearity this is why an ODE becomes an algebraic equation — exactly what Section 5 does to $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$. A few workhorse pairs:
-
-$$
-\mathcal{L}\{1\} = \frac{1}{s}, \qquad
-\mathcal{L}\{t\} = \frac{1}{s^2}, \qquad
-$$
-$$
-\mathcal{L}\{e^{at}\} = \frac{1}{s-a}, \qquad
-\mathcal{L}\{t e^{at}\} = \frac{1}{(s-a)^2}
-$$
-$$
-\mathcal{L}\{\sin\omega t\} = \frac{\omega}{s^2+\omega^2}, \qquad
-\mathcal{L}\{\cos\omega t\} = \frac{s}{s^2+\omega^2}
-$$
-
-### Partial fraction decomposition
-
-Inverse Laplace transforms are read off a table, so the goal is to split a rational function $F(s) = N(s)/D(s)$ (with $\deg N < \deg D$) into pieces that match table entries. Factor $D(s)$ and decompose:
-
-- Distinct linear factors $(s-a)(s-b)$: $\ \dfrac{A}{s-a} + \dfrac{B}{s-b}$
-- Repeated factors $(s-a)^2$: $\ \dfrac{A}{s-a} + \dfrac{B}{(s-a)^2}$
-- Irreducible quadratic $s^2 + \omega^2$: $\ \dfrac{As + B}{s^2 + \omega^2}$ ($\to$ sines and cosines)
-
-```{=latex}
-\begin{example}[frametitle={Example - partial fractions}]
-```
-
-Split $\dfrac{1}{(s+1)^2(s+2)}$ — a repeated factor plus a distinct one, so three coefficients:
-
-$$
-\frac{1}{(s+1)^2(s+2)} = \frac{A}{s+1} + \frac{B}{(s+1)^2} + \frac{C}{s+2}
-$$
-
-Multiplying through by $(s+1)^2(s+2)$:
-
-$$
-1 = A(s+1)(s+2) + B(s+2) + C(s+1)^2
-$$
-
-Plug in the roots to kill terms: $s = -2$ gives $1 = C$, and $s = -1$ gives $1 = B$. The last coefficient comes from the $s^2$ terms: $0 = A + C$, so $A = -1$:
-
-$$
-\frac{1}{(s+1)^2(s+2)} = -\frac{1}{s+1} + \frac{1}{(s+1)^2} + \frac{1}{s+2}
-$$
-
-With $\mathcal{L}^{-1}\{\frac{1}{s+a}\} = e^{-at}$ and $\mathcal{L}^{-1}\{\frac{1}{(s+a)^2}\} = t e^{-at}$:
-
-$$
-\mathcal{L}^{-1}\left\{\frac{1}{(s+1)^2(s+2)}\right\} = -e^{-t} + t e^{-t} + e^{-2t}
-$$
-
-Sanity check: at a convenient point, $s = 0$, both sides give $\frac{1}{2} = -1 + 1 + \frac{1}{2}$. In time, the denominator is three degrees above the numerator, so the response must start flat, $f(0) = \dot{f}(0) = 0$ — and it does: $f(0) = -1 + 0 + 1 = 0$, $\dot{f}(0) = 1 + 1 - 2 = 0$.
 
 ```{=latex}
 \end{example}
