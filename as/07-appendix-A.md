@@ -425,7 +425,19 @@ Obviously a single eigenvalue can occur multiple times. We call this algebraic m
 
 ### Similarity transformation
 
-A matrix describes a linear map *in a particular basis*. Change the basis with an invertible $\mathbf{T}$, $\vec{x} = \mathbf{T}\tilde{\vec{x}}$ (the columns of $\mathbf{T}$ are the new basis vectors written in the old coordinates), and $\vec{y} = \mathbf{A}\vec{x}$ becomes $\tilde{\vec{y}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}\,\tilde{\vec{x}}$. Two matrices related this way are called similar:
+A matrix describes a linear map *in a particular basis*. Take the map $\vec{y} = \mathbf{A}\vec{x}$ and describe both vectors in a new basis. With an invertible $\mathbf{T}$ whose columns are the new basis vectors written in the old coordinates, the old coordinates follow from the new ones as
+
+$$
+\vec{x} = \mathbf{T}\tilde{\vec{x}}, \qquad \vec{y} = \mathbf{T}\tilde{\vec{y}}
+$$
+
+(the same $\mathbf{T}$ for both, since $\vec{x}$ and $\vec{y}$ live in the same space). Substitute into $\vec{y} = \mathbf{A}\vec{x}$ and solve for $\tilde{\vec{y}}$:
+
+$$
+\mathbf{T}\tilde{\vec{y}} = \mathbf{A}\mathbf{T}\tilde{\vec{x}} \quad\Longrightarrow\quad \tilde{\vec{y}} = \underbrace{\mathbf{T}^{-1}\mathbf{A}\mathbf{T}}_{\tilde{\mathbf{A}}}\,\tilde{\vec{x}}
+$$
+
+Read right to left: $\mathbf{T}$ translates the input from new to old coordinates, $\mathbf{A}$ acts there, and $\mathbf{T}^{-1}$ translates the result back to new coordinates. Two matrices related this way are called similar:
 
 $$
 \tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}
@@ -445,21 +457,78 @@ and with it everything the polynomial encodes:
 
 The eigenvectors are *not* unchanged. They are the same arrows, but their coordinates change: if $\mathbf{A}\vec{v} = \lambda\vec{v}$, then $\tilde{\mathbf{A}}(\mathbf{T}^{-1}\vec{v}) = \lambda(\mathbf{T}^{-1}\vec{v})$.
 
+```{=latex}
+\begin{example}[frametitle={Example - the same map in a basis rotated by 45°}]
+```
+
+Old basis: the usual orthonormal $\vec{e}_1 = \tvec{1, 0}$, $\vec{e}_2 = \tvec{0, 1}$. New basis: the same pair rotated by 45°, still orthonormal,
+
+$$
+\vec{t}_1 = \tfrac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ 1 \end{bmatrix}, \qquad
+\vec{t}_2 = \tfrac{1}{\sqrt{2}}\begin{bmatrix} -1 \\ 1 \end{bmatrix}, \qquad
+\mathbf{T} = [\vec{t}_1\ \vec{t}_2] = \tfrac{1}{\sqrt{2}}\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}
+$$
+
+$\mathbf{T}$ is a rotation, so its inverse is free: $\mathbf{T}^{-1} = \mathbf{T}^\mathsf{T}$ (true for any orthonormal columns). Take the map
+
+$$
+\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}
+$$
+
+In the old basis it is hard to read: it both stretches and turns each basis vector ($\vec{e}_1 \mapsto \tvec{2, 1}$). In the new one:
+
+$$
+\tilde{\mathbf{A}} = \mathbf{T}^\mathsf{T}\mathbf{A}\mathbf{T}
+= \tfrac{1}{2}\begin{bmatrix} 1 & 1 \\ -1 & 1 \end{bmatrix}\begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}
+= \tfrac{1}{2}\begin{bmatrix} 3 & 3 \\ -1 & 1 \end{bmatrix}\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}
+= \begin{bmatrix} 3 & 0 \\ 0 & 1 \end{bmatrix}
+$$
+
+So there was never any turning: the map stretches by 3 along the diagonal $\vec{t}_1$ and leaves the anti-diagonal $\vec{t}_2$ alone. The rotated basis just happens to line up with what $\mathbf{A}$ does.
+
+*Follow one vector through.* Take $\vec{x} = \vec{e}_1 = \tvec{1, 0}$.
+
+- Old coordinates: $\vec{y} = \mathbf{A}\vec{x} = \tvec{2, 1}$.
+- New coordinates: $\tilde{\vec{x}} = \mathbf{T}^\mathsf{T}\vec{x} = \tfrac{1}{\sqrt{2}}\tvec{1, -1}$, then $\tilde{\vec{y}} = \tilde{\mathbf{A}}\tilde{\vec{x}} = \tfrac{1}{\sqrt{2}}\tvec{3, -1}$.
+- Back to old: $\mathbf{T}\tilde{\vec{y}} = \tfrac{3}{2}\tvec{1, 1} - \tfrac{1}{2}\tvec{-1, 1} = \tvec{2, 1}$. Same arrow, as it must be.
+
+*What survived and what didn't.*
+
+- Eigenvalues $3, 1$ in both. $\operatorname{tr} = 4$ and $\det = 3$ in both.
+- The eigenvectors are the same arrows but not the same numbers: $\vec{t}_1, \vec{t}_2$ in old coordinates, $\tvec{1, 0}, \tvec{0, 1}$ in new ones.
+- The entries of the matrix did not survive at all. The off-diagonal 1s were a property of the coordinates, not of the map.
+
+This is diagonalization in miniature: the columns of $\mathbf{T}$ are exactly the eigenvectors of $\mathbf{A}$, which is why $\tilde{\mathbf{A}}$ came out diagonal.
+
+```{=latex}
+\end{example}
+```
+
 *Functions pass through.* In a power the inner $\mathbf{T}\mathbf{T}^{-1}$ pairs cancel, $\tilde{\mathbf{A}}^k = \mathbf{T}^{-1}\mathbf{A}^k\mathbf{T}$, and so does every power series built from powers:
 
 $$
 f(\mathbf{T}^{-1}\mathbf{A}\mathbf{T}) = \mathbf{T}^{-1}f(\mathbf{A})\,\mathbf{T}, \qquad\text{e.g.}\quad e^{\mathbf{A}t} = \mathbf{T}\,e^{\tilde{\mathbf{A}}t}\,\mathbf{T}^{-1}
 $$
 
-This is the practical reason to change basis: pick $\mathbf{T}$ so that $\tilde{\mathbf{A}}$ makes $f$ easy, compute $f(\tilde{\mathbf{A}})$, and transform back. The best case is diagonal. Put $n$ independent eigenvectors in the columns of $\mathbf{T} = \mathbf{V}$, then $\mathbf{A}\mathbf{V} = \mathbf{V}\boldsymbol{\Lambda}$ column by column, i.e.
+This is the practical reason to change basis: pick $\mathbf{T}$ so that $\tilde{\mathbf{A}}$ makes $f$ easy, compute $f(\tilde{\mathbf{A}})$, and transform back.
+
+*In state space* a similarity is simply a new choice of state variables, $\vec{x} = \mathbf{T}\tilde{\vec{x}}$. The same substitution as above, now into $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$ and $\vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}$, gives
+
+$$
+\mathbf{T}\dot{\tilde{\vec{x}}} = \mathbf{A}\mathbf{T}\tilde{\vec{x}} + \mathbf{B}\vec{u} \quad\Longrightarrow\quad \dot{\tilde{\vec{x}}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}\,\tilde{\vec{x}} + \mathbf{T}^{-1}\mathbf{B}\,\vec{u}, \qquad \vec{y} = \mathbf{C}\mathbf{T}\,\tilde{\vec{x}} + \mathbf{D}\vec{u}
+$$
+
+so $(\mathbf{A}, \mathbf{B}, \mathbf{C}, \mathbf{D}) \mapsto (\mathbf{T}^{-1}\mathbf{A}\mathbf{T},\ \mathbf{T}^{-1}\mathbf{B},\ \mathbf{C}\mathbf{T},\ \mathbf{D})$. Here only the state changes coordinates; $\vec{u}$ and $\vec{y}$ are untouched, which is why $\mathbf{B}$ gets only a $\mathbf{T}^{-1}$ and $\mathbf{C}$ only a $\mathbf{T}$. Poles, stability and the transfer function do not notice it.
+
+*Diagonalization.* The easiest $\tilde{\mathbf{A}}$ of all is diagonal, and the basis that gets you there is made of eigenvectors. Put $n$ independent eigenvectors in the columns of $\mathbf{T} = \mathbf{V}$. Then $\mathbf{A}\vec{v}_i = \lambda_i\vec{v}_i$, stacked column by column, reads $\mathbf{A}\mathbf{V} = \mathbf{V}\boldsymbol{\Lambda}$, i.e.
 
 $$
 \mathbf{V}^{-1}\mathbf{A}\mathbf{V} = \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n), \qquad f(\mathbf{A}) = \mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}
 $$
 
-For the example above, $\mathbf{V} = [\vec{x}_1\ \vec{x}_2\ \vec{x}_3]$ gives $\mathbf{V}^{-1}\mathbf{A}\mathbf{V} = \operatorname{diag}(1, 2, 3)$. This needs $n$ independent eigenvectors, i.e. $m_g = m_a$ for every eigenvalue. When some eigenvalue falls short, the best achievable form is the Jordan form below.
+The 45° example was exactly this with $\mathbf{V} = \mathbf{T}$. For the eigenvalue example above, $\mathbf{V} = [\vec{x}_1\ \vec{x}_2\ \vec{x}_3]$ gives $\operatorname{diag}(1, 2, 3)$. In state space the new states are the *modes*: each $\dot{\tilde{x}}_i = \lambda_i\tilde{x}_i + (\mathbf{V}^{-1}\mathbf{B}\vec{u})_i$ evolves on its own, and $\Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$. The State space chapter works this through in detail.
 
-In state space a similarity is simply a new choice of state variables, $\vec{x} = \mathbf{T}\tilde{\vec{x}}$: $(\mathbf{A}, \mathbf{B}, \mathbf{C}, \mathbf{D}) \mapsto (\mathbf{T}^{-1}\mathbf{A}\mathbf{T},\ \mathbf{T}^{-1}\mathbf{B},\ \mathbf{C}\mathbf{T},\ \mathbf{D})$. Poles, stability and the transfer function do not notice it.
+The catch is the word *independent*: there must be $n$ of them, i.e. $m_g = m_a$ for every eigenvalue. A defective matrix has too few, and then *no* $\mathbf{T}$ at all makes it diagonal. Take $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. If it were similar to a diagonal matrix, that matrix would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But $\mathbf{T}^{-1}(2\mathbf{I})\mathbf{T} = 2\mathbf{I} \ne \mathbf{A}$ for every $\mathbf{T}$. The best one can do is the Jordan form, and this $\mathbf{A}$ already is one.
 
 ### Jordan form
 
