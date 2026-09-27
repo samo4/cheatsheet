@@ -602,7 +602,64 @@ $$
 
 The 45° example was exactly this with $\mathbf{V} = \mathbf{T}$. For the first eigenvalue example above (distinct eigenvalues), $\mathbf{V} = [\vec{x}_1\ \vec{x}_2\ \vec{x}_3]$ gives $\operatorname{diag}(1, 2, 3)$. In state space the new states are the *modes*: each $\dot{\tilde{x}}_i = \lambda_i\tilde{x}_i + (\mathbf{V}^{-1}\mathbf{B}\vec{u})_i$ evolves on its own, and $\Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$. The State space chapter works this through in detail.
 
-The catch is the word *independent*. A defective matrix, like the one in the eigenvalue section, has fewer than $n$ of them, and then *no* $\mathbf{T}$ at all makes it diagonal. Take $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. If it were similar to a diagonal matrix, that matrix would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But $\mathbf{T}^{-1}(2\mathbf{I})\mathbf{T} = 2\mathbf{I} \ne \mathbf{A}$ for every $\mathbf{T}$. The best one can do is the Jordan form, and this $\mathbf{A}$ already is one.
+The catch is the word *independent*. A defective matrix, like the one in the eigenvalue section, has fewer than $n$ of them, and then *no* $\mathbf{T}$ at all makes it diagonal. Take $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. If it were similar to a diagonal matrix, that matrix would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But $\mathbf{T}^{-1}(2\mathbf{I})\mathbf{T} = 2\mathbf{I} \ne \mathbf{A}$ for every $\mathbf{T}$. The best one can do is the Jordan form (next section), and this $\mathbf{A}$ already is one.
+
+## Jordan form
+
+When a matrix is defective, we settle for the next best thing: a basis in which $\mathbf{A}$ is *as diagonal as possible*. That is the Jordan form.\footnote{C. Jordan published it in 1870. Not to be confused with W. Jordan of Gauss–Jordan elimination, a geodesist.} It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
+
+### Jordan blocks
+
+Every square matrix, defective or not, is similar to a *Jordan matrix* $\mathbf{J}$, block-diagonal with *Jordan blocks* on the diagonal:
+
+$$
+\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J} = \begin{bmatrix} \mathbf{J}_{k_1}(\lambda_1) & & \\ & \ddots & \\ & & \mathbf{J}_{k_p}(\lambda_p) \end{bmatrix}, \qquad
+\mathbf{J}_k(\lambda) = \begin{bmatrix} \lambda & 1 & & \\ & \lambda & \ddots & \\ & & \ddots & 1 \\ & & & \lambda \end{bmatrix}_{k\times k}
+$$
+
+Zeros everywhere, except for the eigenvalues on the diagonal and $1$s on the superdiagonal *inside* each block. The same $\lambda$ may appear in several blocks. A diagonalizable matrix has only $1\times1$ blocks, so then $\mathbf{J} = \boldsymbol{\Lambda}$ and $\mathbf{T} = \mathbf{V}$.
+
+*Counting the blocks.* Each Jordan block contains exactly one (independent) eigenvector, at the bottom of its chain. So there are as many blocks as independent eigenvectors: $m_{g,i}$ for each $\lambda_i$, and a diagonalizable matrix has $n$. With that, the multiplicities from the eigenvalue section fix most of the structure. For each eigenvalue $\lambda_i$:
+
+- the number of its blocks is $m_{g,i}$,
+- their sizes add up to $m_{a,i}$,
+- the individual sizes follow from the ranks of powers of $\mathbf{N} = \mathbf{A} - \lambda_i\mathbf{I}$: the number of blocks of size $\ge k$ is $\operatorname{rank}\mathbf{N}^{k-1} - \operatorname{rank}\mathbf{N}^{k}$ (with $\mathbf{N}^0 = \mathbf{I}$, rank $n$).
+
+For $m_a \le 3$ the first two rules already fix the sizes. For example, $m_a = 3$ with $m_g = 2$ can only be blocks of size $2 + 1$. The rank rule is needed only from $m_a = 4$ on, where $m_g = 2$ could mean $3+1$ or $2+2$.
+
+### Generalized eigenvectors
+
+The columns of $\mathbf{T}$ are found the same way as in diagonalization: read $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$ column by column. Take a single $2\times2$ block with columns $\vec{v}_1, \vec{v}_2$:
+
+$$
+\mathbf{A}\begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix}\begin{bmatrix} \lambda & 1 \\ 0 & \lambda \end{bmatrix} = \begin{bmatrix} \lambda\vec{v}_1 & \vec{v}_1 + \lambda\vec{v}_2 \end{bmatrix}
+$$
+
+The first column is the ordinary eigenvector equation. The second almost is, except for the extra $\vec{v}_1$ that the superdiagonal $1$ contributes. For a $k\times k$ block the pattern continues, and the columns form a *chain*:
+
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+(\mathbf{A} - \lambda\mathbf{I})\vec{v}_1 = \vec{0}, \quad (\mathbf{A} - \lambda\mathbf{I})\vec{v}_2 = \vec{v}_1, \quad \dots, \quad (\mathbf{A} - \lambda\mathbf{I})\vec{v}_k = \vec{v}_{k-1}
+$}
+\endgroup
+\]
+```
+
+Only $\vec{v}_1$ is a true eigenvector. The others are *generalized eigenvectors*: $\mathbf{N} = \mathbf{A} - \lambda\mathbf{I}$ does not kill them, but a power of it does, $\mathbf{N}^j\vec{v}_j = \vec{0}$.
+
+*Build the chain from the top.* Solving $\mathbf{N}\vec{v}_2 = \vec{v}_1$ bottom-up is awkward. $\mathbf{N}$ is singular, and for a badly chosen eigenvector $\vec{v}_1$ the system has no solution at all. Going down avoids this:
+
+1. Pick $\vec{v}_k$ with $\mathbf{N}^{k}\vec{v}_k = \vec{0}$ but $\mathbf{N}^{k-1}\vec{v}_k \ne \vec{0}$. Usually any vector outside $\ker\mathbf{N}^{k-1}$ does it.
+2. Go down with $\vec{v}_{j-1} = \mathbf{N}\vec{v}_j$. Each step is a matrix–vector product, nothing to solve, and the last one lands on an eigenvector automatically.
+3. Fill the remaining blocks of the same $\lambda$ with further chains (or plain eigenvectors for $1\times1$ blocks), independent of the ones you already have.
+4. Stack all chains into $\mathbf{T}$, each one bottom-up ($\vec{v}_1, \vec{v}_2, \dots$), in the order of the blocks in $\mathbf{J}$.
+
+Worked examples, from the block structure through the chains to $\mathbf{T}$, are in the State space chapter under $\Phi$ via the Jordan form.
+
+*A caveat.* The Jordan form is a tool for thinking, not for numerical computation. It is discontinuous: perturb a Jordan block by $\varepsilon$ and the repeated eigenvalue splits, the matrix becomes diagonalizable, and $\mathbf{J}$ jumps to a diagonal matrix. Rounding errors do exactly this, so numerical software avoids the Jordan form (MATLAB's `jordan` is symbolic-only). It uses the Schur form $\mathbf{Q}^{*}\mathbf{A}\mathbf{Q}$ instead, which is triangular with orthogonal (unitary) $\mathbf{Q}$.
 
 ## Functions of a square matrix
 

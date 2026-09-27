@@ -903,56 +903,7 @@ The diagonalization method is perhaps the most elegant, but it stands or falls w
 
 A defective matrix, such as $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$, cannot be diagonalized by any choice of basis (Linear algebra chapter). Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
 
-So we settle for the next best thing: a basis in which $\mathbf{A}$ is *as diagonal as possible*. That is the Jordan form.\footnote{C. Jordan published it in 1870. Not to be confused with W. Jordan of Gauss–Jordan elimination, a geodesist.} It is not really a fifth method, but diagonalization finished. It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
-
-#### Jordan blocks
-
-Every square matrix, defective or not, is similar (see the Linear algebra chapter) to a *Jordan matrix* $\mathbf{J}$, block-diagonal with *Jordan blocks* on the diagonal:
-
-$$
-\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J} = \begin{bmatrix} \mathbf{J}_{k_1}(\lambda_1) & & \\ & \ddots & \\ & & \mathbf{J}_{k_p}(\lambda_p) \end{bmatrix}, \qquad
-\mathbf{J}_k(\lambda) = \begin{bmatrix} \lambda & 1 & & \\ & \lambda & \ddots & \\ & & \ddots & 1 \\ & & & \lambda \end{bmatrix}_{k\times k}
-$$
-
-Zeros everywhere, except for the eigenvalues on the diagonal and $1$s on the superdiagonal *inside* each block. The same $\lambda$ may appear in several blocks. A diagonalizable matrix has only $1\times1$ blocks, so then $\mathbf{J} = \boldsymbol{\Lambda}$ and $\mathbf{T} = \mathbf{V}$.
-
-*Counting the blocks.* Each Jordan block contains exactly one (independent) eigenvector, at the bottom of its chain. So there are as many blocks as independent eigenvectors: $m_{g,i}$ for each $\lambda_i$, and a diagonalizable matrix has $n$. With that, the multiplicities from the Linear algebra chapter fix most of the structure. For each eigenvalue $\lambda_i$:
-
-- the number of its blocks is $m_{g,i}$,
-- their sizes add up to $m_{a,i}$,
-- the individual sizes follow from the ranks of powers of $\mathbf{N} = \mathbf{A} - \lambda_i\mathbf{I}$: the number of blocks of size $\ge k$ is $\operatorname{rank}\mathbf{N}^{k-1} - \operatorname{rank}\mathbf{N}^{k}$ (with $\mathbf{N}^0 = \mathbf{I}$, rank $n$).
-
-For $m_a \le 3$ the first two rules already fix the sizes. For example, $m_a = 3$ with $m_g = 2$ can only be blocks of size $2 + 1$. The rank rule is needed only from $m_a = 4$ on, where $m_g = 2$ could mean $3+1$ or $2+2$.
-
-#### Generalized eigenvectors
-
-The columns of $\mathbf{T}$ are found the same way as in diagonalization: read $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$ column by column. Take a single $2\times2$ block with columns $\vec{v}_1, \vec{v}_2$:
-
-$$
-\mathbf{A}\begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix}\begin{bmatrix} \lambda & 1 \\ 0 & \lambda \end{bmatrix} = \begin{bmatrix} \lambda\vec{v}_1 & \vec{v}_1 + \lambda\vec{v}_2 \end{bmatrix}
-$$
-
-The first column is the ordinary eigenvector equation. The second almost is, except for the extra $\vec{v}_1$ that the superdiagonal $1$ contributes. For a $k\times k$ block the pattern continues, and the columns form a *chain*:
-
-```{=latex}
-\[
-\begingroup
-\setlength{\fboxsep}{1.2em}
-\fbox{$\displaystyle
-(\mathbf{A} - \lambda\mathbf{I})\vec{v}_1 = \vec{0}, \quad (\mathbf{A} - \lambda\mathbf{I})\vec{v}_2 = \vec{v}_1, \quad \dots, \quad (\mathbf{A} - \lambda\mathbf{I})\vec{v}_k = \vec{v}_{k-1}
-$}
-\endgroup
-\]
-```
-
-Only $\vec{v}_1$ is a true eigenvector. The others are *generalized eigenvectors*: $\mathbf{N} = \mathbf{A} - \lambda\mathbf{I}$ does not kill them, but a power of it does, $\mathbf{N}^j\vec{v}_j = \vec{0}$.
-
-*Build the chain from the top.* Solving $\mathbf{N}\vec{v}_2 = \vec{v}_1$ bottom-up is awkward. $\mathbf{N}$ is singular, and for a badly chosen eigenvector $\vec{v}_1$ the system has no solution at all. Going down avoids this:
-
-1. Pick $\vec{v}_k$ with $\mathbf{N}^{k}\vec{v}_k = \vec{0}$ but $\mathbf{N}^{k-1}\vec{v}_k \ne \vec{0}$. Usually any vector outside $\ker\mathbf{N}^{k-1}$ does it.
-2. Go down with $\vec{v}_{j-1} = \mathbf{N}\vec{v}_j$. Each step is a matrix–vector product, nothing to solve, and the last one lands on an eigenvector automatically.
-3. Fill the remaining blocks of the same $\lambda$ with further chains (or plain eigenvectors for $1\times1$ blocks), independent of the ones you already have.
-4. Stack all chains into $\mathbf{T}$, each one bottom-up ($\vec{v}_1, \vec{v}_2, \dots$), in the order of the blocks in $\mathbf{J}$.
+So we settle for the next best thing: the Jordan form $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J}$, a basis in which $\mathbf{A}$ is *as diagonal as possible*. Its Jordan blocks $\mathbf{J}_k(\lambda)$, how to count them, and the chains of generalized eigenvectors that make up $\mathbf{T}$ are all in the Linear algebra chapter. It is not really a fifth method, but diagonalization finished. It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
 
 #### The exponential of a Jordan block
 
@@ -1151,8 +1102,6 @@ In LTI analysis you rarely need $\mathbf{T}$, but the block sizes answer questio
 - **Controllability and observability.** In Jordan coordinates you can read them off $\mathbf{B}$ and $\mathbf{C}$ (Gilbert's criterion). A useful consequence: if one eigenvalue has two or more Jordan blocks ($m_g \ge 2$), a single input cannot control the system, and a single output cannot observe it, whatever $\mathbf{B}$ or $\mathbf{C}$ is. The input has to reach independent modes that share one $\lambda$, and they respond identically to it. In general, a system with $m$ inputs needs $m \ge \max_i m_{g,i}$. For actual testing, use the rank tests of the Properties chapter.^[For the Jordan-form tests in full, and a treatment of this whole chapter at similar depth, see @chen1999linear.]
 - **Discrete time.** The same blocks rule $\mathbf{A}^k$. With $\binom{k}{i} = 0$ for $i > k$, the binomial expansion gives $\mathbf{J}_q(\lambda)^k = \sum_{i=0}^{q-1}\binom{k}{i}\lambda^{k-i}\mathbf{N}_q^i$, so the modes are $\lambda^k, k\lambda^{k-1}, \dots$.
 - **Functions of matrices.** Every method for $f(\mathbf{A})$ (Taylor, Laplace, Cayley–Hamilton with derivatives) reduces, in Jordan coordinates, to applying $f$ to the individual blocks as above. That is why they all agree. It also explains the derivative trick of Cayley–Hamilton below: $\frac{d^j}{d\lambda^j}e^{\lambda t} = t^j e^{\lambda t}$ produces exactly the terms a Jordan block needs.
-
-*A caveat.* The Jordan form is a tool for thinking, not for numerical computation. It is discontinuous: perturb a Jordan block by $\varepsilon$ and the repeated eigenvalue splits, the matrix becomes diagonalizable, and $\mathbf{J}$ jumps to a diagonal matrix. Rounding errors do exactly this, so numerical software avoids the Jordan form (MATLAB's `jordan` is symbolic-only). It uses the Schur form $\mathbf{Q}^{*}\mathbf{A}\mathbf{Q}$ instead, which is triangular with orthogonal (unitary) $\mathbf{Q}$.
 
 By hand, the chain hunt is the laborious part. The Laplace method above and the Cayley–Hamilton\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} method below both handle defective matrices with no eigenvectors at all.
 
