@@ -637,16 +637,9 @@ $$
 
 The first column is the ordinary eigenvector equation. The second almost is, except for the extra $\vec{v}_1$ that the superdiagonal $1$ contributes. For a $k\times k$ block the pattern continues, and the columns form a *chain*:
 
-```{=latex}
-\[
-\begingroup
-\setlength{\fboxsep}{1.2em}
-\fbox{$\displaystyle
+$$
 (\mathbf{A} - \lambda\mathbf{I})\vec{v}_1 = \vec{0}, \quad (\mathbf{A} - \lambda\mathbf{I})\vec{v}_2 = \vec{v}_1, \quad \dots, \quad (\mathbf{A} - \lambda\mathbf{I})\vec{v}_k = \vec{v}_{k-1}
-$}
-\endgroup
-\]
-```
+$$
 
 Only $\vec{v}_1$ is a true eigenvector. The others are *generalized eigenvectors*: $\mathbf{N} = \mathbf{A} - \lambda\mathbf{I}$ does not kill them, but a power of it does, $\mathbf{N}^j\vec{v}_j = \vec{0}$.
 

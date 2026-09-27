@@ -642,7 +642,7 @@ $$
 \Phi(t) = e^{\mathbf{A}t} = \operatorname{diag}\!\big(e^{d_1 t},\, e^{d_2 t},\, \dots,\, e^{d_n t}\big)
 $$
 
-Most $\mathbf{A}$'s are not diagonal, but with a little elbow grease we can still get there. The ingredients are the eigenvalues and eigenvectors of $\mathbf{A}$, with their algebraic and geometric multiplicities $m_{a,i}$ and $m_{g,i}$ (see the Linear algebra chapter).
+Most $\mathbf{A}$'s are not diagonal, but with a little elbow grease we can still get there. The ingredients are the eigenvalues and eigenvectors of $\mathbf{A}$, with their algebraic and geometric multiplicities $m_{a,i}$ and $m_{g,i}$.
 
 *Triangular shortcut.* If $\mathbf{A}$ is upper or lower triangular, finding the eigenvalues needs no work: the determinant is already factored, and the eigenvalues are just the diagonal entries. Diagonal was the whole jackpot; triangular is the half-jackpot — eigenvalues free, but the full $\Phi$ still needs a method.
 
@@ -901,9 +901,11 @@ The diagonalization method is perhaps the most elegant, but it stands or falls w
 
 ### $\Phi$ via the Jordan form
 
-A defective matrix, such as $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$, cannot be diagonalized by any choice of basis. Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
+$$\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$$
 
-So we settle for the next best thing: the Jordan form $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J}$, a basis in which $\mathbf{A}$ is *as diagonal as possible*. Its Jordan blocks $\mathbf{J}_k(\lambda)$, how to count them, and the chains of generalized eigenvectors that make up $\mathbf{T}$ are all in the Linear algebra chapter. It is not really a fifth method, but diagonalization finished. It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
+A defective matrix, such as $\mathbf{A}$ above, cannot be diagonalized by any choice of basis. Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
+
+So we settle for the next best thing: the Jordan form $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J}$, a basis in which $\mathbf{A}$ is *as diagonal as possible*. It is not really a fifth method, but diagonalization finished. It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
 
 #### The exponential of a Jordan block
 
@@ -1093,7 +1095,7 @@ The largest block is $2\times2$, so the highest power of $t$ is $t^1$, even thou
 \end{example}
 ```
 
-*The blocks tell you more than $\Phi$.* In LTI analysis you rarely need $\mathbf{T}$ itself, but the block sizes answer questions that the eigenvalues alone leave open: which terms the free response can contain (Modes of an LTI system), whether eigenvalues on the imaginary axis are stable (marginal stability, both in the Properties chapter), how many inputs or outputs it takes to control or observe the system (Controllability and Observability, ditto), and which modes $\mathbf{A}^k$ has in discrete time (Discrete chapter, $\mathbf{A}^k$ via diagonalization).^[For the Jordan-form tests in full, and a treatment of this whole chapter at similar depth, see @chen1999linear.]
+*The Jordan blocks tell you more than just $\Phi$.* In LTI analysis you rarely need $\mathbf{T}$ itself, but the block sizes answer questions that the eigenvalues alone leave open — haunt the notes for mentions of "Jordan form" to find them all.
 
 By hand, the chain hunt is the laborious part. The Laplace method above and the Cayley–Hamilton method below both handle defective matrices with no eigenvectors at all.
 

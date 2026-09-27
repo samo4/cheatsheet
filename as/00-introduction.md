@@ -1,6 +1,15 @@
 # Introduction
 
-The mental model behind these notes follows the chain **modeling → analysis → control**, but notes stops at just hinting the last part. Modeling (the next chapter) turns a physical system into equations, analysis squeezes behaviour out of those equations, and control runs the other way, from desired behaviour to a system that delivers it. All of it rests on one class of systems, the linear time-invariant (LTI) ones.
+These notes are about predicting what a dynamic system will do, from its equations alone. First of all, you should never again be unsure what is and isn't an LTI system, and what the difference costs you (this chapter). Along the way you will build a mathematical toolbox to:
+
+- write the state equations of a mechanical or electrical system (Modeling),
+- compute its response to an initial state and an input (State space),
+- read stability, controllability and observability off the model (Properties),
+- describe the input–output behaviour with a transfer function (Transfer functions),
+- recognize when a nonlinear system behaves as an LTI one near an operating point, so the same toolbox still applies (Linearization),
+- do all of the above for sampled, discrete-time systems (Discrete).
+
+The Linear algebra chapter supplies the matrix tools the rest relies on.
 
 ## Common vocabulary
 
