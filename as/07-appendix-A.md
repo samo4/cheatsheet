@@ -189,7 +189,7 @@ Row 2 collapses to zero, but row 3 still leaves a pivot in column 2, so $\operat
 
 ### Determinant
 
-The determinant is a single number attached to a square matrix. It decides invertibility ($\det\mathbf{A} \ne 0$) and, geometrically, how much the matrix scales volumes.
+The determinant is a single number attached to a square matrix. It decides invertibility ($\det\mathbf{A} \ne 0$) and, geometrically, how much the matrix scales volumes. $\det\mathbf{A} = 0$ means the rows (or columns) are linearly dependent.
 
 For a $2\times2$ matrix:
 
@@ -197,11 +197,9 @@ $$
 \begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad - bc
 $$
 
-For $n\times n$, expand along a row or column (Laplace expansion); signs alternate $+,-,+,\dots$.
+For $n\times n$, expand along a row or column; signs alternate $+,-,+,\dots$.
 
-$\det\mathbf{A} = 0$ means the rows (or columns) are linearly dependent.
-
-*Square shortcut.* $full rank ⇔ \det\mathbf{A} \ne 0$ When the matrix is square, one number settles full rank: for $n\times n$ $\mathbf{A}$, $\operatorname{rank}\mathbf{A} = n$ exactly when $\det\mathbf{A} \ne 0$ — dependent rows or columns are precisely what make the determinant vanish, and their absence *is* full rank. This is the cheap route to the controllability and observability tests whenever the matrix comes out square: $\mathcal{C}$ is square only for a single input ($m = 1$), $\mathcal{O}$ only for a single output ($p = 1$). For rectangular matrices $\det$ is not even defined, so row-reduction is the only way.
+*Square shortcut.* $full rank ⇔ \det\mathbf{A} \ne 0$ When the matrix is square, one number settles full rank: for $n\times n$ $\mathbf{A}$, $\operatorname{rank}\mathbf{A} = n$ exactly when $\det\mathbf{A} \ne 0$ — dependent rows or columns are precisely what make the determinant vanish, and their absence *is* full rank. This is the often the cheapest route to any rank tests of square matrices that you might encounter.
 
 Also useful later: $\det(\mathbf{A}\mathbf{B}) = \det\mathbf{A}\,\det\mathbf{B}$ and $\det(\mathbf{A}^{-1}) = 1/\det\mathbf{A}$. Swapping two rows or two columns multiplies the determinant by $-1$ — so reordering the columns of an eigenvector matrix only flips the sign.
 
@@ -314,14 +312,26 @@ $$
 ```{=latex}
 \begin{example}[frametitle={Note - triangular matrices}]
 ```
-If $\mathbf{A}$ is triangular (lower or upper), the determinant is just the product of the diagonal entries, so
-
-$$\det(\mathbf{A} - \lambda\mathbf{I}) = \prod_i (a_{ii} - \lambda)$$
-
-and the eigenvalues are exactly the diagonal entries $a_{11}, a_{22}, \dots, a_{nn}$. This is why triangular (and diagonal) matrices are so convenient — no characteristic polynomial to solve.
+If $\mathbf{A}$ is triangular (lower or upper), the determinant is just the product of the diagonal entries, so the eigenvalues are exactly the diagonal entries $a_{11}, a_{22}, \dots, a_{nn}$. This is why triangular (and diagonal) matrices are so convenient — no characteristic polynomial to solve.
 ```{=latex}
 \end{example}
 ```
+
+Geometrically, each eigenspace is a subspace through the origin, and on it $\mathbf{A}$ acts as plain scaling by $\lambda$. Take a matrix with eigenvalues $\lambda = 7$ and $\lambda = -4$ [@lay2015linear]. Solving $(\mathbf{A} - 7\mathbf{I})\vec{x} = \vec{0}$ gives $x_1 = x_2$, and $(\mathbf{A} + 4\mathbf{I})\vec{x} = \vec{0}$ gives $5x_1 + 6x_2 = 0$, so
+
+$$
+E_7 = \operatorname{span}\left\{\begin{bmatrix} 1 \\ 1 \end{bmatrix}\right\},
+\qquad
+E_{-4} = \operatorname{span}\left\{\begin{bmatrix} -6 \\ 5 \end{bmatrix}\right\}.
+$$
+
+Both are lines crossing at $\vec{0}$. A vector on $E_7$ is stretched 7 times along its own line; one on $E_{-4}$ is stretched 4 times and flipped, but stays on its line. Any other vector, e.g. $\vec{w} = (-\tfrac12, -1)$ with $\mathbf{A}\vec{w} = (-\tfrac{13}{2}, -\tfrac92)$, is knocked off its line:
+
+```{=latex}
+\input{tikz/eigenspaces-lay.tex}
+```
+
+Granted, it it might be hard to visualize in higher dimensions, but the principle is the same: each eigenspace is a subspace where the matrix acts as simple scaling.
 
 ```{=latex}
 \begin{example}[frametitle={Example - eigenvalues and eigenvectors}]
@@ -371,7 +381,7 @@ Sanity check: $\mathbf{A}\vec{x}_1 = \vec{x}_1$, $\mathbf{A}\vec{x}_2 = 2\vec{x}
 \end{example}
 ```
 
-Obviously a single eigenvalue can occur multiple times. We call this algebraic multiplicity and denote it as $m_a$. The number of linearly independent eigenvectors belonging to it is the geometric multiplicity $m_g$, always $1 \le m_g \le m_a$.
+A single eigenvalue can occur multiple times. We call this algebraic multiplicity and denote it as $m_a$. The number of linearly independent eigenvectors belonging to it is the geometric multiplicity $m_g$, always $1 \le m_g \le m_a$.
 
 ## Similarity transformation
 
