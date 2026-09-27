@@ -1,7 +1,6 @@
 # Appendix A: Linear algebra review
 
-Appendix A provides a brief review of essential linear algebra concepts used throughout the text, it mostly follows chapter 3 of @chen1999linear, that's where the $\mathbf{Q}$ comes from.
-
+Appendix A provides a brief review of essential linear algebra concepts used throughout the text, it mostly follows chapter 3 of @chen1999linear, that's where the $\mathbf{Q}$ comes from. Another source is the lecture series @abbott2012linear.
 
 ## Matrix multiplication
 
