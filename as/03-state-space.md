@@ -901,7 +901,7 @@ The diagonalization method is perhaps the most elegant, but it stands or falls w
 
 ### $\Phi$ via the Jordan form
 
-A defective matrix, such as $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$, cannot be diagonalized by any choice of basis (Linear algebra chapter). Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
+A defective matrix, such as $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$, cannot be diagonalized by any choice of basis. Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
 
 So we settle for the next best thing: the Jordan form $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J}$, a basis in which $\mathbf{A}$ is *as diagonal as possible*. Its Jordan blocks $\mathbf{J}_k(\lambda)$, how to count them, and the chains of generalized eigenvectors that make up $\mathbf{T}$ are all in the Linear algebra chapter. It is not really a fifth method, but diagonalization finished. It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
 
@@ -1093,21 +1093,13 @@ The largest block is $2\times2$, so the highest power of $t$ is $t^1$, even thou
 \end{example}
 ```
 
-#### What the blocks tell you (TODO: distrubute these insights throughout the following chapters)
-
-In LTI analysis you rarely need $\mathbf{T}$, but the block sizes answer questions that the eigenvalues alone leave open.
-
-- **Modes.** The blocks tell you in advance which terms the free response can contain. A $k\times k$ block at $\lambda$ contributes $e^{\lambda t}, t e^{\lambda t}, \dots, t^{k-1}e^{\lambda t}$. This is the defective case under Modes of an LTI system, and the state-space version of a repeated pole in partial fractions.
-- **Stability on the imaginary axis.** For a stable eigenvalue the polynomial loses to the exponential, and $t^j e^{\lambda t} \to 0$. With $\operatorname{Re}\lambda = 0$ there is no decay to win against, and a block of size $\ge 2$ makes the response grow without bound. This is the one case where the eigenvalues do not decide stability. Marginal stability needs every eigenvalue with $\operatorname{Re}\lambda = 0$ to have only $1\times1$ blocks ($m_g = m_a$). The eigenvalue does not have to be simple. $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ (two separate integrators, blocks $1+1$) stays put and is marginally stable. The double integrator $\ddot{x} = 0$, with $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}$ (one $2\times2$ block), drifts as $x(t) = x_0 + \dot{x}_0 t$ and is unstable. Both have the same eigenvalues, $\lambda = 0, 0$.
-- **Controllability and observability.** In Jordan coordinates you can read them off $\mathbf{B}$ and $\mathbf{C}$ (Gilbert's criterion). A useful consequence: if one eigenvalue has two or more Jordan blocks ($m_g \ge 2$), a single input cannot control the system, and a single output cannot observe it, whatever $\mathbf{B}$ or $\mathbf{C}$ is. The input has to reach independent modes that share one $\lambda$, and they respond identically to it. In general, a system with $m$ inputs needs $m \ge \max_i m_{g,i}$. For actual testing, use the rank tests of the Properties chapter.^[For the Jordan-form tests in full, and a treatment of this whole chapter at similar depth, see @chen1999linear.]
-- **Discrete time.** The same blocks rule $\mathbf{A}^k$. With $\binom{k}{i} = 0$ for $i > k$, the binomial expansion gives $\mathbf{J}_q(\lambda)^k = \sum_{i=0}^{q-1}\binom{k}{i}\lambda^{k-i}\mathbf{N}_q^i$, so the modes are $\lambda^k, k\lambda^{k-1}, \dots$.
-- **Functions of matrices.** Every method for $f(\mathbf{A})$ (Taylor, Laplace, Cayley–Hamilton with derivatives) reduces, in Jordan coordinates, to applying $f$ to the individual blocks as above. That is why they all agree. It also explains the derivative trick of Cayley–Hamilton below: $\frac{d^j}{d\lambda^j}e^{\lambda t} = t^j e^{\lambda t}$ produces exactly the terms a Jordan block needs.
+*The blocks tell you more than $\Phi$.* In LTI analysis you rarely need $\mathbf{T}$ itself, but the block sizes answer questions that the eigenvalues alone leave open: which terms the free response can contain (Modes of an LTI system), whether eigenvalues on the imaginary axis are stable (marginal stability, both in the Properties chapter), how many inputs or outputs it takes to control or observe the system (Controllability and Observability, ditto), and which modes $\mathbf{A}^k$ has in discrete time (Discrete chapter, $\mathbf{A}^k$ via diagonalization).^[For the Jordan-form tests in full, and a treatment of this whole chapter at similar depth, see @chen1999linear.]
 
 By hand, the chain hunt is the laborious part. The Laplace method above and the Cayley–Hamilton method below both handle defective matrices with no eigenvectors at all.
 
 ### $\Phi$ via Cayley–Hamilton
 
-Cayley–Hamilton turns any analytic function of $\mathbf{A}$ into a polynomial of degree at most $n-1$ in $\mathbf{A}$ (Linear algebra chapter). Here the function is $f(\lambda) = e^{\lambda t}$, so the matrix exponential must have the form
+Cayley–Hamilton turns any analytic function of $\mathbf{A}$ into a polynomial of degree at most $n-1$ in $\mathbf{A}$. Here the function is $f(\lambda) = e^{\lambda t}$, so the matrix exponential must have the form
 
 $$
 e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A} + \cdots + \alpha_{n-1}(t)\mathbf{A}^{n-1}
@@ -1119,7 +1111,7 @@ $$
 e^{\lambda_i t} = \alpha_0(t) + \alpha_1(t)\lambda_i + \cdots + \alpha_{n-1}(t)\lambda_i^{n-1}, \qquad i = 1, \dots, n
 $$
 
-and solve the resulting Vandermonde system for the $\alpha_j(t)$; $t$ lives only in the known right-hand sides. A repeated eigenvalue again needs derivatives with respect to $\lambda$ (not $t$). Unlike diagonalization, this works even for defective matrices (see the defective-matrix example below).
+and solve the resulting system for the $\alpha_j(t)$; $t$ lives only in the known right-hand sides. A repeated eigenvalue again needs derivatives with respect to $\lambda$ (not $t$). Those derivatives are no accident: $\frac{d^j}{d\lambda^j}e^{\lambda t} = t^j e^{\lambda t}$ produces exactly the terms a Jordan block needs. In Jordan coordinates every method for $f(\mathbf{A})$ (Taylor, Laplace, Cayley–Hamilton) reduces to applying $f$ to the individual blocks, which is why they all agree. Unlike diagonalization, this works even for defective matrices (see the defective-matrix example below).
 
 ```{=latex}
 \begin{example}[frametitle={Example - obtaining $\Phi$ via Cayley–Hamilton}]
@@ -1225,7 +1217,7 @@ Sanity check: $\Phi(0) = \mathbf{I}$, and differentiating at $t = 0$ ($\frac{d}{
 
 ### Choosing between the four methods
 
-We have shown four ways to skin a cat, but at the end you still have the same dead cat. The Taylor series is the most general, flows nicely from rudimentary principles, but it is tedious. Diagonalization is elegant, and with its Jordan extension it shows how the system works: independent modes along the eigenvectors. Defective matrices make it laborious, though. Laplace transform is a nice trick, but requires some algebraic manipulation (in other words: much harder to implement in computers). Cayley–Hamilton is a clever method, but requires solving a Vandermonde system, and it is a black box: $\Phi$ comes out, insight into the structure doesn't.
+We have shown four ways to skin a cat, but at the end you still have the same dead cat. The Taylor series is the most general, flows nicely from rudimentary principles, but it is tedious. Diagonalization is elegant, and with its Jordan extension it shows how the system works: independent modes along the eigenvectors. Defective matrices make it laborious, though. Laplace transform is a nice trick, but requires some algebraic manipulation (in other words: much harder to implement in computers). Cayley–Hamilton is a clever method, but it is a black box: $\Phi$ comes out, insight into the structure doesn't.
 
 In practice the choice depends on $\mathbf{A}$ and on the problem. Cayley–Hamilton (CH) is the one that keeps coming back — it is the method behind controllability and observability later in these notes — and it wins when:
 

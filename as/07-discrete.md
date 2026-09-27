@@ -554,7 +554,7 @@ $}
 \]
 ```
 
-— only if $\mathbf{A}$ is diagonalizable.
+— only if $\mathbf{A}$ is diagonalizable. Otherwise the Jordan form takes over, $\mathbf{A}^k = \mathbf{T}\mathbf{J}^k\mathbf{T}^{-1}$, and the same blocks rule $\mathbf{A}^k$ as rule $e^{\mathbf{A}t}$. Splitting a block as $\mathbf{J}_q(\lambda) = \lambda\mathbf{I} + \mathbf{N}_q$ and using $\binom{k}{i} = 0$ for $i > k$, the binomial expansion gives $\mathbf{J}_q(\lambda)^k = \sum_{i=0}^{q-1}\binom{k}{i}\lambda^{k-i}\mathbf{N}_q^i$, so a $q\times q$ block contributes the modes $\lambda^k, k\lambda^{k-1}, \dots$ in place of $e^{\lambda t}, t e^{\lambda t}, \dots$.
 
 
 ```{=latex}

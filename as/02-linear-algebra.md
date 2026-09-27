@@ -703,7 +703,7 @@ $$
 
 Think of it as interpolation: $r(\lambda) = \alpha_0 + \alpha_1\lambda + \cdots$ is the unique degree-$(n-1)$ polynomial whose graph passes through $(\lambda_i,\, f(\lambda_i))$ at every eigenvalue. Matching there fixes all $n$ unknowns — no infinite series needed.
 
-Solving this Vandermonde system gives the $\alpha_j$. If an eigenvalue $\lambda_i$ has algebraic multiplicity $m_{a,i}$, evaluating at $\lambda_i$ yields only one equation; the missing $m_{a,i}-1$ come from differentiating $f(\lambda) = r(\lambda)$ with respect to $\lambda$, $m_{a,i}-1$ times, and evaluating at $\lambda_i$ again (a root of multiplicity $m_{a,i}$ also kills those derivatives of the $q(\lambda)g(\lambda)$ term). Each eigenvalue contributes exactly as many equations as its multiplicity.
+Solving this system gives the $\alpha_j$. If an eigenvalue $\lambda_i$ has algebraic multiplicity $m_{a,i}$, evaluating at $\lambda_i$ yields only one equation; the missing $m_{a,i}-1$ come from differentiating $f(\lambda) = r(\lambda)$ with respect to $\lambda$, $m_{a,i}-1$ times, and evaluating at $\lambda_i$ again (a root of multiplicity $m_{a,i}$ also kills those derivatives of the $q(\lambda)g(\lambda)$ term). Each eigenvalue contributes exactly as many equations as its multiplicity.
 
 The recipe, for any $f$:
 

@@ -10,7 +10,7 @@ $$
 
 each a **mode** of the system, so the eigenvalues of $\mathbf{A}$ are the modes of the response. A real $\lambda$ gives a growing or decaying exponential; a conjugate pair $\sigma \pm j\omega$ gives an oscillation with envelope $e^{\sigma t}$.
 
-The exception is a defective $\mathbf{A}$: with fewer independent eigenvectors than eigenvalues, a repeated eigenvalue brings a factor $t$ instead of a second independent exponential, so $n$ eigenvalues need not give $n$ modes. The Jordan form (State-space chapter) says exactly which: a $k	imes k$ Jordan block at $\lambda$ contributes $e^{\lambda t}, t e^{\lambda t}, \dots, t^{k-1}e^{\lambda t}$.
+The exception is a defective $\mathbf{A}$: with fewer independent eigenvectors than eigenvalues, a repeated eigenvalue brings a factor $t$ instead of a second independent exponential, so $n$ eigenvalues need not give $n$ modes. The Jordan form says exactly which. The block sizes tell you in advance which terms the free response can contain: a $k\times k$ Jordan block at $\lambda$ contributes $e^{\lambda t}, t e^{\lambda t}, \dots, t^{k-1}e^{\lambda t}$ (see $\Phi$ via the Jordan form in the State-space chapter). This is the state-space version of a repeated pole in partial fractions.
 
 These eigenvalues are also the **poles** of the transfer function $G(s) = \mathbf{C}(s\mathbf{I}-\mathbf{A})^{-1}\mathbf{B} + \mathbf{D}$ (which we get to properly in the transfer-function chapter): its denominator is $\det(s\mathbf{I}-\mathbf{A})$, so the poles are exactly the eigenvalues of $\mathbf{A}$ — at least for a minimal realization (controllable and observable, both defined below). An eigenvalue belonging to an uncontrollable or unobservable mode cancels out of $G(s)$ and is not a pole.
 
@@ -62,7 +62,7 @@ $}
 
 For the system to be marginally stable a.k.a stable in the sense of Lyapunov, the states may oscillate but remain bounded. 
 
-No eigenvalue with $\operatorname{Re}\lambda_i > 0$, and the eigenvalues on the imaginary axis are simple.^[There's more to it than meets the eye. "Simple" is sufficient but not necessary. The exact condition is that every eigenvalue on the axis has only $1\times1$ Jordan blocks ($m_g = m_a$). $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ has $\lambda = 0$ twice and is still marginally stable, while the double integrator, which has the same eigenvalues, drifts off as $t$. See $\Phi$ via the Jordan form in the State-space chapter.] The poles sit exactly on the dashed boundary:
+No eigenvalue with $\operatorname{Re}\lambda_i > 0$, and the eigenvalues on the imaginary axis are simple.^[There's more to it than meets the eye. "Simple" is sufficient but not necessary. The exact condition is that every eigenvalue on the axis has only $1\times1$ Jordan blocks ($m_g = m_a$; Jordan form in the Linear algebra chapter). For a stable eigenvalue the polynomial loses to the exponential, and $t^j e^{\lambda t} \to 0$. With $\operatorname{Re}\lambda = 0$ there is no decay to win against, and a block of size $\ge 2$ makes the response grow without bound. This is the one case where the eigenvalues alone do not decide stability. $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ (two separate integrators, blocks $1+1$) has $\lambda = 0$ twice and stays put, so it is marginally stable. The double integrator $\ddot{x} = 0$, with $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}$ (one $2\times2$ block), has the same eigenvalues but drifts as $x(t) = x_0 + \dot{x}_0 t$, so it is unstable.] The poles sit exactly on the dashed boundary:
 
 ```{=latex}
 \input{tikz/stability-marginal.tex}
@@ -81,7 +81,7 @@ $\operatorname{Re}\lambda_i < 0$ for all $i$: every mode decays, so from any ini
 
 ### Unstable
 
-Some eigenvalue with $\operatorname{Re}\lambda_i > 0$, or a repeated eigenvalue on the imaginary axis (which brings a factor $t$ and grows). Trajectories diverge; the poles lie in the right half-plane, outside the stable region:
+Some eigenvalue with $\operatorname{Re}\lambda_i > 0$, or an eigenvalue on the imaginary axis with a Jordan block of size $\ge 2$ (which brings a factor $t$ and grows; see the footnote under marginal stability). Trajectories diverge; the poles lie in the right half-plane, outside the stable region:
 
 ```{=latex}
 \input{tikz/stability-unstable.tex}
@@ -188,6 +188,8 @@ so $\operatorname{rank}\mathcal{C} = 2 < n$ and the system is not controllable. 
 \end{example}
 ```
 
+*Beyond diagonal: Jordan coordinates.* The same reading works for any $\mathbf{A}$ once it is brought to Jordan form, where controllability can be read off the transformed $\mathbf{B}$ (Gilbert's criterion). A useful consequence: if one eigenvalue has two or more Jordan blocks ($m_g \ge 2$), a single input cannot control the system, whatever $\mathbf{B}$ is. The input has to reach independent modes that share one $\lambda$, and they respond identically to it. In general, a system with $m$ inputs needs $m \ge \max_i m_{g,i}$. For actual testing, use the rank test above.^[For the Jordan-form tests in full, see @chen1999linear.]
+
 ## Observability
 
 A system is **observable** if the initial state $\vec{x}_0(t_0)$ can be reconstructed from the output $\vec{y}(t)$ measured over finite interval $$[t_0, t_1]$ together with the known input $\vec{u}(t)$).
@@ -255,7 +257,7 @@ $}
 
 When the rank falls short, the rows it misses are exactly the unobservable modes from the chapter opening: in the example below $\det\mathcal{O}$ vanishes, and the mode that never reaches the sensor is $\lambda = -1$ — the very factor $(s+1)$ that cancels out of the transfer functions.
 
-Note the duality: observability of $(\mathbf{A}, \mathbf{C})$ is controllability of $(\mathbf{A}^T, \mathbf{C}^T)$ — the controllability matrix of that transposed pair is exactly $\mathcal{O}^T$, so the two tests are one and the same condition.
+Note the duality: observability of $(\mathbf{A}, \mathbf{C})$ is controllability of $(\mathbf{A}^T, \mathbf{C}^T)$ — the controllability matrix of that transposed pair is exactly $\mathcal{O}^T$, so the two tests are one and the same condition. The Jordan-form rule from controllability carries over too: if one eigenvalue has two or more Jordan blocks, a single output cannot observe the system, whatever $\mathbf{C}$ is, and $p$ outputs need $p \ge \max_i m_{g,i}$.
 
 ```{=latex}
 \begin{example}[frametitle={Example - observability, the Taylor route}]
