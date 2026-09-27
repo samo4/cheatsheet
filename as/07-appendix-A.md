@@ -1,5 +1,8 @@
 # Appendix A: Linear algebra review
 
+Appendix A provides a brief review of essential linear algebra concepts used throughout the text, it mostly follows chapter 3 of @chen1999linear, that's where the $\mathbf{Q}$ comes from.
+
+
 ## Matrix multiplication
 
 Matrix multiplication is *row by column*: entry $(i,j)$ of $\mathbf{A}\mathbf{B}$ is row $i$ of $\mathbf{A}$ dotted with column $j$ of $\mathbf{B}$. The inner dimensions must match, $(m \times n)(n \times p) = (m \times p)$.
@@ -14,7 +17,7 @@ $$
 \mathbf{A}\mathbf{B} = \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{bmatrix}\begin{bmatrix} 7 & 8 \\ 9 & 10 \\ 11 & 12 \end{bmatrix}
 $$
 
-Entry by entry (just one to illustrate) :
+Entry by entry (just one) :
 
 $$
 c_{11} = 1\cdot7 + 2\cdot9 + 3\cdot11 = 58
@@ -39,25 +42,18 @@ The determinant is a single number attached to a square matrix. It decides inver
 For a $2\times2$ matrix:
 
 $$
-\det\begin{bmatrix} a & b \\ c & d \end{bmatrix} = ad - bc
+\begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad - bc
 $$
 
-For $n\times n$, expand along a row or column (Laplace expansion); signs alternate $+,-,+,\dots$. For $3\times3$ along the first row:
+For $n\times n$, expand along a row or column (Laplace expansion); signs alternate $+,-,+,\dots$.
 
-$$
-\det\begin{bmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{bmatrix}
-= a_{11}\begin{vmatrix} a_{22} & a_{23} \\ a_{32} & a_{33} \end{vmatrix}
-- a_{12}\begin{vmatrix} a_{21} & a_{23} \\ a_{31} & a_{33} \end{vmatrix}
-+ a_{13}\begin{vmatrix} a_{21} & a_{22} \\ a_{31} & a_{32} \end{vmatrix}
-$$
-
-$\det\mathbf{A} = 0$ means the rows (or columns) are linearly dependent — the matrix crushes a volume to zero.
+$\det\mathbf{A} = 0$ means the rows (or columns) are linearly dependent.
 
 Also useful later: $\det(\mathbf{A}\mathbf{B}) = \det\mathbf{A}\,\det\mathbf{B}$ and $\det(\mathbf{A}^{-1}) = 1/\det\mathbf{A}$. Swapping two rows or two columns multiplies the determinant by $-1$ — so reordering the columns of an eigenvector matrix only flips the sign.
 
 ## Inverse of a matrix
 
-The inverse $\mathbf{A}^{-1}$ is the matrix with $\mathbf{A}\mathbf{A}^{-1} = \mathbf{A}^{-1}\mathbf{A} = \mathbf{I}$. Two standard ways to compute it.
+The inverse $\mathbf{A}^{-1}$ is the matrix with $\mathbf{A}\mathbf{A}^{-1} = \mathbf{A}^{-1}\mathbf{A} = \mathbf{I}$. Two standard ways to compute it: Gaussian elimination and the adjugate formula with cofactors.
 
 ### Existence of inverse
 
@@ -70,7 +66,7 @@ A square matrix is invertible (nonsingular) iff $\det\mathbf{A} \ne 0$.
 $\mathbf{A} = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 3 & 4 \\ 3 & 4 & a \end{bmatrix}$.
 
 $$
-\det\mathbf{A} = 1\cdot(3a - 16) - 2\cdot(2a - 12) + 3\cdot(8 - 9) = 5 - a
+\det\mathbf{A} = 1\begin{vmatrix} 3 & 4 \\ 4 & a \end{vmatrix} - 2\begin{vmatrix} 2 & 4 \\ 3 & a \end{vmatrix} + 3\begin{vmatrix} 2 & 3 \\ 3 & 4 \end{vmatrix} = (3a - 16) - 2(2a - 12) + 3(8 - 9) = 5 - a
 $$
 
 so $\mathbf{A}$ is invertible exactly for $a \ne 5$. At $a = 5$ the third row is a linear combination of the first two: $[3\ 4\ 5] = -[1\ 2\ 3] + 2[2\ 3\ 4]$.
@@ -84,80 +80,46 @@ so $\mathbf{A}$ is invertible exactly for $a \ne 5$. At $a = 5$ the third row is
 Row-reduce the augmented matrix $[\mathbf{A} \mid \mathbf{I}]$ until the left block is $\mathbf{I}$; the right block is then $\mathbf{A}^{-1}$.
 
 ```{=latex}
-\begin{example}[frametitle={Example - inverse via Gauss elimination}]
-```
-
-$\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 5 & 3 \end{bmatrix}$. Augment and reduce:
-
-$$
-\left[\begin{array}{cc|cc} 2 & 1 & 1 & 0 \\ 5 & 3 & 0 & 1 \end{array}\right]
-\xrightarrow{R_1/2}
-\left[\begin{array}{cc|cc} 1 & \frac12 & \frac12 & 0 \\ 5 & 3 & 0 & 1 \end{array}\right]
-$$
-
-$$
-\xrightarrow{R_2 - 5R_1}
-\left[\begin{array}{cc|cc} 1 & \frac12 & \frac12 & 0 \\ 0 & \frac12 & -\frac52 & 1 \end{array}\right]
-\xrightarrow{2R_2}
-\left[\begin{array}{cc|cc} 1 & \frac12 & \frac12 & 0 \\ 0 & 1 & -5 & 2 \end{array}\right]
-$$
-
-$$
-\xrightarrow{R_1 - \frac12 R_2}
-\left[\begin{array}{cc|cc} 1 & 0 & 3 & -1 \\ 0 & 1 & -5 & 2 \end{array}\right]
-\quad\Longrightarrow\quad
-\mathbf{A}^{-1} = \begin{bmatrix} 3 & -1 \\ -5 & 2 \end{bmatrix}
-$$
-
-Sanity check: $\mathbf{A}\mathbf{A}^{-1} = \begin{bmatrix} 6-5 & -2+2 \\ 15-15 & -5+6 \end{bmatrix} = \mathbf{I}$.
-
-```{=latex}
-\end{example}
-```
-
-```{=latex}
 \begin{example}[frametitle={Example - Gauss saving your PFE}]
 ```
 
-When doing lots of partial fraction expansion, Gauss can save you some writing. Your PFE brought you 3 equations in 3 unknowns, and you rewrite them to:
+The same moves solve $\mathbf{A}\vec{x} = \vec{b}$ directly: augment with the single column $\vec{b}$ instead of $\mathbf{I}$. Partial fractions are where this pays off: matching coefficients leaves you with two equations in two unknowns,
 
 $$
-\begin{bmatrix} 1 & 1 & 1 \\ 7 & 9 & 10 \\ 2 & 3 & 3 \end{bmatrix}\begin{bmatrix} A \\ B \\ C \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$$
-
-Pack everything into one augmented matrix and row-reduce. A few heuristics for choosing the moves:
-
-- *Work one column at a time, left to right.* The leading $1$ in row 1 is the pivot; kill everything below it by subtracting multiples of the pivot row, $R_i - a_{i1}R_1$ — here $R_2 - 7R_1$ and $R_3 - 2R_1$.
-- *Favor a pivot of $1$.* The next pivot sits in column 2; row 3 already has a $1$ there, so swap it up ($R_2 \leftrightarrow R_3$) instead of pivoting on the $2$ and dragging fractions along.
-- *The multiplier is always entry-over-pivot.* After the swap, column 2 of the bottom row holds a $2$ over pivot $1$, so the move is $R_3 - 2R_2$.
-- *Rows above the current pivot are finished* — leave them alone. At the end, either back-substitute from the bottom, or keep eliminating upward ($R_i - a_{ic}R_p$) until the left block is $\mathbf{I}$ and read the answer off the last column.
-
-$$
-\left[\begin{array}{ccc|c} 1 & 1 & 1 & 0 \\ 7 & 9 & 10 & 0 \\ 2 & 3 & 3 & 1 \end{array}\right]
-\xrightarrow{row_2 - 7row_1, \ row_3 - 2row_1}
-\left[\begin{array}{ccc|c} 1 & 1 & 1 & 0 \\ 0 & 2 & 3 & 0 \\ 0 & 1 & 1 & 1 \end{array}\right]
+\begin{bmatrix} 1 & 1 \\ 2 & 1 \end{bmatrix}\begin{bmatrix} A \\ B \end{bmatrix} = \begin{bmatrix} 1 \\ 3 \end{bmatrix}
 $$
 
-Swap the last two rows and eliminate again:
+A few heuristics for choosing the moves:
+
+- *Work one column at a time, left to right.* The leading $1$ in row 1 is the pivot; kill everything below it with $R_i - a_{i1}R_1$ — the multiplier is always entry-over-pivot.
+- *Favor a pivot of $1$.* Swap a row with a $1$ up, or flip a $-1$ with $-R_i$, rather than dragging fractions along.
+- *Rows above the current pivot are finished* — leave them alone until the end, then eliminate upward until the left block is $\mathbf{I}$.
+
+Row operations act on every column the same way, so nothing stops you carrying $\vec{b}$ *and* $\mathbf{I}$ along at once, $[\mathbf{A} \mid \vec{b} \mid \mathbf{I}]$ — one reduction, two answers:
 
 $$
-\xrightarrow{row_2 \leftrightarrow row_3}
-\left[\begin{array}{ccc|c} 1 & 1 & 1 & 0 \\ 0 & 1 & 1 & 1 \\ 0 & 2 & 3 & 0 \end{array}\right]
-\xrightarrow{row_3 - 2row_2}
-\left[\begin{array}{ccc|c} 1 & 1 & 1 & 0 \\ 0 & 1 & 1 & 1 \\ 0 & 0 & 1 & -2 \end{array}\right]
+\left[\begin{array}{cc|c|cc} 1 & 1 & 1 & 1 & 0 \\ 2 & 1 & 3 & 0 & 1 \end{array}\right]
+\xrightarrow{R_2 - 2R_1}
+\left[\begin{array}{cc|c|cc} 1 & 1 & 1 & 1 & 0 \\ 0 & -1 & 1 & -2 & 1 \end{array}\right]
 $$
 
-Now kill the entries above the pivots, top to bottom:
-
 $$
-\xrightarrow{row_2 - row_3, \ row_1 - row_3}
-\left[\begin{array}{ccc|c} 1 & 1 & 0 & 2 \\ 0 & 1 & 0 & 3 \\ 0 & 0 & 1 & -2 \end{array}\right]
-\xrightarrow{row_1 - row_2}
-\left[\begin{array}{ccc|c} 1 & 0 & 0 & -1 \\ 0 & 1 & 0 & 3 \\ 0 & 0 & 1 & -2 \end{array}\right]
+\xrightarrow{-R_2}
+\left[\begin{array}{cc|c|cc} 1 & 1 & 1 & 1 & 0 \\ 0 & 1 & -1 & 2 & -1 \end{array}\right]
+\xrightarrow{R_1 - R_2}
+\left[\begin{array}{cc|c|cc} 1 & 0 & 2 & -1 & 1 \\ 0 & 1 & -1 & 2 & -1 \end{array}\right]
 $$
 
-The left block is $\mathbf{I}$, so the augmented column is the solution — read it off directly, because row swaps cannot scramble your variables: a row is one *equation*, and columns keep their meaning, so $A,B,C$ stay glued to columns 1, 2, 3 no matter how you shuffle the rows. Only swapping *columns* would relabel the variables — and then you'd have to swap the names $A,B,C$ to match. $(A, B, C) = (-1, \ 3, \ -2)$
+The left block is $\mathbf{I}$, so the middle column is the solution, $(A, B) = (2, -1)$, and the right block is the inverse,
 
-Sanity check: plug back into the original equations, not the reduced ones — $-1 + 3 - 2 = 0$, $7(-1) + 9(3) + 10(-2) = 0$, $2(-1) + 3(3) + 3(-2) = 1$.
+$$
+\mathbf{A}^{-1} = \begin{bmatrix} -1 & 1 \\ 2 & -1 \end{bmatrix}, \qquad
+\mathbf{A}\mathbf{A}^{-1} = \begin{bmatrix} -1+2 & 1-1 \\ -2+2 & 2-1 \end{bmatrix} = \mathbf{I}.
+$$
+
+Once you have $\mathbf{A}^{-1}$, any other right-hand side is just a multiplication, $\vec{x} = \mathbf{A}^{-1}\vec{b}$, with no reduction to redo. Row operations, swaps included, never scramble the variables: a row is one *equation*, and $A, B$ stay glued to columns 1 and 2. Only swapping *columns* would relabel them.
+
+Sanity check against the original, not the reduced system: $2 - 1 = 1$, $2(2) - 1 = 3$.
 
 Side note: strictly, Gauss elimination is not the same as the (eigen)diagonalization below. Row reduction only left-multiplies $\mathbf{A}$ by elementary matrices, so it does *not* preserve eigenvalues — diagonalization is a similarity $\mathbf{P}^{-1}\mathbf{A}\mathbf{P}$ and needs column operations too. What elimination does give you is the rank, and that is exactly what detects the singularity behind $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.
 
@@ -179,14 +141,6 @@ $$
 \mathbf{A}^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix},
 $$
 
-Applying it to the same $\mathbf{A}$ above ($ad - bc = 1$):
-
-$$
-\mathbf{A}^{-1} = \begin{bmatrix} 3 & -1 \\ -5 & 2 \end{bmatrix},
-$$
-
-which matches the Gauss result.
-
 ## Vectors, bases and norms
 
 *Linear independence.* a set of vectors is independent when $c_1\vec{v}_1 + \cdots + c_k\vec{v}_k = \vec{0}$ iff all $c_i = 0$, i.e. none is a combination of the others. As matrix columns: rank $k$. In $\mathbb{R}^n$ at most $n$ of them.
@@ -198,8 +152,6 @@ $$
 $$
 
 Same vector, new description.
-
-*Orthonormal basis.* Orthogonal ($\vec{q}_i^T\vec{q}_j = 0$, $i \ne j$) plus normal ($\vec{q}_i^T\vec{q}_i = 1$). Then $\mathbf{Q}^{-1} = \mathbf{Q}^T$ and coordinates are dot products, $\tilde{x}_i = \vec{q}_i^T\vec{x}$.
 
 *Vector norms.* A norm $\lVert\vec{x}\rVert$ measures the length of a vector and must satisfy:
 
@@ -223,17 +175,51 @@ In a city with a square street grid, the destination is 3 blocks east and 4 bloc
 \end{example}
 ```
 
+*Dot product.* Multiply matching entries and add them up $\vec{x}^T\vec{y}$. The result is a single number, not a vector. Geometrically, $\vec{x}^T\vec{y} = \lVert\vec{x}\rVert_2\,\lVert\vec{y}\rVert_2\cos\theta$, with $\theta$ the angle between the two arrows, so it measures how much they point the same way.
+
+*Orthonormal.* Two vectors are orthogonal when their dot product is zero. A vector is *normal* (normalized) when it has unit length, $\vec{q}^T\vec{q} = 1$.\footnote{Order matters. Mulitplying a vector by its transposed self gives the inner product — a single number. If you swap it around you get a matrix. Incidently: dot product and inner product are not strictly the same thing.} Why it is worth having? Stack the basis as columns of $\mathbf{Q}$. Entry $(i,j)$ of $\mathbf{Q}^T\mathbf{Q}$ is exactly $\vec{q}_i^T\vec{q}_j$, so the conditions above say $\mathbf{Q}^T\mathbf{Q} = \mathbf{I}$ — the inverse comes free by transposing:
+
+$$
+\mathbf{Q}^{-1} = \mathbf{Q}^T, \qquad \tilde{\vec{x}} = \mathbf{Q}^T\vec{x}, \qquad \tilde{x}_i = \vec{q}_i^T\vec{x}
+$$
+
+Each coordinate is simply the shadow of $\vec{x}$ on one basis vector. In a general basis $\mathbf{T}$ the coordinates are coupled and you have to solve $\mathbf{T}\tilde{\vec{x}} = \vec{x}$. Lengths and angles also survive the change. Such $\mathbf{Q}$ are rotations and reflections — they move the grid but never stretch it.
+
+```{=latex}
+\begin{example}[frametitle={Example - coordinates in a rotated grid}]
+```
+
+Take the axes rotated by 45°:
+
+$$
+\vec{q}_1 = \tfrac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ 1 \end{bmatrix}, \qquad
+\vec{q}_2 = \tfrac{1}{\sqrt{2}}\begin{bmatrix} -1 \\ 1 \end{bmatrix}
+$$
+
+Check: $\vec{q}_1^T\vec{q}_2 = \tfrac{1}{2}(-1 + 1) = 0$ and $\vec{q}_1^T\vec{q}_1 = \vec{q}_2^T\vec{q}_2 = \tfrac{1}{2}(1 + 1) = 1$, so orthonormal. The coordinates of $\vec{x} = \tvec{3, 1}$ are two dot products:
+
+$$
+\tilde{x}_1 = \vec{q}_1^T\vec{x} = \tfrac{3 + 1}{\sqrt{2}} = 2\sqrt{2}, \qquad
+\tilde{x}_2 = \vec{q}_2^T\vec{x} = \tfrac{-3 + 1}{\sqrt{2}} = -\sqrt{2}
+$$
+
+Rebuild to confirm: $2\sqrt{2}\,\vec{q}_1 - \sqrt{2}\,\vec{q}_2 = \tvec{2, 2} - \tvec{-1, 1} = \tvec{3, 1}$. Length is unchanged too: $3^2 + 1^2 = 10 = (2\sqrt{2})^2 + (\sqrt{2})^2$.
+
+```{=latex}
+\end{example}
+```
+
 ## Linear algebraic equations
 
 The rank $r = \operatorname{rank}\mathbf{A}$ is the number of linearly independent rows (or columns). Multiplying by an invertible matrix never changes it, which is why row operations (left-multiplication by invertible elementary matrices) are safe for finding the rank. For a system $\mathbf{A}\vec{x} = \vec{b}$ with $n$ unknowns:
 
-- No solution if $\operatorname{rank}[\mathbf{A}\mid\vec{b}] > \operatorname{rank}\mathbf{A}$ (inconsistent).
+- No solution if $\operatorname{rank}[\mathbf{A}\mid\vec{b}] > \operatorname{rank}\mathbf{A}$.
 - Exactly one solution if $\operatorname{rank}\mathbf{A} = \operatorname{rank}[\mathbf{A}\mid\vec{b}] = n$.
-- Infinitely many solutions if $\operatorname{rank}\mathbf{A} = \operatorname{rank}[\mathbf{A}\mid\vec{b}] < n$; then there are $n - r$ free variables.
+- Infinitely many solutions if $\operatorname{rank}\mathbf{A} = \operatorname{rank}[\mathbf{A}\mid\vec{b}] < n$.
 
 The homogeneous system $\mathbf{A}\vec{x} = \vec{0}$ always has the trivial solution $\vec{x} = \vec{0}$, and has nontrivial ones exactly when $\operatorname{rank}\mathbf{A} < n$, i.e. when $\mathbf{A}$ is singular ($\det\mathbf{A} = 0$).
 
-*Range space and null space.* Two subspaces sort out the answers:
+*Range space and null space.* Two subspaces sort out the answers above:
 
 - range space (column space): all combinations of the columns, i.e. all $\mathbf{A}\vec{x}$. $\mathbf{A}\vec{x} = \vec{b}$ is solvable exactly when $\vec{b}$ lies in it. Its dimension is the rank $r$.
 - null space (kernel): $\ker\mathbf{A} = \{\vec{x} : \mathbf{A}\vec{x} = \vec{0}\}$. Its dimension, the nullity, is $n - r$, one per free variable.
@@ -251,13 +237,13 @@ The rank is the dimension of the range space.
 ```
 
 $$
-\mathbf{A} = \begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \\ 1 & 1 & 2 \end{bmatrix}, \qquad
-\vec{y} = \mathbf{A}\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} x_1 + x_3 \\ x_2 + x_3 \\ x_1 + x_2 + 2x_3 \end{bmatrix}
+\mathbf{A} = \begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \end{bmatrix}, \qquad
+\vec{y} = \mathbf{A}\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} x_1 + x_3 \\ x_2 + x_3 \end{bmatrix}
 $$
 
-$\mathbf{A}$ is square, so its size alone would allow the whole of $\mathbb{R}^3$. But column 3 is column 1 $+$ column 2, so the third column adds no new direction. Whatever $x_1, x_2, x_3$ are, $y_3 = y_1 + y_2$: the outputs can never leave that plane. That plane is the range space, and its dimension is $\operatorname{rank}\mathbf{A} = 2$ (and $\det\mathbf{A} = 0$).
+Only two rows, so every output lives in $\mathbb{R}^2$ and the rank can be at most $2$, however many columns there are. Columns 1 and 2 are already the two unit vectors $\vec{e}_1, \vec{e}_2$, so they reach every direction of the plane. Column 3 is column 1 $+$ column 2 and adds nothing. The range space is all of $\mathbb{R}^2$, and $\operatorname{rank}\mathbf{A} = 2$.
 
-So $\mathbf{A}\vec{x} = \tvec{1, 2, 3}$ is solvable ($3 = 1 + 2$, e.g. $\vec{x} = \tvec{1, 2, 0}$), but $\mathbf{A}\vec{x} = \tvec{1, 2, 0}$ is not, because that $\vec{b}$ is off the plane. With $n = 3$ columns and rank $2$, the nullity is $1$: the same dependency, read as $\text{col}_1 + \text{col}_2 - \text{col}_3 = \vec{0}$, gives $\ker\mathbf{A} = \operatorname{span}\{\tvec{1, 1, -1}\}$. So a solution, when it exists, is not unique: $\vec{x} = \tvec{1, 2, 0} + t\,\tvec{1, 1, -1}$ for any $t$.
+So every $\vec{b}$ is reachable, e.g. $\mathbf{A}\vec{x} = \tvec{1, 2}$ with $\vec{x} = \tvec{1, 2, 0}$. With $n = 3$ columns and rank $2$, the nullity is $1$: the same dependency, read as $\text{col}_1 + \text{col}_2 - \text{col}_3 = \vec{0}$, gives $\ker\mathbf{A} = \operatorname{span}\{\tvec{1, 1, -1}\}$. So the solution is not unique: $\vec{x} = \tvec{1, 2, 0} + t\,\tvec{1, 1, -1}$ for any $t$. Three unknowns, two equations, one direction left free.
 
 ```{=latex}
 \end{example}

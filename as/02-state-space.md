@@ -51,7 +51,7 @@ $$
 y = \begin{bmatrix} 1 & 0 \end{bmatrix}\vec{x}
 $$
 
-Sanity check: $\det(s\mathbf{I} - \mathbf{A}) = s(s+2) + 3 = s^2 + 2s + 3$ — the ODE's own coefficients come back, as they must for a companion matrix.
+Sanity check: $\det(s\mathbf{I} - \mathbf{A}) = s(s+2) + 3 = s^2 + 2s + 3$ — the ODE's own coefficients come back.
 
 ```{=latex}
 \end{example}
@@ -59,7 +59,7 @@ Sanity check: $\det(s\mathbf{I} - \mathbf{A}) = s(s+2) + 3 = s^2 + 2s + 3$ — t
 
 The idea is Kalman's: recasting a linear system as matrices acting on a state vector is what he did in 1960 [@kalman1960general], the year usually called the birth of modern system theory [@bernhard2019kalman].
 
-The state variables are not unique. Relabeling is the dull case — reordering $x_1 = y$, $x_2 = \dot{y}$ changes nothing but the row order. The interesting case is swapping one physical quantity for another, which is a genuine choice rather than a relabeling.
+The state variables are not unique. Reordering variables changes nothing but the row order. The interesting case is swapping one physical quantity for another.
 
 ```{=latex}
 \begin{example}[frametitle={Example - state variables are not unique}]
@@ -1260,7 +1260,7 @@ In LTI analysis you rarely need $\mathbf{T}$, but the block sizes answer questio
 
 - **Modes.** The blocks tell you in advance which terms the free response can contain. A $k\times k$ block at $\lambda$ contributes $e^{\lambda t}, t e^{\lambda t}, \dots, t^{k-1}e^{\lambda t}$. This is the defective case under Modes of an LTI system, and the state-space version of a repeated pole in partial fractions.
 - **Stability on the imaginary axis.** For a stable eigenvalue the polynomial loses to the exponential, and $t^j e^{\lambda t} \to 0$. With $\operatorname{Re}\lambda = 0$ there is no decay to win against, and a block of size $\ge 2$ makes the response grow without bound. This is the one case where the eigenvalues do not decide stability. Marginal stability needs every eigenvalue with $\operatorname{Re}\lambda = 0$ to have only $1\times1$ blocks ($m_g = m_a$). The eigenvalue does not have to be simple. $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ (two separate integrators, blocks $1+1$) stays put and is marginally stable. The double integrator $\ddot{x} = 0$, with $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}$ (one $2\times2$ block), drifts as $x(t) = x_0 + \dot{x}_0 t$ and is unstable. Both have the same eigenvalues, $\lambda = 0, 0$.
-- **Controllability and observability.** In Jordan coordinates you can read them off $\mathbf{B}$ and $\mathbf{C}$ (Gilbert's criterion). A useful consequence: if one eigenvalue has two or more Jordan blocks ($m_g \ge 2$), a single input cannot control the system, and a single output cannot observe it, whatever $\mathbf{B}$ or $\mathbf{C}$ is. The input has to reach independent modes that share one $\lambda$, and they respond identically to it. In general, a system with $m$ inputs needs $m \ge \max_i m_{g,i}$. For actual testing, use the rank tests of the Properties chapter.^[For the Jordan-form tests in full, and a treatment of this whole chapter at similar depth, see @chen2013linear.]
+- **Controllability and observability.** In Jordan coordinates you can read them off $\mathbf{B}$ and $\mathbf{C}$ (Gilbert's criterion). A useful consequence: if one eigenvalue has two or more Jordan blocks ($m_g \ge 2$), a single input cannot control the system, and a single output cannot observe it, whatever $\mathbf{B}$ or $\mathbf{C}$ is. The input has to reach independent modes that share one $\lambda$, and they respond identically to it. In general, a system with $m$ inputs needs $m \ge \max_i m_{g,i}$. For actual testing, use the rank tests of the Properties chapter.^[For the Jordan-form tests in full, and a treatment of this whole chapter at similar depth, see @chen1999linear.]
 - **Discrete time.** The same blocks rule $\mathbf{A}^k$. With $\binom{k}{i} = 0$ for $i > k$, the binomial expansion gives $\mathbf{J}_q(\lambda)^k = \sum_{i=0}^{q-1}\binom{k}{i}\lambda^{k-i}\mathbf{N}_q^i$, so the modes are $\lambda^k, k\lambda^{k-1}, \dots$.
 - **Functions of matrices.** Every method for $f(\mathbf{A})$ (Taylor, Laplace, Cayley–Hamilton with derivatives) reduces, in Jordan coordinates, to applying $f$ to the individual blocks as above. That is why they all agree. It also explains the derivative trick of Cayley–Hamilton below: $\frac{d^j}{d\lambda^j}e^{\lambda t} = t^j e^{\lambda t}$ produces exactly the terms a Jordan block needs.
 
