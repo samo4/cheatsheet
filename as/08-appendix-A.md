@@ -1,4 +1,4 @@
-# Appendix B: Calculus and transforms review
+# Appendix A: Calculus and transforms review
 
 ## Calculus
 

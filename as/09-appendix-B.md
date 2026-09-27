@@ -1,4 +1,4 @@
-# Appendix C: Selected solved problems
+# Appendix B: Selected solved problems
 
 ## Modelling
 

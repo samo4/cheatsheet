@@ -1,6 +1,6 @@
-# Appendix A: Linear algebra review
+# Linear algebra
 
-Appendix A provides a brief review of essential linear algebra concepts used throughout the text, it mostly follows chapter 3 of @chen1999linear. Chen writes $\mathbf{Q}$ for any basis matrix; here $\mathbf{T}$ is a general basis and $\mathbf{Q}$ an orthonormal one. Another source is the lecture series @abbott2012linear.
+This chapter collects the linear algebra used throughout the rest of the notes. It mostly follows chapter 3 of @chen1999linear. Chen writes $\mathbf{Q}$ for any basis matrix; here $\mathbf{T}$ is a general basis and $\mathbf{Q}$ an orthonormal one. Another source is the lecture series @abbott2012linear.
 
 ## Matrix multiplication
 
