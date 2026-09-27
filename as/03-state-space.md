@@ -901,7 +901,7 @@ The diagonalization method is perhaps the most elegant, but it stands or falls w
 
 ### $\Phi$ via the Jordan form
 
-Take the defective matrix from the Linear algebra chapter, or the simplest one there is, $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. No clever choice of $\mathbf{V}$ diagonalizes it. If some $\mathbf{V}^{-1}\mathbf{A}\mathbf{V}$ were diagonal, it would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But then $\mathbf{A} = \mathbf{V}(2\mathbf{I})\mathbf{V}^{-1} = 2\mathbf{I}$, which it is not. Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
+A defective matrix, such as $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$, cannot be diagonalized by any choice of basis (Linear algebra chapter). Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
 
 So we settle for the next best thing: a basis in which $\mathbf{A}$ is *as diagonal as possible*. That is the Jordan form.\footnote{C. Jordan published it in 1870. Not to be confused with W. Jordan of Gauss–Jordan elimination, a geodesist.} It is not really a fifth method, but diagonalization finished. It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
 
