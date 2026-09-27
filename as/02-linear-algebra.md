@@ -600,7 +600,7 @@ $$
 f(\mathbf{A}) = \mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}
 $$
 
-The 45° example was exactly this with $\mathbf{V} = \mathbf{T}$. For the first eigenvalue example above (distinct eigenvalues), $\mathbf{V} = [\vec{x}_1\ \vec{x}_2\ \vec{x}_3]$ gives $\operatorname{diag}(1, 2, 3)$. In state space the new states are the *modes*: each $\dot{\tilde{x}}_i = \lambda_i\tilde{x}_i + (\mathbf{V}^{-1}\mathbf{B}\vec{u})_i$ evolves on its own, and $\Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$. The State space chapter works this through in detail.
+The 45° example was exactly this with $\mathbf{V} = \mathbf{T}$. For the first eigenvalue example above (distinct eigenvalues), $\mathbf{V} = [\vec{x}_1\ \vec{x}_2\ \vec{x}_3]$ gives $\operatorname{diag}(1, 2, 3)$. In state space the new states are the *modes*: each $\dot{\tilde{x}}_i = \lambda_i\tilde{x}_i + (\mathbf{V}^{-1}\mathbf{B}\vec{u})_i$ evolves on its own, and $\Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$. Worked examples, including a coupled RC pair split into its modes, are in the State space chapter under $\Phi$ via diagonalization.
 
 The catch is the word *independent*. A defective matrix, like the one in the eigenvalue section, has fewer than $n$ of them, and then *no* $\mathbf{T}$ at all makes it diagonal. Take $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. If it were similar to a diagonal matrix, that matrix would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But $\mathbf{T}^{-1}(2\mathbf{I})\mathbf{T} = 2\mathbf{I} \ne \mathbf{A}$ for every $\mathbf{T}$. The best one can do is the Jordan form (next section), and this $\mathbf{A}$ already is one.
 
@@ -712,7 +712,7 @@ The recipe, for any $f$:
 3. Match the scalar twin $f(\lambda_i) = \alpha_0 + \alpha_1\lambda_i + \cdots + \alpha_{n-1}\lambda_i^{n-1}$ at every eigenvalue. An eigenvalue with algebraic multiplicity $m_a$ gives only one equation, so also match the first $m_a - 1$ derivatives with respect to $\lambda$ there.
 4. Solve for the $\alpha_j$ and substitute back into the ansatz.
 
-The main text uses this recipe with two particular functions: $f(\lambda) = e^{\lambda t}$ gives the state-transition matrix $\Phi(t) = e^{\mathbf{A}t}$ (State space chapter), and $f(\lambda) = \lambda^k$ gives $\mathbf{A}^k$ (Discrete chapter). When $\mathbf{A}$ is diagonalizable, the result equals $\mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}$ from the Diagonalization section. Cayley–Hamilton just gets there without the eigenvectors, and it also works for defective matrices.
+The main text uses this recipe with two particular functions: $f(\lambda) = e^{\lambda t}$ gives the state-transition matrix $\Phi(t) = e^{\mathbf{A}t}$ (State space chapter, $\Phi$ via Cayley–Hamilton), and $f(\lambda) = \lambda^k$ gives $\mathbf{A}^k$ (Discrete chapter, $\mathbf{A}^k$ via Cayley–Hamilton). When $\mathbf{A}$ is diagonalizable, the result equals $\mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}$ from the Diagonalization section. Cayley–Hamilton just gets there without the eigenvectors, and it also works for defective matrices.
 
 ```{=latex}
 \begin{example}[frametitle={Example - use C-H to calculate $\sin\mathbf{A}$}]
