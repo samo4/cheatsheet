@@ -35,112 +35,6 @@ Note the order matters: $\mathbf{B}\mathbf{A}$ is $3\times3$, so it cannot equal
 \end{example}
 ```
 
-## Matrix determinant
-
-The determinant is a single number attached to a square matrix. It decides invertibility ($\det\mathbf{A} \ne 0$) and, geometrically, how much the matrix scales volumes.
-
-For a $2\times2$ matrix:
-
-$$
-\begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad - bc
-$$
-
-For $n\times n$, expand along a row or column (Laplace expansion); signs alternate $+,-,+,\dots$.
-
-$\det\mathbf{A} = 0$ means the rows (or columns) are linearly dependent.
-
-Also useful later: $\det(\mathbf{A}\mathbf{B}) = \det\mathbf{A}\,\det\mathbf{B}$ and $\det(\mathbf{A}^{-1}) = 1/\det\mathbf{A}$. Swapping two rows or two columns multiplies the determinant by $-1$ — so reordering the columns of an eigenvector matrix only flips the sign.
-
-## Inverse of a matrix
-
-The inverse $\mathbf{A}^{-1}$ is the matrix with $\mathbf{A}\mathbf{A}^{-1} = \mathbf{A}^{-1}\mathbf{A} = \mathbf{I}$. Two standard ways to compute it: Gaussian elimination and the adjugate formula with cofactors.
-
-### Existence of inverse
-
-A square matrix is invertible (nonsingular) iff $\det\mathbf{A} \ne 0$.
-
-```{=latex}
-\begin{example}[frametitle={Example - for which $a$ is the matrix invertible?}]
-```
-
-$\mathbf{A} = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 3 & 4 \\ 3 & 4 & a \end{bmatrix}$.
-
-$$
-\det\mathbf{A} = 1\begin{vmatrix} 3 & 4 \\ 4 & a \end{vmatrix} - 2\begin{vmatrix} 2 & 4 \\ 3 & a \end{vmatrix} + 3\begin{vmatrix} 2 & 3 \\ 3 & 4 \end{vmatrix} = (3a - 16) - 2(2a - 12) + 3(8 - 9) = 5 - a
-$$
-
-so $\mathbf{A}$ is invertible exactly for $a \ne 5$. At $a = 5$ the third row is a linear combination of the first two: $[3\ 4\ 5] = -[1\ 2\ 3] + 2[2\ 3\ 4]$.
-
-```{=latex}
-\end{example}
-```
-
-### Gauss elimination
-
-Row-reduce the augmented matrix $[\mathbf{A} \mid \mathbf{I}]$ until the left block is $\mathbf{I}$; the right block is then $\mathbf{A}^{-1}$.
-
-```{=latex}
-\begin{example}[frametitle={Example - Gauss saving your PFE}]
-```
-
-The same moves solve $\mathbf{A}\vec{x} = \vec{b}$ directly: augment with the single column $\vec{b}$ instead of $\mathbf{I}$. Partial fractions are where this pays off: matching coefficients leaves you with two equations in two unknowns,
-
-$$
-\begin{bmatrix} 1 & 1 \\ 2 & 1 \end{bmatrix}\begin{bmatrix} A \\ B \end{bmatrix} = \begin{bmatrix} 1 \\ 3 \end{bmatrix}
-$$
-
-A few heuristics for choosing the moves:
-
-- *Work one column at a time, left to right.* The leading $1$ in row 1 is the pivot; kill everything below it with $R_i - a_{i1}R_1$ — the multiplier is always entry-over-pivot.
-- *Favor a pivot of $1$.* Swap a row with a $1$ up, or flip a $-1$ with $-R_i$, rather than dragging fractions along.
-- *Rows above the current pivot are finished* — leave them alone until the end, then eliminate upward until the left block is $\mathbf{I}$.
-
-Row operations act on every column the same way, so nothing stops you carrying $\vec{b}$ *and* $\mathbf{I}$ along at once, $[\mathbf{A} \mid \vec{b} \mid \mathbf{I}]$ — one reduction, two answers:
-
-$$
-\left[\begin{array}{cc|c|cc} 1 & 1 & 1 & 1 & 0 \\ 2 & 1 & 3 & 0 & 1 \end{array}\right]
-\xrightarrow{R_2 - 2R_1}
-\left[\begin{array}{cc|c|cc} 1 & 1 & 1 & 1 & 0 \\ 0 & -1 & 1 & -2 & 1 \end{array}\right]
-$$
-
-$$
-\xrightarrow{-R_2}
-\left[\begin{array}{cc|c|cc} 1 & 1 & 1 & 1 & 0 \\ 0 & 1 & -1 & 2 & -1 \end{array}\right]
-\xrightarrow{R_1 - R_2}
-\left[\begin{array}{cc|c|cc} 1 & 0 & 2 & -1 & 1 \\ 0 & 1 & -1 & 2 & -1 \end{array}\right]
-$$
-
-The left block is $\mathbf{I}$, so the middle column is the solution, $(A, B) = (2, -1)$, and the right block is the inverse,
-
-$$
-\mathbf{A}^{-1} = \begin{bmatrix} -1 & 1 \\ 2 & -1 \end{bmatrix}, \qquad
-\mathbf{A}\mathbf{A}^{-1} = \begin{bmatrix} -1+2 & 1-1 \\ -2+2 & 2-1 \end{bmatrix} = \mathbf{I}.
-$$
-
-Once you have $\mathbf{A}^{-1}$, any other right-hand side is just a multiplication, $\vec{x} = \mathbf{A}^{-1}\vec{b}$, with no reduction to redo. Row operations, swaps included, never scramble the variables: a row is one *equation*, and $A, B$ stay glued to columns 1 and 2. Only swapping *columns* would relabel them.
-
-Sanity check against the original, not the reduced system: $2 - 1 = 1$, $2(2) - 1 = 3$.
-
-Side note: strictly, Gauss elimination is not the same as the (eigen)diagonalization below. Row reduction only left-multiplies $\mathbf{A}$ by elementary matrices, so it does *not* preserve eigenvalues — diagonalization is a similarity $\mathbf{P}^{-1}\mathbf{A}\mathbf{P}$ and needs column operations too. What elimination does give you is the rank, and that is exactly what detects the singularity behind $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.
-
-```{=latex}
-\end{example}
-```
-
-### With cofactors
-
-The adjugate formula
-
-$$
-\mathbf{A}^{-1} = \frac{1}{\det\mathbf{A}}\operatorname{adj}\mathbf{A},
-$$
-
-where $\operatorname{adj}\mathbf{A}$ is the transpose of the matrix of cofactors. For a $2\times2$ matrix where $a,b$ is the first row and $c,d$ the second row, this collapses to the famous formula
-
-$$
-\mathbf{A}^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix},
-$$
-
 ## Vectors, bases and norms
 
 *Linear independence.* a set of vectors is independent when $c_1\vec{v}_1 + \cdots + c_k\vec{v}_k = \vec{0}$ iff all $c_i = 0$, i.e. none is a combination of the others. As matrix columns: rank $k$. In $\mathbb{R}^n$ at most $n$ of them.
@@ -151,7 +45,7 @@ $$
 \vec{x} = \mathbf{T}\tilde{\vec{x}}, \qquad \tilde{\vec{x}} = \mathbf{T}^{-1}\vec{x}, \qquad \tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}
 $$
 
-Same vector, new description.
+Same vector, new description. ($\mathbf{T}^{-1}$ exists because the columns are independent; inverses are covered under linear algebraic equations.)
 
 *Vector norms.* A norm $\lVert\vec{x}\rVert$ measures the length of a vector and must satisfy:
 
@@ -227,7 +121,7 @@ The homogeneous system $\mathbf{A}\vec{x} = \vec{0}$ always has the trivial solu
 Together they give the rank–nullity theorem: every column is either a pivot or a free variable, so for $n$ columns
 
 $$
-n = \operatorname{rank}\mathbf{A} + \operatorname{nullity}\mathbf{A}
+\text{number of columns of } \mathbf{A} = \operatorname{rank}\mathbf{A} + \operatorname{nullity}\mathbf{A}
 $$
 
 The rank is the dimension of the range space.
@@ -251,7 +145,7 @@ So every $\vec{b}$ is reachable, e.g. $\mathbf{A}\vec{x} = \tvec{1, 2}$ with $\v
 
 *Structure of the solution.* If $\vec{x}_p$ is any one solution, every solution is $\vec{x} = \vec{x}_p + \vec{x}_h$ with $\vec{x}_h \in \ker\mathbf{A}$, unique exactly when $\ker\mathbf{A} = \{\vec{0}\}$. This is the same particular-plus-homogeneous split as for linear ODEs. The notes use both spaces: eigenvectors span $\ker(\mathbf{A} - \lambda\mathbf{I})$ (geometric multiplicity is its nullity), and reachable states form the range space of $\mathcal{C}$ (controllability).
 
-*Rank of a product.* The same two spaces cap the rank of a product. $\operatorname{range}(\mathbf{A}\mathbf{B}) \subseteq \operatorname{range}\mathbf{A}$, since every $\mathbf{A}\mathbf{B}\vec{x}$ is $\mathbf{A}(\mathbf{B}\vec{x})$. Also $\ker\mathbf{B} \subseteq \ker(\mathbf{A}\mathbf{B})$, since $\mathbf{B}\vec{x} = \vec{0}$ forces $\mathbf{A}\mathbf{B}\vec{x} = \vec{0}$, and rank–nullity turns this into a bound by $\operatorname{rank}\mathbf{B}$. Together:
+*Rank of a product.* Read $\mathbf{A}\mathbf{B}$ by columns and by rows. Each column of $\mathbf{A}\mathbf{B}$ is $\mathbf{A}$ times a column of $\mathbf{B}$, so it is a combination of the columns of $\mathbf{A}$, and there cannot be more independent ones than $\operatorname{rank}\mathbf{A}$. Each row of $\mathbf{A}\mathbf{B}$ is a combination of the rows of $\mathbf{B}$, weighted by a row of $\mathbf{A}$, so there cannot be more independent ones than $\operatorname{rank}\mathbf{B}$. Together:
 
 $$
 \operatorname{rank}(\mathbf{A}\mathbf{B}) \le \min(\operatorname{rank}\mathbf{A}, \operatorname{rank}\mathbf{B})
@@ -265,7 +159,7 @@ Put simply, multiplying can never raise the rank, only keep it or lower it. An i
 
 $$ \mathcal{O} = \begin{bmatrix} C \\ CA \end{bmatrix} = \begin{bmatrix} -1 & -1 \\ 3 & 7 \end{bmatrix}  $$
 
-$\mathcal{O}$ is $2\times2$, so $n = 2$. Row-reduce — rank is unchanged by row operations, and the point is to force a zero under the first pivot, the same column-by-column drill as in the Gauss example above. This time the leading entry is $-1$, and the cheapest first move is to flip the row: $-R_1$ turns it into the favourite pivot $+1$ and spares every sign from here on — rank never minds a row being multiplied by $-1$. Then clear column 1 with $R_2 - 3R_1$:
+$\mathcal{O}$ is $2\times2$, so $n = 2$. Row-reduce — rank is unchanged by row operations, and the point is to force a zero under the first pivot, the column-by-column drill detailed under Gauss elimination below. This time the leading entry is $-1$, and the cheapest first move is to flip the row: $-R_1$ turns it into the favourite pivot $+1$ and spares every sign from here on — rank never minds a row being multiplied by $-1$. Then clear column 1 with $R_2 - 3R_1$:
 
 $$
 \mathcal{O} \sim \begin{bmatrix} 1 & 1 \\ 0 & 4 \end{bmatrix}
@@ -279,34 +173,127 @@ $$
 
 i.e. $\mathcal{O}$ has *full rank*.
 
-Rectangular matrices work the same way, the rank is just capped by the smaller dimension, $\operatorname{rank}\mathbf{A} \le \min(m, n)$: a $3\times4$ matrix can carry at most three pivots. Take one with a dependency planted inside — row 3 was written as row 1 $+$ row 2:
+Rectangular matrices work the same way, the rank is just capped by the smaller dimension, $\operatorname{rank}\mathbf{A} \le \min(m, n)$. A tall $3\times2$ has the same shape as an $\mathcal{O}$ with $n = 2$ states; here row 2 was planted as $2\times$ row 1:
 
 $$
-\mathbf{A} = \begin{bmatrix} 1 & 1 & 1 & 1 \\ 2 & 3 & 4 & 5 \\ 3 & 4 & 5 & 6 \end{bmatrix}
-$$
-
-Same drill — clear column 1 below the pivot ($R_2 - 2R_1$, $R_3 - 3R_1$), then column 2 ($R_3 - R_2$):
-
-$$
+\mathbf{A} = \begin{bmatrix} 1 & 2 \\ 2 & 4 \\ 3 & 7 \end{bmatrix}
 \xrightarrow{R_2 - 2R_1, \ R_3 - 3R_1}
-\begin{bmatrix} 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 \\ 0 & 1 & 2 & 3 \end{bmatrix}
-\xrightarrow{R_3 - R_2}
-\begin{bmatrix} 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 \\ 0 & 0 & 0 & 0 \end{bmatrix}
+\begin{bmatrix} 1 & 2 \\ 0 & 0 \\ 0 & 1 \end{bmatrix}
 $$
 
-Rows 2 and 3 came out identical, so one collapses to a zero row — row 3 added no new direction. Only two pivots survive, so
-
-$$
-\operatorname{rank}\mathbf{A} = 2 < 3,
-$$
-
-one short of full row rank. That is the same question the observability test $\operatorname{rank}\mathcal{O} = n$ asks: every row $\mathbf{C}\mathbf{A}^k$ must add a genuinely new direction, or the state cannot be reconstructed.
+Row 2 collapses to zero, but row 3 still leaves a pivot in column 2, so $\operatorname{rank}\mathbf{A} = 2 = n$, which is *full column rank*. That is exactly what the observability test $\operatorname{rank}\mathcal{O} = n$ asks for. A redundant row costs nothing, as long as the other rows $\mathbf{C}\mathbf{A}^k$ still supply all $n$ directions.
 
 ```{=latex}
 \end{example}
 ```
 
+### Determinant
+
+The determinant is a single number attached to a square matrix. It decides invertibility ($\det\mathbf{A} \ne 0$) and, geometrically, how much the matrix scales volumes.
+
+For a $2\times2$ matrix:
+
+$$
+\begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad - bc
+$$
+
+For $n\times n$, expand along a row or column (Laplace expansion); signs alternate $+,-,+,\dots$.
+
+$\det\mathbf{A} = 0$ means the rows (or columns) are linearly dependent.
+
 *Square shortcut.* $full rank ⇔ \det\mathbf{A} \ne 0$ When the matrix is square, one number settles full rank: for $n\times n$ $\mathbf{A}$, $\operatorname{rank}\mathbf{A} = n$ exactly when $\det\mathbf{A} \ne 0$ — dependent rows or columns are precisely what make the determinant vanish, and their absence *is* full rank. This is the cheap route to the controllability and observability tests whenever the matrix comes out square: $\mathcal{C}$ is square only for a single input ($m = 1$), $\mathcal{O}$ only for a single output ($p = 1$). For rectangular matrices $\det$ is not even defined, so row-reduction is the only way.
+
+Also useful later: $\det(\mathbf{A}\mathbf{B}) = \det\mathbf{A}\,\det\mathbf{B}$ and $\det(\mathbf{A}^{-1}) = 1/\det\mathbf{A}$. Swapping two rows or two columns multiplies the determinant by $-1$ — so reordering the columns of an eigenvector matrix only flips the sign.
+
+### Inverse of a matrix
+
+The inverse $\mathbf{A}^{-1}$ is the matrix with $\mathbf{A}\mathbf{A}^{-1} = \mathbf{A}^{-1}\mathbf{A} = \mathbf{I}$. Two standard ways to compute it: Gaussian elimination and the adjugate formula with cofactors.
+
+#### Existence of inverse
+
+A square matrix is invertible (nonsingular) iff $\det\mathbf{A} \ne 0$.
+
+```{=latex}
+\begin{example}[frametitle={Example - for which $a$ is the matrix invertible?}]
+```
+
+$\mathbf{A} = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 3 & 4 \\ 3 & 4 & a \end{bmatrix}$.
+
+$$
+\det\mathbf{A} = 1\begin{vmatrix} 3 & 4 \\ 4 & a \end{vmatrix} - 2\begin{vmatrix} 2 & 4 \\ 3 & a \end{vmatrix} + 3\begin{vmatrix} 2 & 3 \\ 3 & 4 \end{vmatrix} = (3a - 16) - 2(2a - 12) + 3(8 - 9) = 5 - a
+$$
+
+so $\mathbf{A}$ is invertible exactly for $a \ne 5$. At $a = 5$ the third row is a linear combination of the first two: $[3\ 4\ 5] = -[1\ 2\ 3] + 2[2\ 3\ 4]$.
+
+```{=latex}
+\end{example}
+```
+
+#### Gauss elimination
+
+Row-reduce the augmented matrix $[\mathbf{A} \mid \mathbf{I}]$ until the left block is $\mathbf{I}$; the right block is then $\mathbf{A}^{-1}$.
+
+```{=latex}
+\begin{example}[frametitle={Example - Gauss saving your PFE}]
+```
+
+The same moves solve $\mathbf{A}\vec{x} = \vec{b}$ directly: augment with the single column $\vec{b}$ instead of $\mathbf{I}$. Partial fractions are where this pays off: matching coefficients leaves you with two equations in two unknowns,
+
+$$
+\begin{bmatrix} 1 & 1 \\ 2 & 1 \end{bmatrix}\begin{bmatrix} A \\ B \end{bmatrix} = \begin{bmatrix} 1 \\ 3 \end{bmatrix}
+$$
+
+A few heuristics for choosing the moves:
+
+- *Work one column at a time, left to right.* The leading $1$ in row 1 is the pivot; kill everything below it with $R_i - a_{i1}R_1$ — the multiplier is always entry-over-pivot.
+- *Favor a pivot of $1$.* Swap a row with a $1$ up, or flip a $-1$ with $-R_i$, rather than dragging fractions along.
+- *Rows above the current pivot are finished* — leave them alone until the end, then eliminate upward until the left block is $\mathbf{I}$.
+
+Row operations act on every column the same way, so nothing stops you carrying $\vec{b}$ *and* $\mathbf{I}$ along at once, $[\mathbf{A} \mid \vec{b} \mid \mathbf{I}]$ — one reduction, two answers:
+
+$$
+\left[\begin{array}{cc|c|cc} 1 & 1 & 1 & 1 & 0 \\ 2 & 1 & 3 & 0 & 1 \end{array}\right]
+\xrightarrow{R_2 - 2R_1}
+\left[\begin{array}{cc|c|cc} 1 & 1 & 1 & 1 & 0 \\ 0 & -1 & 1 & -2 & 1 \end{array}\right]
+$$
+
+$$
+\xrightarrow{-R_2}
+\left[\begin{array}{cc|c|cc} 1 & 1 & 1 & 1 & 0 \\ 0 & 1 & -1 & 2 & -1 \end{array}\right]
+\xrightarrow{R_1 - R_2}
+\left[\begin{array}{cc|c|cc} 1 & 0 & 2 & -1 & 1 \\ 0 & 1 & -1 & 2 & -1 \end{array}\right]
+$$
+
+The left block is $\mathbf{I}$, so the middle column is the solution, $(A, B) = (2, -1)$, and the right block is the inverse,
+
+$$
+\mathbf{A}^{-1} = \begin{bmatrix} -1 & 1 \\ 2 & -1 \end{bmatrix}, \qquad
+\mathbf{A}\mathbf{A}^{-1} = \begin{bmatrix} -1+2 & 1-1 \\ -2+2 & 2-1 \end{bmatrix} = \mathbf{I}.
+$$
+
+Once you have $\mathbf{A}^{-1}$, any other right-hand side is just a multiplication, $\vec{x} = \mathbf{A}^{-1}\vec{b}$, with no reduction to redo. Row operations, swaps included, never scramble the variables: a row is one *equation*, and $A, B$ stay glued to columns 1 and 2. Only swapping *columns* would relabel them.
+
+Sanity check against the original, not the reduced system: $2 - 1 = 1$, $2(2) - 1 = 3$.
+
+Side note: strictly, Gauss elimination is not the same as the (eigen)diagonalization below. Row reduction only left-multiplies $\mathbf{A}$ by elementary matrices, so it does *not* preserve eigenvalues — diagonalization is a similarity $\mathbf{P}^{-1}\mathbf{A}\mathbf{P}$ and needs column operations too. What elimination does give you is the rank, and that is exactly what detects the singularity behind $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.
+
+```{=latex}
+\end{example}
+```
+
+#### With cofactors
+
+The adjugate formula
+
+$$
+\mathbf{A}^{-1} = \frac{1}{\det\mathbf{A}}\operatorname{adj}\mathbf{A},
+$$
+
+where $\operatorname{adj}\mathbf{A}$ is the transpose of the matrix of cofactors. For a $2\times2$ matrix where $a,b$ is the first row and $c,d$ the second row, this collapses to the famous formula
+
+$$
+\mathbf{A}^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix},
+$$
 
 ## Eigenvalues and eigenvectors
 
