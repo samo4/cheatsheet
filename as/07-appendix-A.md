@@ -396,10 +396,10 @@ When $m_g < m_a$ for some eigenvalue, the matrix is *defective*. Its eigenvector
 
 ## Similarity transformation
 
-A matrix describes a linear map *in a particular basis*. Take the map $\vec{y} = \mathbf{A}\vec{x}$ and describe both vectors in a new basis. With an invertible $\mathbf{T}$ whose columns are the new basis vectors written in the old coordinates, the old coordinates follow from the new ones as
+A matrix describes a linear map in a particular basis. Take the map $\vec{y} = \mathbf{A}\vec{x}$ and describe both vectors in a new basis. With an invertible $\mathbf{T}$ whose columns are the new basis vectors written in the old coordinates, the old coordinates follow from the new ones as
 
 $$
-\vec{x} = \mathbf{T}\tilde{\vec{x}}, \qquad \vec{y} = \mathbf{T}\tilde{\vec{y}}
+\underbrace{\vec{x}}_{\text{old}} = \mathbf{T}\underbrace{\tilde{\vec{x}}}_{\text{new}}, \qquad \underbrace{\vec{y}}_{\text{old}} = \mathbf{T}\underbrace{\tilde{\vec{y}}}_{\text{new}}
 $$
 
 (the same $\mathbf{T}$ for both, since $\vec{x}$ and $\vec{y}$ live in the same space). Substitute into $\vec{y} = \mathbf{A}\vec{x}$ and solve for $\tilde{\vec{y}}$:
