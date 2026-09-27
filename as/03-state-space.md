@@ -907,9 +907,7 @@ So we settle for the next best thing: a basis in which $\mathbf{A}$ is *as diago
 
 #### Jordan blocks
 
-*Similarity in one breath.* Two matrices are *similar* if $\tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}$ for some invertible $\mathbf{T}$. They are the same map written in a different basis (the columns of $\mathbf{T}$), so they share eigenvalues and multiplicities, and $e^{\mathbf{A}t} = \mathbf{T}e^{\tilde{\mathbf{A}}t}\mathbf{T}^{-1}$. Diagonalization was the special case $\mathbf{T} = \mathbf{V}$, $\tilde{\mathbf{A}} = \boldsymbol{\Lambda}$. In state space, $\mathbf{T}$ is just a new choice of state, $\vec{x} = \mathbf{T}\tilde{\vec{x}}$ (details in the Linear algebra chapter).
-
-Every square matrix, defective or not, is similar to a *Jordan matrix* $\mathbf{J}$, block-diagonal with *Jordan blocks* on the diagonal:
+Every square matrix, defective or not, is similar (see the Linear algebra chapter) to a *Jordan matrix* $\mathbf{J}$, block-diagonal with *Jordan blocks* on the diagonal:
 
 $$
 \mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J} = \begin{bmatrix} \mathbf{J}_{k_1}(\lambda_1) & & \\ & \ddots & \\ & & \mathbf{J}_{k_p}(\lambda_p) \end{bmatrix}, \qquad
