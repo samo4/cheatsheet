@@ -381,7 +381,18 @@ Sanity check: $\mathbf{A}\vec{x}_1 = \vec{x}_1$, $\mathbf{A}\vec{x}_2 = 2\vec{x}
 \end{example}
 ```
 
-A single eigenvalue can occur multiple times. We call this algebraic multiplicity and denote it as $m_a$. The number of linearly independent eigenvectors belonging to it is the geometric multiplicity $m_g$, always $1 \le m_g \le m_a$.
+#### Algebraic multiplicity
+
+An single eigenvalue can be a repeated root of the characteristic polynomial. The number of times it repeats is its algebraic multiplicity $m_a$.
+
+#### Geometric multiplicity
+
+The geometric multiplicity $m_g$ of an eigenvalue is the number of linearly independent eigenvectors belonging to it. In practice it is the number of free variables left when you solve $(\mathbf{A} - \lambda\mathbf{I})\vec{x} = \vec{0}$. Geometrically, it says whether the eigenspace is a line ($m_g = 1$), a plane ($m_g = 2$), and so on. It always satisfies $1 \le m_g \le m_a$. Both $2\times2$ matrices below have $\lambda = 1$ with $m_a = 2$:
+
+- $\mathbf{I}$ scales every vector by 1, so its eigenspace is the whole plane: $m_g = 2$.
+- The shear $\begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ leaves only the $x_1$ axis in place, so its eigenspace is that one line: $m_g = 1$.
+
+When $m_g < m_a$ for some eigenvalue, the matrix is *defective*. Its eigenvectors cannot span the whole space.
 
 ## Similarity transformation
 
