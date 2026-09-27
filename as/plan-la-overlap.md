@@ -3,7 +3,7 @@
 Rule: 02 owns pure matrix theory; 03 keeps only what is Φ-specific and cites 02. One step per commit.
 
 1. [x] **Eigenvalues and eigenvectors.** Merge 03's extras into 02 (Hilbert footnote, Σm_a = n, m_g = n − rank, "In practice" recipe, linear-dependence warning, defective 3×3 example). Drop the subsection from 03; keep its triangular half-jackpot line.
-2. [ ] **Diagonalization.** AV = VΛ derivation and column-order remark move to 02 (replacing its short version; add "always true for distinct eigenvalues"). 03 keeps the diagonal motivation, the telescoped series to the boxed Φ = Ve^{Λt}V⁻¹, RC-modes and Φ examples.
+2. [x] **Diagonalization.** AV = VΛ derivation and column-order remark move to 02 (replacing its short version; add "always true for distinct eigenvalues"). 03 keeps the diagonal motivation, the telescoped series to the boxed Φ = Ve^{Λt}V⁻¹, RC-modes and Φ examples.
 3. [ ] **"Defective cannot be diagonalized"** (the [[2,1],[0,2]] argument). Keep in 02; 03 points back and keeps the "not exotic" motivation.
 4. [ ] **Similarity.** Delete "Similarity in one breath" from 03.
 5. [ ] **Jordan form.** New 02 section between Similarity and Functions: Jordan matrix, counting blocks, generalized eigenvectors + chain recipe, Schur caveat. 03 keeps Φ via Jordan: block exponential, the three examples (whole), "What the blocks tell you".

@@ -648,41 +648,13 @@ Most $\mathbf{A}$'s are not diagonal, but with a little elbow grease we can stil
 
 #### Diagonalization
 
-Now to where we're really going: how to reorganize our matrix into a diagonal form. When $m_{g,i} = m_{a,i}$ for every eigenvalue, there are exactly $n$ linearly independent eigenvectors $\vec{v}_1, \dots, \vec{v}_n$. Stack them as columns:
+Now to where we're really going: how to reorganize our matrix into a diagonal form. When $m_{g,i} = m_{a,i}$ for every eigenvalue, the $n$ independent eigenvectors stacked as the columns of $\mathbf{V}$ give the factorization (derived in the Linear algebra chapter)
 
 $$
-\mathbf{V} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}
+\mathbf{A} = \mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}, \qquad \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)
 $$
 
-Each eigenpair satisfies $\mathbf{A}\vec{v}_i = \lambda_i \vec{v}_i$, so stacking the $n$ equations side by side lets $\mathbf{A}$ act on every column at once:
-
-$$
-\mathbf{A} \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix} = \begin{bmatrix} \lambda_1\vec{v}_1 & \lambda_2\vec{v}_2 & \cdots & \lambda_n\vec{v}_n \end{bmatrix}
-$$
-
-The scaled columns on the right are just the original ones times the diagonal eigenvalue matrix $\boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)$:
-
-$$
-= \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}\begin{bmatrix}
-\lambda_1 & & \\
-& \ddots & \\
-& & \lambda_n
-\end{bmatrix}
-$$
-
-So, writing $\mathbf{V}$ for the stacked matrix, this is exactly
-
-$$
-\mathbf{A}\mathbf{V} = \mathbf{V}\boldsymbol{\Lambda}
-$$
-
-Independence makes $\mathbf{V}$ invertible, so multiplying by $\mathbf{V}^{-1}$ from the right gives the factorization
-
-$$
-\mathbf{A} = \mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}
-$$
-
-The order of the columns is your choice — each eigenvalue on the diagonal of $\boldsymbol{\Lambda}$ just has to follow its own eigenvector. Swapping two columns of $\mathbf{V}$ (and the matching eigenvalues) flips the sign of $\det\mathbf{V}$ but leaves $\mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}$, and hence $\Phi(t)$, identical. Only $\det\mathbf{V} \ne 0$ really matters.
+with each eigenvalue on the diagonal of $\boldsymbol{\Lambda}$ in the same position as its eigenvector in $\mathbf{V}$.
 
 This is the whole trick: $\mathbf{A}$ is just a diagonal matrix in a different basis. Powers pass through the same similarity — the inner $\mathbf{V}^{-1}\mathbf{V}$ pairs cancel, like a telescope:
 

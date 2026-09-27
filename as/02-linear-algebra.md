@@ -556,15 +556,53 @@ $$
 
 so $(\mathbf{A}, \mathbf{B}, \mathbf{C}, \mathbf{D}) \mapsto (\mathbf{T}^{-1}\mathbf{A}\mathbf{T},\ \mathbf{T}^{-1}\mathbf{B},\ \mathbf{C}\mathbf{T},\ \mathbf{D})$. Here only the state changes coordinates; $\vec{u}$ and $\vec{y}$ are untouched, which is why $\mathbf{B}$ gets only a $\mathbf{T}^{-1}$ and $\mathbf{C}$ only a $\mathbf{T}$. Poles, stability and the transfer function do not notice it.
 
-*Diagonalization.* The easiest $\tilde{\mathbf{A}}$ of all is diagonal, and the basis that gets you there is made of eigenvectors. Put $n$ independent eigenvectors in the columns of $\mathbf{T} = \mathbf{V}$. Then $\mathbf{A}\vec{v}_i = \lambda_i\vec{v}_i$, stacked column by column, reads $\mathbf{A}\mathbf{V} = \mathbf{V}\boldsymbol{\Lambda}$, i.e.
+### Diagonalization
+
+The easiest $\tilde{\mathbf{A}}$ of all is diagonal, and the basis that gets you there is made of eigenvectors. When $m_{g,i} = m_{a,i}$ for every eigenvalue, there are exactly $n$ linearly independent eigenvectors $\vec{v}_1, \dots, \vec{v}_n$. This is always the case when all eigenvalues are distinct, since then $m_{g,i} = m_{a,i} = 1$. Stack them as columns:
 
 $$
-\mathbf{V}^{-1}\mathbf{A}\mathbf{V} = \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n), \qquad f(\mathbf{A}) = \mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}
+\mathbf{V} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}
 $$
 
-The 45° example was exactly this with $\mathbf{V} = \mathbf{T}$. For the eigenvalue example above, $\mathbf{V} = [\vec{x}_1\ \vec{x}_2\ \vec{x}_3]$ gives $\operatorname{diag}(1, 2, 3)$. In state space the new states are the *modes*: each $\dot{\tilde{x}}_i = \lambda_i\tilde{x}_i + (\mathbf{V}^{-1}\mathbf{B}\vec{u})_i$ evolves on its own, and $\Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$. The State space chapter works this through in detail.
+Each eigenpair satisfies $\mathbf{A}\vec{v}_i = \lambda_i \vec{v}_i$, so stacking the $n$ equations side by side lets $\mathbf{A}$ act on every column at once:
 
-The catch is the word *independent*: there must be $n$ of them, i.e. $m_g = m_a$ for every eigenvalue. A defective matrix has too few, and then *no* $\mathbf{T}$ at all makes it diagonal. Take $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. If it were similar to a diagonal matrix, that matrix would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But $\mathbf{T}^{-1}(2\mathbf{I})\mathbf{T} = 2\mathbf{I} \ne \mathbf{A}$ for every $\mathbf{T}$. The best one can do is the Jordan form, and this $\mathbf{A}$ already is one. See $\Phi$ via the Jordan form in the State space chapter.
+$$
+\mathbf{A} \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix} = \begin{bmatrix} \lambda_1\vec{v}_1 & \lambda_2\vec{v}_2 & \cdots & \lambda_n\vec{v}_n \end{bmatrix}
+$$
+
+The scaled columns on the right are just the original ones times the diagonal eigenvalue matrix $\boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)$:
+
+$$
+= \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}\begin{bmatrix}
+\lambda_1 & & \
+& \ddots & \
+& & \lambda_n
+\end{bmatrix}
+$$
+
+So, writing $\mathbf{V}$ for the stacked matrix, this is exactly
+
+$$
+\mathbf{A}\mathbf{V} = \mathbf{V}\boldsymbol{\Lambda}
+$$
+
+Independence makes $\mathbf{V}$ invertible, so multiplying by $\mathbf{V}^{-1}$ from either side gives the factorization and its twin, a similarity with $\mathbf{T} = \mathbf{V}$:
+
+$$
+\mathbf{A} = \mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}, \qquad \mathbf{V}^{-1}\mathbf{A}\mathbf{V} = \boldsymbol{\Lambda}
+$$
+
+The order of the columns is your choice — each eigenvalue on the diagonal of $\boldsymbol{\Lambda}$ just has to follow its own eigenvector. Swapping two columns of $\mathbf{V}$ (and the matching eigenvalues) flips the sign of $\det\mathbf{V}$ but leaves $\mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}$, and hence every $f(\mathbf{A})$, identical. Only $\det\mathbf{V} \ne 0$ really matters.
+
+Since functions pass through a similarity, and a function of a diagonal matrix acts entry by entry,
+
+$$
+f(\mathbf{A}) = \mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}
+$$
+
+The 45° example was exactly this with $\mathbf{V} = \mathbf{T}$. For the first eigenvalue example above (distinct eigenvalues), $\mathbf{V} = [\vec{x}_1\ \vec{x}_2\ \vec{x}_3]$ gives $\operatorname{diag}(1, 2, 3)$. In state space the new states are the *modes*: each $\dot{\tilde{x}}_i = \lambda_i\tilde{x}_i + (\mathbf{V}^{-1}\mathbf{B}\vec{u})_i$ evolves on its own, and $\Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$. The State space chapter works this through in detail.
+
+The catch is the word *independent*: there must be $n$ of them, i.e. $m_g = m_a$ for every eigenvalue. A defective matrix has too few, and then *no* $\mathbf{T}$ at all makes it diagonal. Take $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. If it were similar to a diagonal matrix, that matrix would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But $\mathbf{T}^{-1}(2\mathbf{I})\mathbf{T} = 2\mathbf{I} \ne \mathbf{A}$ for every $\mathbf{T}$. The best one can do is the Jordan form, and this $\mathbf{A}$ already is one.
 
 ## Functions of a square matrix
 
