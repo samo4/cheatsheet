@@ -665,7 +665,29 @@ Worked examples, from the block structure through the chains to $\mathbf{T}$, ar
 
 Starting with Cayley in 1858, people asked whether run-of-the-mill scalar functions such as $\sqrt{x}$, $e^x$, $\sin x$ and $\cos x$ have any meaning when applied to a matrix. As a matter of fact, they do for square matrices.
 
-A function of a square matrix is defined by its power series: if the scalar function's Taylor series $f(\lambda) = \sum_k c_k\lambda^k$ converges, then $f(\mathbf{A}) = \sum_k c_k\mathbf{A}^k$. That is what $e^{\mathbf{A}t}$, $\sin\mathbf{A}$ or $\mathbf{A}^k$ mean. The infinite series is useless by hand, but Cayley–Hamilton theorem (introduced in the State space chapter) collapses it: $\mathbf{A}$ satisfies its own characteristic equation, so every power $\mathbf{A}^k$ with $k \ge n$ folds back into $\mathbf{I}, \mathbf{A}, \dots, \mathbf{A}^{n-1}$. Dividing $f$ by the characteristic polynomial $g(\lambda) = \det(\lambda\mathbf{I} - \mathbf{A})$ therefore leaves a remainder of degree at most $n - 1$, and the $q$-term dies when the matrix is substituted:
+A function of a square matrix is defined by its power series: if the scalar function's Taylor series $f(\lambda) = \sum_k c_k\lambda^k$ converges, then $f(\mathbf{A}) = \sum_k c_k\mathbf{A}^k$. That is what $e^{\mathbf{A}t}$, $\sin\mathbf{A}$ or $\mathbf{A}^k$ mean. The infinite series is useless by hand, but the Cayley–Hamilton theorem\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} collapses it.
+
+### The Cayley–Hamilton theorem
+
+Every matrix satisfies its own characteristic equation. If
+
+$$
+g(\lambda) = \det(\lambda\mathbf{I} - \mathbf{A}) = \lambda^n + c_{n-1}\lambda^{n-1} + \cdots + c_0
+$$
+
+then substituting the matrix for the scalar gives the zero matrix:
+
+$$
+g(\mathbf{A}) = \mathbf{A}^n + c_{n-1}\mathbf{A}^{n-1} + \cdots + c_0\mathbf{I} = \mathbf{0}
+$$
+
+So every power $\mathbf{A}^k$ with $k \ge n$ folds back into a combination of $\mathbf{I}, \mathbf{A}, \dots, \mathbf{A}^{n-1}$. This is the whole power of the theorem: dividing any polynomial $p(\lambda)$ by $g(\lambda)$ leaves a remainder $r(\lambda)$ of degree at most $n-1$, and since $g(\mathbf{A}) = \mathbf{0}$,
+
+$$
+p(\mathbf{A}) = r(\mathbf{A})
+$$
+
+For an analytic function\footnote{An analytic function has derivatives of all orders and can be represented by a convergent power series (e.g. $e^{\mathbf{A}t}$ or $\sin\mathbf{A}$)} the same holds after expanding it in a Taylor series and reducing term by term. The $q$-term dies when the matrix is substituted:
 
 $$
 f(\lambda) = q(\lambda)\,g(\lambda) + \alpha_0 + \alpha_1\lambda + \cdots + \alpha_{n-1}\lambda^{n-1}
@@ -673,14 +695,24 @@ f(\lambda) = q(\lambda)\,g(\lambda) + \alpha_0 + \alpha_1\lambda + \cdots + \alp
 f(\mathbf{A}) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \cdots + \alpha_{n-1}\mathbf{A}^{n-1}
 $$
 
-because $g(\mathbf{A}) = \mathbf{0}$. So any analytic matrix function collapses to a polynomial of degree at most $n-1$ in $\mathbf{A}$, and the only unknowns are the $n$ scalars $\alpha_j$. The recipe, for any $f$:
+So any analytic matrix function collapses to a polynomial of degree at most $n-1$ in $\mathbf{A}$, and the only unknowns are the $n$ scalars $\alpha_j$. They come from the *scalar* twin on the left. At an eigenvalue, $g(\lambda_i) = 0$ by definition, so the $q(\lambda)g(\lambda)$ term drops out there too, and each eigenvalue yields one scalar equation:
+
+$$
+f(\lambda_i) = \alpha_0 + \alpha_1\lambda_i + \cdots + \alpha_{n-1}\lambda_i^{n-1}, \qquad i = 1, \dots, n
+$$
+
+Think of it as interpolation: $r(\lambda) = \alpha_0 + \alpha_1\lambda + \cdots$ is the unique degree-$(n-1)$ polynomial whose graph passes through $(\lambda_i,\, f(\lambda_i))$ at every eigenvalue. Matching there fixes all $n$ unknowns — no infinite series needed.
+
+Solving this Vandermonde system gives the $\alpha_j$. If an eigenvalue $\lambda_i$ has algebraic multiplicity $m_{a,i}$, evaluating at $\lambda_i$ yields only one equation; the missing $m_{a,i}-1$ come from differentiating $f(\lambda) = r(\lambda)$ with respect to $\lambda$, $m_{a,i}-1$ times, and evaluating at $\lambda_i$ again (a root of multiplicity $m_{a,i}$ also kills those derivatives of the $q(\lambda)g(\lambda)$ term). Each eigenvalue contributes exactly as many equations as its multiplicity.
+
+The recipe, for any $f$:
 
 1. Find the eigenvalues of $\mathbf{A}$.
 2. Write the ansatz $f(\mathbf{A}) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \cdots + \alpha_{n-1}\mathbf{A}^{n-1}$.
 3. Match the scalar twin $f(\lambda_i) = \alpha_0 + \alpha_1\lambda_i + \cdots + \alpha_{n-1}\lambda_i^{n-1}$ at every eigenvalue. An eigenvalue with algebraic multiplicity $m_a$ gives only one equation, so also match the first $m_a - 1$ derivatives with respect to $\lambda$ there.
 4. Solve for the $\alpha_j$ and substitute back into the ansatz.
 
-The main text uses this recipe with two particular functions: $f(\lambda) = e^{\lambda t}$ gives the state-transition matrix $\Phi(t) = e^{\mathbf{A}t}$ (State space chapter), and $f(\lambda) = \lambda^k$ gives $\mathbf{A}^k$ (Discrete chapter). When $\mathbf{A}$ is diagonalizable, the result equals $\mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}$ from the previous section. Cayley–Hamilton just gets there without the eigenvectors, and it also works for defective matrices.
+The main text uses this recipe with two particular functions: $f(\lambda) = e^{\lambda t}$ gives the state-transition matrix $\Phi(t) = e^{\mathbf{A}t}$ (State space chapter), and $f(\lambda) = \lambda^k$ gives $\mathbf{A}^k$ (Discrete chapter). When $\mathbf{A}$ is diagonalizable, the result equals $\mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}$ from the Diagonalization section. Cayley–Hamilton just gets there without the eigenvectors, and it also works for defective matrices.
 
 ```{=latex}
 \begin{example}[frametitle={Example - use C-H to calculate $\sin\mathbf{A}$}]

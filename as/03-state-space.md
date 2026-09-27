@@ -1103,51 +1103,23 @@ In LTI analysis you rarely need $\mathbf{T}$, but the block sizes answer questio
 - **Discrete time.** The same blocks rule $\mathbf{A}^k$. With $\binom{k}{i} = 0$ for $i > k$, the binomial expansion gives $\mathbf{J}_q(\lambda)^k = \sum_{i=0}^{q-1}\binom{k}{i}\lambda^{k-i}\mathbf{N}_q^i$, so the modes are $\lambda^k, k\lambda^{k-1}, \dots$.
 - **Functions of matrices.** Every method for $f(\mathbf{A})$ (Taylor, Laplace, Cayley–Hamilton with derivatives) reduces, in Jordan coordinates, to applying $f$ to the individual blocks as above. That is why they all agree. It also explains the derivative trick of Cayley–Hamilton below: $\frac{d^j}{d\lambda^j}e^{\lambda t} = t^j e^{\lambda t}$ produces exactly the terms a Jordan block needs.
 
-By hand, the chain hunt is the laborious part. The Laplace method above and the Cayley–Hamilton\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} method below both handle defective matrices with no eigenvectors at all.
+By hand, the chain hunt is the laborious part. The Laplace method above and the Cayley–Hamilton method below both handle defective matrices with no eigenvectors at all.
 
 ### $\Phi$ via Cayley–Hamilton
 
-The Cayley–Hamilton theorem states that every matrix satisfies its own characteristic equation.
-
-$$
-\det(\lambda\mathbf{I} - \mathbf{A}) = \lambda^n + c_{n-1}\lambda^{n-1} + \cdots + c_0
-$$
-
-Substituting the matrix for the scalar gives the zero matrix:
-
-$$
-\mathbf{A}^n + c_{n-1}\mathbf{A}^{n-1} + \cdots + c_0\mathbf{I} = \mathbf{0}
-$$
-
-So every power $\mathbf{A}^k$ with $k \ge n$ reduces to a combination of $\mathbf{I}, \mathbf{A}, \dots, \mathbf{A}^{n-1}$, and the matrix exponential must have the form
+Cayley–Hamilton turns any analytic function of $\mathbf{A}$ into a polynomial of degree at most $n-1$ in $\mathbf{A}$ (Linear algebra chapter). Here the function is $f(\lambda) = e^{\lambda t}$, so the matrix exponential must have the form
 
 $$
 e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A} + \cdots + \alpha_{n-1}(t)\mathbf{A}^{n-1}
 $$
 
-This is the whole power of the theorem: dividing any polynomial $p(\lambda)$ by the characteristic polynomial $g(\lambda) = \det(\lambda\mathbf{I}-\mathbf{A})$ leaves a remainder $r(\lambda)$ of degree at most $n-1$, and since $g(\mathbf{A}) = \mathbf{0}$,
-
-$$
-p(\mathbf{A}) = r(\mathbf{A})
-$$
-
-For an analytic function\footnote{An analytic function has derivatives of all orders and can be represented by a convergent power series (e.g. $e^{\mathbf{A}t}$ or $\sin\mathbf{A}$)} the same holds after expanding it in a Taylor series and reducing term by term.
-
-Two ideas just came together: (1) $e^{\mathbf{A}t}$ collapses to the low-degree polynomial above because Cayley–Hamilton folds every power $\mathbf{A}^k$, $k \ge n$, back into $\mathbf{I}, \dots, \mathbf{A}^{n-1}$; (2) the coefficients are found by applying the same remainder trick to the *scalar* function $e^{\lambda t}$. Dividing $e^{\lambda t}$ by the characteristic polynomial $g(\lambda) = \det(\lambda\mathbf{I}-\mathbf{A})$ leaves a remainder of degree at most $n-1$,
-
-$$
-e^{\lambda t} = q(\lambda)\,g(\lambda) + \alpha_0(t) + \alpha_1(t)\lambda + \cdots + \alpha_{n-1}(t)\lambda^{n-1}
-$$
-
-whose coefficients are exactly the $\alpha_j(t)$ above — because $g(\mathbf{A}) = \mathbf{0}$ kills the $q(\mathbf{A})g(\mathbf{A})$ term the same way. At an eigenvalue, $g(\lambda_i) = 0$ by definition, so the $q(\lambda)g(\lambda)$ term drops out and each eigenvalue yields one scalar equation:
+The only twist is that the coefficients now depend on $t$. The recipe is otherwise unchanged: match the scalar twin $e^{\lambda t} = \alpha_0(t) + \alpha_1(t)\lambda + \cdots + \alpha_{n-1}(t)\lambda^{n-1}$ at every eigenvalue,
 
 $$
 e^{\lambda_i t} = \alpha_0(t) + \alpha_1(t)\lambda_i + \cdots + \alpha_{n-1}(t)\lambda_i^{n-1}, \qquad i = 1, \dots, n
 $$
 
-Think of it as interpolation: $r(\lambda) = \alpha_0 + \alpha_1\lambda + \cdots$ is the unique degree-$(n-1)$ polynomial whose graph passes through $(\lambda_i,\, e^{\lambda_i t})$ at every eigenvalue. Matching there fixes all $n$ unknowns $\alpha_j(t)$ — no infinite series needed.
-
-Solving this Vandermonde system gives the $\alpha_j(t)$. If an eigenvalue $\lambda_i$ has algebraic multiplicity $m_{a,i}$, evaluating at $\lambda_i$ yields only one equation; the missing $m_{a,i}-1$ come from differentiating $f(\lambda) = r(\lambda)$ with respect to $\lambda$, $m_{a,i}-1$ times — each eigenvalue contributes exactly as many equations as its multiplicity. Unlike diagonalization, this works even for defective matrices (see the defective-matrix example below).
+and solve the resulting Vandermonde system for the $\alpha_j(t)$; $t$ lives only in the known right-hand sides. A repeated eigenvalue again needs derivatives with respect to $\lambda$ (not $t$). Unlike diagonalization, this works even for defective matrices (see the defective-matrix example below).
 
 ```{=latex}
 \begin{example}[frametitle={Example - obtaining $\Phi$ via Cayley–Hamilton}]
