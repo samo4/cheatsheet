@@ -1,6 +1,6 @@
 # Appendix A: Linear algebra review
 
-Appendix A provides a brief review of essential linear algebra concepts used throughout the text, it mostly follows chapter 3 of @chen1999linear, that's where the $\mathbf{Q}$ comes from. Another source is the lecture series @abbott2012linear.
+Appendix A provides a brief review of essential linear algebra concepts used throughout the text, it mostly follows chapter 3 of @chen1999linear. Chen writes $\mathbf{Q}$ for any basis matrix; here $\mathbf{T}$ is a general basis and $\mathbf{Q}$ an orthonormal one. Another source is the lecture series @abbott2012linear.
 
 ## Matrix multiplication
 
@@ -272,7 +272,7 @@ Once you have $\mathbf{A}^{-1}$, any other right-hand side is just a multiplicat
 
 Sanity check against the original, not the reduced system: $2 - 1 = 1$, $2(2) - 1 = 3$.
 
-Side note: strictly, Gauss elimination is not the same as the (eigen)diagonalization below. Row reduction only left-multiplies $\mathbf{A}$ by elementary matrices, so it does *not* preserve eigenvalues — diagonalization is a similarity $\mathbf{P}^{-1}\mathbf{A}\mathbf{P}$ and needs column operations too. What elimination does give you is the rank, and that is exactly what detects the singularity behind $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.
+Side note: strictly, Gauss elimination is not the same as the (eigen)diagonalization below. Row reduction only left-multiplies $\mathbf{A}$ by elementary matrices, so it does *not* preserve eigenvalues — diagonalization is a similarity $\mathbf{T}^{-1}\mathbf{A}\mathbf{T}$ and needs column operations too. What elimination does give you is the rank, and that is exactly what detects the singularity behind $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.
 
 ```{=latex}
 \end{example}
@@ -395,13 +395,18 @@ When $m_g < m_a$ for some eigenvalue, the matrix is *defective*. Its eigenvector
 
 ## Similarity transformation
 
-A matrix describes a linear map in a particular basis. Take the map $\vec{y} = \mathbf{A}\vec{x}$ and describe both vectors in a new basis. With an invertible $\mathbf{T}$ whose columns are the new basis vectors written in the old coordinates, the old coordinates follow from the new ones as
+A matrix describes a linear map in a particular basis. Take the map $\vec{y} = \mathbf{A}\vec{x}$ and describe both vectors in a new basis. To picture it, it is exactly the eigenspace figure above, with $\vec{x} = \vec{w}$ and $\vec{y} = \mathbf{A}\vec{w}$. With an invertible $\mathbf{T}$ whose columns are the new basis vectors written in the old coordinates, the old coordinates follow from the new ones as
 
 $$
 \underbrace{\vec{x}}_{\text{old}} = \mathbf{T}\underbrace{\tilde{\vec{x}}}_{\text{new}}, \qquad \underbrace{\vec{y}}_{\text{old}} = \mathbf{T}\underbrace{\tilde{\vec{y}}}_{\text{new}}
 $$
 
-(the same $\mathbf{T}$ for both, since $\vec{x}$ and $\vec{y}$ live in the same space). Substitute into $\vec{y} = \mathbf{A}\vec{x}$ and solve for $\tilde{\vec{y}}$:
+Where:
+
+- $\mathbf{A}$ is the map. It moves vectors, $\vec{w} \mapsto \mathbf{A}\vec{w}$.
+- $\mathbf{T}$ is a change of coordinates (hence $\mathbf{T}$, for transformation). It only relabels the same vector in a new grid.
+
+Substitute into $\vec{y} = \mathbf{A}\vec{x}$ and solve for $\tilde{\vec{y}}$:
 
 $$
 \mathbf{T}\tilde{\vec{y}} = \mathbf{A}\mathbf{T}\tilde{\vec{x}} \quad\Longrightarrow\quad \tilde{\vec{y}} = \underbrace{\mathbf{T}^{-1}\mathbf{A}\mathbf{T}}_{\tilde{\mathbf{A}}}\,\tilde{\vec{x}}
@@ -500,11 +505,9 @@ The 45° example was exactly this with $\mathbf{V} = \mathbf{T}$. For the eigenv
 
 The catch is the word *independent*: there must be $n$ of them, i.e. $m_g = m_a$ for every eigenvalue. A defective matrix has too few, and then *no* $\mathbf{T}$ at all makes it diagonal. Take $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. If it were similar to a diagonal matrix, that matrix would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But $\mathbf{T}^{-1}(2\mathbf{I})\mathbf{T} = 2\mathbf{I} \ne \mathbf{A}$ for every $\mathbf{T}$. The best one can do is the Jordan form, and this $\mathbf{A}$ already is one. See $\Phi$ via the Jordan form in the State space chapter.
 
-## Cayley–Hamilton: an arbitrary function of a matrix
+## Functions of a square matrix
 
-How do you compute an arbitrary function $f(\mathbf{A})$ of a matrix with Cayley–Hamilton? Let's take $\sin\mathbf{A}$ for example.
-
-Cayley–Hamilton says $\mathbf{A}$ satisfies its own characteristic equation, so every power $\mathbf{A}^k$ with $k \ge n$ folds back into $\mathbf{I}, \mathbf{A}, \dots, \mathbf{A}^{n-1}$. Dividing $f$ by the characteristic polynomial $g(\lambda) = \det(\lambda\mathbf{I} - \mathbf{A})$ therefore leaves a remainder of degree at most $n - 1$ — and the $q$-term dies when the matrix is substituted:
+A function of a square matrix is defined by its power series: if $f(\lambda) = \sum_k c_k\lambda^k$ converges, then $f(\mathbf{A}) = \sum_k c_k\mathbf{A}^k$. That is what $e^{\mathbf{A}t}$, $\sin\mathbf{A}$ or $\mathbf{A}^k$ mean. The infinite series is useless by hand, but Cayley–Hamilton (introduced in the State space chapter) collapses it: $\mathbf{A}$ satisfies its own characteristic equation, so every power $\mathbf{A}^k$ with $k \ge n$ folds back into $\mathbf{I}, \mathbf{A}, \dots, \mathbf{A}^{n-1}$. Dividing $f$ by the characteristic polynomial $g(\lambda) = \det(\lambda\mathbf{I} - \mathbf{A})$ therefore leaves a remainder of degree at most $n - 1$, and the $q$-term dies when the matrix is substituted:
 
 $$
 f(\lambda) = q(\lambda)\,g(\lambda) + \alpha_0 + \alpha_1\lambda + \cdots + \alpha_{n-1}\lambda^{n-1}
@@ -512,7 +515,14 @@ f(\lambda) = q(\lambda)\,g(\lambda) + \alpha_0 + \alpha_1\lambda + \cdots + \alp
 f(\mathbf{A}) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \cdots + \alpha_{n-1}\mathbf{A}^{n-1}
 $$
 
-because $g(\mathbf{A}) = \mathbf{0}$. So any analytic matrix function collapses to a polynomial of degree at most $n-1$ in $\mathbf{A}$, and the only unknowns are the $n$ scalars $\alpha_j$.
+because $g(\mathbf{A}) = \mathbf{0}$. So any analytic matrix function collapses to a polynomial of degree at most $n-1$ in $\mathbf{A}$, and the only unknowns are the $n$ scalars $\alpha_j$. The recipe, for any $f$:
+
+1. Find the eigenvalues of $\mathbf{A}$.
+2. Write the ansatz $f(\mathbf{A}) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \cdots + \alpha_{n-1}\mathbf{A}^{n-1}$.
+3. Match the scalar twin $f(\lambda_i) = \alpha_0 + \alpha_1\lambda_i + \cdots + \alpha_{n-1}\lambda_i^{n-1}$ at every eigenvalue. An eigenvalue with algebraic multiplicity $m_a$ gives only one equation, so also match the first $m_a - 1$ derivatives with respect to $\lambda$ there.
+4. Solve for the $\alpha_j$ and substitute back into the ansatz.
+
+The main text uses this recipe with two particular functions: $f(\lambda) = e^{\lambda t}$ gives the state-transition matrix $\Phi(t) = e^{\mathbf{A}t}$ (State space chapter), and $f(\lambda) = \lambda^k$ gives $\mathbf{A}^k$ (Discrete chapter). When $\mathbf{A}$ is diagonalizable, the result equals $\mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}$ from the previous section. Cayley–Hamilton just gets there without the eigenvectors, and it also works for defective matrices.
 
 ```{=latex}
 \begin{example}[frametitle={Example - use C-H to calculate $\sin\mathbf{A}$}]
