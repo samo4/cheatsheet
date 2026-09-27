@@ -642,95 +642,13 @@ $$
 \Phi(t) = e^{\mathbf{A}t} = \operatorname{diag}\!\big(e^{d_1 t},\, e^{d_2 t},\, \dots,\, e^{d_n t}\big)
 $$
 
-Most $\mathbf{A}$'s are not diagonal, but with a little elbow grease we can still get there — the ingredients are eigenvalues and eigenvectors, so let's detour.
+Most $\mathbf{A}$'s are not diagonal, but with a little elbow grease we can still get there. The ingredients are the eigenvalues and eigenvectors of $\mathbf{A}$, with their algebraic and geometric multiplicities $m_{a,i}$ and $m_{g,i}$ (see the Linear algebra chapter).
 
-#### Eigenvalues and eigenvectors
-
-The eigenvalues\footnote{D.Hilbert gave us the nice german name "Eigenwert" for eigenvalue} of $\mathbf{A}$ are the scalars $\lambda$ for which
-
-$$
-\mathbf{A}\vec{v} = \lambda\vec{v}
-$$
-
-has a nonzero solution $\vec{v} \ne 0$ — the eigenvector. Geometrically, $\mathbf{A}$ just stretches $\vec{v}$ by $\lambda$ without rotating it. Rearranging gives $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$, which has a nontrivial solution iff the matrix is singular, i.e.
-
-$$
-\det(\mathbf{A} - \lambda\mathbf{I}) = 0
-$$
-
-Eigenvalues are the roots of the characteristic polynomial $\det(\mathbf{A} - \lambda\mathbf{I})$. For an $n \times n$ matrix this is a polynomial of degree $n$, so by the fundamental theorem of algebra there are $n$ eigenvalues counting multiplicity. Each eigenvalue carries two numbers:
-
-- **Algebraic** multiplicity $m_{a,i}$ — how many times $\lambda_i$ occurs as a root of the characteristic polynomial. These sum to the matrix dimension: $\sum_i m_{a,i} = n$.
-- **Geometric** multiplicity $m_{g,i}$ — the dimension of the eigenspace $\ker(\mathbf{A} - \lambda_i\mathbf{I})$, i.e. the number of linearly independent eigenvectors belonging to $\lambda_i$. Computed as the nullity $m_{g,i} = n - \operatorname{rank}(\mathbf{A} - \lambda_i\mathbf{I})$.
-
-They are always related by $1 \le m_{g,i} \le m_{a,i}$. The gap $m_{a,i} - m_{g,i}$ measures how "defective" $\mathbf{A}$ is at $\lambda_i$: if $m_{g,i} < m_{a,i}$ there are not enough eigenvectors, and diagonalization fails.
-
-**In practice**:
-
-1. Solve $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$ for the eigenvalues.
-2. For each $\lambda_i$, solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$; the number of free parameters in the solution is $m_{g,i}$.
-
-*Triangular shortcut.* If $\mathbf{A}$ is upper or lower triangular, step 1 needs no work: the determinant is already factored, and the eigenvalues are just the diagonal entries. Diagonal was the whole jackpot; triangular is the half-jackpot — eigenvalues free, but the full $\Phi$ still needs a method.
-
-*Watch out for linear dependence.* Since $\lambda_i$ *is* an eigenvalue, the matrix $(\mathbf{A} - \lambda_i\mathbf{I})$ is singular by construction — its rows are linearly dependent. So when you solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$, don't be alarmed that one row turns out to be a multiple of another, or that a row is all zeros: that's exactly what should happen. Only the independent equations carry information — their number is the rank, and the leftover free variables are precisely the geometric multiplicity $m_{g,i}$.
-
-$\mathbf{A}$ is diagonalizable iff $m_{g,i} = m_{a,i}$ for every $i$. This is always the case when all eigenvalues are distinct, since then $m_{g,i} = m_{a,i} = 1$.
-
-```{=latex}
-\begin{example}[frametitle={Example - eigenvalues and eigenvectors}]
-```
-
-Find the eigenvalues and eigenvectors of $\mathbf{A} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 2 & 1 \\ 0 & 0 & 2 \end{bmatrix}$.
-
-The characteristic polynomial (upper-triangular, so the eigenvalues sit on the diagonal):
-
-$$
-\det(\mathbf{A} - \lambda\mathbf{I}) = \begin{vmatrix} 1-\lambda & 0 & 0 \\ 0 & 2-\lambda & 1 \\ 0 & 0 & 2-\lambda \end{vmatrix} = (1-\lambda)(2-\lambda)^2 = 0
-$$
-
-so $\lambda_1 = 1$ with $m_{a,1} = 1$, and $\lambda_2 = 2$ with $m_{a,2} = 2$.
-
-For $\lambda_1 = 1$, solve $(\mathbf{A} - \mathbf{I})\vec{v} = \vec{0}$:
-
-$$
-(\mathbf{A} - \mathbf{I}) = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix}
-$$
-
-The first row vanished entirely — the eigenvalue knocked out the $(1,1)$ diagonal entry and there's nothing else in that row, so it contributes no equation. The other two rows are independent (each has a pivot), so the rank is $2$ and exactly one variable is free: $m_{g,1} = 3 - 2 = 1 = m_{a,1}$.
-
-The surviving equations are $v_2 + v_3 = 0$ and $v_3 = 0$, which force $v_3 = 0$ and $v_2 = 0$ while leaving $v_1$ free:
-
-$$
-v_2 + v_3 = 0,\ v_3 = 0
-\quad\Longrightarrow\quad
-v_3 = 0,\ v_2 = 0,\ v_1 \text{ free}
-\quad\Longrightarrow\quad
-\vec{v}_1 = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}
-$$
-
-As always, any scalar multiple of $\vec{v}_1$ is also an eigenvector — the eigenspace is the whole line through $\vec{v}_1$.
-
-For $\lambda_2 = 2$, solve $(\mathbf{A} - 2\mathbf{I})\vec{v} = \vec{0}$:
-
-$$
-\begin{bmatrix} -1 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix}\vec{v} = \vec{0}
-\quad\Longrightarrow\quad
-v_1 = 0,\ v_3 = 0,\ v_2 \text{ free}
-\quad\Longrightarrow\quad
-\vec{v}_2 = \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}
-$$
-
-Here $m_{g,2} = 1 < m_{a,2} = 2$: only two linearly independent eigenvectors exist, so $\mathbf{A}$ is defective and **not** diagonalizable.
-
-Sanity check: $\mathbf{A}\vec{v}_1 = \tvec{1,0,0} = 1\cdot\vec{v}_1$ and $\mathbf{A}\vec{v}_2 = \tvec{0,2,0} = 2\vec{v}_2$.
-
-```{=latex}
-\end{example}
-```
+*Triangular shortcut.* If $\mathbf{A}$ is upper or lower triangular, finding the eigenvalues needs no work: the determinant is already factored, and the eigenvalues are just the diagonal entries. Diagonal was the whole jackpot; triangular is the half-jackpot — eigenvalues free, but the full $\Phi$ still needs a method.
 
 #### Diagonalization
 
-And now back where we're really going: how to reorganize our matrix into a diagonal form. When $m_{g,i} = m_{a,i}$ for every eigenvalue, there are exactly $n$ linearly independent eigenvectors $\vec{v}_1, \dots, \vec{v}_n$. Stack them as columns:
+Now to where we're really going: how to reorganize our matrix into a diagonal form. When $m_{g,i} = m_{a,i}$ for every eigenvalue, there are exactly $n$ linearly independent eigenvectors $\vec{v}_1, \dots, \vec{v}_n$. Stack them as columns:
 
 $$
 \mathbf{V} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}
@@ -1011,7 +929,7 @@ The diagonalization method is perhaps the most elegant, but it stands or falls w
 
 ### $\Phi$ via the Jordan form
 
-Take the defective matrix from the eigenvalue example above, or the simplest one there is, $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. No clever choice of $\mathbf{V}$ diagonalizes it. If some $\mathbf{V}^{-1}\mathbf{A}\mathbf{V}$ were diagonal, it would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But then $\mathbf{A} = \mathbf{V}(2\mathbf{I})\mathbf{V}^{-1} = 2\mathbf{I}$, which it is not. Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
+Take the defective matrix from the Linear algebra chapter, or the simplest one there is, $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. No clever choice of $\mathbf{V}$ diagonalizes it. If some $\mathbf{V}^{-1}\mathbf{A}\mathbf{V}$ were diagonal, it would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But then $\mathbf{A} = \mathbf{V}(2\mathbf{I})\mathbf{V}^{-1} = 2\mathbf{I}$, which it is not. Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
 
 So we settle for the next best thing: a basis in which $\mathbf{A}$ is *as diagonal as possible*. That is the Jordan form.\footnote{C. Jordan published it in 1870. Not to be confused with W. Jordan of Gauss–Jordan elimination, a geodesist.} It is not really a fifth method, but diagonalization finished. It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
 
@@ -1028,7 +946,7 @@ $$
 
 Zeros everywhere, except for the eigenvalues on the diagonal and $1$s on the superdiagonal *inside* each block. The same $\lambda$ may appear in several blocks. A diagonalizable matrix has only $1\times1$ blocks, so then $\mathbf{J} = \boldsymbol{\Lambda}$ and $\mathbf{T} = \mathbf{V}$.
 
-*Counting the blocks.* Each Jordan block contains exactly one (independent) eigenvector, at the bottom of its chain. So there are as many blocks as independent eigenvectors: $m_{g,i}$ for each $\lambda_i$, and a diagonalizable matrix has $n$. With that, the multiplicities from the eigenvalue section fix most of the structure. For each eigenvalue $\lambda_i$:
+*Counting the blocks.* Each Jordan block contains exactly one (independent) eigenvector, at the bottom of its chain. So there are as many blocks as independent eigenvectors: $m_{g,i}$ for each $\lambda_i$, and a diagonalizable matrix has $n$. With that, the multiplicities from the Linear algebra chapter fix most of the structure. For each eigenvalue $\lambda_i$:
 
 - the number of its blocks is $m_{g,i}$,
 - their sizes add up to $m_{a,i}$,
@@ -1128,7 +1046,7 @@ The series stops as soon as a power of $\mathbf{N}$ vanishes, at the latest afte
 \begin{example}[frametitle={Example - a matrix already in Jordan form}]
 ```
 
-The defective matrix from the eigenvalue example,
+The defective matrix from the Linear algebra chapter,
 
 $$
 \mathbf{A} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 2 & 1 \\ 0 & 0 & 2 \end{bmatrix}

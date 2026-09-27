@@ -302,11 +302,13 @@ $$
 \mathbf{A}\vec{x} = \lambda\vec{x}
 $$
 
-The scalar $\lambda$ is the eigenvalue. Rearranging gives $(\mathbf{A} - \lambda\mathbf{I})\vec{x} = \vec{0}$, so the eigenvectors are the null space of $\mathbf{A} - \lambda\mathbf{I}$ (without $\vec{0}$), called the eigenspace. A nonzero one exists iff that null space is nontrivial, i.e. $\mathbf{A} - \lambda\mathbf{I}$ is singular (rank below $n$, not invertible). Hence the eigenvalues are the roots of the characteristic polynomial
+The scalar $\lambda$ is the eigenvalue.\footnote{D.Hilbert gave us the nice german name "Eigenwert" for eigenvalue} Rearranging gives $(\mathbf{A} - \lambda\mathbf{I})\vec{x} = \vec{0}$, so the eigenvectors are the null space of $\mathbf{A} - \lambda\mathbf{I}$ (without $\vec{0}$), called the eigenspace. A nonzero one exists iff that null space is nontrivial, i.e. $\mathbf{A} - \lambda\mathbf{I}$ is singular (rank below $n$, not invertible). Hence the eigenvalues are the roots of the characteristic polynomial
 
 $$
 \det(\mathbf{A} - \lambda\mathbf{I}) = 0
 $$
+
+For an $n \times n$ matrix this is a polynomial of degree $n$, so by the fundamental theorem of algebra there are $n$ eigenvalues counting multiplicity.
 
 ```{=latex}
 \begin{example}[frametitle={Note - triangular matrices}]
@@ -382,16 +384,75 @@ Sanity check: $\mathbf{A}\vec{x}_1 = \vec{x}_1$, $\mathbf{A}\vec{x}_2 = 2\vec{x}
 
 #### Algebraic multiplicity
 
-An single eigenvalue can be a repeated root of the characteristic polynomial. The number of times it repeats is its algebraic multiplicity $m_a$.
+An single eigenvalue can be a repeated root of the characteristic polynomial. The number of times it repeats is its algebraic multiplicity $m_a$ (written $m_{a,i}$ for $\lambda_i$ when there are several). These sum to the matrix dimension: $\sum_i m_{a,i} = n$.
 
 #### Geometric multiplicity
 
-The geometric multiplicity $m_g$ of an eigenvalue is the number of linearly independent eigenvectors belonging to it. In practice it is the number of free variables left when you solve $(\mathbf{A} - \lambda\mathbf{I})\vec{x} = \vec{0}$. Geometrically, it says whether the eigenspace is a line ($m_g = 1$), a plane ($m_g = 2$), and so on. It always satisfies $1 \le m_g \le m_a$. Both $2\times2$ matrices below have $\lambda = 1$ with $m_a = 2$:
+The geometric multiplicity $m_g$ of an eigenvalue is the number of linearly independent eigenvectors belonging to it, i.e. the dimension of the eigenspace $\ker(\mathbf{A} - \lambda\mathbf{I})$. It is computed as the nullity $m_g = n - \operatorname{rank}(\mathbf{A} - \lambda\mathbf{I})$; in practice it is the number of free variables left when you solve $(\mathbf{A} - \lambda\mathbf{I})\vec{x} = \vec{0}$. Geometrically, it says whether the eigenspace is a line ($m_g = 1$), a plane ($m_g = 2$), and so on. It always satisfies $1 \le m_g \le m_a$. Both $2\times2$ matrices below have $\lambda = 1$ with $m_a = 2$:
 
 - $\mathbf{I}$ scales every vector by 1, so its eigenspace is the whole plane: $m_g = 2$.
 - The shear $\begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ leaves only the $x_1$ axis in place, so its eigenspace is that one line: $m_g = 1$.
 
-When $m_g < m_a$ for some eigenvalue, the matrix is *defective*. Its eigenvectors cannot span the whole space.
+When $m_g < m_a$ for some eigenvalue, the matrix is *defective*. Its eigenvectors cannot span the whole space. The gap $m_{a,i} - m_{g,i}$ measures how defective $\mathbf{A}$ is at $\lambda_i$.
+
+**In practice**:
+
+1. Solve $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$ for the eigenvalues.
+2. For each $\lambda_i$, solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$; the number of free parameters in the solution is $m_{g,i}$.
+
+*Watch out for linear dependence.* Since $\lambda_i$ *is* an eigenvalue, the matrix $(\mathbf{A} - \lambda_i\mathbf{I})$ is singular by construction — its rows are linearly dependent. So when you solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$, don't be alarmed that one row turns out to be a multiple of another, or that a row is all zeros: that's exactly what should happen. Only the independent equations carry information — their number is the rank, and the leftover free variables are precisely the geometric multiplicity $m_{g,i}$.
+
+```{=latex}
+\begin{example}[frametitle={Example - a defective matrix}]
+```
+
+Find the eigenvalues and eigenvectors of $\mathbf{A} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 2 & 1 \\ 0 & 0 & 2 \end{bmatrix}$.
+
+The characteristic polynomial (upper-triangular, so the eigenvalues sit on the diagonal):
+
+$$
+\det(\mathbf{A} - \lambda\mathbf{I}) = \begin{vmatrix} 1-\lambda & 0 & 0 \\ 0 & 2-\lambda & 1 \\ 0 & 0 & 2-\lambda \end{vmatrix} = (1-\lambda)(2-\lambda)^2 = 0
+$$
+
+so $\lambda_1 = 1$ with $m_{a,1} = 1$, and $\lambda_2 = 2$ with $m_{a,2} = 2$.
+
+For $\lambda_1 = 1$, solve $(\mathbf{A} - \mathbf{I})\vec{v} = \vec{0}$:
+
+$$
+(\mathbf{A} - \mathbf{I}) = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+The first row vanished entirely — the eigenvalue knocked out the $(1,1)$ diagonal entry and there's nothing else in that row, so it contributes no equation. The other two rows are independent (each has a pivot), so the rank is $2$ and exactly one variable is free: $m_{g,1} = 3 - 2 = 1 = m_{a,1}$.
+
+The surviving equations are $v_2 + v_3 = 0$ and $v_3 = 0$, which force $v_3 = 0$ and $v_2 = 0$ while leaving $v_1$ free:
+
+$$
+v_2 + v_3 = 0,\ v_3 = 0
+\quad\Longrightarrow\quad
+v_3 = 0,\ v_2 = 0,\ v_1 \text{ free}
+\quad\Longrightarrow\quad
+\vec{v}_1 = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}
+$$
+
+As always, any scalar multiple of $\vec{v}_1$ is also an eigenvector — the eigenspace is the whole line through $\vec{v}_1$.
+
+For $\lambda_2 = 2$, solve $(\mathbf{A} - 2\mathbf{I})\vec{v} = \vec{0}$:
+
+$$
+\begin{bmatrix} -1 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix}\vec{v} = \vec{0}
+\quad\Longrightarrow\quad
+v_1 = 0,\ v_3 = 0,\ v_2 \text{ free}
+\quad\Longrightarrow\quad
+\vec{v}_2 = \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}
+$$
+
+Here $m_{g,2} = 1 < m_{a,2} = 2$: only two linearly independent eigenvectors exist, so $\mathbf{A}$ is defective and **not** diagonalizable.
+
+Sanity check: $\mathbf{A}\vec{v}_1 = \tvec{1,0,0} = 1\cdot\vec{v}_1$ and $\mathbf{A}\vec{v}_2 = \tvec{0,2,0} = 2\vec{v}_2$.
+
+```{=latex}
+\end{example}
+```
 
 ## Similarity transformation
 
