@@ -346,37 +346,21 @@ $$
 
 so $\lambda_1 = 1$, $\lambda_2 = 2$, $\lambda_3 = 3$ — all distinct, hence $\mathbf{A}$ is diagonalizable.
 
-For $\lambda = 1$, solve $(\mathbf{A} - \mathbf{I})\vec{x} = \vec{0}$:
+For $\lambda = 1$, solve $(\mathbf{A} - \mathbf{I})\vec{v} = \vec{0}$:
 
 $$
-\begin{bmatrix} 0 & 0 & -1 \\ 1 & 1 & 1 \\ 2 & 2 & 2 \end{bmatrix}\vec{x} = \vec{0}
+\begin{bmatrix} 0 & 0 & -1 \\ 1 & 1 & 1 \\ 2 & 2 & 2 \end{bmatrix}\vec{v} = \vec{0}
 \quad\Longrightarrow\quad
-x_3 = 0,\ x_1 + x_2 = 0
+v_3 = 0,\ v_1 + v_2 = 0
 \quad\Longrightarrow\quad
-\vec{x}_1 = \begin{bmatrix} -1 \\ 1 \\ 0 \end{bmatrix}
+\vec{v}_1 = \begin{bmatrix} -1 \\ 1 \\ 0 \end{bmatrix}
 $$
 
-For $\lambda = 2$: $(\mathbf{A} - 2\mathbf{I})\vec{x} = \vec{0}$:
+For $\lambda = 2$, $(\mathbf{A} - 2\mathbf{I})\vec{v} = \vec{0}$ give $v_3 = -v_1$, $v_1 = -2v_2$, so $\vec{v}_2 = \tvec{-2, 1, 2}$.
 
-$$
-\begin{bmatrix} -1 & 0 & -1 \\ 1 & 0 & 1 \\ 2 & 2 & 1 \end{bmatrix}\vec{x} = \vec{0}
-\quad\Longrightarrow\quad
-x_3 = -x_1,\ x_1 = -2x_2
-\quad\Longrightarrow\quad
-\vec{x}_2 = \begin{bmatrix} -2 \\ 1 \\ 2 \end{bmatrix}
-$$
+For $\lambda = 3$, $(\mathbf{A} - 3\mathbf{I})\vec{v} = \vec{0}$ gives $v_3 = -2v_1$, $v_2 = -v_1$, so $\vec{v}_3 = \tvec{1, -1, -2}$.
 
-For $\lambda = 3$: $(\mathbf{A} - 3\mathbf{I})\vec{x} = \vec{0}$:
-
-$$
-\begin{bmatrix} -2 & 0 & -1 \\ 1 & -1 & 1 \\ 2 & 2 & 0 \end{bmatrix}\vec{x} = \vec{0}
-\quad\Longrightarrow\quad
-x_3 = -2x_1,\ x_2 = -x_1
-\quad\Longrightarrow\quad
-\vec{x}_3 = \begin{bmatrix} 1 \\ -1 \\ -2 \end{bmatrix}
-$$
-
-Sanity check: $\mathbf{A}\vec{x}_1 = \vec{x}_1$, $\mathbf{A}\vec{x}_2 = 2\vec{x}_2$, $\mathbf{A}\vec{x}_3 = 3\vec{x}_3$.
+Sanity check: $\mathbf{A}\vec{v}_1 = \vec{v}_1$, $\mathbf{A}\vec{v}_2 = 2\vec{v}_2$, $\mathbf{A}\vec{v}_3 = 3\vec{v}_3$.
 
 ```{=latex}
 \end{example}
