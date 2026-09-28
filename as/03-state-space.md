@@ -911,15 +911,7 @@ So we settle for the next best thing: the Jordan form $\mathbf{T}^{-1}\mathbf{A}
 
 The similarity passes through the Taylor series exactly as before, since only $\mathbf{T}\mathbf{T}^{-1} = \mathbf{I}$ was used, never the diagonal shape. So $e^{\mathbf{A}t} = \mathbf{T}e^{\mathbf{J}t}\mathbf{T}^{-1}$. A block-diagonal matrix raised to a power stays block-diagonal, so $e^{\mathbf{J}t}$ is simply the exponentials of the individual blocks placed on the diagonal. It remains to exponentiate one block.
 
-Split it as $\mathbf{J}_k(\lambda) = \lambda\mathbf{I} + \mathbf{N}_k$, where $\mathbf{N}_k$ holds only the superdiagonal $1$s. $\mathbf{N}_k$ is *nilpotent*: each power shifts the $1$s one diagonal further up, until they fall off the corner,
-
-$$
-\mathbf{N}_3 = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix}, \qquad
-\mathbf{N}_3^2 = \begin{bmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}, \qquad
-\mathbf{N}_3^3 = \mathbf{0}
-$$
-
-Since $\lambda\mathbf{I}$ commutes with everything, $e^{(\lambda\mathbf{I} + \mathbf{N}_k)t} = e^{\lambda t}e^{\mathbf{N}_k t}$ (for matrices that do *not* commute this factoring fails). The series for $e^{\mathbf{N}_k t}$ stops after $k$ terms:
+The Linear algebra chapter already did this, for any $f$, in Functions of a Jordan block: split $\mathbf{J}_k(\lambda) = \lambda\mathbf{I} + \mathbf{N}_k$, where the nilpotent $\mathbf{N}_k$ holds the superdiagonal $1$s. Then $f^{(j)}(\lambda)/j!$ climbs the $j$-th superdiagonal. For $f(\lambda) = e^{\lambda t}$, each derivative brings down a $t$. The same result also follows directly: $\lambda\mathbf{I}$ commutes with everything, so $e^{(\lambda\mathbf{I} + \mathbf{N}_k)t} = e^{\lambda t}e^{\mathbf{N}_k t}$ (for matrices that do *not* commute this factoring fails), and the series for $e^{\mathbf{N}_k t}$ stops after $k$ terms:
 
 ```{=latex}
 \[
