@@ -388,10 +388,16 @@ An single eigenvalue can be a repeated root of the characteristic polynomial. Th
 
 #### Geometric multiplicity
 
-The geometric multiplicity $m_g$ of an eigenvalue is the number of linearly independent eigenvectors belonging to it, i.e. the dimension of the eigenspace $\ker(\mathbf{A} - \lambda\mathbf{I})$. It is computed as the nullity $m_g = n - \operatorname{rank}(\mathbf{A} - \lambda\mathbf{I})$; in practice it is the number of free variables left when you solve $(\mathbf{A} - \lambda\mathbf{I})\vec{x} = \vec{0}$. Geometrically, it says whether the eigenspace is a line ($m_g = 1$), a plane ($m_g = 2$), and so on. It always satisfies $1 \le m_g \le m_a$. Both $2\times2$ matrices below have $\lambda = 1$ with $m_a = 2$:
+The geometric multiplicity $m_g$ of an eigenvalue is the number of linearly independent eigenvectors belonging to it, i.e. the dimension of the eigenspace $\ker(\mathbf{A} - \lambda\mathbf{I})$. It is computed as the nullity $m_g = n - \operatorname{rank}(\mathbf{A} - \lambda\mathbf{I})$; in practice it is the number of free variables left when you solve $(\mathbf{A} - \lambda\mathbf{I})\vec{x} = \vec{0}$. Geometrically, it says whether the eigenspace is a line ($m_g = 1$), a plane ($m_g = 2$), and so on. It always satisfies $1 \le m_g \le m_a$. Both $2\times2$ matrices below have $\lambda = 2$ with $m_a = 2$:
 
-- $\mathbf{I}$ scales every vector by 1, so its eigenspace is the whole plane: $m_g = 2$.
-- The shear $\begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ leaves only the $x_1$ axis in place, so its eigenspace is that one line: $m_g = 1$.
+- $2\mathbf{I}$ scales every vector by 2, so its eigenspace is the whole plane: $m_g = 2$.
+- $\mathbf{J}_2(2) = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$ also scales by 2, but the $1$ adds a shear that pushes every vector off its line except those on the $x_1$ axis, so its eigenspace is that one line: $m_g = 1$.
+
+Same inputs (solid) and their images (dashed) in both:
+
+```{=latex}
+\input{tikz/eigenspaces-multiplicity.tex}
+```
 
 When $m_g < m_a$ for some eigenvalue, the matrix is *defective*. Its eigenvectors cannot span the whole space. The gap $m_{a,i} - m_{g,i}$ measures how defective $\mathbf{A}$ is at $\lambda_i$.
 
