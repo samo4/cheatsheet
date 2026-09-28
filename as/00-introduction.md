@@ -59,6 +59,42 @@ The same additive term is harmless in $\dot{y} = 5y + 4t$, because there it is t
 \end{example}
 ```
 
+When there is no equation, only a box on the bench, superposition becomes an experiment instead.
+
+```{=latex}
+\begin{example}[frametitle={Example - testing linearity on the bench}]
+```
+
+Take an unknown box, say an audio amplifier, with a function generator on its input and an oscilloscope on its output. Start each run from rest, so that only the input drives the output.
+
+**Zero in, zero out.** Switch the generator off. Any steady output voltage is the offset $\beta$ from the example above, and it breaks linearity on its own.
+
+**Homogeneity.** Feed a sine of amplitude $U$, then $2U$, then $4U$. A linear box doubles its output every time. Once the peaks flatten, the amplifier is clipping against its supply rails: that is saturation, and the box is linear only below that amplitude.
+
+**A sine in, the same sine out.** Look at the output spectrum (the oscilloscope's FFT mode). An LTI box can change only the amplitude and phase of a sine, so a single line at the input frequency $f$ should come out. Lines at $2f, 3f, \dots$ are harmonic distortion, the signature of terms like $u^2$ and $u^3$.
+
+**Additivity with two orthogonal signals.** Use both generator channels and feed the sum $u = u_1 + u_2$ of two *orthogonal* signals, whose inner product over a common period $T$ vanishes:
+
+$$
+\langle u_1, u_2 \rangle = \frac{1}{T}\int_0^T u_1(t)\,u_2(t)\,dt = 0.
+$$
+
+Two sines at different frequencies $f_1 \neq f_2$ are the natural choice. Orthogonality is what makes one measurement enough. Each input is a separate direction in signal space, so the two responses can be pulled back out of the combined output by projection: correlate the output with each frequency (the FFT bins at $f_1$ and $f_2$) and compare each part with the response to that input alone.
+
+An LTI box keeps each sine at its own frequency, so its two responses stay orthogonal and their powers add by Pythagoras:
+
+$$
+\|y\|^2 = \|y_1\|^2 + \|y_2\|^2.
+$$
+
+The output lies entirely in the span of the two input directions. A nonlinear box leaks energy out of that span. A term like $u^2$ contains the cross product $2u_1u_2$, which produces lines at $f_1 \pm f_2$ (intermodulation), frequencies orthogonal to both inputs that neither input contained. Any output power outside $f_1$ and $f_2$ is a direct measure of how nonlinear the box is.
+
+An experiment can disprove linearity but never prove it. Passing every test shows only that the box is linear *over the amplitudes and frequencies you tried*. This is the bench version of linearization: real systems are linear only in a limited range.
+
+```{=latex}
+\end{example}
+```
+
 ### Is it time invariant?
 
 A system is time-invariant if delaying the input by $\tau$ delays the output by exactly $\tau$:
@@ -197,3 +233,26 @@ It passes both tests, so the integrator is LTI.
 The drum fails because it is distributed, stochastic systems because they are random; either way there is no finite deterministic ODE, and both stay outside the toolbox of these notes. The honest title of these notes would be *lumped deterministic LTI systems*.
 
 Together, linearity and time invariance give far more than either does alone. Any input can be split into delayed, scaled copies of one elementary test signal: linearity makes the responses add, and time invariance makes every copy respond identically. So one experiment is enough — measure the response to a single short kick, the *impulse response* — and the response to any other input follows by superposition. The whole input–output behaviour is fixed by that one measurement.
+
+### The whole course in one(ish) paragraph
+
+The scalar equation $\dot{x} = ax + bu$ has the solution
+
+$$
+x(t) = e^{at}x_0 + \int_0^t e^{a(t-\tau)}\,b\,u(\tau)\,d\tau,
+$$
+
+which decays when $a < 0$ and grows when $a > 0$.
+
+The integral is exactly that superposition of kicks, with $e^{at}b$ as the impulse response.
+
+Everything that follows makes this one line work when the state is a vector of $n$ components, $\dot{\vec{x}} = A\vec{x} + B\vec{u}$ with output $\vec{y} = C\vec{x}$:
+
+- the exponential $e^{at}$ becomes the matrix exponential $e^{At}$ (Linear algebra, State space),
+- the sign of $a$ becomes the eigenvalues of $A$ (Properties),
+- $\frac{b}{s-a}$ becomes $C(sI - A)^{-1}B$ (Transfer functions),
+- $a^k$ becomes $A^k$ (Discrete).
+
+The only genuinely new questions (can the input reach every state, can the output see every state) are the ones a single state cannot ask.
+
+Arbitrarily many states, but finitely many: with infinitely many, as in the drum, $A$ is no longer a matrix.
