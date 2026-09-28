@@ -234,25 +234,69 @@ The drum fails because it is distributed, stochastic systems because they are ra
 
 Together, linearity and time invariance give far more than either does alone. Any input can be split into delayed, scaled copies of one elementary test signal: linearity makes the responses add, and time invariance makes every copy respond identically. So one experiment is enough — measure the response to a single short kick, the *impulse response* — and the response to any other input follows by superposition. The whole input–output behaviour is fixed by that one measurement.
 
-### The whole course in one(ish) paragraph
+### What if $a$ is $\mathbf{A}$?
 
-The scalar equation $\dot{x} = ax + bu$ has the solution
+What the toolbox has to do is easiest to see on the simplest dynamic system there is, solved the way you already know from calculus.
+
+```{=latex}
+\begin{example}[frametitle={Example - discharging a capacitor}]
+```
+
+A capacitor $C$, charged to $x_0$, is switched across a resistor $R$ at $t = 0$.
+
+**Step 1 — model**\
+The capacitor voltage $x = v_C$ is the state: it is what the circuit remembers. The capacitor current $i_C = C\dot{x}$ is the only current through the resistor, which carries $x/R$ in the opposite direction, so KCL gives
 
 $$
-x(t) = e^{at}x_0 + \int_0^t e^{a(t-\tau)}\,b\,u(\tau)\,d\tau,
+C\dot{x} + \frac{x}{R} = 0 \quad\Longrightarrow\quad \dot{x} = a x, \qquad a = -\frac{1}{RC}.
 $$
 
-which decays when $a < 0$ and grows when $a > 0$.
+**Step 2 — separate the variables**
 
-The integral is exactly that superposition of kicks, with $e^{at}b$ as the impulse response.
+$$
+\frac{dx}{x} = a\,dt
+$$
 
-Everything that follows makes this one line work when the state is a vector of $n$ components, $\dot{\vec{x}} = A\vec{x} + B\vec{u}$ with output $\vec{y} = C\vec{x}$:
+**Step 3 — integrate** from $0$ to $t$
 
-- the exponential $e^{at}$ becomes the matrix exponential $e^{At}$ (Linear algebra, State space),
-- the sign of $a$ becomes the eigenvalues of $A$ (Properties),
-- $\frac{b}{s-a}$ becomes $C(sI - A)^{-1}B$ (Transfer functions),
-- $a^k$ becomes $A^k$ (Discrete).
+$$
+\ln x(t) - \ln x_0 = a t
+$$
+
+**Step 4 — exponentiate**
+
+$$
+x(t) = x_0\,e^{at} = x_0\,e^{-t/RC}
+$$
+
+The voltage decays with the time constant $\tau = RC$: down to $37\,\%$ after $\tau$, below $1\,\%$ after $5\tau$. With $a > 0$ it would instead grow without bound, to infinity.
+
+**Step 5 — check**\
+$\dot{x} = a\,x_0 e^{at} = a x$, and $x(0) = x_0$.
+
+```{=latex}
+\end{example}
+```
+
+Now couple a few such circuits together. Every capacitor and inductor brings a state, and each derivative depends on all of them, so $a$ becomes a matrix:
+
+$$
+\dot{\vec{x}} = \mathbf{A}\vec{x}, \qquad \vec{x}(0) = \vec{x}_0.
+$$
+
+Steps 2 to 4 break at once: there is no dividing by a vector and no logarithm of one. The answer, as we shall see, survives,
+
+$$
+\vec{x}(t) = e^{\mathbf{A}t}\vec{x}_0,
+$$
+
+provided $e^{\mathbf{A}t}$ can be given a meaning, and the check of Step 5 goes through unchanged once $\frac{d}{dt}e^{\mathbf{A}t} = \mathbf{A}e^{\mathbf{A}t}$. Getting the state equations is the Modeling chapter, and making sense of $e^{\mathbf{A}t}$ is the State space chapter. Everything else follows the same pattern, the scalar result with a matrix in place of $a$:
+
+- the exponential $e^{at}$ becomes the matrix exponential $e^{\mathbf{A}t}$ (Linear algebra, State space),
+- the sign of $a$ becomes the eigenvalues of $\mathbf{A}$ (Properties),
+- the transfer function $\frac{b}{s-a}$ becomes $\mathbf{C}(s\mathbf{I} - \mathbf{A})^{-1}\mathbf{B}$ (Transfer functions),
+- $a^k$ becomes $\mathbf{A}^k$ (Discrete).
 
 The only genuinely new questions (can the input reach every state, can the output see every state) are the ones a single state cannot ask.
 
-Arbitrarily many states, but finitely many: with infinitely many, as in the drum, $A$ is no longer a matrix.
+Arbitrarily many states, but finitely many: with infinitely many, as in the drum, $\mathbf{A}$ is no longer a matrix.
