@@ -1,6 +1,6 @@
 % Geometric multiplicity in 2D: same eigenvalue lambda = 2 (m_a = 2), different eigenspaces.
 % Left: 2I, every vector is an eigenvector, E_2 is the whole plane (m_g = 2).
-% Right: J_2(2) = [2 1; 0 2], only the x1 axis survives (m_g = 1).
+% Right: [2 1; 0 2], only the x1 axis survives (m_g = 1).
 % Same three inputs in both panels: (1,0), (0,1), (-1,1).
 \begin{center}
 \begin{tikzpicture}
@@ -43,7 +43,7 @@
   xtick={-2,-1,1,2}, ytick={1,2},
   tick label style={font=\scriptsize},
   grid=major, grid style={gray!25},
-  title={$\mathbf{J}_2(2)$: $m_g = 1$}, title style={font=\small},
+  title={$\left[\begin{smallmatrix} 2 & 1 \\ 0 & 2 \end{smallmatrix}\right]$: $m_g = 1$}, title style={font=\small},
 ]
 % E_2 is only the x1 axis
 \addplot[domain=-2.6:2.6, line width=4pt, blue!15, samples=2] {0};

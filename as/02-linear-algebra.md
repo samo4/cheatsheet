@@ -296,13 +296,13 @@ $$
 
 A common use for matrices is to describe linear transformations. A transformation $\vec{x}  \mapsto \mathbf{A}\vec{x}$ can stretch, shrink, rotate, or reflect vectors. Eigenvectors are the special directions that are only stretched or shrunk, not rotated.
 
-A nonzero vector $\vec{x}$ is an eigenvector of $\mathbf{A}$ if multiplying by $\mathbf{A}$ just scales it:
+A nonzero vector $\vec{v}$ is an eigenvector of $\mathbf{A}$ if multiplying by $\mathbf{A}$ just scales it:
 
 $$
-\mathbf{A}\vec{x} = \lambda\vec{x}
+\mathbf{A}\vec{v} = \lambda\vec{v}
 $$
 
-The scalar $\lambda$ is the eigenvalue.\footnote{D.Hilbert gave us the nice german name "Eigenwert" for eigenvalue} Rearranging gives $(\mathbf{A} - \lambda\mathbf{I})\vec{x} = \vec{0}$, so the eigenvectors are the null space of $\mathbf{A} - \lambda\mathbf{I}$ (without $\vec{0}$), called the eigenspace. A nonzero one exists iff that null space is nontrivial, i.e. $\mathbf{A} - \lambda\mathbf{I}$ is singular (rank below $n$, not invertible). Hence the eigenvalues are the roots of the characteristic polynomial
+The scalar $\lambda$ is the eigenvalue.\footnote{D.Hilbert gave us the nice german name "Eigenwert" for eigenvalue} Rearranging gives $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$, so the eigenvectors are the null space of $\mathbf{A} - \lambda\mathbf{I}$ (without $\vec{0}$), called the eigenspace. A nonzero one exists iff that null space is nontrivial, i.e. $\mathbf{A} - \lambda\mathbf{I}$ is singular (rank below $n$, not invertible). Hence the eigenvalues are the roots of the characteristic polynomial
 
 $$
 \det(\mathbf{A} - \lambda\mathbf{I}) = 0
@@ -332,7 +332,7 @@ Both are lines crossing at $\vec{0}$. A vector on $E_7$ is stretched 7 times alo
 \input{tikz/eigenspaces-lay.tex}
 ```
 
-Granted, it it might be hard to visualize in higher dimensions, but the principle is the same: each eigenspace is a subspace where the matrix acts as simple scaling.
+Granted, it might be hard to visualize in higher dimensions, but the principle is the same: each eigenspace is a subspace where the matrix acts as simple scaling.
 
 ```{=latex}
 \begin{example}[frametitle={Example - eigenvalues and eigenvectors}]
@@ -356,7 +356,7 @@ v_3 = 0,\ v_1 + v_2 = 0
 \vec{v}_1 = \begin{bmatrix} -1 \\ 1 \\ 0 \end{bmatrix}
 $$
 
-For $\lambda = 2$, $(\mathbf{A} - 2\mathbf{I})\vec{v} = \vec{0}$ give $v_3 = -v_1$, $v_1 = -2v_2$, so $\vec{v}_2 = \tvec{-2, 1, 2}$.
+For $\lambda = 2$, $(\mathbf{A} - 2\mathbf{I})\vec{v} = \vec{0}$ gives $v_3 = -v_1$, $v_1 = -2v_2$, so $\vec{v}_2 = \tvec{-2, 1, 2}$.
 
 For $\lambda = 3$, $(\mathbf{A} - 3\mathbf{I})\vec{v} = \vec{0}$ gives $v_3 = -2v_1$, $v_2 = -v_1$, so $\vec{v}_3 = \tvec{1, -1, -2}$.
 
@@ -368,14 +368,14 @@ Sanity check: $\mathbf{A}\vec{v}_1 = \vec{v}_1$, $\mathbf{A}\vec{v}_2 = 2\vec{v}
 
 #### Algebraic multiplicity
 
-An single eigenvalue can be a repeated root of the characteristic polynomial. The number of times it repeats is its algebraic multiplicity $m_a$ (written $m_{a,i}$ for $\lambda_i$ when there are several). These sum to the matrix dimension: $\sum_i m_{a,i} = n$.
+A single eigenvalue can be a repeated root of the characteristic polynomial. The number of times it repeats is its algebraic multiplicity $m_a$ (written $m_{a,i}$ for $\lambda_i$ when there are several). These sum to the matrix dimension: $\sum_i m_{a,i} = n$.
 
 #### Geometric multiplicity
 
-The geometric multiplicity $m_g$ of an eigenvalue is the number of linearly independent eigenvectors belonging to it, i.e. the dimension of the eigenspace $\ker(\mathbf{A} - \lambda\mathbf{I})$. It is computed as the nullity $m_g = n - \operatorname{rank}(\mathbf{A} - \lambda\mathbf{I})$; in practice it is the number of free variables left when you solve $(\mathbf{A} - \lambda\mathbf{I})\vec{x} = \vec{0}$. Geometrically, it says whether the eigenspace is a line ($m_g = 1$), a plane ($m_g = 2$), and so on. It always satisfies $1 \le m_g \le m_a$. Both $2\times2$ matrices below have $\lambda = 2$ with $m_a = 2$:
+The geometric multiplicity $m_g$ of an eigenvalue is the number of linearly independent eigenvectors belonging to it, i.e. the dimension of the eigenspace $\ker(\mathbf{A} - \lambda\mathbf{I})$. It is computed as the nullity $m_g = n - \operatorname{rank}(\mathbf{A} - \lambda\mathbf{I})$; in practice it is the number of free variables left when you solve $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$. Geometrically, it says whether the eigenspace is a line ($m_g = 1$), a plane ($m_g = 2$), and so on. It always satisfies $1 \le m_g \le m_a$. Both $2\times2$ matrices below have $\lambda = 2$ with $m_a = 2$:
 
 - $2\mathbf{I}$ scales every vector by 2, so its eigenspace is the whole plane: $m_g = 2$.
-- $\mathbf{J}_2(2) = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$ also scales by 2, but the $1$ adds a shear that pushes every vector off its line except those on the $x_1$ axis, so its eigenspace is that one line: $m_g = 1$.
+- $\begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$ also scales by 2, but the $1$ adds a shear that pushes every vector off its line except those on the $x_1$ axis, so its eigenspace is that one line: $m_g = 1$.
 
 Same inputs (solid) and their images (dashed) in both:
 
@@ -590,9 +590,9 @@ $$
 f(\mathbf{A}) = \mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}
 $$
 
-The 45° example was exactly this with $\mathbf{V} = \mathbf{T}$. For the first eigenvalue example above (distinct eigenvalues), $\mathbf{V} = [\vec{x}_1\ \vec{x}_2\ \vec{x}_3]$ gives $\operatorname{diag}(1, 2, 3)$. In state space the new states are the *modes*: each $\dot{\tilde{x}}_i = \lambda_i\tilde{x}_i + (\mathbf{V}^{-1}\mathbf{B}\vec{u})_i$ evolves on its own, and $\Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$. Worked examples, including a coupled RC pair split into its modes, are in the State space chapter under $\Phi$ via diagonalization.
+The 45° example was exactly this with $\mathbf{V} = \mathbf{T}$. For the first eigenvalue example above (distinct eigenvalues), $\mathbf{V} = [\vec{v}_1\ \vec{v}_2\ \vec{v}_3]$ gives $\operatorname{diag}(1, 2, 3)$. In state space the new states are the *modes*: each $\dot{\tilde{x}}_i = \lambda_i\tilde{x}_i + (\mathbf{V}^{-1}\mathbf{B}\vec{u})_i$ evolves on its own, and $\Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$. Worked examples, including a coupled RC pair split into its modes, are in the State space chapter under $\Phi$ via diagonalization.
 
-The catch is the word *independent*. A defective matrix, like the one in the eigenvalue section, has fewer than $n$ of them, and then *no* $\mathbf{T}$ at all makes it diagonal. Take $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. If it were similar to a diagonal matrix, that matrix would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But $\mathbf{T}^{-1}(2\mathbf{I})\mathbf{T} = 2\mathbf{I} \ne \mathbf{A}$ for every $\mathbf{T}$. The best one can do is the Jordan form (next section), and this $\mathbf{A}$ already is one.
+The catch is the word *independent*. A defective matrix, like the one in the eigenvalue section, has fewer than $n$ of them, and then *no* $\mathbf{T}$ at all makes it diagonal. Take $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. If it were similar to a diagonal matrix, that matrix would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But $\mathbf{T}^{-1}(2\mathbf{I})\mathbf{T} = 2\mathbf{I} \ne \mathbf{A}$ for every $\mathbf{T}$. The best one can do is the Jordan form (next section).
 
 ## Jordan canonical form
 
@@ -612,15 +612,15 @@ The observation that rescues us: square the matrix. Every solution of $(\mathbf{
 \begin{example}[frametitle={Example - eigenvector and generalized eigenvector}]
 ```
 
-$\mathbf{A} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$.
+$\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$, the defective matrix from the end of Diagonalization.
 
 **Step 1 — eigenvalues**\
-$\mathbf{A}$ is triangular, so we read the eigenvalue off the diagonal: $\lambda = 1$ with $m_a = 2$.
+$\mathbf{A}$ is triangular, so we read the eigenvalue off the diagonal: $\lambda = 2$ with $m_a = 2$.
 
 **Step 2 — eigenvector**
 
 $$
-(\mathbf{A} - \lambda\mathbf{I}) = \begin{bmatrix} 1 - \lambda & 1 \\ 0 & 1 - \lambda \end{bmatrix} \overset{\lambda = 1}{=} \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}
+(\mathbf{A} - \lambda\mathbf{I}) = \begin{bmatrix} 2 - \lambda & 1 \\ 0 & 2 - \lambda \end{bmatrix} \overset{\lambda = 2}{=} \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}
 $$
 
 $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ says only $v_2 = 0$, so $\vec{v}_1 = \tvec{1, 0}$. The rank is $1$, so $m_g = 2 - 1 = 1$: one eigenvector short.
@@ -660,6 +660,8 @@ $$
 \end{array}\right]
 $$
 
+The defective example from the eigenvalue section is already of this shape, with the blocks swapped: $\mathbf{J}_1(1)$ followed by $\mathbf{J}_2(2)$.
+
 Each Jordan block contains exactly one (independent) eigenvector, the column of $\mathbf{T}$ lined up with the block's top-left entry. The other columns are the generalized eigenvectors from above. So there are as many blocks as independent eigenvectors. Both multiplicities shape the Jordan form. For each eigenvalue $\lambda_i$:
 
 - the number of its blocks is $m_{g,i}$,
@@ -696,7 +698,7 @@ Only $\vec{v}_1$ is a true eigenvector. The others are generalized eigenvectors:
 3. Fill the remaining blocks of the same $\lambda$ with further chains (or plain eigenvectors for $1\times1$ blocks), independent of the ones you already have.
 4. Stack all chains into $\mathbf{T}$, each one starting with its eigenvector ($\vec{v}_1, \vec{v}_2, \dots$) so that $\vec{v}_1$ lands on the top-left of its block, in the order of the blocks in $\mathbf{J}$.
 
-Back to the example from Generalized eigenvectors: $\mathbf{T} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ gives $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} = \mathbf{J}_2(1)$. $\mathbf{A}$ is already a Jordan block, so $\mathbf{J} = \mathbf{A}$ is no surprise. The simplest choice $\vec{v}_2 = \tvec{0, 1}$ would even give $\mathbf{T} = \mathbf{I}$.
+Back to the example from Generalized eigenvectors: $\mathbf{T} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ gives $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix} = \mathbf{J}_2(2)$. $\mathbf{A}$ is already a Jordan block, so $\mathbf{J} = \mathbf{A}$ is no surprise. The simplest choice $\vec{v}_2 = \tvec{0, 1}$ would even give $\mathbf{T} = \mathbf{I}$.
 
 ```{=latex}
 \begin{example}[frametitle={Example - Jordan form end to end}]
