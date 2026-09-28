@@ -628,25 +628,51 @@ Each Jordan block contains exactly one (independent) eigenvector, the column of 
 
 - the number of its blocks is $m_{g,i}$,
 - their sizes add up to $m_{a,i}$,
-- the individual sizes follow from the ranks of powers of $\mathbf{N} = \mathbf{A} - \lambda_i\mathbf{I}$: the number of blocks of size $\ge k$ is $\operatorname{rank}\mathbf{N}^{k-1} - \operatorname{rank}\mathbf{N}^{k}$ (with $\mathbf{N}^0 = \mathbf{I}$, rank $n$).
+- the individual sizes follow from the ranks of powers of $(\mathbf{A} - \lambda_i\mathbf{I})$: the number of blocks of size $\ge k$ is $\operatorname{rank}(\mathbf{A} - \lambda_i\mathbf{I})^{k-1} - \operatorname{rank}(\mathbf{A} - \lambda_i\mathbf{I})^{k}$ (the zeroth power is $\mathbf{I}$, rank $n$).
 
 For $m_a \le 3$ the first two rules already fix the sizes; the rank rule is needed only from $m_a = 4$ on, where $m_g = 2$ could mean $3+1$ or $2+2$.
 
 ### Generalized eigenvectors
 
-A defective matrix is short of eigenvectors. For an eigenvalue $\lambda$, write $\mathbf{N} = \mathbf{A} - \lambda\mathbf{I}$. The equation $\mathbf{N}\vec{v} = \vec{0}$ always has solutions, since $\mathbf{N}$ is singular, but only $m_g$ independent ones, fewer than the $m_a$ we need to fill $\mathbf{T}$.
+A defective matrix is short of eigenvectors. The equation $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ always has solutions, since $\mathbf{A} - \lambda\mathbf{I}$ is singular, but only $m_g$ independent ones, fewer than the $m_a$ we need to fill $\mathbf{T}$.
 
-The observation that rescues us: square the matrix. Every solution of $\mathbf{N}\vec{v} = \vec{0}$ also solves $\mathbf{N}^2\vec{v} = \vec{0}$, but the squared equation can have *more* independent solutions. The cube can add more still. Take the matrix from the end of Diagonalization again, $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$, with $\lambda = 2$, $m_a = 2$ and $m_g = 1$:
+The observation that rescues us: square the matrix. Every solution of $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ also solves $(\mathbf{A} - \lambda\mathbf{I})^2\vec{v} = \vec{0}$, but the squared equation can have *more* independent solutions. The cube can add more still.
+
+```{=latex}
+\begin{example}[frametitle={Example - eigenvector and generalized eigenvector}]
+```
+
+$\mathbf{A} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$.
+
+**Step 1 — eigenvalues**\
+$\mathbf{A}$ is triangular, so we read the $m_a = 2$ eigenvalue off the diagonal.
+
+**Step 2 — eigenvector**
 
 $$
-\mathbf{N} = \mathbf{A} - 2\mathbf{I} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}, \qquad \mathbf{N}^2 = \mathbf{0}.
+(\mathbf{A} - \lambda\mathbf{I}) = \begin{bmatrix} 1 - \lambda & 1 \\ 0 & 1 - \lambda \end{bmatrix} \overset{\lambda = 1}{=} \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}
 $$
 
-- $\mathbf{N}\vec{v} = \vec{0}$ says only $v_2 = 0$. Its solutions are the $x_1$ axis: one eigenvector, one short.
-- $\mathbf{N}^2\vec{v} = \vec{0}$ holds for *every* $\vec{v}$, the whole plane, so the missing direction is there.
-- $\vec{v}_2 = \tvec{0, 1}$ solves the squared equation but not the plain one, and one application of $\mathbf{N}$ takes it to the eigenvector, $\mathbf{N}\vec{v}_2 = \tvec{1, 0} = \vec{v}_1$.
+$(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ says only $v_2 = 0$, so $\vec{v}_1 = \tvec{1, 0}$. The rank is $1$, so $m_g = 2 - 1 = 1$: one eigenvector short.
 
-In general, each higher power of $\mathbf{N}$ has at least as many independent solutions as the one before, until there are $m_a$ of them and adding powers stops helping. The new solutions picked up on the way are the *generalized eigenvectors*.
+**Step 3 — generalized eigenvector** the previous equation will not give as any more, so we square it:
+
+$(\mathbf{A} - \lambda\mathbf{I})^2 = \mathbf{0}$, so $(\mathbf{A} - \lambda\mathbf{I})^2\vec{v} = \vec{0}$ holds for *every* $\vec{v}$. 
+Pick one that does not already solve $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$, i.e. any vector off the $x_1$ axis, e.g. $\vec{v}_2 = \tvec{1, 1}$.
+
+**Step 4 — chain**\
+$(\mathbf{A} - \lambda\mathbf{I})\vec{v}_2 = \tvec{1, 0} = \vec{v}_1$. One application lands on the eigenvector, a second one gives $\vec{0}$.
+
+**Step 5 — check**\
+$\mathbf{T} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ and $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} = \mathbf{J}_2(1)$.
+
+$\mathbf{A}$ is already a Jordan block, so $\mathbf{J} = \mathbf{A}$ is no surprise. The simplest choice $\vec{v}_2 = \tvec{0, 1}$ would even give $\mathbf{T} = \mathbf{I}$.
+
+```{=latex}
+\end{example}
+```
+
+In general, each higher power of $(\mathbf{A} - \lambda\mathbf{I})$ has at least as many independent solutions as the one before, until there are $m_a$ of them and adding powers stops helping. The new solutions picked up on the way are the *generalized eigenvectors*.
 
 They are exactly what the Jordan form needs. The columns of $\mathbf{T}$ are found the same way as in diagonalization: read $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$ column by column. Take a single $2\times2$ block with columns $\vec{v}_1, \vec{v}_2$:
 
@@ -665,12 +691,12 @@ $$
 \end{aligned}
 $$
 
-Only $\vec{v}_1$ is a true eigenvector. The others are the generalized eigenvectors from above: $\mathbf{N} = \mathbf{A} - \lambda\mathbf{I}$ does not kill them, but a power of it does, $\mathbf{N}^j\vec{v}_j = \vec{0}$.
+Only $\vec{v}_1$ is a true eigenvector. The others are the generalized eigenvectors from above: $(\mathbf{A} - \lambda\mathbf{I})$ does not kill them, but a power of it does, $(\mathbf{A} - \lambda\mathbf{I})^j\vec{v}_j = \vec{0}$.
 
-*Build the chain from the top.* Solving $\mathbf{N}\vec{v}_2 = \vec{v}_1$ bottom-up is awkward. $\mathbf{N}$ is singular, and for a badly chosen eigenvector $\vec{v}_1$ the system has no solution at all. Going down avoids this:
+*Build the chain from the top.* Solving $(\mathbf{A} - \lambda\mathbf{I})\vec{v}_2 = \vec{v}_1$ bottom-up is awkward. The matrix is singular, and for a badly chosen eigenvector $\vec{v}_1$ the system has no solution at all. Going down avoids this:
 
-1. Pick $\vec{v}_k$ with $\mathbf{N}^{k}\vec{v}_k = \vec{0}$ but $\mathbf{N}^{k-1}\vec{v}_k \ne \vec{0}$. Usually any vector that does not solve $\mathbf{N}^{k-1}\vec{v} = \vec{0}$ does it.
-2. Go down with $\vec{v}_{j-1} = \mathbf{N}\vec{v}_j$. Each step is a matrix–vector product, nothing to solve, and the last one lands on an eigenvector automatically.
+1. Pick $\vec{v}_k$ with $(\mathbf{A} - \lambda\mathbf{I})^{k}\vec{v}_k = \vec{0}$ but $(\mathbf{A} - \lambda\mathbf{I})^{k-1}\vec{v}_k \ne \vec{0}$. Usually any vector that does not solve $(\mathbf{A} - \lambda\mathbf{I})^{k-1}\vec{v} = \vec{0}$ does it.
+2. Go down with $\vec{v}_{j-1} = (\mathbf{A} - \lambda\mathbf{I})\vec{v}_j$. Each step is a matrix–vector product, nothing to solve, and the last one lands on an eigenvector automatically.
 3. Fill the remaining blocks of the same $\lambda$ with further chains (or plain eigenvectors for $1\times1$ blocks), independent of the ones you already have.
 4. Stack all chains into $\mathbf{T}$, each one starting with its eigenvector ($\vec{v}_1, \vec{v}_2, \dots$) so that $\vec{v}_1$ lands on the top-left of its block, in the order of the blocks in $\mathbf{J}$.
 
