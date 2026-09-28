@@ -530,10 +530,16 @@ This is diagonalization in miniature: the columns of $\mathbf{T}$ are exactly th
 \end{example}
 ```
 
-*Functions pass through.* In a power the inner $\mathbf{T}\mathbf{T}^{-1}$ pairs cancel, $\tilde{\mathbf{A}}^k = \mathbf{T}^{-1}\mathbf{A}^k\mathbf{T}$, and so does every power series built from powers:
+*Functions pass through.* Turn the similarity around, $\mathbf{A} = \mathbf{T}\tilde{\mathbf{A}}\mathbf{T}^{-1}$, and square it. The inner pair cancels:
 
 $$
-f(\mathbf{T}^{-1}\mathbf{A}\mathbf{T}) = \mathbf{T}^{-1}f(\mathbf{A})\,\mathbf{T}, \qquad\text{e.g.}\quad e^{\mathbf{A}t} = \mathbf{T}\,e^{\tilde{\mathbf{A}}t}\,\mathbf{T}^{-1}
+\mathbf{A}^2 = \mathbf{T}\tilde{\mathbf{A}}\underbrace{\mathbf{T}^{-1}\mathbf{T}}_{\mathbf{I}}\tilde{\mathbf{A}}\mathbf{T}^{-1} = \mathbf{T}\tilde{\mathbf{A}}^2\mathbf{T}^{-1}
+$$
+
+Every further factor adds one more such pair, so $\mathbf{A}^k = \mathbf{T}\tilde{\mathbf{A}}^k\mathbf{T}^{-1}$, and so does every power series built from powers:
+
+$$
+f(\mathbf{A}) = \mathbf{T}f(\tilde{\mathbf{A}})\,\mathbf{T}^{-1}, \qquad\text{e.g.}\quad e^{\mathbf{A}t} = \mathbf{T}\,e^{\tilde{\mathbf{A}}t}\,\mathbf{T}^{-1}
 $$
 
 This is the practical reason to change basis: pick $\mathbf{T}$ so that $\tilde{\mathbf{A}}$ makes $f$ easy, compute $f(\tilde{\mathbf{A}})$, and transform back.
@@ -780,7 +786,7 @@ $$
 f\left(\begin{bmatrix} \mathbf{B}_1 & \mathbf{0} \\ \mathbf{0} & \mathbf{B}_2 \end{bmatrix}\right) = \begin{bmatrix} f(\mathbf{B}_1) & \mathbf{0} \\ \mathbf{0} & f(\mathbf{B}_2) \end{bmatrix}
 $$
 
-That's why $\mathbf{J}$ is so useful: $f(\mathbf{A}) = \mathbf{T}f(\mathbf{J})\mathbf{T}^{-1}$ needs $f$ only of the small blocks.
+That's why $\mathbf{J}$ is so useful. Functions pass through a similarity (the inner $\mathbf{T}^{-1}\mathbf{T}$ pairs cancel, see Similarity transformation), so $f(\mathbf{A}) = \mathbf{T}f(\mathbf{J})\mathbf{T}^{-1}$ needs $f$ only of the small blocks.
 
 For a general $\mathbf{A}$ the infinite series is useless by hand, but the Cayley–Hamilton theorem\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} collapses it.
 
