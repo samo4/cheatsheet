@@ -446,6 +446,8 @@ Sanity check: $\mathbf{A}\vec{v}_1 = \tvec{1,0,0} = 1\cdot\vec{v}_1$ and $\mathb
 
 ## Similarity transformation
 
+A similarity transformation changes nothing about the system (same content, different map), only the coordinate grid we describe it in, and we pick the grid that makes the description simplest. Electrical engineers already use one: the Clarke transform, which untangles three coupled phases into independent components.\footnote{In a symmetric three-phase machine, the columns of the Clarke matrix are eigenvectors of the $abc$ inductance matrix, so in $\alpha\beta0$ that matrix is diagonal. That is diagonalization, below.}
+
 A matrix describes a linear map in a particular basis. Take the map $\vec{y} = \mathbf{A}\vec{x}$ and describe both vectors in a new basis. To picture it, it is exactly the eigenspace figure above, with $\vec{x} = \vec{w}$ and $\vec{y} = \mathbf{A}\vec{w}$. With an invertible $\mathbf{T}$ whose columns are the new basis vectors written in the old coordinates, the old coordinates follow from the new ones as
 
 $$
@@ -562,8 +564,8 @@ The scaled columns on the right are just the original ones times the diagonal ei
 
 $$
 = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}\begin{bmatrix}
-\lambda_1 & & \
-& \ddots & \
+\lambda_1 & & \\
+& \ddots & \\
 & & \lambda_n
 \end{bmatrix}
 $$
