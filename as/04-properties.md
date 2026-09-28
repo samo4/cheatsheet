@@ -78,6 +78,32 @@ $\operatorname{Re}\lambda_i < 0$ for all $i$: every mode decays, so from any ini
 \input{tikz/stability-asymptotic.tex}
 ```
 
+```{=latex}
+\begin{example}[frametitle={Example - what the eigenvalues can't tell you, but the Jordan form can}]
+```
+
+Compare
+
+$$
+\mathbf{A}_1 = \begin{bmatrix} -1 & 0 \\ 0 & -1 \end{bmatrix}, \qquad
+\mathbf{A}_2 = \begin{bmatrix} -1 & c \\ 0 & -1 \end{bmatrix}, \quad c \ne 0.
+$$
+
+Same eigenvalues, $\lambda = -1$ twice, so both are asymptotically stable. Their Jordan forms differ, though: $\mathbf{A}_1$ is two $1\times1$ blocks, while $\mathbf{A}_2$ is one $2\times2$ block, $\mathbf{T}^{-1}\mathbf{A}_2\mathbf{T} = \mathbf{J}_2(-1)$ with $\mathbf{T} = \begin{bmatrix} c & 0 \\ 0 & 1 \end{bmatrix}$. The exponentials are
+
+$$
+e^{\mathbf{A}_1 t} = \begin{bmatrix} e^{-t} & 0 \\ 0 & e^{-t} \end{bmatrix}, \qquad
+e^{\mathbf{A}_2 t} = \begin{bmatrix} e^{-t} & c\,t e^{-t} \\ 0 & e^{-t} \end{bmatrix}.
+$$
+
+Start both from $\vec{x}_0 = \tvec{0, 1}$. The first system shrinks straight to the origin, $\vec{x}(t) = e^{-t}\vec{x}_0$, and never gets farther away than it started. The second gets $x_1(t) = c\,t e^{-t}$: it climbs first, peaks at $t = 1$ with $x_1 = c/e$, and only then decays. For $c = 10$ the state swings out to about $3.7$ from a start of length $1$, before settling.
+
+Both systems end at zero, as the eigenvalues promise. The eigenvalues say nothing about the way there. The $t e^{-t}$ mode, and with it the hump, comes from the $2\times2$ block. The height of the hump, $c$, sits in $\mathbf{T}$. In general a $t e^{\lambda t}$ mode with $\lambda < 0$ peaks at $t = 1/|\lambda|$, so the slower the pole, the later and larger the swing.
+
+```{=latex}
+\end{example}
+```
+
 
 ### Unstable
 
