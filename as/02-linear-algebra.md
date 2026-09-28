@@ -758,7 +758,7 @@ Instead of inverting $\mathbf{T}$, check $\mathbf{A}\mathbf{T} = \mathbf{T}\math
 \end{example}
 ```
 
-The superdiagonal 1s are not bookkeeping. In $e^{\mathbf{A}t}$ a $k\times k$ block turns into terms up to $t^{k-1}e^{\lambda t}$, see Functions of a Jordan block below.
+The superdiagonal 1s are not bookkeeping. In $e^{\mathbf{A}t}$ a $k\times k$ block turns into terms up to $t^{k-1}e^{\lambda t}$, see The exponential of a Jordan block below.
 
 More worked examples, from the block structure through the chains to $\mathbf{T}$, are in the State space chapter under $\Phi$ via the Jordan form.
 
@@ -880,53 +880,33 @@ Sanity check: $\mathbf{A}$ is triangular, so the answer must be triangular with 
 \end{example}
 ```
 
-### Functions of a Jordan block
+### The exponential of a Jordan block
 
-The Cayley–Hamilton recipe handles a repeated eigenvalue by matching derivatives too, but it never says why the derivatives show up. The Jordan form does. By the block-diagonal rule above, $f(\mathbf{J})$ needs only $f$ of each block, so take a single block. A $4\times4$ one is big enough to show the pattern.
-
-*Split the block.* Write $\mathbf{J}_4(\lambda) = \lambda\mathbf{I} + \mathbf{N}$, where $\mathbf{N}$ holds only the superdiagonal $1$s. Each power of $\mathbf{N}$ pushes the $1$s one diagonal further up, until they fall off the corner:
+This is where the chapter has been heading. The exponential passes through a similarity, $e^{\mathbf{A}t} = \mathbf{T}e^{\mathbf{J}t}\mathbf{T}^{-1}$, and $e^{\mathbf{J}t}$ is block diagonal, so all we need is the exponential of a single Jordan block. We take a $4\times4$ one. The pattern for other sizes will be obvious.
 
 $$
-\mathbf{N} = \begin{bmatrix} 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 \end{bmatrix}, \quad
-\mathbf{N}^2 = \begin{bmatrix} 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix}, \quad
-\mathbf{N}^3 = \begin{bmatrix} 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix}, \quad
+\mathbf{J}_4(\lambda) = \begin{bmatrix} \lambda & 1 & 0 & 0 \\ 0 & \lambda & 1 & 0 \\ 0 & 0 & \lambda & 1 \\ 0 & 0 & 0 & \lambda \end{bmatrix}
+= \lambda\mathbf{I} + \mathbf{N}, \qquad
+\mathbf{N} = \begin{bmatrix} 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 \end{bmatrix}
+$$
+
+*Step 1 — split off the diagonal.* $\lambda\mathbf{I}$ commutes with every matrix, so the exponential splits just like the scalar one:\footnote{For two matrices that do not commute, $e^{(\mathbf{X}+\mathbf{Y})t} \ne e^{\mathbf{X}t}e^{\mathbf{Y}t}$ in general.}
+
+$$
+e^{\mathbf{J}_4(\lambda)t} = e^{\lambda t}\,e^{\mathbf{N}t}
+$$
+
+*Step 2 — powers of $\mathbf{N}$.* Each multiplication by $\mathbf{N}$ pushes the $1$s one diagonal further up, until they fall off the corner:
+
+$$
+\mathbf{N}^2 = \begin{bmatrix} 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix}, \qquad
+\mathbf{N}^3 = \begin{bmatrix} 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix}, \qquad
 \mathbf{N}^4 = \mathbf{0}
 $$
 
-A matrix with a vanishing power is called *nilpotent*.
+A matrix with a vanishing power like this is called *nilpotent*.
 
-*Take powers of the block.* $\lambda\mathbf{I}$ commutes with everything, so $(\lambda\mathbf{I} + \mathbf{N})^m$ expands by the binomial theorem just like $(\lambda + x)^m$. Because $\mathbf{N}^4 = \mathbf{0}$, the expansion stops after four terms:
-
-$$
-\mathbf{J}_4(\lambda)^m = \lambda^m\mathbf{I} + m\lambda^{m-1}\mathbf{N} + \binom{m}{2}\lambda^{m-2}\mathbf{N}^2 + \binom{m}{3}\lambda^{m-3}\mathbf{N}^3
-$$
-
-Now look at the coefficients. $m\lambda^{m-1}$ is the derivative of $\lambda^m$, $\binom{m}{2}\lambda^{m-2} = \frac{1}{2!}\frac{d^2}{d\lambda^2}\lambda^m$ and $\binom{m}{3}\lambda^{m-3} = \frac{1}{3!}\frac{d^3}{d\lambda^3}\lambda^m$.
-
-*Sum the series.* $f(\mathbf{J}_4(\lambda)) = \sum_m c_m\mathbf{J}_4(\lambda)^m$. Group the terms by powers of $\mathbf{N}$. The coefficient of $\mathbf{N}^j$ is $\sum_m c_m\frac{1}{j!}\frac{d^j}{d\lambda^j}\lambda^m = \frac{f^{(j)}(\lambda)}{j!}$, i.e. the same series differentiated $j$ times:
-
-```{=latex}
-\[
-\begingroup
-\setlength{\fboxsep}{1.2em}
-\fbox{$\displaystyle
-f(\mathbf{J}_4(\lambda)) = f(\lambda)\,\mathbf{I} + f'(\lambda)\,\mathbf{N} + \frac{f''(\lambda)}{2!}\,\mathbf{N}^2 + \frac{f'''(\lambda)}{3!}\,\mathbf{N}^3
-= \begin{bmatrix}
-f(\lambda) & f'(\lambda) & \frac{f''(\lambda)}{2!} & \frac{f'''(\lambda)}{3!} \\[2pt]
-0 & f(\lambda) & f'(\lambda) & \frac{f''(\lambda)}{2!} \\[2pt]
-0 & 0 & f(\lambda) & f'(\lambda) \\[2pt]
-0 & 0 & 0 & f(\lambda)
-\end{bmatrix}
-$}
-\endgroup
-\]
-```
-
-You can read this as the Taylor series of $f$ around $\lambda$, with $\mathbf{N}$ in place of $x - \lambda$. Since $\mathbf{N}$ is nilpotent, the series is finite. The derivatives climb the superdiagonals, one order per diagonal. A $k\times k$ block works the same way and reaches $f^{(k-1)}(\lambda)/(k-1)!$ in its top-right corner.
-
-*Why Cayley–Hamilton matches derivatives.* The remainder polynomial $r$ must satisfy $r(\mathbf{A}) = f(\mathbf{A})$. With $\mathbf{A} = \mathbf{T}\mathbf{J}\mathbf{T}^{-1}$, that means $r(\mathbf{J}) = f(\mathbf{J})$, block by block. Apply the formula to $r$ as well: $r(\mathbf{J}_4(\lambda))$ has $r(\lambda), r'(\lambda), r''(\lambda)/2!, r'''(\lambda)/3!$ on its diagonals. The two matrices agree only if $r$ agrees with $f$ *and with its first three derivatives* at $\lambda$. So the derivative equations in the recipe come straight from these superdiagonals. Matching $m_a - 1$ derivatives is always enough, because no block is larger than $m_a$.
-
-*The exponential.* Take $f(\lambda) = e^{\lambda t}$. Each derivative with respect to $\lambda$ brings down one factor of $t$, $f^{(j)}(\lambda) = t^j e^{\lambda t}$, so
+*Step 3 — the series stops.* In $e^{\mathbf{N}t} = \mathbf{I} + \mathbf{N}t + \frac{\mathbf{N}^2t^2}{2!} + \frac{\mathbf{N}^3t^3}{3!} + \dots$ every term from $\mathbf{N}^4$ on is zero, so four terms are all there is. Each one lands on its own diagonal:
 
 ```{=latex}
 \[
@@ -944,21 +924,52 @@ $}
 \]
 ```
 
-A $k\times k$ block produces powers of $t$ up to $t^{k-1}$, and nothing else in the Jordan form produces a power of $t$. With $f(\lambda) = \lambda^k$ the same formula gives $\mathbf{J}^k$, with $k\lambda^{k-1}, \binom{k}{2}\lambda^{k-2}, \dots$ on the superdiagonals (Discrete chapter).
+A $k\times k$ block gives the same picture, with $\frac{t^{k-1}}{(k-1)!}$ in the top-right corner. So the $t e^{\lambda t}, t^2 e^{\lambda t}, \dots$ do not come from a repeated eigenvalue as such. They come from the superdiagonal $1$s, and a longer block gives higher powers of $t$.
 
-*Same eigenvalues, different behaviour.* Every $4\times4$ Jordan matrix with the single eigenvalue $\lambda$ has the same characteristic polynomial. What tells them apart is how the four columns split into blocks ($\oplus$ stacks blocks on the diagonal):
+```{=latex}
+\begin{example}[frametitle={Example - same eigenvalue, different blocks}]
+```
+
+Both matrices below have the single eigenvalue $\lambda$ with $m_a = 4$ and $m_g = 2$ (two blocks each), but they split differently, $3+1$ versus $2+2$. Each block is exponentiated on its own:
 
 $$
-\begin{array}{lccc}
-\text{blocks} & \text{sizes} & m_g & \text{highest power of } t \\ \hline
-\mathbf{J}_4 & 4 & 1 & t^3 e^{\lambda t} \\
-\mathbf{J}_3 \oplus \mathbf{J}_1 & 3+1 & 2 & t^2 e^{\lambda t} \\
-\mathbf{J}_2 \oplus \mathbf{J}_2 & 2+2 & 2 & t\, e^{\lambda t} \\
-\mathbf{J}_2 \oplus \mathbf{J}_1 \oplus \mathbf{J}_1 & 2+1+1 & 3 & t\, e^{\lambda t} \\
-\lambda\mathbf{I} & 1+1+1+1 & 4 & \text{none}
-\end{array}
+\mathbf{J} = \left[\begin{array}{ccc:c}
+\lambda & 1 & 0 & 0 \\
+0 & \lambda & 1 & 0 \\
+0 & 0 & \lambda & 0 \\ \hdashline
+0 & 0 & 0 & \lambda
+\end{array}\right]
+\quad\Longrightarrow\quad
+e^{\mathbf{J}t} = e^{\lambda t}\left[\begin{array}{ccc:c}
+1 & t & \frac{t^2}{2!} & 0 \\
+0 & 1 & t & 0 \\
+0 & 0 & 1 & 0 \\ \hdashline
+0 & 0 & 0 & 1
+\end{array}\right]
 $$
 
-The rows $3+1$ and $2+2$ have the same $m_g$ but different dynamics, which is why the rank rule in Jordan blocks is needed from $m_a = 4$ on. For $\lambda < 0$ this matters only for the transient, because $e^{\lambda t}$ wins against any power of $t$. For $\lambda = 0$ it decides everything: $\lambda\mathbf{I}$ stays bounded, and every other row grows without bound.
+$$
+\mathbf{J} = \left[\begin{array}{cc:cc}
+\lambda & 1 & 0 & 0 \\
+0 & \lambda & 0 & 0 \\ \hdashline
+0 & 0 & \lambda & 1 \\
+0 & 0 & 0 & \lambda
+\end{array}\right]
+\quad\Longrightarrow\quad
+e^{\mathbf{J}t} = e^{\lambda t}\left[\begin{array}{cc:cc}
+1 & t & 0 & 0 \\
+0 & 1 & 0 & 0 \\ \hdashline
+0 & 0 & 1 & t \\
+0 & 0 & 0 & 1
+\end{array}\right]
+$$
 
-For a general $\mathbf{A}$, put it all together: $f(\mathbf{A}) = \mathbf{T}f(\mathbf{J})\mathbf{T}^{-1}$, where $f(\mathbf{J})$ is block diagonal with each block $f(\mathbf{J}_k(\lambda))$ filled in by the pattern above. The State space chapter uses this with $f(\lambda) = e^{\lambda t}$ in $\Phi$ via the Jordan form.
+The first one reaches $t^2 e^{\lambda t}$, the second only $t e^{\lambda t}$. The eigenvalues and both multiplicities can't tell the two apart. That takes the rank rule from Jordan blocks. For $\lambda = 0$ the difference is growth like $t^2$ versus growth like $t$.
+
+```{=latex}
+\end{example}
+```
+
+*Other functions.* Nothing here was special to the exponential. For any $f$ from this section, $f(\mathbf{J}_4(\lambda))$ has the same shape, with $f(\lambda)$ on the diagonal and $f'(\lambda)$, $\frac{f''(\lambda)}{2!}$, $\frac{f'''(\lambda)}{3!}$ on the superdiagonals. For $f(\lambda) = e^{\lambda t}$, the derivatives with respect to $\lambda$ give exactly the $t e^{\lambda t}$, $t^2 e^{\lambda t}$ and $t^3 e^{\lambda t}$ of the box above. This is also where the derivative equations in the Cayley–Hamilton recipe come from: the polynomial $r(\lambda)$ reproduces $f(\mathbf{J})$ only if it matches these derivatives too.
+
+The State space chapter puts this to work in $\Phi$ via the Jordan form.
