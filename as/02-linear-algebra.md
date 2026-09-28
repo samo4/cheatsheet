@@ -890,13 +890,12 @@ $$
 \mathbf{N} = \begin{bmatrix} 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 \end{bmatrix}
 $$
 
-*Step 1 — split off the diagonal.* $\lambda\mathbf{I}$ commutes with every matrix, so the exponential splits just like the scalar one:\footnote{For two matrices that do not commute, $e^{(\mathbf{X}+\mathbf{Y})t} \ne e^{\mathbf{X}t}e^{\mathbf{Y}t}$ in general.}
+The diagonal part $\lambda\mathbf{I}$ commutes with every matrix, so the exponential splits just like the scalar one:\footnote{For two matrices that do not commute, $e^{(\mathbf{X}+\mathbf{Y})t} \ne e^{\mathbf{X}t}e^{\mathbf{Y}t}$ in general.}
 
 $$
 e^{\mathbf{J}_4(\lambda)t} = e^{\lambda t}\,e^{\mathbf{N}t}
 $$
-
-*Step 2 — powers of $\mathbf{N}$.* Each multiplication by $\mathbf{N}$ pushes the $1$s one diagonal further up, until they fall off the corner:
+and the problem shrinks to $e^{\mathbf{N}t}$. That turns out to be easy, because $\mathbf{N}$ runs out of powers. Each multiplication by $\mathbf{N}$ pushes the $1$s one diagonal further up, until they fall off the corner:
 
 $$
 \mathbf{N}^2 = \begin{bmatrix} 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix}, \qquad
@@ -906,7 +905,7 @@ $$
 
 A matrix with a vanishing power like this is called *nilpotent*.
 
-*Step 3 — the series stops.* In $e^{\mathbf{N}t} = \mathbf{I} + \mathbf{N}t + \frac{\mathbf{N}^2t^2}{2!} + \frac{\mathbf{N}^3t^3}{3!} + \dots$ every term from $\mathbf{N}^4$ on is zero, so four terms are all there is. Each one lands on its own diagonal:
+So the series breaks off. In $e^{\mathbf{N}t} = \mathbf{I} + \mathbf{N}t + \frac{\mathbf{N}^2t^2}{2!} + \frac{\mathbf{N}^3t^3}{3!} + \dots$ every term from $\mathbf{N}^4$ on is zero, so four terms are all there is. Each one lands on its own diagonal:
 
 ```{=latex}
 \[
