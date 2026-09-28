@@ -598,9 +598,9 @@ The catch is the word *independent*. A defective matrix, like the one in the eig
 
 When a matrix is defective, we settle for the next best thing: a basis in which $\mathbf{A}$ is *as diagonal as possible*. That is the Jordan form.\footnote{C. Jordan published it in 1870. Not to be confused with W. Jordan of Gauss–Jordan elimination, a geodesist.} It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
 
-In other words, not all matrices are similar to a diagonal matrix; but all are similar to a Jordan canonical form matrix. 
+In other words, not every matrix is similar to a diagonal matrix, but every matrix is similar to a Jordan matrix.
 
-This will come up as a very useful form for many problems, but for a teaser, note that block diagonal matrices like a Jordan form can be easily multiplied.
+That makes it useful far beyond this chapter. $\mathbf{J}$ is block diagonal, so powers, exponentials and other functions of $\mathbf{A}$ reduce to the same functions of small blocks.
 
 ### Generalized eigenvectors
 
@@ -698,9 +698,69 @@ Only $\vec{v}_1$ is a true eigenvector. The others are generalized eigenvectors:
 
 Back to the example from Generalized eigenvectors: $\mathbf{T} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ gives $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} = \mathbf{J}_2(1)$. $\mathbf{A}$ is already a Jordan block, so $\mathbf{J} = \mathbf{A}$ is no surprise. The simplest choice $\vec{v}_2 = \tvec{0, 1}$ would even give $\mathbf{T} = \mathbf{I}$.
 
+```{=latex}
+\begin{example}[frametitle={Example - Jordan form end to end}]
+```
+
+$\mathbf{A} = \begin{bmatrix} 3 & -1 & 1 \\ 1 & 1 & -2 \\ 0 & 0 & -1 \end{bmatrix}$.
+
+**Step 1 — eigenvalues**\
+Expand along the last row:
+
+$$
+\det(\mathbf{A} - \lambda\mathbf{I}) = (-1 - \lambda)\begin{vmatrix} 3 - \lambda & -1 \\ 1 & 1 - \lambda \end{vmatrix} = (-1 - \lambda)(\lambda - 2)^2
+$$
+
+so $\lambda_1 = 2$ with $m_{a,1} = 2$ and $\lambda_2 = -1$ with $m_{a,2} = 1$.
+
+**Step 2 — block structure**
+
+$$
+(\mathbf{A} - \lambda_1\mathbf{I}) = \begin{bmatrix} 1 & -1 & 1 \\ 1 & -1 & -2 \\ 0 & 0 & -3 \end{bmatrix}
+$$
+
+has rank $2$ (the first two columns are dependent), so $m_{g,1} = 3 - 2 = 1$. One block of size $m_{a,1} = 2$ for $\lambda_1$, and a $1\times1$ block for $\lambda_2$:
+
+$$
+\mathbf{J} = \left[\begin{array}{cc:c}
+2 & 1 & 0 \\
+0 & 2 & 0 \\ \hdashline
+0 & 0 & -1
+\end{array}\right]
+$$
+
+**Step 3 — chain for $\lambda_1$, from the top**\
+The block has size $2$, so we need $\vec{v}_2$ with $(\mathbf{A} - \lambda_1\mathbf{I})^2\vec{v}_2 = \vec{0}$ but $(\mathbf{A} - \lambda_1\mathbf{I})\vec{v}_2 \ne \vec{0}$:
+
+$$
+(\mathbf{A} - \lambda_1\mathbf{I})^2 = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & 9 \\ 0 & 0 & 9 \end{bmatrix}
+$$
+
+Its kernel is $v_3 = 0$. Take $\vec{v}_2 = \tvec{1, 0, 0}$, which is not an eigenvector. Going down is a single product, nothing to solve:
+
+$$
+\vec{v}_1 = (\mathbf{A} - \lambda_1\mathbf{I})\vec{v}_2 = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}
+$$
+
+**Step 4 — eigenvector for $\lambda_2$**\
+$(\mathbf{A} + \mathbf{I})\vec{v} = \vec{0}$ with $\mathbf{A} + \mathbf{I} = \begin{bmatrix} 4 & -1 & 1 \\ 1 & 2 & -2 \\ 0 & 0 & 0 \end{bmatrix}$ gives $\vec{v}_3 = \tvec{0, 1, 1}$.
+
+**Step 5 — assemble and check**\
+Columns in the order of the blocks in $\mathbf{J}$, each chain starting with its eigenvector:
+
+$$
+\mathbf{T} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \vec{v}_3 \end{bmatrix} = \begin{bmatrix} 1 & 1 & 0 \\ 1 & 0 & 1 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+Instead of inverting $\mathbf{T}$, check $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$ column by column: $\mathbf{A}\vec{v}_1 = \tvec{2, 2, 0} = 2\vec{v}_1$, $\mathbf{A}\vec{v}_2 = \tvec{3, 1, 0} = \vec{v}_1 + 2\vec{v}_2$ and $\mathbf{A}\vec{v}_3 = \tvec{0, -1, -1} = -\vec{v}_3$.
+
+```{=latex}
+\end{example}
+```
+
 The superdiagonal 1s are not bookkeeping. In $e^{\mathbf{A}t}$ a $k\times k$ block turns into terms up to $t^{k-1}e^{\lambda t}$, see The exponential of a Jordan block in the State space chapter.
 
-Worked examples, from the block structure through the chains to $\mathbf{T}$, are in the State space chapter under $\Phi$ via the Jordan form.
+More worked examples, from the block structure through the chains to $\mathbf{T}$, are in the State space chapter under $\Phi$ via the Jordan form.
 
 *A caveat.* The Jordan form is a tool for thinking, not for numerical computation. It is discontinuous: perturb a Jordan block by $\varepsilon$ and the repeated eigenvalue splits, the matrix becomes diagonalizable, and $\mathbf{J}$ jumps to a diagonal matrix. Rounding errors do exactly this, so numerical software avoids the Jordan form (MATLAB's `jordan` is symbolic-only). It uses the Schur form $\mathbf{Q}^{*}\mathbf{A}\mathbf{Q}$ instead, which is triangular with orthogonal (unitary) $\mathbf{Q}$.
 
