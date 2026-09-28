@@ -770,7 +770,19 @@ More worked examples, from the block structure through the chains to $\mathbf{T}
 
 Starting with Cayley in 1858, people asked whether run-of-the-mill scalar functions such as $\sqrt{x}$, $e^x$, $\sin x$ and $\cos x$ have any meaning when applied to a matrix. As a matter of fact, they do for square matrices.
 
-A function of a square matrix is defined by its power series: if the scalar function's Taylor series $f(\lambda) = \sum_k c_k\lambda^k$ converges, then $f(\mathbf{A}) = \sum_k c_k\mathbf{A}^k$. That is what $e^{\mathbf{A}t}$, $\sin\mathbf{A}$ or $\mathbf{A}^k$ mean. The infinite series is useless by hand, but the Cayley–Hamilton theorem\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} collapses it.
+A function of a square matrix is defined by its power series: if the scalar function's Taylor series $f(\lambda) = \sum_k c_k\lambda^k$ converges, then $f(\mathbf{A}) = \sum_k c_k\mathbf{A}^k$. That is what $e^{\mathbf{A}t}$, $\sin\mathbf{A}$ or $\mathbf{A}^k$ mean.
+
+*Block diagonal matrices are easy.* The zero blocks multiply out to zero, so each block is powered on its own, and every power series follows:
+
+$$
+\begin{bmatrix} \mathbf{B}_1 & \mathbf{0} \\ \mathbf{0} & \mathbf{B}_2 \end{bmatrix}^k = \begin{bmatrix} \mathbf{B}_1^k & \mathbf{0} \\ \mathbf{0} & \mathbf{B}_2^k \end{bmatrix}
+\quad\Longrightarrow\quad
+f\left(\begin{bmatrix} \mathbf{B}_1 & \mathbf{0} \\ \mathbf{0} & \mathbf{B}_2 \end{bmatrix}\right) = \begin{bmatrix} f(\mathbf{B}_1) & \mathbf{0} \\ \mathbf{0} & f(\mathbf{B}_2) \end{bmatrix}
+$$
+
+That's why $\mathbf{J}$ is so useful: $f(\mathbf{A}) = \mathbf{T}f(\mathbf{J})\mathbf{T}^{-1}$ needs $f$ only of the small blocks.
+
+For a general $\mathbf{A}$ the infinite series is useless by hand, but the Cayley–Hamilton theorem\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} collapses it.
 
 ### The Cayley–Hamilton theorem
 
