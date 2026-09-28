@@ -446,6 +446,10 @@ Sanity check: $\mathbf{A}\vec{v}_1 = \tvec{1,0,0} = 1\cdot\vec{v}_1$ and $\mathb
 
 ## Similarity transformation
 
+First the idea, then the algebra. A similarity transformation changes nothing about the system. It is the same content drawn on a different map: the same vectors and the same linear map, described in a different coordinate grid. There is only one reason to do it. In a well-chosen grid the description gets simpler, sometimes dramatically so.
+
+Electrical engineers already know one such change of grid: the Clarke–Park transform. In the $abc$ frame, the three phase currents of a machine are three coupled sinusoids. Clarke rewrites them on two fixed axes ($\alpha\beta$), and Park turns those axes along with the rotor ($dq$). The currents in the copper have not changed at all. In $dq$, though, they are constants, and the machine model splits into a flux axis and a torque axis, so AC control becomes a DC problem.\footnote{Park's matrix turns with the rotor angle, so it depends on time. Here $\mathbf{T}$ is constant, but the idea is the same.} A similarity transformation does the same for a matrix, and for $\mathbf{A}$ the best grid will turn out to be its eigenvectors.
+
 A matrix describes a linear map in a particular basis. Take the map $\vec{y} = \mathbf{A}\vec{x}$ and describe both vectors in a new basis. To picture it, it is exactly the eigenspace figure above, with $\vec{x} = \vec{w}$ and $\vec{y} = \mathbf{A}\vec{w}$. With an invertible $\mathbf{T}$ whose columns are the new basis vectors written in the old coordinates, the old coordinates follow from the new ones as
 
 $$
@@ -562,8 +566,8 @@ The scaled columns on the right are just the original ones times the diagonal ei
 
 $$
 = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}\begin{bmatrix}
-\lambda_1 & & \
-& \ddots & \
+\lambda_1 & & \\
+& \ddots & \\
 & & \lambda_n
 \end{bmatrix}
 $$
