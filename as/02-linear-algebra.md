@@ -544,14 +544,6 @@ $$
 
 This is the practical reason to change basis: pick $\mathbf{T}$ so that $\tilde{\mathbf{A}}$ makes $f$ easy, compute $f(\tilde{\mathbf{A}})$, and transform back.
 
-*In state space* a similarity is simply a new choice of state variables, $\vec{x} = \mathbf{T}\tilde{\vec{x}}$. The same substitution as above, now into $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$ and $\vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}$, gives
-
-$$
-\mathbf{T}\dot{\tilde{\vec{x}}} = \mathbf{A}\mathbf{T}\tilde{\vec{x}} + \mathbf{B}\vec{u} \quad\Longrightarrow\quad \dot{\tilde{\vec{x}}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}\,\tilde{\vec{x}} + \mathbf{T}^{-1}\mathbf{B}\,\vec{u}, \qquad \vec{y} = \mathbf{C}\mathbf{T}\,\tilde{\vec{x}} + \mathbf{D}\vec{u}
-$$
-
-so $(\mathbf{A}, \mathbf{B}, \mathbf{C}, \mathbf{D}) \mapsto (\mathbf{T}^{-1}\mathbf{A}\mathbf{T},\ \mathbf{T}^{-1}\mathbf{B},\ \mathbf{C}\mathbf{T},\ \mathbf{D})$. Here only the state changes coordinates; $\vec{u}$ and $\vec{y}$ are untouched, which is why $\mathbf{B}$ gets only a $\mathbf{T}^{-1}$ and $\mathbf{C}$ only a $\mathbf{T}$. Poles, stability and the transfer function do not notice it.
-
 ### Diagonalization
 
 The easiest $\tilde{\mathbf{A}}$ of all is diagonal, and the basis that gets you there is made of eigenvectors. When $m_{g,i} = m_{a,i}$ for every eigenvalue, there are exactly $n$ linearly independent eigenvectors $\vec{v}_1, \dots, \vec{v}_n$. This is always the case when all eigenvalues are distinct, since then $m_{g,i} = m_{a,i} = 1$. Stack them as columns:
