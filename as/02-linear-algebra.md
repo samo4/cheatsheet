@@ -446,8 +446,6 @@ Sanity check: $\mathbf{A}\vec{v}_1 = \tvec{1,0,0} = 1\cdot\vec{v}_1$ and $\mathb
 
 ## Similarity transformation
 
-A similarity transformation changes nothing about the system (same content, different map), only the coordinate grid we describe it in, and we pick the grid that makes the description simplest. Electrical engineers already use one: the Clarke transform, which untangles three coupled phases into independent components.\footnote{In a symmetric three-phase machine, the columns of the Clarke matrix are eigenvectors of the $abc$ inductance matrix, so in $\alpha\beta0$ that matrix is diagonal. That is diagonalization, below.}
-
 A matrix describes a linear map in a particular basis. Take the map $\vec{y} = \mathbf{A}\vec{x}$ and describe both vectors in a new basis. To picture it, it is exactly the eigenspace figure above, with $\vec{x} = \vec{w}$ and $\vec{y} = \mathbf{A}\vec{w}$. With an invertible $\mathbf{T}$ whose columns are the new basis vectors written in the old coordinates, the old coordinates follow from the new ones as
 
 $$
@@ -545,6 +543,8 @@ f(\mathbf{A}) = \mathbf{T}f(\tilde{\mathbf{A}})\,\mathbf{T}^{-1}, \qquad\text{e.
 $$
 
 This is the practical reason to change basis: pick $\mathbf{T}$ so that $\tilde{\mathbf{A}}$ makes $f$ easy, compute $f(\tilde{\mathbf{A}})$, and transform back.
+
+Think of the same sentence in Slovene and in English: the words change, the meaning doesn't. A similarity is such a translation. The entries of the matrix are the words, and the eigenvalues are the meaning.
 
 ### Diagonalization
 
