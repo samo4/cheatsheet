@@ -602,6 +602,42 @@ In other words, not all matrices are similar to a diagonal matrix; but all are s
 
 This will come up as a very useful form for many problems, but for a teaser, note that block diagonal matrices like a Jordan form can be easily multiplied.
 
+### Generalized eigenvectors
+
+A defective matrix is short of eigenvectors. The equation $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ always has solutions, since $\mathbf{A} - \lambda\mathbf{I}$ is singular, but only $m_g$ independent ones, fewer than the $m_a$ we need to fill $\mathbf{T}$.
+
+The observation that rescues us: square the matrix. Every solution of $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ also solves $(\mathbf{A} - \lambda\mathbf{I})^2\vec{v} = \vec{0}$, but the squared equation can have *more* independent solutions. The cube can add more still.
+
+```{=latex}
+\begin{example}[frametitle={Example - eigenvector and generalized eigenvector}]
+```
+
+$\mathbf{A} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$.
+
+**Step 1 — eigenvalues**\
+$\mathbf{A}$ is triangular, so we read the eigenvalue off the diagonal: $\lambda = 1$ with $m_a = 2$.
+
+**Step 2 — eigenvector**
+
+$$
+(\mathbf{A} - \lambda\mathbf{I}) = \begin{bmatrix} 1 - \lambda & 1 \\ 0 & 1 - \lambda \end{bmatrix} \overset{\lambda = 1}{=} \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}
+$$
+
+$(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ says only $v_2 = 0$, so $\vec{v}_1 = \tvec{1, 0}$. The rank is $1$, so $m_g = 2 - 1 = 1$: one eigenvector short.
+
+**Step 3 — generalized eigenvector**\
+The previous equation will not give us any more, so we square it. $(\mathbf{A} - \lambda\mathbf{I})^2 = \mathbf{0}$, so $(\mathbf{A} - \lambda\mathbf{I})^2\vec{v} = \vec{0}$ holds for *every* $\vec{v}$. 
+Pick one that does not already solve $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$, i.e. any vector off the $x_1$ axis, e.g. $\vec{v}_2 = \tvec{1, 1}$.
+
+**Step 4 — chain**\
+$(\mathbf{A} - \lambda\mathbf{I})\vec{v}_2 = \tvec{1, 0} = \vec{v}_1$. One application lands on the eigenvector, a second one gives $\vec{0}$. The two vectors are linked, which is what the Jordan form will build on.
+
+```{=latex}
+\end{example}
+```
+
+In general, each higher power of $(\mathbf{A} - \lambda\mathbf{I})$ has at least as many independent solutions as the one before, until there are $m_a$ of them and adding powers stops helping. The new solutions picked up on the way are the *generalized eigenvectors*.
+
 ### Jordan blocks
 
 Every square matrix, defective or not, is similar to a *Jordan matrix* $\mathbf{J}$, with *Jordan blocks* on the diagonal:
@@ -624,7 +660,7 @@ $$
 \end{array}\right]
 $$
 
-Each Jordan block contains exactly one (independent) eigenvector, the column of $\mathbf{T}$ lined up with the block's top-left entry. The other columns are generalized eigenvectors (next section). So there are as many blocks as independent eigenvectors. Both multiplicities shape the Jordan form. For each eigenvalue $\lambda_i$:
+Each Jordan block contains exactly one (independent) eigenvector, the column of $\mathbf{T}$ lined up with the block's top-left entry. The other columns are the generalized eigenvectors from above. So there are as many blocks as independent eigenvectors. Both multiplicities shape the Jordan form. For each eigenvalue $\lambda_i$:
 
 - the number of its blocks is $m_{g,i}$,
 - their sizes add up to $m_{a,i}$,
@@ -632,49 +668,9 @@ Each Jordan block contains exactly one (independent) eigenvector, the column of 
 
 For $m_a \le 3$ the first two rules already fix the sizes; the rank rule is needed only from $m_a = 4$ on, where $m_g = 2$ could mean $3+1$ or $2+2$.
 
-### Generalized eigenvectors
+### Building T
 
-A defective matrix is short of eigenvectors. The equation $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ always has solutions, since $\mathbf{A} - \lambda\mathbf{I}$ is singular, but only $m_g$ independent ones, fewer than the $m_a$ we need to fill $\mathbf{T}$.
-
-The observation that rescues us: square the matrix. Every solution of $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ also solves $(\mathbf{A} - \lambda\mathbf{I})^2\vec{v} = \vec{0}$, but the squared equation can have *more* independent solutions. The cube can add more still.
-
-```{=latex}
-\begin{example}[frametitle={Example - eigenvector and generalized eigenvector}]
-```
-
-$\mathbf{A} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$.
-
-**Step 1 — eigenvalues**\
-$\mathbf{A}$ is triangular, so we read the $m_a = 2$ eigenvalue off the diagonal.
-
-**Step 2 — eigenvector**
-
-$$
-(\mathbf{A} - \lambda\mathbf{I}) = \begin{bmatrix} 1 - \lambda & 1 \\ 0 & 1 - \lambda \end{bmatrix} \overset{\lambda = 1}{=} \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}
-$$
-
-$(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ says only $v_2 = 0$, so $\vec{v}_1 = \tvec{1, 0}$. The rank is $1$, so $m_g = 2 - 1 = 1$: one eigenvector short.
-
-**Step 3 — generalized eigenvector** the previous equation will not give as any more, so we square it:
-
-$(\mathbf{A} - \lambda\mathbf{I})^2 = \mathbf{0}$, so $(\mathbf{A} - \lambda\mathbf{I})^2\vec{v} = \vec{0}$ holds for *every* $\vec{v}$. 
-Pick one that does not already solve $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$, i.e. any vector off the $x_1$ axis, e.g. $\vec{v}_2 = \tvec{1, 1}$.
-
-**Step 4 — chain**\
-$(\mathbf{A} - \lambda\mathbf{I})\vec{v}_2 = \tvec{1, 0} = \vec{v}_1$. One application lands on the eigenvector, a second one gives $\vec{0}$.
-
-**Step 5 — check**\
-$\mathbf{T} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ and $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} = \mathbf{J}_2(1)$.
-
-$\mathbf{A}$ is already a Jordan block, so $\mathbf{J} = \mathbf{A}$ is no surprise. The simplest choice $\vec{v}_2 = \tvec{0, 1}$ would even give $\mathbf{T} = \mathbf{I}$.
-
-```{=latex}
-\end{example}
-```
-
-In general, each higher power of $(\mathbf{A} - \lambda\mathbf{I})$ has at least as many independent solutions as the one before, until there are $m_a$ of them and adding powers stops helping. The new solutions picked up on the way are the *generalized eigenvectors*.
-
-They are exactly what the Jordan form needs. The columns of $\mathbf{T}$ are found the same way as in diagonalization: read $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$ column by column. Take a single $2\times2$ block with columns $\vec{v}_1, \vec{v}_2$:
+The generalized eigenvectors are exactly what $\mathbf{T}$ needs. Its columns are found the same way as in diagonalization: read $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$ column by column. Take a single $2\times2$ block with columns $\vec{v}_1, \vec{v}_2$:
 
 $$
 \mathbf{A}\begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix}\begin{bmatrix} \lambda & 1 \\ 0 & \lambda \end{bmatrix} = \begin{bmatrix} \lambda\vec{v}_1 & \vec{v}_1 + \lambda\vec{v}_2 \end{bmatrix}
@@ -691,7 +687,7 @@ $$
 \end{aligned}
 $$
 
-Only $\vec{v}_1$ is a true eigenvector. The others are the generalized eigenvectors from above: $(\mathbf{A} - \lambda\mathbf{I})$ does not kill them, but a power of it does, $(\mathbf{A} - \lambda\mathbf{I})^j\vec{v}_j = \vec{0}$.
+Only $\vec{v}_1$ is a true eigenvector. The others are generalized eigenvectors: $(\mathbf{A} - \lambda\mathbf{I})$ does not kill them, but a power of it does, $(\mathbf{A} - \lambda\mathbf{I})^j\vec{v}_j = \vec{0}$.
 
 *Build the chain from the top.* Solving $(\mathbf{A} - \lambda\mathbf{I})\vec{v}_2 = \vec{v}_1$ bottom-up is awkward. The matrix is singular, and for a badly chosen eigenvector $\vec{v}_1$ the system has no solution at all. Going down avoids this:
 
@@ -700,26 +696,11 @@ Only $\vec{v}_1$ is a true eigenvector. The others are the generalized eigenvect
 3. Fill the remaining blocks of the same $\lambda$ with further chains (or plain eigenvectors for $1\times1$ blocks), independent of the ones you already have.
 4. Stack all chains into $\mathbf{T}$, each one starting with its eigenvector ($\vec{v}_1, \vec{v}_2, \dots$) so that $\vec{v}_1$ lands on the top-left of its block, in the order of the blocks in $\mathbf{J}$.
 
+Back to the example from Generalized eigenvectors: $\mathbf{T} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ gives $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} = \mathbf{J}_2(1)$. $\mathbf{A}$ is already a Jordan block, so $\mathbf{J} = \mathbf{A}$ is no surprise. The simplest choice $\vec{v}_2 = \tvec{0, 1}$ would even give $\mathbf{T} = \mathbf{I}$.
+
+The superdiagonal 1s are not bookkeeping. In $e^{\mathbf{A}t}$ a $k\times k$ block turns into terms up to $t^{k-1}e^{\lambda t}$, see The exponential of a Jordan block in the State space chapter.
+
 Worked examples, from the block structure through the chains to $\mathbf{T}$, are in the State space chapter under $\Phi$ via the Jordan form.
-
-### What the 1s carry
-
-The eigenvalues alone do not pin down a matrix up to similarity. Compare
-
-$$
-2\mathbf{I} = \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix}, \qquad \mathbf{J}_2(2) = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}.
-$$
-
-They share the eigenvalues $2, 2$, the characteristic polynomial, the trace and the determinant, yet they are not similar (as shown at the end of Diagonalization). The difference is the superdiagonal $1$. It records that $\lambda = 2$ has only one eigenvector instead of two, which is information the diagonal alone loses.
-
-It is not a bookkeeping detail either, because the 1s change the dynamics. Split the block as $\mathbf{J}_2(\lambda) = \lambda\mathbf{I} + \mathbf{N}$, where $\mathbf{N}$ holds only the $1$ and $\mathbf{N}^2 = \mathbf{0}$. The two parts commute, so the exponential series of $\mathbf{N}t$ stops after two terms:
-
-$$
-e^{\lambda\mathbf{I}t} = \begin{bmatrix} e^{\lambda t} & 0 \\ 0 & e^{\lambda t} \end{bmatrix}, \qquad
-e^{\mathbf{J}_2(\lambda)t} = e^{\lambda t}(\mathbf{I} + \mathbf{N}t) = \begin{bmatrix} e^{\lambda t} & t\,e^{\lambda t} \\ 0 & e^{\lambda t} \end{bmatrix}.
-$$
-
-The $1$ turns into a $t\,e^{\lambda t}$ term, and a $k\times k$ block brings terms up to $t^{k-1}e^{\lambda t}$. For $\lambda < 0$ the exponential still wins and the response decays. On the imaginary axis it decides stability. With $\lambda = 0$, the matrix $\mathbf{0}$ gives two constant states, while $\mathbf{J}_2(0)$ is a double integrator whose state grows like $t$.
 
 *A caveat.* The Jordan form is a tool for thinking, not for numerical computation. It is discontinuous: perturb a Jordan block by $\varepsilon$ and the repeated eigenvalue splits, the matrix becomes diagonalizable, and $\mathbf{J}$ jumps to a diagonal matrix. Rounding errors do exactly this, so numerical software avoids the Jordan form (MATLAB's `jordan` is symbolic-only). It uses the Schur form $\mathbf{Q}^{*}\mathbf{A}\mathbf{Q}$ instead, which is triangular with orthogonal (unitary) $\mathbf{Q}$.
 
