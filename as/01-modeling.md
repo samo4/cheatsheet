@@ -10,7 +10,7 @@ In every domain a system is built from the same three kinds of ideal elements:
 
 Storage is what makes a system *dynamic*. A storage element cannot change its energy instantly: it accumulates input over time, so the system keeps reacting after the input is gone. That behaviour is captured by differential equations. Each independent storage element contributes one state, so the number of states equals the number of independent storage elements.
 
-The same three elements appear in every domain — electrical, mechanical, hydraulic, thermal — and in non-physical systems such as biological populations or economic ones. This chapter turns the resulting differential equations into *state-space form*,
+Besides the electrical and mechanical domains, the same structure carries over to hydraulic and thermal systems, and even to non-physical ones such as biological populations or economies. This chapter turns the resulting differential equations into *state-space form*,
 
 $$
 \dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}, \qquad \vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u},
@@ -24,14 +24,14 @@ Building a model is not always a paper exercise — it often needs data. A car s
 
 ## Higher-order ODEs as first-order systems
 
-State-space form only contains first derivatives, so a higher-order ODE must first be rewritten as a system. The trick is to promote the lower-order derivatives to state variables. Formally we would write something like this:
+State-space form only contains first derivatives, so a higher-order ODE must first be rewritten as a system. The trick is to promote the lower-order derivatives to state variables: each state is the derivative of the one before, and only the last equation carries the actual dynamics,
 
 $$
-\dot{x}_n = f_n(x_1, x_2, \dots, x_n, u), \qquad
-\dot{x}_{n-1} = x_n, \qquad
-\dot{x}_{n-2} = x_{n-1}, \qquad
+\dot{x}_1 = x_2, \qquad
+\dot{x}_2 = x_3, \qquad
 \dots, \qquad
-\dot{x}_1 = x_2
+\dot{x}_{n-1} = x_n, \qquad
+\dot{x}_n = f(x_1, x_2, \dots, x_n, u).
 $$
 
 In general, an $n$-th order ODE $y^{(n)} + a_{n-1}y^{(n-1)} + \cdots + a_1\dot{y} + a_0 y = u$ becomes $n$ first-order equations by taking $x_1 = y$, $x_2 = \dot{y}$, $\dots$, $x_n = y^{(n-1)}$; the state matrix takes the companion form
@@ -49,9 +49,9 @@ The number of states equals the order of the ODE — the same "one state per ind
 
 ## The energy perspective
 
-As already emphasized, the number of state variables corresponds to the number of *independent* energy storage elements. In mechanical systems these are typically the masses (storing kinetic energy) and the springs (storing potential energy); the damper only dissipates.
+In mechanical systems the independent storage elements are typically the masses (storing kinetic energy) and the springs (storing potential energy); the damper only dissipates.
 
-Comparing to electrical systems, the analogy is obvious: capacitor–spring, inductor–mass, resistor–damper. But the pedant will ask how to reconcile the second derivative in $F = ma$ with the first derivative in the capacitor–current relation. The answer, as in *Higher-order ODEs as first-order systems*, is the choice of state variables: for mechanical systems we take position and velocity, for electrical systems the capacitor voltages and inductor currents. This way, the state-space representation always involves first-order derivatives of the chosen states.
+Comparing to electrical systems, the usual *force–voltage* analogy pairs inductor–mass, capacitor–spring, resistor–damper (the *force–current* analogy pairs them differently, mass–capacitor and spring–inductor; both are consistent). The pedant will ask how to reconcile the second derivative in $F = ma$ with the first derivative in $v = L\,\dot{i}$. There is nothing to reconcile: $F = m\dot{v}$ is already first order in the velocity, just as $v = L\,\dot{i}$ is in the current. As in *Higher-order ODEs as first-order systems*, it is the choice of state variables that does the work: position and velocity for mechanical systems, capacitor voltages and inductor currents for electrical ones. This way, the state-space representation always involves first-order derivatives of the chosen states.
 
 ## Modeling mechanical systems
 
@@ -76,9 +76,9 @@ $$F = k\,(x_{\text{other}} - x_{\text{mass}}), \qquad F = b\,(\dot{x}_{\text{oth
 and the parentheses already contain every sign:
 
 - the *mass's own coordinate* carries the minus — the element always pushes back on *this* body, whichever way you drew the axis;
-- the *other terminal* carries the plus — another moving mass *assists* the motion, while fixed ground adds only a constant, which disappears once $x$ is measured from static equilibrium and leaves plain $-kx$ or $-b\dot{x}$.
+- the *other terminal* carries the plus — another moving mass *assists* the motion, while fixed ground contributes nothing ($x_{\text{other}} = 0$) and leaves plain $-kx$ or $-b\dot{x}$.
 
-Because no choice of axis direction can change which terminal is the mass's *own*, a sign cannot be placed wrongly by reasoning — only the picture can be misread. So:
+Because no choice of axis direction can change which terminal is the mass's *own*, the recipe leaves no sign to choose — what remains is reading the picture correctly. So:
 
 1. Use the **same positive direction** for every coordinate and for $ma$.
 2. For each element touching the body, write $k(x_{\text{other}} - x_{\text{mass}})$ or $b(\dot{x}_{\text{other}} - \dot{x}_{\text{mass}})$ — never add a sign yourself.
@@ -106,7 +106,7 @@ $$x_1 = x \quad \text{(vertical position)}, \qquad x_2 = \dot{x} \quad \text{(ve
 - *Damper* opposes velocity. If the body moves up ($\dot{x} > 0$) the damper pushes it down, hence $F_b = -b\dot{x}$.
 - *Gravity* always pulls down, hence $F_g = -mg$.
 
-*Sanity check:* at rest ($\ddot{x} = \dot{x} = 0$) Newton gives $kx = -mg$, i.e. the spring pushes up with exactly the weight — a flipped sign here would make the body float away.
+*Sanity check:* at rest ($\ddot{x} = \dot{x} = 0$) Newton gives $kx = -mg$, i.e. the spring is compressed and pushes up with exactly the weight. A flipped gravity sign would put the equilibrium above the ground; a flipped spring sign would make the body run away from any equilibrium.
 
 **Step 3 — Newton's 2$^\text{nd}$ law.** $\sum F = ma$:
 
@@ -132,7 +132,7 @@ $$
 
 $$m\ddot{x} + b\dot{x} + kx = 0, \qquad \dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\vec{x}:$$
 
-the same state matrix, with the input removed. Here $x_1$ is how deep the car has penetrated and $x_2$ how fast it is still going, and the damper turns the kinetic energy $\tfrac{1}{2}mv_0^2$ into heat — that is what makes the crash *cushioned*.
+the same state matrix, with the input removed. Here $x_1$ is how deep the car has penetrated and $x_2$ how fast it is still going, with the initial state $\vec{x}(0) = \begin{bmatrix} 0 & v_0 \end{bmatrix}^T$. The spring only stores the kinetic energy $\tfrac{1}{2}mv_0^2$ and hands it back; the damper is what turns it into heat — that is what makes the crash *cushioned*. The model holds only while the car touches the buffer: once $x$ returns to $0$ the car rebounds free, which a linear model cannot express.
 
 ```{=latex}
 \end{example}
@@ -154,7 +154,7 @@ Once the body slides, the force saturates and always opposes the motion,
 
 $$F_k = -\mu_k N \operatorname{sign}(\dot{x}), \qquad \mu_k < \mu_s .$$
 
-The $\operatorname{sign}$ makes the term nonlinear and discontinuous at $\dot{x} = 0$. Linearized about a moving operating point it gives a *constant* force, not a damping coefficient, so dry friction never turns into a $b\dot{x}$ term in an LTI model: only when the direction can flip does it stay a genuine nonlinearity — if the direction of travel is known, $-\mu_k N \operatorname{sign}(\dot{x}_0)$ is just a constant force and enters $\mathbf{B}$ exactly as the weight $mg$ did above. The drop $\mu_s \to \mu_k$ is what produces stick–slip: squealing brakes, squeaking chalk, the violin bow.
+The $\operatorname{sign}$ makes the term nonlinear and discontinuous at $\dot{x} = 0$. If the direction of travel is known, $-\mu_k N \operatorname{sign}(\dot{x}_0)$ is a constant force and enters through $\mathbf{B}$, like the weight $mg$ above; if the direction can reverse, it is a genuine nonlinearity. In neither case does it become a $b\dot{x}$ term. The drop $\mu_s \to \mu_k$ is what produces stick–slip: squealing brakes, squeaking chalk, the violin bow.
 
 #### Rolling resistance
 
@@ -239,9 +239,9 @@ $$
 
 if the output of interest is the angle.
 
-**Sanity check.** With a constant torque the speed settles at $\omega_\infty = \tau_m/b$, while the angle grows without bound — a steady torque pins the *speed*, never the *position*, because the rotor has no torsional spring to define one. The eigenvalues say the same: $-b/J$, the reciprocal of the mechanical time constant $J/b$ (the rotor's version of an RC circuit), and $0$, the free integrator in $\dot{\theta} = \omega$.
+**Sanity check.** With a constant torque the speed settles at $\omega_\infty = \tau_m/b$, while the angle grows without bound — a steady torque pins the *speed*, never the *position*, because the rotor has no torsional spring to define one. The eigenvalues say the same: $-b/J$, minus the reciprocal of the mechanical time constant $J/b$ (the rotor's version of an RC circuit), and $0$, the free integrator in $\dot{\theta} = \omega$.
 
-**Two things that attach without adding a state.** The motor torque itself is made from current, $\tau_m = K_t i$, and the spinning rotor generates the back-EMF $K_e\omega$ that limits that current — so the electrical side enters through the input, and the two together carry the current as a second state. A gearbox adds none either: referred to one shaft ($\omega_2 = n\omega_1$, $\tau_1 = n\tau_2$), the two inertias collapse into a single $J = J_1 + n^2 J_2$.
+**What attaches to the shaft.** The motor torque itself is made from current, $\tau_m = K_t i$, and the spinning rotor generates the back-EMF $K_e\omega$ that limits that current. If the armature inductance is negligible, the current is algebraic, $i = (v - K_e\omega)/R$, and the motor only adds $K_tK_e/R$ to the damping — no new state. Otherwise $L\,\dot{i} = v - Ri - K_e\omega$ and the current becomes a third state. A gearbox adds no state at all: referred to one shaft ($\omega_2 = n\omega_1$, $\tau_1 = n\tau_2$), the two inertias collapse into a single $J = J_1 + n^2 J_2$.
 
 ```{=latex}
 \end{example}
@@ -249,7 +249,7 @@ if the output of interest is the angle.
 
 ## Modeling of electrical circuits
 
-Let's skip how resistors, capacitors and inductors are modeled. Electrical modeling rests on Kirchhoff's laws, and since there are two of them — both able to generate independent equations — two methods were taught: node-voltage and mesh-current. In principle either one suffices; in practice you use whichever leaves fewer unknowns, and in the examples below we mix them where it is convenient.
+Let's skip how resistors, capacitors and inductors are modeled. Electrical modeling rests on Kirchhoff's laws, and since there are two of them — both able to generate independent equations — two methods were taught: node-voltage and mesh-current. In principle either one suffices; in practice you use whichever leaves fewer unknowns. Both examples below use node voltages.
 
 ```{=latex}
 \begin{example}[frametitle={Example - state-space equations of a circuit}]
@@ -261,33 +261,37 @@ We want to write down the state-space equations of the circuit in matrix form, w
 \input{tikz/modeling-circuit.tex}
 ```
 
-Let's select one node as ground. Although any node can be ground, we try to choose it in a way that will make the resulting equation as easy as possible. Generally, pick the node with the most element connections to reduce the number of unknown node voltages. Prefer to ground a terminal of a voltage source: then the other terminal is fixed by the source ($V_1 = v_g$), so we never write the KCL equation at that node and the source current $i_{v_g}$ never enters the equations as an unknown. If a voltage source instead floats between two non-grounded nodes, its current appears in both node equations with opposite signs — eliminate it by adding the two node equations (the *supernode*) and closing the pair with the source constraint $V_2 - V_1 = v_g$. In our case, we can select the bottom node as ground.\footnote{In simulation software (e.g., SPICE), the ground node choice can influence numerical stability, but picking the one with the most connections is still a good rule of thumb.}
+Let's select one node as ground. Although any node can be ground, we try to choose it in a way that will make the resulting equation as easy as possible. The number of unknown node voltages is always one less than the number of nodes, whichever you pick; what the choice changes is how many terms each equation carries, so pick the node with the most element connections. Prefer to ground a terminal of a voltage source: then the other terminal is fixed by the source ($V_1 = v_g$), so we never write the KCL equation at that node and the source current $i_{v_g}$ never enters the equations as an unknown. If a voltage source instead floats between two non-grounded nodes, its current appears in both node equations with opposite signs — eliminate it by adding the two node equations (the *supernode*) and closing the pair with the source constraint $V_2 - V_1 = v_g$. In our case, we can select the bottom node as ground.
 
-Then we proceed to mark the remaining nodes.\footnote{Passive sign convention (PSC) defines an element's voltage positive at the terminal where the reference current enters; power is then positive when the element absorbs energy. For a voltage source, PSC requires the reference current to be marked so that current entering absorbs power and current leaving (minus sign) delivers power to the rest of the circuit — the arrow points into the + terminal. For the capacitor we have defined the polarity and applied PSC to $i_C$ (arrow into +); for the inductor we have defined the current $i_L$. Although $v_L$ is not needed here, we could define its polarity according to PSC as well ($V_2$ positive with respect to $V_3$).}
+Then we proceed to mark the remaining nodes.\footnote{Passive sign convention (PSC) defines an element's voltage positive at the terminal where the reference current enters; power is then positive when the element absorbs energy. For the voltage source we marked $i_g$ entering the + terminal, so under PSC a positive $v_g i_g$ means the source absorbs power, and a negative one that it delivers power to the rest of the circuit. For the capacitor we have defined the polarity and applied PSC to $i_C$ (arrow into +); for the inductor we have defined the current $i_L$. The output $v_L$ takes its polarity from PSC as well ($V_2$ positive with respect to $V_3$).}
 
 ```{=latex}
 \input{tikz/modeling-circuit-nodes.tex}
 ```
 
-Here we mix the two: a node-voltage formulation, with the state variables of the energy-storing elements chosen up front.
+This is a node-voltage formulation, with the state variables of the energy-storing elements chosen up front.
 
 First we observe that $V_1 = v_g$ and $v_C = V_3$.
 
-We write down the equations for each node using Kirchhoff's current law. When expressing currents through resistors, we start with the current node voltage (so currents are taken as leaving the node: plus sign in our equations).
+We write down the equations for each node using Kirchhoff's current law. When expressing currents through resistors, we start with the voltage of the node being written (so currents are taken as leaving the node: plus sign in our equations).
 
 $$\frac{V_1 - V_2}{R_1} + i_g = 0$$
 
-When a node is connected to an inductor, we express the current through the inductor as a state variable. Note that the direction of current for $i_L$ is defined as flowing out of $V_2$. For $V_2$ we get:
+This one only determines the source current $i_g$; the state equations will not need it.
+
+When a node is connected to an inductor, we express the current through the inductor as a state variable. Note that the direction of current for $i_L$ is defined as flowing out of $V_2$, towards $V_3$. For $V_2$ we get:
 
 $$\frac{V_2 - V_1}{R_1} + i_L = 0$$
 
-For capacitors we do the same, but take the voltage rather than the current as the state variable (more standard); the current then follows from $i_C = C\,\dot{v}_C$ under PSC.
+For capacitors we do the same, but take the voltage rather than the current as the state variable (more standard); the current then follows from $i_C = C\,\dot{v}_C$ under PSC. For $V_3$, with $i_L$ entering and $i_C$ leaving through the capacitor:
 
-Next, we write down the equations for the energy-storing elements using their constitutive relations. Note that $i_L$ is chosen from $V_2$ to $V_3$. Lenz’s law is not ignored; its effect was already built into the sign of the inductor’s voltage when we adopted PSC. Faraday’s law gives $v = L\,\dot{i}$ for the chosen polarity (voltage drop in the direction of the reference current). If you had defined the voltage polarity opposite to the current reference, the relation would appear as $v = -L\,\dot{i}$. Thus no extra minus is added later — the orientation choices at the start encode it.
+$$-i_L + i_C + \frac{V_3}{R_2} = 0$$
+
+Next, we write down the equations for the energy-storing elements using their constitutive relations.\footnote{Lenz's law is not ignored; its effect was already built into the sign of the inductor's voltage when we adopted PSC. Faraday's law gives $v = L\,\dot{i}$ for the chosen polarity (voltage drop in the direction of the reference current). Had the voltage polarity been defined opposite to the current reference, the relation would read $v = -L\,\dot{i}$. No extra minus is added later — the orientation choices at the start encode it.} For the inductor:
 
 $$ v_L = L \frac{di_L}{dt} = V_2 - V_3 $$
 
-And for the capacitor:
+And for the capacitor, solving the node-$V_3$ equation for $i_C$:
 
 $$ i_C = C \frac{dv_C}{dt} = i_L - \frac{V_3}{R_2} $$
 
@@ -333,7 +337,7 @@ Sanity check: KVL around the loop, $v_{R_1} + v_L + v_C = R_1 i_L + (v_g - R_1 i
 \input{tikz/example-circuit.tex}
 ```
 
-For the circuit above, we want to write the state-space equations in matrix form, with state vector $\vec{x} = [i_L, v_C]^T$ and input $\vec{u} = [v_g, i_g]^T$.
+For the circuit above, we want to write the state-space equations in matrix form, with state vector $\vec{x} = [i_L, v_C]^T$ and input $\vec{u} = [v_g, i_g]^T$. No output is specified, so only the state equation is wanted.
 
 **Step 1** Decide on nodes.
 

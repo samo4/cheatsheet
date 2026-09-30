@@ -2,13 +2,13 @@
 
 ## Modes of an LTI system
 
-The shape of the (un–forced) response of an LTI system is set by the eigenvalues of $\mathbf{A}$. From the homogeneous solution, $\vec{x}(t) = e^{\mathbf{A}t}\vec{x}_0$, and diagonalizing gives $e^{\mathbf{A}t} = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$, so the response is a linear combination of the exponentials
+The shape of the (zero-input) response of an LTI system is set by the eigenvalues of $\mathbf{A}$. From the homogeneous solution, $\vec{x}(t) = e^{\mathbf{A}t}\vec{x}_0$, and diagonalizing gives $e^{\mathbf{A}t} = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$, so the response is a linear combination of the exponentials
 
 $$
 e^{\lambda_1 t},\; e^{\lambda_2 t},\; \dots,\; e^{\lambda_n t}
 $$
 
-each a **mode** of the system, so the eigenvalues of $\mathbf{A}$ are the modes of the response. A real $\lambda$ gives a growing or decaying exponential; a conjugate pair $\sigma \pm j\omega$ gives an oscillation with envelope $e^{\sigma t}$.
+each called a **mode** of the system, so the eigenvalues of $\mathbf{A}$ are the modes of the response. A real $\lambda$ gives a growing or decaying exponential; a conjugate pair $\sigma \pm j\omega$ gives an oscillation with envelope $e^{\sigma t}$.
 
 The exception is a defective $\mathbf{A}$: with fewer independent eigenvectors than eigenvalues, a repeated eigenvalue brings a factor $t$ instead of a second independent exponential, so $n$ eigenvalues need not give $n$ modes. The Jordan form says exactly which. The block sizes tell you in advance which terms the free response can contain: a $k\times k$ Jordan block at $\lambda$ contributes $e^{\lambda t}, t e^{\lambda t}, \dots, t^{k-1}e^{\lambda t}$ (see $\Phi$ via the Jordan form in the State-space chapter). This is the state-space version of a repeated pole in partial fractions.
 
@@ -216,6 +216,10 @@ so $\operatorname{rank}\mathcal{C} = 2 < n$ and the system is not controllable. 
 
 *Beyond diagonal: Jordan coordinates.* The same reading works for any $\mathbf{A}$ once it is brought to Jordan form, where controllability can be read off the transformed $\mathbf{B}$ (Gilbert's criterion). A useful consequence: if one eigenvalue has two or more Jordan blocks ($m_g \ge 2$), a single input cannot control the system, whatever $\mathbf{B}$ is. The input has to reach independent modes that share one $\lambda$, and they respond identically to it. In general, a system with $m$ inputs needs $m \ge \max_i m_{g,i}$. For actual testing, use the rank test above.^[For the Jordan-form tests in full, see @chen1999linear.]
 
+Also controllability question as we asked ourselves here is a yes or no question. But there might be other points of interest, e.g. how hard it is to achieve a particular state.
+
+And lastly, the test outlined here is not the only one. There are alternative criteria and methods for checking controllability, such as the PBH (Popov-Belevitch-Hautus) test, which can sometimes be more convenient depending on the system's structure.
+
 ## Observability
 
 A system is **observable** if the initial state $\vec{x}_0(t_0)$ can be reconstructed from the output $\vec{y}(t)$ measured over finite interval $$[t_0, t_1]$ together with the known input $\vec{u}(t)$).
@@ -375,3 +379,5 @@ Where it hides: $\lambda = -1$ has eigenvector $\vec{v} = \tvec{-1,1,-1}$ — ch
 ```
 
 Everything in this chapter is decided by one spectrum: the stability classes by where the eigenvalues sit relative to the imaginary axis, controllability and observability by how $\mathbf{B}$ and $\mathbf{C}$ couple to the eigenvectors. The next chapter views the same system from the outside — the transfer function $G(s)$ and the frequency domain.
+
+Perhaps obvious, but still worth emphasizing: everything we're talking about here is only valid for linear systems; nonlinear systems require different notions of stability, controllability and observability. As a teaser: for a linear system, the futher you are to the left of the abcissa in the complex plane, the more stable the system is. But in a non-linear system, stability has a sweetspot - too far to the left and the system may become unstable.
