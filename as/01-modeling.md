@@ -4,9 +4,9 @@ A model turns a physical system into a set of equations that predicts how it beh
 
 In every domain a system is built from the same three kinds of ideal elements:
 
-- **Sources** deliver energy into the system — a voltage source, a force.
-- **Storage** elements hold energy and release it on their own time scale — a capacitor or inductor, a spring or mass.
-- **Dissipation** converts energy into heat — a resistor, a damper.
+- **Sources** deliver energy into the system.
+- **Storage** elements hold energy and release it on their own time scale.
+- **Dissipation** converts energy into heat.
 
 Storage is what makes a system *dynamic*. A storage element cannot change its energy instantly: it accumulates input over time, so the system keeps reacting after the input is gone. That behaviour is captured by differential equations. Each independent storage element contributes one state, so the number of states equals the number of independent storage elements.
 
@@ -45,13 +45,7 @@ $$
 \end{bmatrix}
 $$
 
-The number of states equals the order of the ODE — the same "one state per independent energy-storing element" count as in the electrical circuit below.
-
-## The energy perspective
-
-In mechanical systems the independent storage elements are typically the masses (storing kinetic energy) and the springs (storing potential energy); the damper only dissipates.
-
-Comparing to electrical systems, the usual *force–voltage* analogy pairs inductor–mass, capacitor–spring, resistor–damper (the *force–current* analogy pairs them differently, mass–capacitor and spring–inductor; both are consistent). The pedant will ask how to reconcile the second derivative in $F = ma$ with the first derivative in $v = L\,\dot{i}$. There is nothing to reconcile: $F = m\dot{v}$ is already first order in the velocity, just as $v = L\,\dot{i}$ is in the current. As in *Higher-order ODEs as first-order systems*, it is the choice of state variables that does the work: position and velocity for mechanical systems, capacitor voltages and inductor currents for electrical ones. This way, the state-space representation always involves first-order derivatives of the chosen states.
+The number of states equals the order of the ODE.
 
 ## Modeling mechanical systems
 
@@ -63,13 +57,13 @@ Everything genuinely new about mechanical modeling is *directional bookkeeping*:
 
 The three ideal elements are:
 
-- *Spring* — $F = k(x_2 - x_1)$: stores energy.
+- *Spring* — $F = k(x_2 - x_1)$.
 - *Damper* — $F = b(\dot{x}_2 - \dot{x}_1)$: dissipates energy.
-- *Mass* — $F = ma$: stores kinetic energy.
+- *Mass* — $F = ma$.
 
 Plus, to complete the list at the top, a *source* of energy: a force $F(t)$ or a prescribed motion $x(t)$.
 
-**Recipe.** A spring and a damper are *two-terminal* elements: each acts only on the difference between its two ends — the spring wants a constant separation, the damper a constant relative velocity. So the force an element exerts on the body you are isolating is always
+**Recipe.** A spring and a damper are two-terminal elements: each acts only on the difference between its two ends — the spring wants a constant separation, the damper a constant relative velocity. So the force an element exerts on the body you are isolating is always
 
 $$F = k\,(x_{\text{other}} - x_{\text{mass}}), \qquad F = b\,(\dot{x}_{\text{other}} - \dot{x}_{\text{mass}}),$$
 
@@ -82,7 +76,7 @@ Because no choice of axis direction can change which terminal is the mass's *own
 
 1. Use the **same positive direction** for every coordinate and for $ma$.
 2. For each element touching the body, write $k(x_{\text{other}} - x_{\text{mass}})$ or $b(\dot{x}_{\text{other}} - \dot{x}_{\text{mass}})$ — never add a sign yourself.
-3. Sum with Newton and collect. Then sanity-check at rest: with $\ddot{x} = \dot{x} = 0$ the springs must hold the static load exactly — if they don't, the diagram is wrong, not the math.
+3. Sum with Newton and collect. Then sanity-check at rest: with $\ddot{x} = \dot{x} = 0$ the springs must hold the static load exactly.
 
 Measuring $x$ from the static equilibrium makes the constant weight disappear; measuring it from the unstretched position leaves the weight as a constant input. Both are correct; pick one and stick with it.
 
@@ -108,19 +102,19 @@ $$x_1 = x \quad \text{(vertical position)}, \qquad x_2 = \dot{x} \quad \text{(ve
 
 *Sanity check:* at rest ($\ddot{x} = \dot{x} = 0$) Newton gives $kx = -mg$, i.e. the spring is compressed and pushes up with exactly the weight. A flipped gravity sign would put the equilibrium above the ground; a flipped spring sign would make the body run away from any equilibrium.
 
-**Step 3 — Newton's 2$^\text{nd}$ law.** $\sum F = ma$:
+**Step 3 — Newton's 2$^\text{nd}$ law.**
 
 $$m\ddot{x} = F_k + F_b + F_g = -kx - b\dot{x} - mg,$$
 
-rearranged into the familiar second-order ODE
+rearranged into
 
 $$m\ddot{x} + b\dot{x} + kx = -mg.$$
 
-**Step 4 — reduce to first order.** With the states of Step 1:
+**Step 4 — reduce to first order.** Introduce $\dot{x}_1 = x_2$ as a new state and divide by $m$.
 
-$$\dot{x}_1 = x_2, \qquad \dot{x}_2 = -\frac{k}{m}x_1 - \frac{b}{m}x_2 - g.$$
+$$\dot{x}_2 = -\frac{k}{m}x_1 - \frac{b}{m}x_2 - g.$$
 
-**Step 5 — matrix form.** With the input $u = mg$ (the weight):
+**Step 5 — matrix form.** With the input $u = mg$:
 
 $$
 \dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\vec{x} + \begin{bmatrix} 0 \\ -\frac{1}{m} \end{bmatrix} u.
@@ -128,11 +122,11 @@ $$
 
 **Physical meaning of the states.** $x_1$ is the body's vertical position, $x_2$ its vertical velocity. The state matrix is the same companion form as in *Higher-order ODEs as first-order systems*: one state per derivative. The constant input does not change the dynamics — it only sets the equilibrium (the static deflection of Step 2); measure $x$ from that equilibrium and $mg$ drops out entirely.
 
-**Variant — the same system with no input.** Replace the weight by a crash: a car of mass $m$ entering a rigid barrier at speed $v_0$, cushioned by the same spring $k$ and damper $b$ in parallel. Take $x$ as the *compression* of the buffer, positive into the barrier. The motion now resists itself — the spring pushes back ($F_k = -kx$) and the damper pushes back harder the faster the car is still moving ($F_b = -b\dot{x}$) — so
+**Variant — the same system with no input.** Replace the weight by a crash: a car of mass $m$ entering a rigid barrier at speed $v_0$, cushioned by the same spring $k$ and damper $b$ in parallel. Take $x$ as the *compression* of the buffer, positive into the barrier. The motion now resists itself — the spring pushes back ($F_k = -kx$) and the damper pushes back harder the faster the car is still moving ($F_b = -b\dot{x}$):
 
 $$m\ddot{x} + b\dot{x} + kx = 0, \qquad \dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\vec{x}:$$
 
-the same state matrix, with the input removed. Here $x_1$ is how deep the car has penetrated and $x_2$ how fast it is still going, with the initial state $\vec{x}(0) = \begin{bmatrix} 0 & v_0 \end{bmatrix}^T$. The spring only stores the kinetic energy $\tfrac{1}{2}mv_0^2$ and hands it back; the damper is what turns it into heat — that is what makes the crash *cushioned*. The model holds only while the car touches the buffer: once $x$ returns to $0$ the car rebounds free, which a linear model cannot express.
+the same state matrix, with the input removed. Here $x_1$ is how deep the car has penetrated and $x_2$ how fast it is still going, with the initial state $\vec{x}(0) = \tvec{0, v_0}$. The spring only stores the kinetic energy $\tfrac{1}{2}mv_0^2$; the damper turns it into heat — that is what makes the crash cushioned. The model holds only while the car touches the buffer: once $x$ returns to $0$ the car rebounds free, which our model cannot express.
 
 ```{=latex}
 \end{example}
@@ -142,70 +136,48 @@ the same state matrix, with the input removed. Here $x_1$ is how deep the car ha
 
 #### Static friction
 
-At rest, friction is whatever it has to be: it matches the applied tangential force up to a limit,
+At rest, friction is a *reaction* force: it takes whatever value holds the body still, up to a limit ($N$ the normal force),
 
 $$|F_s| \le \mu_s N .$$
 
-So it is not a function of the state but an *inequality on it*, and that is what makes it awkward: while the limit holds the body simply does not move, and the equation that would describe the motion is never used.
+So it is not a function of the state at all — it is fixed by the other forces, and the bound only decides *whether* the body moves. That switch between sticking and sliding is what makes friction nonlinear. In practice static friction is a breakaway test: compute the force needed to keep the body at rest; if it stays below $\mu_s N$ nothing moves, otherwise the body slides and kinetic friction takes over.
 
 #### Kinetic friction
 
-Once the body slides, the force saturates and always opposes the motion,
+Once the body slides, the force is constant in size and opposes the motion,
 
 $$F_k = -\mu_k N \operatorname{sign}(\dot{x}), \qquad \mu_k < \mu_s .$$
 
-The $\operatorname{sign}$ makes the term nonlinear and discontinuous at $\dot{x} = 0$. If the direction of travel is known, $-\mu_k N \operatorname{sign}(\dot{x}_0)$ is a constant force and enters through $\mathbf{B}$, like the weight $mg$ above; if the direction can reverse, it is a genuine nonlinearity. In neither case does it become a $b\dot{x}$ term. The drop $\mu_s \to \mu_k$ is what produces stick–slip: squealing brakes, squeaking chalk, the violin bow.
+The $\operatorname{sign}$ is nonlinear, so this is never a $b\dot{x}$ term. If the direction of travel is known, it is just a constant force entering through $\mathbf{B}$, like the weight $mg$. The drop from $\mu_s$ to $\mu_k$ causes stick–slip: squealing brakes, the violin bow.
 
 #### Rolling resistance
 
-A rolling wheel still loses energy, to the deformation of wheel and surface, and the resistance is nearly constant,
+Same form, smaller coefficient, and no static jump, hence no stick–slip:
 
-$$F_r = -c_r N \operatorname{sign}(\dot{x}), \qquad c_r \approx 0.01\text{–}0.015 \ \text{(tyre on asphalt)}, \qquad \approx 0.001\text{–}0.002 \ \text{(steel on rail)}.$$
-
-It has the same sign structure as kinetic friction, but no $\mu_s > \mu_k$ jump — so no stick–slip, just a steady loss.
+$$F_r = -c_r N \operatorname{sign}(\dot{x}), \qquad c_r \approx 0.01 \ \text{(tyre on asphalt)}, \quad 0.001 \ \text{(steel on rail)}.$$
 
 #### Air drag
 
-Drag switches regime with the Reynolds number, the ratio of inertial to viscous forces,
-
-$$Re = \frac{\rho v L}{\mu} = \frac{vL}{\nu},$$
-
-with $L$ the characteristic length — the diameter of a sphere or disc, the side of a plate. In the two limits,
+Which law applies depends on the Reynolds number $Re = vL/\nu$ ($L$ the size of the body, $\nu$ the kinematic viscosity):
 
 $$
 F_d \approx
 \begin{cases}
-c_v\,\dot{x}, & Re \lesssim 1 \quad \text{(Stokes: flow attached, viscous)}\\[2pt]
-\tfrac{1}{2}\rho C_d A\,\dot{x}\,|\dot{x}|, & Re \gtrsim 10^3 \quad \text{(separated flow, inertial)}
+-c_v\,\dot{x}, & Re \lesssim 1 \quad \text{(viscous: dust, MEMS)}\\[2pt]
+-\tfrac{1}{2}\rho C_d A\,\dot{x}\,|\dot{x}|, & Re \gtrsim 10^3 \quad \text{(inertial: anything everyday)}
 \end{cases}
 $$
 
-The first line is *linear*, so the model stays LTI — the regime of dust, aerosols, and MEMS (for a sphere $c_v = 3\pi\mu D$). The second is written with $|\dot{x}|$ rather than $\dot{x}^2$ so that the sign survives: drag always opposes the motion. In between, neither form holds, and $C_d$ is not constant even in the quadratic regime — for a smooth sphere it drops four- to fivefold at the *drag crisis*, $Re \approx 3\cdot 10^5$, which is why golf balls are dimpled.
-
-Quadratic drag is a nonlinearity, so a body falling through air is outside the LTI class; linearizing about its terminal velocity $v_t$ brings it back, where the approach is exponential with $\tau = \dfrac{v_t}{2g}$.
-
-*Shape factor.* $C_d$ is a blunt, orientation-dependent summary. Order of magnitude, with the body facing the flow:
-
-$$
-C_d \approx
-\begin{cases}
-1.1 & \text{square plate}\\[2pt]
-1.4 & \text{triangle, flat side upstream}\\[2pt]
-1.1 & \text{circular disc}\\[2pt]
-0.3 & \text{half-circle (dome, convex side upstream)}
-\end{cases}
-$$
+The viscous law is linear and keeps the model LTI. The quadratic one is written with $|\dot{x}|$ so that drag still opposes the motion; it is nonlinear, but linearizing about the terminal velocity $v_t$ gives an exponential approach with $\tau = v_t/(2g)$. $C_d$ depends on shape: about $1.1$ for a flat plate or disc facing the flow, $0.3$ for a dome.
 
 ### Rotational systems
 
-The same equations with $x \to \theta$, $v \to \omega$, $F \to \tau$, $m \to J$: torque $\tau = J\alpha$, torsional spring $\tau = k(\theta_2 - \theta_1)$, rotational damper $\tau = b(\omega_2 - \omega_1)$. Gears and transmissions just scale torque and angular speed by the gear ratio.
+The translational equations carry over one to one, with angle for position, torque for force and moment of inertia for mass: inertia $\tau = J\alpha$, torsional spring $\tau = k(\theta_2 - \theta_1)$, rotational damper $\tau = b(\omega_2 - \omega_1)$. A gear ratio $n$ scales torque and speed linearly, but inertia, stiffness and damping seen through the gear scale with $n^2$.
 
-The inertia term is also what picks the states, exactly as for a mass:
+As with a mass, the inertia is what picks the states:
 
-$$
-\dot{\theta} = \omega, \qquad
-\tau = J\ddot{\theta} = J\dot{\omega} = J\alpha
-$$
+$$\dot{\theta} = \omega$$
+$$\tau = J\ddot{\theta} = J\dot{\omega}$$
 
 so angle and angular velocity play the role of position and velocity, and a rotational model again reduces to two first-order equations.
 
@@ -215,7 +187,7 @@ so angle and angular velocity play the role of position and velocity, and a rota
 
 A motor shaft carries a rotor of moment of inertia $J$. The bearings resist rotation with a viscous torque $b\omega$, and the motor drives the shaft with a torque $\tau_m(t)$ — the input. We want the rotor's motion.
 
-**Step 1 — states.** Angle and angular velocity, exactly as translation used position and velocity:
+**Step 1 — states.** Exactly as translation used position and velocity:
 
 $$x_1 = \theta \quad \text{(shaft angle)}, \qquad x_2 = \omega = \dot{\theta} \quad \text{(angular velocity)}.$$
 
@@ -231,7 +203,7 @@ $$J\dot{\omega} = \tau_m - b\omega \qquad\Longrightarrow\qquad J\ddot{\theta} + 
 
 No spring appears — nothing stores torsional potential energy — so the equation is first order in $\omega$ and second order only because $\theta$ integrates it.
 
-**Step 4 — matrix form.** With $\vec{x} = \begin{bmatrix} \theta \\ \omega \end{bmatrix}$ and input $\tau_m$,
+**Step 4 — matrix form.** With $\vec{x} = \tvec{\theta, \omega}$ and input $\tau_m$,
 
 $$
 \dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ 0 & -\frac{b}{J} \end{bmatrix}\vec{x} + \begin{bmatrix} 0 \\ \frac{1}{J} \end{bmatrix}\tau_m, \qquad y = \begin{bmatrix} 1 & 0 \end{bmatrix}\vec{x}
@@ -241,7 +213,7 @@ if the output of interest is the angle.
 
 **Sanity check.** With a constant torque the speed settles at $\omega_\infty = \tau_m/b$, while the angle grows without bound — a steady torque pins the *speed*, never the *position*, because the rotor has no torsional spring to define one. The eigenvalues say the same: $-b/J$, minus the reciprocal of the mechanical time constant $J/b$ (the rotor's version of an RC circuit), and $0$, the free integrator in $\dot{\theta} = \omega$.
 
-**What attaches to the shaft.** The motor torque itself is made from current, $\tau_m = K_t i$, and the spinning rotor generates the back-EMF $K_e\omega$ that limits that current. If the armature inductance is negligible, the current is algebraic, $i = (v - K_e\omega)/R$, and the motor only adds $K_tK_e/R$ to the damping — no new state. Otherwise $L\,\dot{i} = v - Ri - K_e\omega$ and the current becomes a third state. A gearbox adds no state at all: referred to one shaft ($\omega_2 = n\omega_1$, $\tau_1 = n\tau_2$), the two inertias collapse into a single $J = J_1 + n^2 J_2$.
+**What attaches to the shaft.** Modeling the motor's electrical side as well ($\tau_m = K_t i$) would add the armature current as a third state. A gearbox adds none: referred to one shaft, the two inertias collapse into a single $J = J_1 + n^2 J_2$.
 
 ```{=latex}
 \end{example}
@@ -249,13 +221,13 @@ if the output of interest is the angle.
 
 ## Modeling of electrical circuits
 
-Let's skip how resistors, capacitors and inductors are modeled. Electrical modeling rests on Kirchhoff's laws, and since there are two of them — both able to generate independent equations — two methods were taught: node-voltage and mesh-current. In principle either one suffices; in practice you use whichever leaves fewer unknowns. Both examples below use node voltages.
+Let's skip how resistors, capacitors and inductors are modeled — you know that. Electrical modeling rests on Kirchhoff's laws, and since there are two of them — both able to generate independent equations — two methods were taught: node-voltage and mesh-current. In principle either one suffices; in practice you use whichever leaves fewer unknowns. Both examples below use node voltages.
 
 ```{=latex}
 \begin{example}[frametitle={Example - state-space equations of a circuit}]
 ```
 
-We want to write down the state-space equations of the circuit in matrix form, with state vector $\vec{x} = \begin{bmatrix} i_L \\ v_C \end{bmatrix}$, input $\vec{u} = \begin{bmatrix} v_g \end{bmatrix}$, and output $\vec{y} = \begin{bmatrix} v_{R_1} \\ v_L \end{bmatrix}$.
+We want to write down the state-space equations of the circuit in matrix form, with state vector $\vec{x} = \tvec{i_L,  v_C}$, input $\vec{u} = \tvec{v_g}$, and output $\vec{y} = \tvec{v_{R_1}, v_L}$.
 
 ```{=latex}
 \input{tikz/modeling-circuit.tex}
@@ -322,7 +294,7 @@ $$
 
 Note what the output equation may *not* contain: $\mathbf{C}$ and $\mathbf{D}$ are constant matrices, so no derivative can appear in them. $v_L = L\,\dot{i}_L$ is the state equation in disguise, not an output relation.
 
-Sanity check: KVL around the loop, $v_{R_1} + v_L + v_C = R_1 i_L + (v_g - R_1 i_L - v_C) + v_C = v_g$, as it must. And the circuit is passive, so every mode has to decay: $\operatorname{tr}\mathbf{A} = -\frac{R_1}{L} - \frac{1}{CR_2} < 0$ and $\det\mathbf{A} = \frac{R_1}{LCR_2} + \frac{1}{LC} > 0$ put both eigenvalues in the left half-plane.
+Sanity check: the voltages around the loop add up to the source, $R_1 i_L + (v_g - R_1 i_L - v_C) + v_C = v_g$, as KVL demands.
 
 
 ```{=latex}
@@ -415,8 +387,14 @@ $$
 \begin{bmatrix} v_g \\ i_g \end{bmatrix}
 $$
 
-Sanity check: with both sources off the circuit is passive, so every mode must decay. It does: $\operatorname{tr}\mathbf{A} = -\frac{R_1}{L} - \frac{1}{CR_2} < 0$ and $\det\mathbf{A} = \frac{R_1}{LCR_2} + \frac{1}{LC} > 0$, so both eigenvalues sit in the left half-plane. A sign slip in Step 3 or 4 would typically flip one of the two.
+Sanity check: the diagonal of $\mathbf{A}$ is negative (each storage element drains through its resistor), and the off-diagonal entries have opposite signs (the inductor and capacitor pass energy back and forth). A sign slip in Step 3 or 4 breaks one of these.
 
 ```{=latex}
 \end{example}
 ```
+
+## The energy perspective
+
+In mechanical systems the independent storage elements are typically the masses (storing kinetic energy) and the springs (storing potential energy); the damper only dissipates.
+
+Comparing to electrical systems, the usual *force–voltage* analogy pairs inductor–mass, capacitor–spring, resistor–damper (the *force–current* analogy pairs them differently, mass–capacitor and spring–inductor; both are consistent). The pedant will ask how to reconcile the second derivative in $F = ma$ with the first derivative in $v = L\,\dot{i}$. There is nothing to reconcile: $F = m\dot{v}$ is already first order in the velocity, just as $v = L\,\dot{i}$ is in the current. As in *Higher-order ODEs as first-order systems*, it is the choice of state variables that does the work: position and velocity for mechanical systems, capacitor voltages and inductor currents for electrical ones. This way, the state-space representation always involves first-order derivatives of the chosen states.
