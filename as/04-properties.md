@@ -252,13 +252,7 @@ $$
 \vec{y}(t) = \mathbf{C}e^{\mathbf{A}t}\vec{x}(0)
 $$
 
-The left side is known for every $t$; the right side contains the unknown $\vec{x}(0)$. Cayley–Hamilton again, with $\mathbf{C}$ multiplied into each term, expands the output into $n$ known functions of time, each multiplying one unknown vector:
-
-$$
-\vec{y}(t) = \alpha_0(t)\,\mathbf{C}\vec{x}(0) + \alpha_1(t)\,\mathbf{C}\mathbf{A}\vec{x}(0) + \cdots + \alpha_{n-1}(t)\,\mathbf{C}\mathbf{A}^{n-1}\vec{x}(0)
-$$
-
-Each of these vectors can be recovered from the output: differentiating brings down one power of $\mathbf{A}$ at a time, since $\frac{d^k}{dt^k}e^{\mathbf{A}t} = \mathbf{A}^k e^{\mathbf{A}t}$, and at $t = 0$ the exponential is the identity,
+The left side is known for every $t$; the right side contains the unknown $\vec{x}(0)$. Differentiating the output brings down one power of $\mathbf{A}$ at a time, since $\frac{d^k}{dt^k}e^{\mathbf{A}t} = \mathbf{A}^k e^{\mathbf{A}t}$, and at $t = 0$ the exponential is the identity,
 
 $$
 \vec{y}^{(k)}(t) = \mathbf{C}\mathbf{A}^k e^{\mathbf{A}t}\vec{x}(0)
@@ -291,45 +285,7 @@ When the rank falls short, the missing directions belong to the unobservable mod
 
 Note the duality: observability of $(\mathbf{A}, \mathbf{C})$ is controllability of $(\mathbf{A}^T, \mathbf{C}^T)$. The controllability matrix of the transposed pair is $\mathcal{O}^T$, so the two tests are the same condition. The Jordan-form rule from controllability carries over too: if one eigenvalue has two or more Jordan blocks, a single output cannot observe the system, whatever $\mathbf{C}$ is, and $p$ outputs need $p \ge \max_i m_{g,i}$.
 
-```{=latex}
-\begin{example}[frametitle={Example - observability, the Taylor route}]
-```
-
-Same starting point, same unknown:
-
-$$
-\vec{y}(t) = \mathbf{C}e^{\mathbf{A}t}\vec{x}(0), \qquad
-e^{\mathbf{A}t} = \sum_{k=0}^{\infty} \frac{(\mathbf{A}t)^k}{k!}
-$$
-
-Inserting the defining series and collecting by powers of $t$ puts one unknown vector behind each known coefficient:
-
-$$
-\vec{y}(t) = \sum_{k=0}^{\infty} \frac{t^k}{k!}\,\underbrace{\mathbf{C}\mathbf{A}^k\vec{x}(0)}_{\text{unknown}}
-$$
-
-No regrouping is needed: differentiate term by term and set $t = 0$, where only the $k$-th term of the $k$-th derivative survives,
-
-$$
-\vec{y}^{(k)}(0) = \mathbf{C}\mathbf{A}^k\vec{x}(0),
-$$
-
-so the rows can be read off the coefficients. Cayley–Hamilton then says that $\mathbf{A}^k$ with $k \ge n$ reduces to $\mathbf{I}, \dots, \mathbf{A}^{n-1}$, so these powers add nothing, and stacking the first $n$ gives
-
-$$
-\underbrace{\begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}}_{\mathcal{O}}\vec{x}(0)
-= \begin{bmatrix} \vec{y}(0) \\ \vec{y}'(0) \\ \vdots \\ \vec{y}^{(n-1)}(0) \end{bmatrix},
-$$
-
-so $\vec{x}(0)$ is recoverable iff $\operatorname{rank}\mathcal{O} = n$: the same matrix, without solving for any $\alpha_k(t)$.
-
-The two routes are the same derivation in two orders: Cayley–Hamilton regroups the series into $n$ known functions of $t$ and then differentiates, Taylor differentiates first and reads the rows off the coefficients. Taylor is shorter; Cayley–Hamilton is what tells you $n$ rows suffice.
-
-You could also go the Taylor route for the controllability test: expanding $e^{\mathbf{A}(t-\tau)}$ as a series shows that the reachable states are spanned by the $\mathbf{A}^k\mathbf{B}$, and Cayley–Hamilton cuts the powers to $k < n$, which leaves the columns of $\mathcal{C}$.
-
-```{=latex}
-\end{example}
-```
+The controllability test can be derived the same way, without the Cayley–Hamilton coefficients: expanding $e^{\mathbf{A}(t-\tau)}$ as a series shows that the reachable states are spanned by the $\mathbf{A}^k\mathbf{B}$, and Cayley–Hamilton cuts the powers to $k < n$, which leaves the columns of $\mathcal{C}$.
 
 ```{=latex}
 \begin{example}[frametitle={Example - observability, and a pole that cancels}]
