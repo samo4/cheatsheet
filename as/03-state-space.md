@@ -137,7 +137,7 @@ Because mathematicians don't like writing/typing $e^{\mathbf{A}t}$, they shortha
 
 ### Properties of the state-transition matrix
 
-Four properties, and taken together they answer a plain question: what *is* $\Phi$? A family of matrices you can multiply, that has a do-nothing member, and whose members can all be undone — everything built out of the one matrix $\mathbf{A}$. That is the payoff: knowing $\mathbf{A}$ is knowing how the state moves at every later time.
+Four properties answer a plain question: what is $\Phi$? A family of matrices you can multiply, that has a do-nothing member, and whose members can all be undone — everything built out of the one matrix $\mathbf{A}$. That is the payoff: knowing $\mathbf{A}$ is knowing how the state moves at every later time.
 
 #### The identity
 
@@ -161,7 +161,7 @@ $$
 \Phi(t_1 - t_2) = \Phi(t_1)\Phi^{-1}(t_2)
 $$
 
-The semigroup property read in reverse. Nothing is assumed here, the inverse is handed to you: take $t_1 = t$ and $t_2 = -t$, and you get $\Phi(t)\Phi(-t) = \Phi(0) = \mathbf{I}$. So every $\Phi$ is invertible, nothing was computed to learn that — no determinant anywhere — and it stays true even when $\mathbf{A}$ itself is singular.
+This follows from the semigroup property with $t_1 = t$, $t_2 = -t$: $\Phi(t)\Phi(-t) = \Phi(0) = \mathbf{I}$. So $\Phi(t)$ is always invertible, with inverse $\Phi(-t)$, even when $\mathbf{A}$ is singular.
 
 #### The defining ODE
 
