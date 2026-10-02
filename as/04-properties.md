@@ -43,7 +43,14 @@ Whether trajectories actually end up at the equilibrium is what we investigate n
 
 ## Stability
 
-For $\dot{\vec{x}} = \mathbf{A}\vec{x}$ stability is decided by the eigenvalues of $\mathbf{A}$ (the poles), that is, by where they sit relative to the imaginary axis. All plots below use the family $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -3 & a \end{bmatrix}$, whose poles are $\lambda = \frac{a \pm j\sqrt{12-a^2}}{2}$, complex while $a^2 < 12$, real beyond that; the grey half-plane is the stable region, the dashed line its boundary:
+Stability asks what the free response $\dot{\vec{x}} = \mathbf{A}\vec{x}$ does from an arbitrary initial state. The equilibrium $\vec{x}_e = \vec{0}$ is
+
+- *stable in the sense of Lyapunov* if every trajectory stays bounded,
+- *asymptotically stable* if, in addition, every trajectory converges to $\vec{0}$,
+- *marginally stable* if it is Lyapunov stable but not asymptotically stable: the states stay bounded, but not all of them decay,
+- *unstable* if some trajectory grows without bound.
+
+Since the free response is built from the modes, all of this is decided by the eigenvalues of $\mathbf{A}$, by where they sit relative to the imaginary axis:
 
 ```{=latex}
 \[
@@ -51,31 +58,31 @@ For $\dot{\vec{x}} = \mathbf{A}\vec{x}$ stability is decided by the eigenvalues 
 \setlength{\fboxsep}{1.2em}
 \fbox{$\displaystyle
 \begin{array}{lcl}
-\operatorname{Re}\lambda_i < 0 \ \ \forall i & \iff & \text{asymptotically stable}
+\operatorname{Re}\lambda_i < 0 \ \ \forall i & \iff & \text{asymptotically stable} \\[4pt]
+\operatorname{Re}\lambda_i \le 0 \ \ \forall i, \text{ some on the axis, all simple} & \Longrightarrow & \text{marginally stable} \\[4pt]
+\text{some } \operatorname{Re}\lambda_i > 0 & \Longrightarrow & \text{unstable}
 \end{array}
 $}
 \endgroup
 \]
 ```
 
-### Marginally stable
-
-A system is *stable in the sense of Lyapunov* if the states remain bounded. It is *marginally stable* if it is Lyapunov stable but not asymptotically stable: the states may oscillate, but they neither grow nor settle.
-
-No eigenvalue with $\operatorname{Re}\lambda_i > 0$, and the eigenvalues on the imaginary axis are simple.^["Simple" is sufficient but not necessary. The exact condition is that every eigenvalue on the axis has only $1\times1$ Jordan blocks ($m_g = m_a$; Jordan form). For a stable eigenvalue the exponential decay wins over the polynomial, and $t^j e^{\lambda t} \to 0$. With $\operatorname{Re}\lambda = 0$ there is no decay to counter the polynomial, and a block of size $\ge 2$ makes the response grow without bound. This is the one case where the eigenvalues alone do not decide stability. $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ (two separate integrators, blocks $1+1$) has $\lambda = 0$ twice and stays put, so it is marginally stable. The double integrator $\ddot{x} = 0$, with $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}$ (one $2\times2$ block), has the same eigenvalues but drifts as $x(t) = x_0 + \dot{x}_0 t$, so it is unstable.] The poles sit on the dashed boundary:
-
-```{=latex}
-\input{tikz/stability-marginal.tex}
-```
+All plots below use the family $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -3 & a \end{bmatrix}$, whose eigenvalues are $\lambda = \frac{a \pm j\sqrt{12-a^2}}{2}$, complex while $a^2 < 12$, real beyond that. The grey half-plane is the stable region, the dashed line its boundary.
 
 ### Asymptotically stable
 
-Asymptotic stability is a stronger version of Lyapunov stability: not only do the states remain bounded, they converge to the equilibrium.
-
-$\operatorname{Re}\lambda_i < 0$ for all $i$: every mode decays, so from any initial condition the trajectory converges to the equilibrium $\vec{x}_e = \vec{0}$. All poles lie strictly inside the shaded left half-plane:
+Every mode decays, so from any initial condition the trajectory converges to the equilibrium $\vec{x}_e = \vec{0}$. All eigenvalues lie strictly inside the shaded left half-plane:
 
 ```{=latex}
 \input{tikz/stability-asymptotic.tex}
+```
+
+### Marginally stable
+
+No eigenvalue lies in the right half-plane, and those on the imaginary axis are simple.^["Simple" is sufficient but not necessary. The exact condition is that every eigenvalue on the axis has only $1\times1$ Jordan blocks ($m_g = m_a$; Jordan form). For a stable eigenvalue the exponential decay wins over the polynomial, and $t^j e^{\lambda t} \to 0$. With $\operatorname{Re}\lambda = 0$ there is no decay to counter the polynomial, and a block of size $\ge 2$ makes the response grow without bound. This is the one case where the eigenvalues alone do not decide stability. $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ (two separate integrators, blocks $1+1$) has $\lambda = 0$ twice and stays put, so it is marginally stable. The double integrator $\ddot{x} = 0$, with $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}$ (one $2\times2$ block), has the same eigenvalues but drifts as $x(t) = x_0 + \dot{x}_0 t$, so it is unstable.] The axis modes neither grow nor decay: a pair $\pm j\omega$ gives a sustained oscillation, $\lambda = 0$ a constant. Here the eigenvalues sit on the dashed boundary:
+
+```{=latex}
+\input{tikz/stability-marginal.tex}
 ```
 
 ```{=latex}
@@ -107,7 +114,7 @@ Both systems end at zero, as the eigenvalues predict. The eigenvalues say nothin
 
 ### Unstable
 
-Some eigenvalue with $\operatorname{Re}\lambda_i > 0$, or an eigenvalue on the imaginary axis with a Jordan block of size $\ge 2$ (which brings a factor $t$ and grows; see the footnote under marginal stability). Trajectories diverge; some pole lies in the right half-plane (or on the axis with a Jordan block), outside the stable region:
+Some eigenvalue lies in the right half-plane, or on the imaginary axis with a Jordan block of size $\ge 2$ (which brings a factor $t$; see the footnote under marginal stability). Some trajectories then grow without bound:
 
 ```{=latex}
 \input{tikz/stability-unstable.tex}
@@ -127,7 +134,7 @@ The eigenvalues depend continuously on the entries of $\mathbf{A}$, so a small c
 
 ### Bounded-input bounded-output stability
 
-The three classes above are about the state. A different question is whether a bounded input can ever produce an unbounded output (**BIBO stability**). It is answered by the poles of the transfer function rather than by the eigenvalues: every pole of $G(s)$ must lie in the open left half-plane.
+The three classes above are about the state. A different question is whether a bounded input can ever produce an unbounded output (**BIBO stability**). It is answered by the poles of the transfer function rather than by the eigenvalues: every pole of $G(s)$ must lie in the open left half-plane. A pole on the axis is not enough: a step into an integrator, or a sine at the resonance frequency of an undamped oscillator, gives an output that grows without bound. So a marginally stable system whose axis mode reaches the output is not BIBO stable.
 
 For a minimal realization the poles are the eigenvalues, so BIBO stability and asymptotic stability coincide. They differ when a pole cancels against a zero. Take
 

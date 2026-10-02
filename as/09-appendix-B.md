@@ -97,7 +97,11 @@ $$
 Stability:
 
 $$
-\operatorname{Re}\lambda_i < 0 \ \ \forall i \iff \text{asymptotically stable}
+\begin{array}{lcl}
+\operatorname{Re}\lambda_i < 0 \ \ \forall i & \iff & \text{asymptotically stable} \\[4pt]
+\operatorname{Re}\lambda_i \le 0 \ \ \forall i, \text{ some on the axis, all simple} & \Longrightarrow & \text{marginally stable} \\[4pt]
+\text{some } \operatorname{Re}\lambda_i > 0 & \Longrightarrow & \text{unstable}
+\end{array}
 $$
 
 Controllability:
@@ -149,5 +153,9 @@ $$
 Stability:
 
 $$
-|\lambda_i| < 1 \ \ \forall i \iff \text{asymptotically stable}
+\begin{array}{lcl}
+|\lambda_i| < 1 \ \ \forall i & \iff & \text{asymptotically stable} \\[4pt]
+|\lambda_i| \le 1 \ \ \forall i, \text{ some on the unit circle, all simple} & \Longrightarrow & \text{marginally stable} \\[4pt]
+\text{some } |\lambda_i| > 1 & \Longrightarrow & \text{unstable}
+\end{array}
 $$
