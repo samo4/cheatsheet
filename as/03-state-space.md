@@ -24,7 +24,7 @@ $$
 \vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}
 $$
 
-with $\mathbf{A}$ the dynamics, $\mathbf{B}$ the input coupling, $\mathbf{C}$ the output coupling, and $\mathbf{D}$ the direct feedthrough — often, but certainly not always, $\mathbf{D} = \mathbf{0}$. The outputs are generally not the states themselves.
+with $\mathbf{A}$ the dynamics, $\mathbf{B}$ the input coupling, $\mathbf{C}$ the output coupling, and $\mathbf{D}$ the direct feedthrough — often, but certainly not always, $\mathbf{D} = \mathbf{0}$. The outputs are generally not the states themselves. $\mathbf{A}$ maps the state vector to its derivatives (i.e. 1:1) so it's a square matrix — which will come extremely handy in just a moment.
 
 A single second-order ODE is enough to show where the four matrices come from.
 
@@ -51,7 +51,7 @@ $$
 y = \begin{bmatrix} 1 & 0 \end{bmatrix}\vec{x}
 $$
 
-Sanity check: $\det(s\mathbf{I} - \mathbf{A}) = s(s+2) + 3 = s^2 + 2s + 3$ — the ODE's own coefficients come back.
+Sanity check: with the states chosen as $y$ and $\dot{y}$, the last row of $\mathbf{A}$ is the ODE's own coefficients with flipped sign, $-3$ and $-2$.
 
 ```{=latex}
 \end{example}
@@ -93,9 +93,9 @@ $$
 \dot{\tilde{\vec{x}}} = \begin{bmatrix} 0 & -\frac{1}{CR} \\ \frac{R}{L} & -\frac{R}{L} \end{bmatrix}\tilde{\vec{x}} + \begin{bmatrix} \frac{1}{C} \\ 0 \end{bmatrix}i_g.
 $$
 
-Every entry changed, yet the circuit did not, and the two matrices are similar, $\tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}$. They therefore share the same eigenvalues — the characteristic equation $\lambda^2 + \frac{R}{L}\lambda + \frac{1}{LC} = 0$ is the same either way — so both descriptions ring at the same frequency and decay at the same rate.
+Every entry changed, but the circuit did not: the two matrices are similar, $\tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}$ (see Similarity transformation in the Linear algebra chapter), so they have the same eigenvalues and the same dynamics.
 
-What the second choice buys is bookkeeping. Both components of $\tilde{\vec{x}}$ are voltages, so the state plane carries one unit and one axis scale; and if the resistor voltage is the quantity worth measuring, the output equation collapses to $y = \begin{bmatrix} 0 & 1 \end{bmatrix}\tilde{\vec{x}}$, one of the states, against $y = \begin{bmatrix} 0 & R \end{bmatrix}\vec{x}$ before.
+The second choice only makes the bookkeeping easier: both states are voltages, and if the resistor voltage is the output, it is simply a state, $y = \begin{bmatrix} 0 & 1 \end{bmatrix}\tilde{\vec{x}}$ instead of $y = \begin{bmatrix} 0 & R \end{bmatrix}\vec{x}$.
 
 ```{=latex}
 \end{example}
