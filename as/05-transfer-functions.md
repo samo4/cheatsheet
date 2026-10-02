@@ -30,6 +30,28 @@ $$
 G(s) = \frac{Y(s)}{U(s)} = \frac{N(s)}{D(s)} = \frac{b_m s^m + \cdots + b_0}{a_n s^n + \cdots + a_0}
 $$
 
+```{=latex}
+\begin{example}[frametitle={Example - a first-order system}]
+```
+
+Take $\dot{x} + p x = f$, with input $f$ and output $x$. With $x(0) = 0$, the derivative becomes $sX(s)$:
+
+$$
+sX(s) + pX(s) = F(s)
+\quad\Longrightarrow\quad
+G(s) = \frac{X(s)}{F(s)} = \frac{1}{s + p}
+$$
+
+The ratio of output to input only makes sense after the transform. In the time domain, $x(t)/f(t)$ is no fixed property of the system: it changes with time and with the input, because $x$ depends on the whole past of $f$ (the convolution $x = h * f$). The transform turns that convolution into a product, and only then does dividing by the input leave something that belongs to the system alone.
+
+The single pole $s = -p$ is the eigenvalue of the state equation $\dot{x} = -px + f$. For the discharging capacitor of the Introduction, $p = \frac{1}{RC}$.
+
+Sanity check: for a constant input $f$ the system settles where $\dot{x} = 0$, at $x = f/p$, and the DC gain agrees, $G(0) = \frac{1}{p}$.
+
+```{=latex}
+\end{example}
+```
+
 ## Impulse response
 
 The inverse transform leads back to the time domain. The two test signals have the simplest transforms,
