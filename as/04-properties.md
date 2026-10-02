@@ -8,21 +8,21 @@ $$
 e^{\lambda_1 t},\; e^{\lambda_2 t},\; \dots,\; e^{\lambda_n t}
 $$
 
-each called a **mode** of the system, so the eigenvalues of $\mathbf{A}$ are the modes of the response. A real $\lambda$ gives a growing or decaying exponential; a conjugate pair $\sigma \pm j\omega$ gives an oscillation with envelope $e^{\sigma t}$.
+each called a **mode** of the system; the eigenvalues of $\mathbf{A}$ set the modes. A real $\lambda$ gives a growing or decaying exponential (or a constant for $\lambda = 0$); a conjugate pair $\sigma \pm j\omega$ gives an oscillation with envelope $e^{\sigma t}$.
 
-The exception is a defective $\mathbf{A}$: with fewer independent eigenvectors than eigenvalues, a repeated eigenvalue brings a factor $t$ instead of a second independent exponential, so $n$ eigenvalues need not give $n$ modes. The Jordan form says which. The block sizes tell you in advance which terms the free response can contain: a $k\times k$ Jordan block at $\lambda$ contributes $e^{\lambda t}, t e^{\lambda t}, \dots, t^{k-1}e^{\lambda t}$ (see $\Phi$ via the Jordan form in the State-space chapter). This is the state-space version of a repeated pole in partial fractions.
+The exception is a defective $\mathbf{A}$: when a repeated eigenvalue has fewer independent eigenvectors than its multiplicity, it brings a factor $t$ instead of a second independent exponential, so $n$ eigenvalues need not give $n$ modes. The Jordan form says which. The block sizes tell you in advance which terms the free response can contain: a $k\times k$ Jordan block at $\lambda$ contributes $e^{\lambda t}, t e^{\lambda t}, \dots, t^{k-1}e^{\lambda t}$ (see $\Phi$ via the Jordan form in the State-space chapter). This is the state-space version of a repeated pole in partial fractions.
 
-These eigenvalues are also the **poles** of the transfer function $G(s) = \mathbf{C}(s\mathbf{I}-\mathbf{A})^{-1}\mathbf{B} + \mathbf{D}$ (which we get to properly in the transfer-function chapter): its denominator is $\det(s\mathbf{I}-\mathbf{A})$, so the poles are the eigenvalues of $\mathbf{A}$, at least for a minimal realization (controllable and observable, both defined below). An eigenvalue belonging to an uncontrollable or unobservable mode cancels out of $G(s)$ and is not a pole.
+These eigenvalues are also the **poles** of the transfer function $G(s) = \mathbf{C}(s\mathbf{I}-\mathbf{A})^{-1}\mathbf{B} + \mathbf{D}$ (which we get to properly in the transfer-function chapter): its denominator is $\det(s\mathbf{I}-\mathbf{A})$, so the poles are the eigenvalues of $\mathbf{A}$, at least for a minimal realization (controllable and observable, both defined below). An uncontrollable or unobservable mode cancels out of $G(s)$; its eigenvalue is not a pole unless another, controllable and observable, mode shares it.
 
 Everything that follows is decided by these modes and by how the inputs and outputs couple to them: the equilibrium behaviour and stability first, then controllability and observability.
 
 ## Equilibrium states and phase portraits
 
-An *equilibrium state* $\vec{x}_e$ is where the system stays put, $\dot{\vec{x}} = \vec{0}$ at $\vec{x} = \vec{x}_e$. For the linear system $\dot{\vec{x}} = \mathbf{A}\vec{x}$ the equilibria solve $\mathbf{A}\vec{x}_e = \vec{0}$: the origin $\vec{x}_e = \vec{0}$ when $\mathbf{A}$ is nonsingular, or a whole subspace of equilibria when $\mathbf{A}$ is singular. (With a constant input, $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$ has equilibria where $\mathbf{A}\vec{x}_e + \mathbf{B}\vec{u} = \vec{0}$.)
+An *equilibrium state* $\vec{x}_e$ is where the system stays put, $\dot{\vec{x}} = \vec{0}$ at $\vec{x} = \vec{x}_e$. For the linear system $\dot{\vec{x}} = \mathbf{A}\vec{x}$ the equilibria solve $\mathbf{A}\vec{x}_e = \vec{0}$: the origin $\vec{x}_e = \vec{0}$ when $\mathbf{A}$ is nonsingular, or a whole subspace of equilibria when $\mathbf{A}$ is singular. (With a constant input, $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$ has equilibria where $\mathbf{A}\vec{x}_e + \mathbf{B}\vec{u} = \vec{0}$, and possibly none: an integrator under a constant input never comes to rest.)
 
 The phase portrait, with trajectories plotted together in state space, shows how the state moves and whether it reaches the equilibrium. Near an equilibrium the behaviour is set by the eigenvalues of $\mathbf{A}$, i.e. the modes from the beginning of this chapter:
 
-- *Node* — real eigenvalues of the same sign: the state moves straight along the eigenvectors, into (both negative) or away from (both positive) the equilibrium.
+- *Node* — real eigenvalues of the same sign: trajectories run into (both negative) or away from (both positive) the equilibrium without circling. They are straight only along the eigenvectors; otherwise they curve in tangent to the slower one.
 - *Saddle* — real eigenvalues of opposite signs: it approaches along one eigenvector and escapes along the other; always unstable.
 - *Focus* (spiral) — complex pair $\sigma \pm j\omega$: it spirals into the equilibrium for $\sigma < 0$, away for $\sigma > 0$.
 - *Center* — purely imaginary $\pm j\omega$: closed elliptical orbits; it neither settles nor escapes.
@@ -58,9 +58,9 @@ $}
 \]
 ```
 
-### Marginally stable (Lyapunov)
+### Marginally stable
 
-In a marginally stable system (also called stable in the sense of Lyapunov), the states may oscillate but remain bounded.
+A system is *stable in the sense of Lyapunov* if the states remain bounded. It is *marginally stable* if it is Lyapunov stable but not asymptotically stable: the states may oscillate, but they neither grow nor settle.
 
 No eigenvalue with $\operatorname{Re}\lambda_i > 0$, and the eigenvalues on the imaginary axis are simple.^["Simple" is sufficient but not necessary. The exact condition is that every eigenvalue on the axis has only $1\times1$ Jordan blocks ($m_g = m_a$; Jordan form). For a stable eigenvalue the exponential decay wins over the polynomial, and $t^j e^{\lambda t} \to 0$. With $\operatorname{Re}\lambda = 0$ there is no decay to counter the polynomial, and a block of size $\ge 2$ makes the response grow without bound. This is the one case where the eigenvalues alone do not decide stability. $\dot{\vec{x}} = \mathbf{0}_{2\times2}\,\vec{x}$ (two separate integrators, blocks $1+1$) has $\lambda = 0$ twice and stays put, so it is marginally stable. The double integrator $\ddot{x} = 0$, with $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}$ (one $2\times2$ block), has the same eigenvalues but drifts as $x(t) = x_0 + \dot{x}_0 t$, so it is unstable.] The poles sit on the dashed boundary:
 
@@ -107,7 +107,7 @@ Both systems end at zero, as the eigenvalues predict. The eigenvalues say nothin
 
 ### Unstable
 
-Some eigenvalue with $\operatorname{Re}\lambda_i > 0$, or an eigenvalue on the imaginary axis with a Jordan block of size $\ge 2$ (which brings a factor $t$ and grows; see the footnote under marginal stability). Trajectories diverge; the poles lie in the right half-plane, outside the stable region:
+Some eigenvalue with $\operatorname{Re}\lambda_i > 0$, or an eigenvalue on the imaginary axis with a Jordan block of size $\ge 2$ (which brings a factor $t$ and grows; see the footnote under marginal stability). Trajectories diverge; some pole lies in the right half-plane (or on the axis with a Jordan block), outside the stable region:
 
 ```{=latex}
 \input{tikz/stability-unstable.tex}
@@ -123,11 +123,11 @@ The eigenvalues depend continuously on the entries of $\mathbf{A}$, so a small c
 
 - *Asymptotic stability is robust*: the circles stay entirely inside the shaded left half-plane, so small perturbations keep the poles there (the margin is the distance from the boundary).
 - *Marginal stability is not*: the circles straddle the dashed boundary, so a tiny change (here, $a$ crossing $0$) pushes the poles into one half-plane or the other, and the system becomes asymptotically stable or unstable.
-- *Instability is robust*: the circles stay in the right half-plane; pushing a pole back across the axis takes a finite change.
+- *Instability in the right half-plane is robust*: the circles stay there; pushing a pole back across the axis takes a finite change. (Instability from a Jordan block on the axis is as fragile as marginal stability.)
 
 ### Bounded-input bounded-output stability
 
-The three classes above are about the state. A different question is whether a bounded input can ever produce an unbounded output (**BIBO stability**). It is answered by the poles of the transfer function rather than by the eigenvalues: every pole of $G(s)$ must lie in the left half-plane.
+The three classes above are about the state. A different question is whether a bounded input can ever produce an unbounded output (**BIBO stability**). It is answered by the poles of the transfer function rather than by the eigenvalues: every pole of $G(s)$ must lie in the open left half-plane.
 
 For a minimal realization the poles are the eigenvalues, so BIBO stability and asymptotic stability coincide. They differ when a pole cancels against a zero. Take
 
@@ -139,6 +139,8 @@ $$
 $$
 
 for which $G(s) = \mathbf{C}(s\mathbf{I}-\mathbf{A})^{-1}\mathbf{B} = \frac{1}{s+2}$: BIBO stable, since the only pole sits at $s = -2$. The state, however, runs away from $\vec{x}_0 = \tvec{1,0}$: the eigenvalue $+1$ belongs to a mode that no input can excite and no output reveals.
+
+A hidden mode is harmless if it decays on its own. A system whose uncontrollable modes are all stable is called *stabilizable*, and one whose unobservable modes are all stable is *detectable*. The example above is neither: its hidden mode is the unstable $+1$.
 
 BIBO stability is a statement about the input–output map, asymptotic stability about the state, and the second is the stronger of the two. This example is why the modes above come with a minimality caveat, and the next two sections say when a mode escapes through the input or the output.
 
@@ -154,10 +156,10 @@ $$
 \vec{x}(t) = \int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\vec{u}(\tau)\, d\tau
 $$
 
-For LTI, reachability from the origin is the same as controllability, since $e^{\mathbf{A}t}$ is always invertible. Cayley–Hamilton expresses $e^{\mathbf{A}s}$ as a polynomial:
+For LTI, reachability from the origin is the same as controllability, since $e^{\mathbf{A}t}$ is always invertible. Cayley–Hamilton expresses $e^{\mathbf{A}\sigma}$, with $\sigma = t - \tau$ the elapsed time, as a polynomial:
 
 $$
-e^{\mathbf{A}s} = \alpha_0(s)\mathbf{I} + \alpha_1(s)\mathbf{A} + \cdots + \alpha_{n-1}(s)\mathbf{A}^{n-1}
+e^{\mathbf{A}\sigma} = \alpha_0(\sigma)\mathbf{I} + \alpha_1(\sigma)\mathbf{A} + \cdots + \alpha_{n-1}(\sigma)\mathbf{A}^{n-1}
 $$
 
 Substituting and pulling the constant matrices $\mathbf{A}^k\mathbf{B}$ out of the integral leaves $n$ fixed directions, each scaled by a weight that depends only on the input:
@@ -218,7 +220,7 @@ so $\operatorname{rank}\mathcal{C} = 2 < n$ and the system is not controllable. 
 
 Controllability as defined here is a yes-or-no question. In practice you may also care how hard it is to reach a particular state.
 
-Finally, the rank test is not the only one. Alternatives such as the PBH (Popov–Belevitch–Hautus) test can be more convenient, depending on the system's structure.
+Finally, the rank test is not the only one. Alternatives, not covered here, such as the PBH (Popov–Belevitch–Hautus) test can be more convenient, depending on the system's structure.
 
 ## Observability
 
@@ -267,8 +269,8 @@ $$
 Stacking the first $n$ of these known vectors,
 
 $$
-\begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}\vec{x}(0)
-= \underbrace{\begin{bmatrix} \vec{y}(0) \\ \vec{y}'(0) \\ \vdots \\ \vec{y}^{(n-1)}(0) \end{bmatrix}}_{\vec{z}}
+\underbrace{\begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}}_{\mathcal{O}}\vec{x}(0)
+= \begin{bmatrix} \vec{y}(0) \\ \vec{y}'(0) \\ \vdots \\ \vec{y}^{(n-1)}(0) \end{bmatrix}
 $$
 
 leaves one linear system for $\vec{x}(0)$, with a unique solution iff $\mathcal{O}$ has full column rank $n$. Powers $\mathbf{A}^k$ with $k \ge n$ add nothing new, because Cayley–Hamilton reduces them to $\mathbf{A}^0, \dots, \mathbf{A}^{n-1}$. The matrix of these rows is the *observability matrix*:
@@ -323,7 +325,7 @@ so $\vec{x}(0)$ is recoverable iff $\operatorname{rank}\mathcal{O} = n$: the sam
 
 The two routes are the same derivation in two orders: Cayley–Hamilton regroups the series into $n$ known functions of $t$ and then differentiates, Taylor differentiates first and reads the rows off the coefficients. Taylor is shorter; Cayley–Hamilton is what tells you $n$ rows suffice.
 
-The Taylor route also works for the controllability test.
+You could also go the Taylor route for the controllability test: expanding $e^{\mathbf{A}(t-\tau)}$ as a series shows that the reachable states are spanned by the $\mathbf{A}^k\mathbf{B}$, and Cayley–Hamilton cuts the powers to $k < n$, which leaves the columns of $\mathcal{C}$.
 
 ```{=latex}
 \end{example}
@@ -372,7 +374,7 @@ $$
 
 the $(s+1)$ is gone: the state does carry the mode $e^{-t}$, but the zero at $s = -1$ in the $x_1 \to y$ map cancels it, and the input–output transfer function is one order lower than the system.
 
-Where the mode is hidden: $\lambda = -1$ has eigenvector $\vec{v} = \tvec{-1,1,-1}$ (check: $\mathbf{A}\vec{v} = -\vec{v}$), and $\mathbf{C}\vec{v} = -4+5-1 = 0$. The sensor never sees it, since $\mathbf{C}\mathbf{A}^k\vec{v} = (-1)^k\mathbf{C}\vec{v} = \vec{0}$, which is $\mathcal{O}\vec{v} = \vec{0}$: the rank drops by one, and the state combination $-x_1 + x_2 - x_3$ decays as $e^{-t}$ unseen. The cancelled $(s+1)$ is that blindness, read in the frequency domain.
+Where the mode is hidden: $\lambda = -1$ has eigenvector $\vec{v} = \tvec{-1,1,-1}$ (check: $\mathbf{A}\vec{v} = -\vec{v}$), and $\mathbf{C}\vec{v} = -4+5-1 = 0$. The sensor never sees it, since $\mathbf{C}\mathbf{A}^k\vec{v} = (-1)^k\mathbf{C}\vec{v} = \vec{0}$, which is $\mathcal{O}\vec{v} = \vec{0}$: the rank drops by one. The combination of states that tracks this mode comes from the left eigenvector, $\vec{w}^T\mathbf{A} = -\vec{w}^T$ with $\vec{w} = \tvec{6, 5, 1}$: the modal coordinate $z = 6x_1 + 5x_2 + x_3$ obeys $\dot{z} = -z$ and decays as $e^{-t}$ unseen. The cancelled $(s+1)$ is that blindness, read in the frequency domain.
 
 ```{=latex}
 \end{example}
@@ -380,4 +382,4 @@ Where the mode is hidden: $\lambda = -1$ has eigenvector $\vec{v} = \tvec{-1,1,-
 
 Everything in this chapter is decided by one spectrum: the stability classes by where the eigenvalues sit relative to the imaginary axis, controllability and observability by how $\mathbf{B}$ and $\mathbf{C}$ couple to the eigenvectors. The next chapter views the same system from the outside: the transfer function $G(s)$ and the frequency domain.
 
-Everything in this chapter holds only for linear systems; nonlinear systems need different notions of stability, controllability and observability. As a teaser: in a linear system, the farther left of the imaginary axis the poles are, the more stable the system. In a nonlinear system stability can have a sweet spot: push too far left and the system may become unstable.
+The *tests* in this chapter are for linear systems. The definitions of stability carry over to nonlinear systems, but there stability becomes a property of each equilibrium, and controllability and observability need other tools. As a teaser: in a linear system, the farther left of the imaginary axis the poles are, the faster every mode decays. In a nonlinear system this can backfire: placing poles far left takes high gain, the transients peak (the *peaking phenomenon*), and a large enough peak can throw the state out of the region where the linear model holds.
