@@ -96,7 +96,7 @@ $}
 \begin{example}[frametitle={Example - transfer function from state space}]
 ```
 
-Same $\mathbf{A} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -2 & 0 \\ 0 & 0 & -3 \end{bmatrix}$ as in the controllability and observability examples, with $\mathbf{B} = \tvec{1, 1, 1}$, $\mathbf{C} = \begin{bmatrix} 6 & -6 & 1 \end{bmatrix}$, $\mathbf{D} = 0$. Since $\mathbf{A}$ is diagonal,
+Same $\mathbf{A} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -2 & 0 \\ 0 & 0 & -3 \end{bmatrix}$ as in the controllability and observability examples, with $\mathbf{B} = \tvec{1, 1, 1}$, $\mathbf{C} = \rvec{6, -6, 1}$, $\mathbf{D} = 0$. Since $\mathbf{A}$ is diagonal,
 
 $$
 (s\mathbf{I} - \mathbf{A})^{-1} = \begin{bmatrix} \frac{1}{s+1} & 0 & 0 \\ 0 & \frac{1}{s+2} & 0 \\ 0 & 0 & \frac{1}{s+3} \end{bmatrix}
@@ -231,7 +231,7 @@ $$
 + \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}\begin{bmatrix} u_1 \\ u_2 \end{bmatrix}
 $$
 
-Sanity check: $\mathbf{A}$ is triangular, so its eigenvalues $-3$ and $-4$ are read off the diagonal — exactly the poles of the two cores. And one channel end to end: $u_2 \to y_2$ is core 1 alone, $\frac{1}{s+3}$, while the matrices give $\begin{bmatrix} 1 & 0 \end{bmatrix}(s\mathbf{I} - \mathbf{A})^{-1}\begin{bmatrix} 1 \\ 0 \end{bmatrix} = \frac{1}{s+3}$.
+Sanity check: $\mathbf{A}$ is triangular, so its eigenvalues $-3$ and $-4$ are read off the diagonal — exactly the poles of the two cores. And one channel end to end: $u_2 \to y_2$ is core 1 alone, $\frac{1}{s+3}$, while the matrices give $\rvec{1, 0}(s\mathbf{I} - \mathbf{A})^{-1}\tvec{1, 0} = \frac{1}{s+3}$.
 
 ```{=latex}
 \end{example}

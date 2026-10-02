@@ -95,7 +95,7 @@ $$
 
 Every entry changed, but the circuit did not: the two matrices are similar, $\tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}$ (see Similarity transformation in the Linear algebra chapter), so they have the same eigenvalues and the same dynamics.
 
-The second choice only makes the bookkeeping easier: both states are voltages, and if the resistor voltage is the output, it is simply a state, $y = \begin{bmatrix} 0 & 1 \end{bmatrix}\tilde{\vec{x}}$ instead of $y = \begin{bmatrix} 0 & R \end{bmatrix}\vec{x}$.
+The second choice only makes the bookkeeping easier: both states are voltages, and if the resistor voltage is the output, it is simply a state, $y = \rvec{0, 1}\tilde{\vec{x}}$ instead of $y = \rvec{0, R}\vec{x}$.
 
 ```{=latex}
 \end{example}
@@ -394,7 +394,7 @@ e^{-t} - e^{-2t} & e^{-t}
 \end{bmatrix}
 $$
 
-Sanity check: $\Phi(0) = \mathbf{I}$ and $\dot{\Phi}(0) = \begin{bmatrix} -2 & 0 \\ -1+2 & -1 \end{bmatrix} = \mathbf{A}$. The "recognizing" step can be tested one term further, too: $(\mathbf{A}^4)_{21} = \begin{bmatrix} 7 & -1 \end{bmatrix}\begin{bmatrix} -2 \\ 1 \end{bmatrix} = -15$, and the $t^4$ coefficient of $e^{-t} - e^{-2t}$ is $\frac{1 - 16}{4!} = -\frac{15}{4!}$.
+Sanity check: $\Phi(0) = \mathbf{I}$ and $\dot{\Phi}(0) = \begin{bmatrix} -2 & 0 \\ -1+2 & -1 \end{bmatrix} = \mathbf{A}$. The "recognizing" step can be tested one term further, too: $(\mathbf{A}^4)_{21} = \rvec{7, -1}\tvec{-2, 1} = -15$, and the $t^4$ coefficient of $e^{-t} - e^{-2t}$ is $\frac{1 - 16}{4!} = -\frac{15}{4!}$.
 
 ```{=latex}
 \end{example}

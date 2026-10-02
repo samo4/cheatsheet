@@ -333,7 +333,7 @@ Taylor route also exists for controllability test.
 \begin{example}[frametitle={Example - observability, and a pole that cancels}]
 ```
 
-This is Ogata's example: $\mathbf{A} = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ -6 & -11 & -6 \end{bmatrix}$, $\mathbf{B} = \tvec{0, 0, 1}$, $\mathbf{C} = \begin{bmatrix} 4 & 5 & 1 \end{bmatrix}$, $\mathbf{D} = 0$. Only $\mathbf{A}$ and $\mathbf{C}$ enter the test; $\mathbf{B}$ rides along for the transfer functions below.
+This is Ogata's example: $\mathbf{A} = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ -6 & -11 & -6 \end{bmatrix}$, $\mathbf{B} = \tvec{0, 0, 1}$, $\mathbf{C} = \rvec{4, 5, 1}$, $\mathbf{D} = 0$. Only $\mathbf{A}$ and $\mathbf{C}$ enter the test; $\mathbf{B}$ rides along for the transfer functions below.
 
 $$
 \mathcal{O} = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \end{bmatrix}
