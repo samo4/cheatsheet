@@ -31,7 +31,7 @@ Only a few distinctions actually change the mathematics, so these are the ones w
 - *Deterministic*: the same initial state and input always produce the same trajectory. *Stochastic*: randomness enters, and only statistics are predictable.
 - *Homogeneous*: no input; the system runs on its initial state alone. *Non-homogeneous*: an input drives it.
 
-Our mathematical tools need two more properties: *linear* and *time-invariant*.
+The toolbox of these notes needs the system to be lumped and deterministic, and two more properties: *linear* and *time-invariant*.
 
 ### Is it linear?
 
@@ -53,7 +53,7 @@ Test the system $y = \alpha u + \beta$: a gain with a constant offset.
 
 Homogeneity demands $L(au) = a\,L(u)$ for every $a$, and $a = 0$ alone forces $L(0) = 0$. Here $u = 0$ gives $y = \beta$, so any nonzero offset breaks linearity by itself: the map is affine, not linear. Additivity fails with it: two separate inputs give $\alpha(u_1 + u_2) + 2\beta$, while the input $u_1 + u_2$ gives only $\alpha(u_1 + u_2) + \beta$.
 
-The same additive term is harmless in $\dot{y} = 5y + 4t$, because there it is the input rather than a fixed part of the system.
+An additive term is harmless when it is not a fixed part of the input–output map but a forcing, like the $4t$ in $\dot{y} = 5y + 4t$: it does not make the equation nonlinear (though it can make it time-varying, see below).
 
 ```{=latex}
 \end{example}
@@ -105,13 +105,13 @@ For an ODE the rule is to look for an explicit $t$: a coefficient or forcing wri
 
 ## The LTI class of dynamic systems
 
-One combination of properties does nearly all the work in practice: *linear*, *time-invariant*, *lumped*, *continuous-time*, *deterministic*.
+One combination of properties does nearly all the work in practice: *linear*, *time-invariant*, *lumped* and *deterministic*, in continuous or discrete time.
 
-These are the linear time-invariant (LTI) systems.
+In these notes, these are the linear time-invariant (LTI) systems.
 
-For them the mathematical toolbox is unusually complete: superposition, the eigenvalues and modes of the system, Laplace transforms, transfer functions, convolution, and with them stability, controllability, and observability. Each of those tools rests on linearity and time invariance and will be discussed in the following chapters.
+For them the mathematical toolbox is unusually complete: superposition, the eigenvalues and modes of the system, Laplace and Z-transforms, transfer functions, convolution, and with them stability, controllability, and observability. Each of those tools rests on linearity and time invariance and is developed in the following chapters.
 
-The justification is not that the world is LTI, but that a system can often be made LTI where and when we need it. Linearize around an equilibrium or along a trajectory and the deviations obey an LTI model (Linearization chapter); sample a continuous system and get a discrete-time one (Discrete chapter). Between them, a great many nonlinear, time-varying and sampled systems can be handled this way.
+The justification is not that the world is LTI, but that a system can often be made LTI where we need it. Linearize a nonlinear system around an equilibrium and the small deviations obey an LTI model (Linearization chapter). Sample a continuous LTI system and you get a discrete-time LTI one, handled by the same tools (Discrete chapter).
 
 Linearization does not help with the other two assumptions: the model must be lumped (finitely many states and an ODE: no partial differential equations, no delays) and deterministic (no noise). And even where linearization does apply, it erases phenomena no linear model can recover: multiple equilibria, hysteresis, saturation, chaos.
 
@@ -181,7 +181,7 @@ $$\frac{\partial^2 w(t,x)}{\partial t^2} = c^2\,\frac{\partial^2 w(t,x)}{\partia
 - *Linear* — $\partial^2/\partial t^2$ and $\partial^2/\partial x^2$ are linear operators, so the equation is linear in the field $w$.
 - *Time-invariant* — the wave speed $c$ is constant, and no coefficient depends explicitly on $t$.
 - *Homogeneous* — no input term; the field moves only under its boundary and initial conditions.
-- *Distributed* — the unknown $w(t,x)$ depends on space as well as time, so the state is a field, not a finite vector $\vec{x}$: infinitely many states, no finite-dimensional model.
+- *Distributed* — the unknown $w(t,x)$ depends on space as well as time, so the state is a field, not a finite vector $\vec{x}$: infinitely many states, no finite-dimensional model. Linear and time-invariant, but outside the LTI class of these notes.
 - Its only lumped approximation is a discretization of $x$ on a grid (the method of lines, as in finite elements).
 
 ```{=latex}
@@ -216,7 +216,7 @@ It passes both tests, so the integrator is LTI.
 
 ## What can we then do with the toolbox and what can't?
 
-The drum fails because it is distributed, stochastic systems because they are random; either way there is no finite deterministic ODE, and both stay outside the toolbox of these notes. The honest title of these notes would be *lumped deterministic LTI systems*.
+The drum fails because it is distributed, stochastic systems because they are random; either way there is no finite deterministic model that predicts trajectories, and both stay outside the toolbox of these notes. Everything that follows is about LTI systems in the strict sense defined above: lumped and deterministic as well as linear and time-invariant.
 
 Together, linearity and time invariance give far more than either does alone. Any input can be split into delayed, scaled copies of one elementary test signal: linearity makes the responses add, and time invariance makes every copy respond identically. So one experiment is enough: measure the response to a single short kick, the *impulse response*, and the response to any other input follows by superposition. The whole input–output behaviour is fixed by that one measurement.
 
