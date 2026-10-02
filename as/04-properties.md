@@ -199,7 +199,7 @@ As you could intuitively deduce, controllability therefore involves only $(\math
 \begin{example}[frametitle={Example - controllability of a diagonal system}]
 ```
 
-$\mathbf{A} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -2 & 0 \\ 0 & 0 & -3 \end{bmatrix}$, $\mathbf{B} = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}$.
+$\mathbf{A} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -2 & 0 \\ 0 & 0 & -3 \end{bmatrix}$, $\mathbf{B} = \tvec{1, 1, 0}$.
 
 $$
 \mathcal{C} = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} \end{bmatrix}
@@ -333,7 +333,7 @@ Taylor route also exists for controllability test.
 \begin{example}[frametitle={Example - observability, and a pole that cancels}]
 ```
 
-This is Ogata's example: $\mathbf{A} = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ -6 & -11 & -6 \end{bmatrix}$, $\mathbf{B} = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$, $\mathbf{C} = \begin{bmatrix} 4 & 5 & 1 \end{bmatrix}$, $\mathbf{D} = 0$. Only $\mathbf{A}$ and $\mathbf{C}$ enter the test; $\mathbf{B}$ rides along for the transfer functions below.
+This is Ogata's example: $\mathbf{A} = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ -6 & -11 & -6 \end{bmatrix}$, $\mathbf{B} = \tvec{0, 0, 1}$, $\mathbf{C} = \begin{bmatrix} 4 & 5 & 1 \end{bmatrix}$, $\mathbf{D} = 0$. Only $\mathbf{A}$ and $\mathbf{C}$ enter the test; $\mathbf{B}$ rides along for the transfer functions below.
 
 $$
 \mathcal{O} = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \end{bmatrix}

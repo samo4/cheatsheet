@@ -50,7 +50,7 @@ $$
 \begin{example}[frametitle={Example - linearizing $f(x_1, x_2) = x_1^2 + x_2^2$}]
 ```
 
-Around $\vec{x}_0 = (1, 2)$: $f(1, 2) = 5$ and $\nabla f(1, 2) = \begin{bmatrix} 2 \\ 4 \end{bmatrix}$, so
+Around $\vec{x}_0 = (1, 2)$: $f(1, 2) = 5$ and $\nabla f(1, 2) = \tvec{2, 4}$, so
 
 $$
 f(x_1, x_2) \approx 5 + 2(x_1 - 1) + 4(x_2 - 2) = 2x_1 + 4x_2 - 5
@@ -94,7 +94,7 @@ $$
 \dot{x} = v, \qquad \dot{v} = g - \frac{k_1}{m}x - \frac{k_2}{m}x^3
 $$
 
-At rest the spring sags to the equilibrium $x_e$ with $k_1 x_e + k_2 x_e^3 = mg$, $v_e = 0$. With $\vec{f}(x, v) = \begin{bmatrix} v \\ g - \frac{k_1}{m}x - \frac{k_2}{m}x^3 \end{bmatrix}$, the Jacobian at the equilibrium is
+At rest the spring sags to the equilibrium $x_e$ with $k_1 x_e + k_2 x_e^3 = mg$, $v_e = 0$. With $\vec{f}(x, v) = \tvec{v,\ g - \frac{k_1}{m}x - \frac{k_2}{m}x^3}$, the Jacobian at the equilibrium is
 
 $$
 \mathbf{A} = \begin{bmatrix} \frac{\partial f_1}{\partial x} & \frac{\partial f_1}{\partial v} \\ \frac{\partial f_2}{\partial x} & \frac{\partial f_2}{\partial v} \end{bmatrix}_e

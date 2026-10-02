@@ -60,7 +60,7 @@ $$
 y[k] - \alpha(1+\beta)\,y[k-1] + \alpha\beta\, y[k-2] = g[k]
 $$
 
-Stack the two previous incomes into the state $\vec{x}[k] = \begin{bmatrix} y[k-2] \\ y[k-1] \end{bmatrix}$, next state on the left:
+Stack the two previous incomes into the state $\vec{x}[k] = \tvec{y[k-2], y[k-1]}$, next state on the left:
 
 $$
 \begin{bmatrix} y[k-1] \\ y[k] \end{bmatrix}
@@ -326,7 +326,7 @@ $$e^{\mathbf{A}_c T} = \mathbf{V}\,e^{\boldsymbol{\Lambda} T}\,\mathbf{V}^{-1}, 
 
 $\det(\lambda\mathbf{I} - \mathbf{A}_c) = (\lambda + 2)(\lambda + 1)$, so the eigenvalues are real: $\lambda_1 = -2$ and $\lambda_2 = -1$.
 
-**Step 2 — the discrete $\mathbf{A}_D$.** The eigenvalues are distinct, so $\mathbf{A}_c$ is diagonalizable and we run the recipe above. Eigenvectors: for $\lambda_1 = -2$ take $\vec{v}_1 = \begin{bmatrix} 1 \\ -1 \end{bmatrix}$, for $\lambda_2 = -1$ take $\vec{v}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$. Hence
+**Step 2 — the discrete $\mathbf{A}_D$.** The eigenvalues are distinct, so $\mathbf{A}_c$ is diagonalizable and we run the recipe above. Eigenvectors: for $\lambda_1 = -2$ take $\vec{v}_1 = \tvec{1, -1}$, for $\lambda_2 = -1$ take $\vec{v}_2 = \tvec{0, 1}$. Hence
 
 $$\mathbf{V} = \begin{bmatrix} 1 & 0 \\ -1 & 1 \end{bmatrix}, \qquad \mathbf{V}^{-1} = \begin{bmatrix} 1 & 0 \\ 1 & 1 \end{bmatrix}, \qquad \boldsymbol{\Lambda} = \begin{bmatrix} -2 & 0 \\ 0 & -1 \end{bmatrix}$$
 
@@ -341,7 +341,7 @@ $$\mathbf{A}_c^{-1} = \begin{bmatrix} -\frac{1}{2} & 0 \\ -\frac{1}{2} & -1 \end
 
 $$\mathbf{B}_D = (\mathbf{A}_D - \mathbf{I})\mathbf{A}_c^{-1}\mathbf{B}_c \approx \begin{bmatrix} 0 \\ 0.095 \end{bmatrix}$$
 
-Sanity check: for a short $T$ both matrices must be close to their first-order (Euler) versions, $\mathbf{A}_D \approx \mathbf{I} + \mathbf{A}_c T = \begin{bmatrix} 0.8 & 0 \\ 0.1 & 0.9 \end{bmatrix}$ and $\mathbf{B}_D \approx \mathbf{B}_c T = \begin{bmatrix} 0 \\ 0.1 \end{bmatrix}$ — and they are. The exact $\mathbf{B}_D = \begin{bmatrix} 0 \\ 1 - e^{-0.1} \end{bmatrix}$ keeps the $0$ on top: $u$ never reaches $x_1$ in continuous time, so sampling cannot make it.
+Sanity check: for a short $T$ both matrices must be close to their first-order (Euler) versions, $\mathbf{A}_D \approx \mathbf{I} + \mathbf{A}_c T = \begin{bmatrix} 0.8 & 0 \\ 0.1 & 0.9 \end{bmatrix}$ and $\mathbf{B}_D \approx \mathbf{B}_c T = \tvec{0, 0.1}$ — and they are. The exact $\mathbf{B}_D = \tvec{0, 1 - e^{-0.1}}$ keeps the $0$ in the first entry: $u$ never reaches $x_1$ in continuous time, so sampling cannot make it.
 
 ```{=latex}
 \end{example}
@@ -492,7 +492,7 @@ and at $k = 0$ this collapses to $\mathbf{A}^0 = \mathbf{P}_1 + \mathbf{P}_2 = \
 \begin{example}[frametitle={Example - the $z$-domain route, double pole}]
 ```
 
-The previous example had distinct poles; this one has a repeated pole. Take $\mathbf{A} = \begin{bmatrix} 1 & 0 \\ -\frac{1}{100} & 1 \end{bmatrix}$ and $\mathbf{B} = \begin{bmatrix} 100 \\ 40 \end{bmatrix}$, with zero initial conditions and a unit step input $u[k] = 1$. All we need is the forced term of the $z$-domain solution just derived:
+The previous example had distinct poles; this one has a repeated pole. Take $\mathbf{A} = \begin{bmatrix} 1 & 0 \\ -\frac{1}{100} & 1 \end{bmatrix}$ and $\mathbf{B} = \tvec{100, 40}$, with zero initial conditions and a unit step input $u[k] = 1$. All we need is the forced term of the $z$-domain solution just derived:
 
 $$\vec{X}(z) = (z\mathbf{I} - \mathbf{A})^{-1}\mathbf{B}\,U(z)$$
 
@@ -532,7 +532,7 @@ $$\vec{x}[k] = \begin{bmatrix} 100k \\[2pt] \frac{k(81-k)}{2} \end{bmatrix}$$
 
 The question this example answers — at which step does a state come back to zero? $x_2[k] = \frac{k(81-k)}{2}$ vanishes at $k = 0$ and again at $k = 81$, so the second state returns to zero after 81 steps. The first state, $x_1[k] = 100k$, only ever touches zero at $k = 0$.
 
-Sanity check: $\vec{x}[1] = \begin{bmatrix} 100 \\ 40 \end{bmatrix} = \mathbf{B}$, as it must from $\vec{x}[1] = \mathbf{B}u[0]$. And the same resolvent is the $\mathbf{A}^k$ machine from the section header: $\mathbf{A}^k = \mathcal{Z}^{-1}\{z(z\mathbf{I}-\mathbf{A})^{-1}\} = \begin{bmatrix} 1 & 0 \\[2pt] -\frac{k}{100} & 1 \end{bmatrix}$.
+Sanity check: $\vec{x}[1] = \tvec{100, 40} = \mathbf{B}$, as it must from $\vec{x}[1] = \mathbf{B}u[0]$. And the same resolvent is the $\mathbf{A}^k$ machine from the section header: $\mathbf{A}^k = \mathcal{Z}^{-1}\{z(z\mathbf{I}-\mathbf{A})^{-1}\} = \begin{bmatrix} 1 & 0 \\[2pt] -\frac{k}{100} & 1 \end{bmatrix}$.
 
 ```{=latex}
 \end{example}
@@ -565,7 +565,7 @@ Again take $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -0.1 & 0.7 \end{bmatrix}$.
 
 **Step 1 — eigenvalues:** $\det(\mathbf{A}-\lambda\mathbf{I}) = \lambda^2 - 0.7\lambda + 0.1 = (\lambda-0.5)(\lambda-0.2)$, so $\lambda_1 = 0.2$ and $\lambda_2 = 0.5$.
 
-**Step 2 — eigenvectors $\mathbf{V}$ and $\mathbf{V}^{-1}$:** for $\lambda_1 = 0.2$ take $\vec{v}_1 = \begin{bmatrix} 1 \\ 0.2 \end{bmatrix}$, for $\lambda_2 = 0.5$ take $\vec{v}_2 = \begin{bmatrix} 1 \\ 0.5 \end{bmatrix}$, so
+**Step 2 — eigenvectors $\mathbf{V}$ and $\mathbf{V}^{-1}$:** for $\lambda_1 = 0.2$ take $\vec{v}_1 = \tvec{1, 0.2}$, for $\lambda_2 = 0.5$ take $\vec{v}_2 = \tvec{1, 0.5}$, so
 
 $$\mathbf{V} = \begin{bmatrix} 1 & 1 \\ 0.2 & 0.5 \end{bmatrix}, \qquad
 \mathbf{V}^{-1} = \begin{bmatrix} \frac{5}{3} & -\frac{10}{3} \\ -\frac{2}{3} & \frac{10}{3} \end{bmatrix}$$

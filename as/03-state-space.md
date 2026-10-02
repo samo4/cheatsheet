@@ -481,7 +481,7 @@ which matches the Taylor result.
 
 Now let's do something useful with $\Phi$: **the step response**.
 
-Take zero initial state $\vec{x}(0) = \vec{0}$, a step input $u(t) = 5$ (constant for $t \ge 0$), and $\mathbf{B}^{\mathsf{T}} = \left[1\ 0\right]$. The homogeneous term in the boxed solution above dies, leaving the forced convolution:
+Take zero initial state $\vec{x}(0) = \vec{0}$, a step input $u(t) = 5$ (constant for $t \ge 0$), and $\mathbf{B} = \tvec{1, 0}$. The homogeneous term in the boxed solution above dies, leaving the forced convolution:
 
 $$
 \vec{x}(t) = \int_0^t \underbrace{e^{\mathbf{A}(t-\tau)}}_{\Phi(t-\tau)}\,\mathbf{B}\,u(\tau)\,d\tau = e^{\mathbf{A}t}\int_0^t e^{-\mathbf{A}\tau}\,\mathbf{B}\,u(\tau)\,d\tau = 5\,e^{\mathbf{A}t}\int_0^t e^{-\mathbf{A}\tau}\,\mathbf{B}\,d\tau
@@ -509,7 +509,7 @@ $$
 = \frac{5}{2}\begin{bmatrix} 1 - e^{-2t} \\[2pt] 1 - 2e^{-t} + e^{-2t} \end{bmatrix}
 $$
 
-Sanity check: $\vec{x}(0) = \vec{0}$, as started. And the final value can be had without any integral — at rest $\dot{\vec{x}} = \vec{0}$, so $\vec{x}(\infty) = -\mathbf{A}^{-1}\mathbf{B}\cdot 5 = -\frac{1}{2}\begin{bmatrix} -1 & 0 \\ -1 & -2 \end{bmatrix}\begin{bmatrix} 1 \\ 0 \end{bmatrix}\cdot 5 = \frac{5}{2}\begin{bmatrix} 1 \\ 1 \end{bmatrix}$, exactly where both entries above settle.
+Sanity check: $\vec{x}(0) = \vec{0}$, as started. And the final value can be had without any integral — at rest $\dot{\vec{x}} = \vec{0}$, so $\vec{x}(\infty) = -\mathbf{A}^{-1}\mathbf{B}\cdot 5 = -\frac{1}{2}\begin{bmatrix} -1 & 0 \\ -1 & -2 \end{bmatrix}\begin{bmatrix} 1 \\ 0 \end{bmatrix}\cdot 5 = \frac{5}{2}\tvec{1, 1}$, exactly where both entries above settle.
 
 ```{=latex}
 \end{example}
@@ -564,7 +564,7 @@ $$
 \end{bmatrix}
 $$
 
-**Step 2 — solve the state equation.** Plug $\Phi$ into the boxed nonhomogeneous solution above ($t_0 = 0$, $\vec{u} = 1$, $\mathbf{B} = [0, g]^T$):
+**Step 2 — solve the state equation.** Plug $\Phi$ into the boxed nonhomogeneous solution above ($t_0 = 0$, $\vec{u} = 1$, $\mathbf{B} = \tvec{0, g}$):
 
 $$
 \vec{x}(t) = \Phi(t)\vec{x}_0 + \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau

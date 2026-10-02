@@ -10,8 +10,8 @@ We have electric circuit on the schematic below.
 \input{tikz/kolokvij-2023-circuit.tex}
 ```
 
-a. Find state-space equations of the circuit in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where $\vec{x} = [i_L, v_C]^T$ and $\vec{u} = [i_g, v_g]^T$.
-b. Find the matrix equation for response $\vec{y} = [ v_{R2}, v]^T$.
+a. Find state-space equations of the circuit in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where $\vec{x} = \tvec{i_L, v_C}$ and $\vec{u} = \tvec{i_g, v_g}$.
+b. Find the matrix equation for response $\vec{y} = \tvec{v_{R2}, v}$.
 
 ### Part a. (ground at the bottom rail)
 
@@ -57,7 +57,7 @@ Partially elastic crash of an object to the wall is modeled with a spring and a 
 \input{tikz/kolokvij-2023-crash.tex}
 ```
 
-a. Model the crash with state equations in the form $\dot{\vec{x}} = \mathbf{A}\vec{x}$, where $\vec{x} = [x, v]^T$
+a. Model the crash with state equations in the form $\dot{\vec{x}} = \mathbf{A}\vec{x}$, where $\vec{x} = \tvec{x, v}$
 b. Write the response equation in the form of $y = \mathbf{C}\vec{x}$, where $y$ is the entire external force acting on the object $y(t) = F(t)$.
 c. With Laplace transformation find the solution of the system $\vec{x}(t)$ for parameters m=5kg, k=20N/m, b=25Ns/m and initial speed of v(0) = -10m/s
 d. What's the maximum force $F_{\max}$ acting on the object during the crash?
@@ -132,7 +132,7 @@ The impact instant is the maximum (the stationary point is a minimum during the 
 
 ## Problem 3 (2024-11-22 / 1)
 
-For the circuit above we want to write down the state-space equations in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where the state vector $\vec{x} = [i_L, v_C]^T$ and $\vec{u} = [v_{g1}, i_{g2}]^T$.
+For the circuit above we want to write down the state-space equations in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where the state vector $\vec{x} = \tvec{i_L, v_C}$ and $\vec{u} = \tvec{v_{g1}, i_{g2}}$.
 
 ```{=latex}
 \begin{center}
@@ -256,7 +256,7 @@ with $\mathbf{A} = \begin{bmatrix} -\frac{R_1}{L} & -\frac{1}{L} \\ \frac{1}{C} 
 
 ### Problem 4a (2021-01-26 / 1)
 
-aka what if you accidentally ground the wrong rail? The circuit is the same as in Problem 1, but the bottom rail is not grounded. Instead, the top rail is grounded. Find the state-space equations in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where $\vec{x} = [i_L, v_C]^T$ and $\vec{u} = [i_g, v_g]^T$.
+aka what if you accidentally ground the wrong rail? The circuit is the same as in Problem 1, but the bottom rail is not grounded. Instead, the top rail is grounded. Find the state-space equations in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where $\vec{x} = \tvec{i_L, v_C}$ and $\vec{u} = \tvec{i_g, v_g}$.
 
 
 ```text

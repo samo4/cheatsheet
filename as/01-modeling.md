@@ -309,7 +309,7 @@ Sanity check: the voltages around the loop add up to the source, $R_1 i_L + (v_g
 \input{tikz/example-circuit.tex}
 ```
 
-For the circuit above, we want to write the state-space equations in matrix form, with state vector $\vec{x} = [i_L, v_C]^T$ and input $\vec{u} = [v_g, i_g]^T$. No output is specified, so only the state equation is wanted.
+For the circuit above, we want to write the state-space equations in matrix form, with state vector $\vec{x} = \tvec{i_L, v_C}$ and input $\vec{u} = \tvec{v_g, i_g}$. No output is specified, so only the state equation is wanted.
 
 **Step 1** Decide on nodes.
 
