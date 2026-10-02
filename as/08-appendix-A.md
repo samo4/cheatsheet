@@ -4,22 +4,22 @@
 
 ### Taylor series
 
-Near a point $x_0$ a smooth function is its polynomial expansion — value, slope, curvature and all higher derivatives matched there:
+Near a point $x_0$ a smooth function equals its polynomial expansion, which matches the value, slope, curvature and all higher derivatives there:
 
 $$
 f(x) = \sum_{k=0}^{\infty} \frac{f^{(k)}(x_0)}{k!}(x-x_0)^k
 = f(x_0) + f'(x_0)(x-x_0) + \frac{f''(x_0)}{2!}(x-x_0)^2 + \cdots
 $$
 
-The $k!$ is the leftover from differentiating $x^k$ $k$ times, and the coefficients are read off the derivatives at $x_0$. Expanding at $x_0 = 0$ is the Maclaurin series, and three of those do all the work in these notes:
+The $k!$ comes from differentiating $x^k$ $k$ times, and the coefficients are the derivatives at $x_0$. Expanding at $x_0 = 0$ gives the Maclaurin series. The one these notes use most is that of $e^x$:
 
 $$
-e^{x} = \underbrace{1}_{\cos} + \underbrace{x}_{\sin} + \underbrace{\frac{x^{2}}{2!}}_{\cos} + \underbrace{\frac{x^{3}}{3!}}_{\sin} + \underbrace{\frac{x^{4}}{4!}}_{\cos} + \underbrace{\frac{x^{5}}{5!}}_{\sin} + \cdots
+e^{x} = \underbrace{1}_{\cosh} + \underbrace{x}_{\sinh} + \underbrace{\frac{x^{2}}{2!}}_{\cosh} + \underbrace{\frac{x^{3}}{3!}}_{\sinh} + \underbrace{\frac{x^{4}}{4!}}_{\cosh} + \underbrace{\frac{x^{5}}{5!}}_{\sinh} + \cdots
 $$
 
-The underbraces sort the terms by parity — the even powers build $\cos$, the odd powers build $\sin$.
+The underbraces sort the terms by parity: the even powers build $\cosh x$, the odd powers $\sinh x$. With $x = j\theta$ the signs alternate, and the same two groups become $\cos\theta$ and $j\sin\theta$ (Euler's formula).
 
-Cutting after the linear term leaves the tangent line $f(x) \approx f(x_0) + f'(x_0)(x-x_0)$, good while the deviation $|x - x_0|$ is small and off by the size of the first discarded term — see the Linearization chapter.
+Cutting after the linear term leaves the tangent line $f(x) \approx f(x_0) + f'(x_0)(x-x_0)$. It is good while the deviation $|x - x_0|$ is small, with an error of the size of the first discarded term (see the Linearization chapter).
 
 ## Continuous-time math
 
@@ -31,26 +31,28 @@ $$
 F(s) = \mathcal{L}\{f(t)\} = \int_0^\infty f(t)\, e^{-st}\, dt
 $$
 
-Its superpower is that it turns differentiation into algebra (integration by parts):
+Its main use is that it turns differentiation into algebra (by integration by parts):
 
 $$
 \mathcal{L}\{\dot{f}(t)\} = sF(s) - f(0)
 $$
 
-the $f(0)$ term carrying the initial condition. Along with linearity this is why an ODE becomes an algebraic equation — exactly what Section 5 does to $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$. A few workhorse pairs:
+the $f(0)$ term carrying the initial condition. Together with linearity, this is why an ODE becomes an algebraic equation, which is what the State-space and Transfer functions chapters do to $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$. The most-used pairs:
 
-$$
-\mathcal{L}\{1\} = \frac{1}{s}, \qquad
-\mathcal{L}\{t\} = \frac{1}{s^2}, \qquad
-$$
-$$
-\mathcal{L}\{e^{at}\} = \frac{1}{s-a}, \qquad
-\mathcal{L}\{t e^{at}\} = \frac{1}{(s-a)^2}
-$$
-$$
-\mathcal{L}\{\sin\omega t\} = \frac{\omega}{s^2+\omega^2}, \qquad
-\mathcal{L}\{\cos\omega t\} = \frac{s}{s^2+\omega^2}
-$$
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
+\begin{array}{ll}
+\mathcal{L}\{1\} = \dfrac{1}{s}, \qquad & \mathcal{L}\{t\} = \dfrac{1}{s^2} \\[12pt]
+\mathcal{L}\{e^{at}\} = \dfrac{1}{s-a}, \qquad & \mathcal{L}\{t e^{at}\} = \dfrac{1}{(s-a)^2} \\[12pt]
+\mathcal{L}\{\sin\omega t\} = \dfrac{\omega}{s^2+\omega^2}, \qquad & \mathcal{L}\{\cos\omega t\} = \dfrac{s}{s^2+\omega^2}
+\end{array}
+$}
+\endgroup
+\]
+```
 
 ### Partial fraction decomposition
 
@@ -64,7 +66,7 @@ Inverse Laplace transforms are read off a table, so the goal is to split a ratio
 \begin{example}[frametitle={Example - partial fractions}]
 ```
 
-Split $\dfrac{1}{(s+1)^2(s+2)}$ — a repeated factor plus a distinct one, so three coefficients:
+Split $\dfrac{1}{(s+1)^2(s+2)}$, a repeated factor plus a distinct one, so three coefficients:
 
 $$
 \frac{1}{(s+1)^2(s+2)} = \frac{A}{s+1} + \frac{B}{(s+1)^2} + \frac{C}{s+2}
@@ -76,7 +78,7 @@ $$
 1 = A(s+1)(s+2) + B(s+2) + C(s+1)^2
 $$
 
-Plug in the roots to kill terms: $s = -2$ gives $1 = C$, and $s = -1$ gives $1 = B$. The last coefficient comes from the $s^2$ terms: $0 = A + C$, so $A = -1$:
+Plug in the roots to eliminate terms: $s = -2$ gives $1 = C$, and $s = -1$ gives $1 = B$. The last coefficient comes from the $s^2$ terms: $0 = A + C$, so $A = -1$:
 
 $$
 \frac{1}{(s+1)^2(s+2)} = -\frac{1}{s+1} + \frac{1}{(s+1)^2} + \frac{1}{s+2}
@@ -88,7 +90,7 @@ $$
 \mathcal{L}^{-1}\left\{\frac{1}{(s+1)^2(s+2)}\right\} = -e^{-t} + t e^{-t} + e^{-2t}
 $$
 
-Sanity check: at a convenient point, $s = 0$, both sides give $\frac{1}{2} = -1 + 1 + \frac{1}{2}$. In time, the denominator is three degrees above the numerator, so the response must start flat, $f(0) = \dot{f}(0) = 0$ — and it does: $f(0) = -1 + 0 + 1 = 0$, $\dot{f}(0) = 1 + 1 - 2 = 0$.
+Sanity check: at a convenient point, $s = 0$, both sides give $\frac{1}{2} = -1 + 1 + \frac{1}{2}$. In time, the denominator is three degrees above the numerator, so the response must start flat, $f(0) = \dot{f}(0) = 0$, and it does: $f(0) = -1 + 0 + 1 = 0$, $\dot{f}(0) = 1 + 1 - 2 = 0$.
 
 ```{=latex}
 \end{example}

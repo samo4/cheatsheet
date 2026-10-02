@@ -6,15 +6,15 @@ $$
 y(t) = (h * u)(t) = \int_0^t h(t-\tau)\, u(\tau)\, d\tau
 $$
 
-But, no matter how beautiful it is (or because of it), convolution is inconvenient to work with: systems in series give nested integrals, and a feedback loop gives an integral equation. We use a mathematical trick to move everything into another space, where finding solutions becomes easier. The Laplace transform is one of those tricks. It turns convolution into multiplication,
+Elegant as it is, convolution is inconvenient to work with: systems in series give nested integrals, and a feedback loop gives an integral equation. A transform moves the problem into another domain where it is easier to solve. The Laplace transform turns convolution into multiplication,
 
 $$
 Y(s) = G(s)\,U(s), \qquad G(s) = \mathcal{L}\{h(t)\}
 $$
 
-and $G(s)$ is what we call the transfer function. Interconnections of systems become algebra on transfer functions. The same property holds for other transforms, most prominently Fourier and Z. 
+and $G(s)$ is what we call the transfer function. Interconnections of systems become algebra on transfer functions. The same property holds for other transforms, most prominently Fourier and Z.
 
-The Fourier transform gives the frequency response $G(j\omega)$, which has the most direct meaning: a sinusoid of frequency $\omega$ comes out as a sinusoid of the same frequency, scaled by $|G(j\omega)|$ and shifted by $\angle G(j\omega)$. This is how we think about signals as spectra and systems as filters, and it can be measured directly. Its limitation is convergence. As an ordinary integral, Fourier converges only for signals that die out, which rules out steps, ramps and unstable systems. Laplace adds a decaying factor $e^{-\sigma t}$ with $s = \sigma + j\omega$ and so handles all of them. Fourier is the special case $\sigma = 0$: where both converge, $G(j\omega)$ is simply $G(s)$ on the imaginary axis. The Z-transform does the same job for sampled signals and gives $G(z)$ (see Discrete systems). This chapter uses Laplace.
+The Fourier transform gives the frequency response $G(j\omega)$, which has the most direct meaning: a sinusoid of frequency $\omega$ comes out as a sinusoid of the same frequency, scaled by $|G(j\omega)|$ and shifted by $\angle G(j\omega)$. This is how we think about signals as spectra and systems as filters, and it can be measured directly. Its limitation is convergence. As an ordinary integral, Fourier converges only for signals that decay, which rules out steps, ramps and unstable systems. Laplace adds a decaying factor $e^{-\sigma t}$ with $s = \sigma + j\omega$ and so handles all of them. Fourier is the special case $\sigma = 0$: where both converge, $G(j\omega)$ is $G(s)$ on the imaginary axis. The Z-transform does the same job for sampled signals and gives $G(z)$ (see Discrete systems). This chapter uses Laplace.
 
 ## Scalar transfer function
 
@@ -111,7 +111,7 @@ G(s) = \mathbf{C}(s\mathbf{I}-\mathbf{A})^{-1}\mathbf{B}
 = \frac{(s+4)(s+5)}{(s+1)(s+2)(s+3)}
 $$
 
-The poles are the eigenvalues of $\mathbf{A}$ ($-1, -2, -3$ — see Modes of an LTI system) and the zeros are $-4, -5$.
+The poles are the eigenvalues of $\mathbf{A}$ ($-1, -2, -3$; see Modes of an LTI system) and the zeros are $-4, -5$.
 
 ```{=latex}
 \end{example}
@@ -119,7 +119,7 @@ The poles are the eigenvalues of $\mathbf{A}$ ($-1, -2, -3$ — see Modes of an 
 
 ## Block diagrams
 
-A block diagram is the drawn form of the transfer-function algebra from the introduction. Each block is a transfer function, arrows are signals, summing junctions add or subtract signals, and pickoff points copy a signal. It is how engineers communicate a system without anyone's internal equations.
+A block diagram is the drawn form of the transfer-function algebra from the introduction. Each block is a transfer function, arrows are signals, summing junctions add or subtract signals, and pickoff points copy a signal. Engineers use it to describe a system without writing out its internal equations.
 
 The basic connections each reduce to a single transfer function:
 
@@ -127,7 +127,7 @@ $$
 \text{series: } G_1 G_2, \qquad \text{parallel: } G_1 + G_2, \qquad \text{feedback: } \frac{G}{1 + GH}
 $$
 
-Repeating these reductions, together with moving summing junctions and pickoff points, collapses any diagram into one transfer function. Reading a diagram runs the other way, from boxes and arrows back to equations.
+Repeating these reductions, together with moving summing junctions and pickoff points, reduces any diagram to one transfer function. Reading a diagram runs the other way, from boxes and arrows back to equations.
 
 ## Feedback
 
@@ -153,7 +153,7 @@ Summing junctions and pickoff points slide through a diagram, but only if the br
 \input{tikz/block-diagram-summing-move.tex}
 ```
 
-puts a copy of $G$ on *every* branch through the junction, because $G(u_1 + u_2) = Gu_1 + Gu_2$. Moving it the other way — from after the block back to before — divides the bypassed branches by $G$ instead.
+puts a copy of $G$ on *every* branch through the junction, because $G(u_1 + u_2) = Gu_1 + Gu_2$. Moving it the other way, from after the block back to before it, divides the bypassed branches by $G$ instead.
 
 Pickoff points compensate the opposite way. Moving the tap from after $G$ to before it,
 
@@ -231,7 +231,7 @@ $$
 + \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}\begin{bmatrix} u_1 \\ u_2 \end{bmatrix}
 $$
 
-Sanity check: $\mathbf{A}$ is triangular, so its eigenvalues $-3$ and $-4$ are read off the diagonal — exactly the poles of the two cores. And one channel end to end: $u_2 \to y_2$ is core 1 alone, $\frac{1}{s+3}$, while the matrices give $\rvec{1, 0}(s\mathbf{I} - \mathbf{A})^{-1}\tvec{1, 0} = \frac{1}{s+3}$.
+Sanity check: $\mathbf{A}$ is triangular, so its eigenvalues $-3$ and $-4$ are read off the diagonal; they are the poles of the two cores. And one channel end to end: $u_2 \to y_2$ is core 1 alone, $\frac{1}{s+3}$, while the matrices give $\rvec{1, 0}(s\mathbf{I} - \mathbf{A})^{-1}\tvec{1, 0} = \frac{1}{s+3}$.
 
 ```{=latex}
 \end{example}

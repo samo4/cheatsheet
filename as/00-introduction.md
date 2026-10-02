@@ -26,24 +26,24 @@ This is material you have met before; it is here only as a reminder and to fix t
 Only a few distinctions actually change the mathematics, so these are the ones we keep:
 
 - *Static* — memoryless, the output depending only on the present input, $y = f(u)$, versus *dynamic* with memory, where the past lingers and forces a differential equation and a state.
-- *Lumped*: finitely many state variables obeying an ODE, so the model is finite-dimensional. *Distributed*: the state is a field $w(t, \vec{r})$, a function of space as well as time, obeying a PDE, so there are infinitely many states. Limit between the two: connections $d < \frac{\lambda}{20}$
+- *Lumped*: finitely many state variables obeying an ODE, so the model is finite-dimensional. *Distributed*: the state is a field $w(t, \vec{r})$, a function of space as well as time, obeying a PDE, so there are infinitely many states. A rule of thumb for circuits: they can be treated as lumped while the connections are shorter than $d < \frac{\lambda}{20}$.
 - *Continuous-time*: signals are defined at every instant. *Discrete-time*: only at samples $kT$.
 - *Deterministic*: the same initial state and input always produce the same trajectory. *Stochastic*: randomness enters, and only statistics are predictable.
 - *Homogeneous*: no input; the system runs on its initial state alone. *Non-homogeneous*: an input drives it.
 
-To get our mathematical tools, we need two properties: *linear*, *time-invariant*.
+Our mathematical tools need two more properties: *linear* and *time-invariant*.
 
 ### Is it linear?
 
-A system is linear when it obeys **superposition**: adding inputs adds their responses, and scaling an input scales its response. That is the linear-map condition you already know — for any $u_1, u_2$ and any constants $a, b$,
+A system is linear when it obeys **superposition**: adding inputs adds their responses, and scaling an input scales its response. This is the linear-map condition you already know: for any $u_1, u_2$ and any constants $a, b$,
 
 $$L(a u_1 + b u_2) = a\,L(u_1) + b\,L(u_2).$$
 
-The two halves have names — additivity, $L(u_1 + u_2) = L(u_1) + L(u_2)$, and homogeneity, $L(a u) = a\,L(u)$ — and both must hold.
+The two halves are called additivity, $L(u_1 + u_2) = L(u_1) + L(u_2)$, and homogeneity, $L(a u) = a\,L(u)$; both must hold.
 
-Linearity is one and the same property whether $L$ acts on scalars, vectors, or signals — only the space it acts on changes.
+Linearity is the same property whether $L$ acts on scalars, vectors or signals; only the space changes.
 
-For a linear system the test is algebraic: every term must be proportional to one signal. Products ($y u$, $y_1 y_2$), powers ($y^2$, $u^2$), and nonlinear functions ($e^y$, $\sin u$, $\sqrt{y}$) break it. A term that involves neither the output nor the input — a prescribed forcing such as $4t$ — is not a nonlinearity, though it can destroy time invariance. A constant term is harmless only when it is an input; as a fixed offset it breaks linearity, as the example below shows.
+For a linear system the test is algebraic: every term must be proportional to one signal. Products ($y u$, $y_1 y_2$), powers ($y^2$, $u^2$), and nonlinear functions ($e^y$, $\sin u$, $\sqrt{y}$) break it. A term that involves neither the output nor the input (a prescribed forcing such as $4t$) is not a nonlinearity, though it can destroy time invariance. A constant term is harmless only when it is an input; as a fixed offset it breaks linearity, as the example below shows.
 
 ```{=latex}
 \begin{example}[frametitle={Example - testing linearity}]
@@ -51,7 +51,7 @@ For a linear system the test is algebraic: every term must be proportional to on
 
 Test the system $y = \alpha u + \beta$: a gain with a constant offset.
 
-Homogeneity demands $L(au) = a\,L(u)$ for every $a$, and $a = 0$ alone forces $L(0) = 0$. Here $u = 0$ gives $y = \beta$, so any nonzero offset breaks linearity by itself — the map is affine, not linear. Additivity fails with it: two separate inputs give $\alpha(u_1 + u_2) + 2\beta$, while the input $u_1 + u_2$ gives only $\alpha(u_1 + u_2) + \beta$.
+Homogeneity demands $L(au) = a\,L(u)$ for every $a$, and $a = 0$ alone forces $L(0) = 0$. Here $u = 0$ gives $y = \beta$, so any nonzero offset breaks linearity by itself: the map is affine, not linear. Additivity fails with it: two separate inputs give $\alpha(u_1 + u_2) + 2\beta$, while the input $u_1 + u_2$ gives only $\alpha(u_1 + u_2) + \beta$.
 
 The same additive term is harmless in $\dot{y} = 5y + 4t$, because there it is the input rather than a fixed part of the system.
 
@@ -69,27 +69,13 @@ Take an unknown box, say an audio amplifier, with a function generator on its in
 
 **Zero in, zero out.** Switch the generator off. Any steady output voltage is the offset $\beta$ from the example above, and it breaks linearity on its own.
 
-**Homogeneity.** Feed a sine of amplitude $U$, then $2U$, then $4U$. A linear box doubles its output every time. Once the peaks flatten, the amplifier is clipping against its supply rails: that is saturation, and the box is linear only below that amplitude.
+**Homogeneity.** Feed a sine of amplitude $U$, then $2U$, then $4U$. A linear box doubles its output every time.
 
-**A sine in, the same sine out.** Look at the output spectrum (the oscilloscope's FFT mode). An LTI box can change only the amplitude and phase of a sine, so a single line at the input frequency $f$ should come out. Lines at $2f, 3f, \dots$ are harmonic distortion, the signature of terms like $u^2$ and $u^3$.
+**A sine in, the same sine out.** Look at the output spectrum (the oscilloscope's FFT mode). An LTI box can change only the amplitude and phase of a sine, so a single line at the input frequency $f$ should come out.
 
-**Additivity with two orthogonal signals.** Use both generator channels and feed the sum $u = u_1 + u_2$ of two *orthogonal* signals, whose inner product over a common period $T$ vanishes:
+**Additivity.** Use both generator channels and feed the sum of two sines at different frequencies $f_1 \neq f_2$. A linear box answers with the sum of the two separate responses, so the spectrum shows lines only at $f_1$ and $f_2$, each the same as with that sine alone. A nonlinear term such as $u^2$ mixes the two and adds lines at $f_1 \pm f_2$ (intermodulation). Any output power at other frequencies measures how nonlinear the box is.
 
-$$
-\langle u_1, u_2 \rangle = \frac{1}{T}\int_0^T u_1(t)\,u_2(t)\,dt = 0.
-$$
-
-Two sines at different frequencies $f_1 \neq f_2$ are the natural choice. Orthogonality is what makes one measurement enough. Each input is a separate direction in signal space, so the two responses can be pulled back out of the combined output by projection: correlate the output with each frequency (the FFT bins at $f_1$ and $f_2$) and compare each part with the response to that input alone.
-
-An LTI box keeps each sine at its own frequency, so its two responses stay orthogonal and their powers add by Pythagoras:
-
-$$
-\|y\|^2 = \|y_1\|^2 + \|y_2\|^2.
-$$
-
-The output lies entirely in the span of the two input directions. A nonlinear box leaks energy out of that span. A term like $u^2$ contains the cross product $2u_1u_2$, which produces lines at $f_1 \pm f_2$ (intermodulation), frequencies orthogonal to both inputs that neither input contained. Any output power outside $f_1$ and $f_2$ is a direct measure of how nonlinear the box is.
-
-An experiment can disprove linearity but never prove it. Passing every test shows only that the box is linear *over the amplitudes and frequencies you tried*. This is the bench version of linearization: real systems are linear only in a limited range.
+An experiment can disprove linearity but never prove it: passing every test shows only that the box is linear over the amplitudes and frequencies you tried. Real systems are linear only in a limited range.
 
 ```{=latex}
 \end{example}
@@ -97,7 +83,7 @@ An experiment can disprove linearity but never prove it. Passing every test show
 
 ### Is it time invariant?
 
-A system is time-invariant if delaying the input by $\tau$ delays the output by exactly $\tau$:
+A system is time-invariant if delaying the input by $\tau$ delays the output by the same $\tau$:
 
 $$
 \text{if } u(t) \mapsto y(t), \qquad \text{then } u(t - \tau) \mapsto y(t - \tau) \quad \text{for every } \tau.
@@ -111,7 +97,7 @@ For an ODE the rule is to look for an explicit $t$: a coefficient or forcing wri
 
 **$\dot{y} = 5y + 4t$ — time-varying.** The coefficient $5$ is constant, but the forcing $4t$ depends explicitly on $t$: at $t = 0$ it drives with $0$, at $t = 10$ with $40$. A shift in time changes the equation, not merely the response.
 
-**$\dot{y} = 5y + u$ — time-invariant.** The same dynamics with the clock removed. Feed the ramp in as the input, $u(t) = 4t$: then $u(t - \tau) = 4(t - \tau)$ gives exactly the delayed response. Either way $\dot{y} = 5y + 4t$ is *linear*; it is time-invariant only if the $4t$ is the input rather than part of the model. The two properties are independent and must be checked separately.
+**$\dot{y} = 5y + u$ — time-invariant.** The same dynamics with the clock removed. Feed the ramp in as the input, $u(t) = 4t$: then $u(t - \tau) = 4(t - \tau)$ gives the delayed response. Either way $\dot{y} = 5y + 4t$ is *linear*; it is time-invariant only if the $4t$ is the input rather than part of the model. The two properties are independent and must be checked separately.
 
 ```{=latex}
 \end{example}
@@ -119,15 +105,15 @@ For an ODE the rule is to look for an explicit $t$: a coefficient or forcing wri
 
 ## The LTI class of dynamic systems
 
-One combination of mathematical classification (or properties) does nearly all the work in practice: *linear*, *time-invariant*, *lumped*, *continuous-time*, *deterministic*.
+One combination of properties does nearly all the work in practice: *linear*, *time-invariant*, *lumped*, *continuous-time*, *deterministic*.
 
 These are the linear time-invariant (LTI) systems.
 
 For them the mathematical toolbox is unusually complete: superposition, the eigenvalues and modes of the system, Laplace transforms, transfer functions, convolution, and with them stability, controllability, and observability. Each of those tools rests on linearity and time invariance and will be discussed in the following chapters.
 
-The justification is not that the world is LTI, but that a system can often be made LTI where and when we need it. Linearize around an equilibrium or along a trajectory and the deviations obey an LTI model (Linearization chapter); sample a continuous system and get a discrete-time one (Discrete chapter). Between them, a great many nonlinear, time-varying, and sampled systems become reachable.
+The justification is not that the world is LTI, but that a system can often be made LTI where and when we need it. Linearize around an equilibrium or along a trajectory and the deviations obey an LTI model (Linearization chapter); sample a continuous system and get a discrete-time one (Discrete chapter). Between them, a great many nonlinear, time-varying and sampled systems can be handled this way.
 
-Linearization does not help with the other two assumptions: the model must be lumped (finitely many states, an ODE — no partial differential equations, no delays) and deterministic (no noise). And even where linearization does apply, it erases phenomena no linear model can recover: multiple equilibria, hysteresis, saturation, chaos.
+Linearization does not help with the other two assumptions: the model must be lumped (finitely many states and an ODE: no partial differential equations, no delays) and deterministic (no noise). And even where linearization does apply, it erases phenomena no linear model can recover: multiple equilibria, hysteresis, saturation, chaos.
 
 Two kinds of systems fall outside.
 
@@ -135,7 +121,7 @@ Two kinds of systems fall outside.
 
 ### Distributed systems
 
-A drum is one of the two classical archetypes of a *distributed* system (the other being the telegrapher's equation). Its skin is a membrane: every point can move, so it has infinitely many states — not a finite vector $\vec{x}$ but a field $w(t, r, \theta)$, the displacement of each point. The governing equation is the two-dimensional wave equation, a partial differential equation in space and time,
+A drum is one of the two classical archetypes of a *distributed* system (the other being the telegrapher's equation). Its skin is a membrane: every point can move, so it has infinitely many states: not a finite vector $\vec{x}$ but a field $w(t, r, \theta)$, the displacement of each point. The governing equation is the two-dimensional wave equation, a partial differential equation in space and time,
 
 $$
 \frac{\partial^2 w}{\partial t^2} = c^2\left(\frac{\partial^2 w}{\partial r^2} + \frac{1}{r}\frac{\partial w}{\partial r} + \frac{1}{r^2}\frac{\partial^2 w}{\partial \theta^2}\right),
@@ -145,15 +131,15 @@ whose modes are Bessel-function shapes. Hitting the drum excites all of those mo
 
 ### Stochastic systems
 
-When you add randomness, the same initial state and input no longer give the same response, and only statistics are (hopefully) predictable. How much of our powerful toolbox survives depends on where the randomness enters. In the first example only the *input* is random and the dynamics are perfectly LTI, so the model still describes the average behaviour. In the second the state itself jumps at random times: there is no deterministic skeleton left to linearize, and LTI-based analysis has no entry point at all.
+When you add randomness, the same initial state and input no longer give the same response, and only statistics are (hopefully) predictable. How much of the toolbox survives depends on where the randomness enters. In the first example only the *input* is random and the dynamics are LTI, so the model still describes the average behaviour. In the second the state itself jumps at random times: there is no deterministic model left to linearize, and LTI analysis does not apply at all.
 
 ```{=latex}
 \begin{example}[frametitle={Example - thermal noise in an RC circuit}]
 ```
 
-Thermal agitation of the electrons in a resistor puts a random voltage across it — Johnson–Nyquist noise — with zero mean and a flat spectrum $S_v = 4 k_B T R$. The RC low-pass filter is the textbook LTI system — one capacitor, one state — yet its output cannot be predicted, only described statistically.
+Thermal agitation of the electrons in a resistor puts a random voltage across it (Johnson–Nyquist noise), with zero mean and a flat spectrum $S_v = 4 k_B T R$. The RC low-pass filter is the textbook LTI system, with one capacitor and one state, yet its output cannot be predicted, only described statistically.
 
-The dynamics are perfectly LTI, but the *input* is not. Two identical experiments give different traces, though nothing about the circuit changed. The toolbox predicts trajectories; here only the statistics are predictable.
+The dynamics are LTI, but the *input* is random. Two identical experiments give different traces, though nothing about the circuit changed. The toolbox predicts trajectories; here only the statistics are predictable.
 
 ```{=latex}
 \end{example}
@@ -163,7 +149,7 @@ The dynamics are perfectly LTI, but the *input* is not. Two identical experiment
 \begin{example}[frametitle={Example - a packet queue}]
 ```
 
-Packets arrive at a router buffer at random instants and are served one at a time at mean rate $\mu$; the state is the number of packets in the system, an integer. There is no differential equation to write — the count sits still, then jumps by one at a random time — and the questions worth asking are already probabilistic: the mean delay, or the probability that the buffer overflows and a packet is lost.
+Packets arrive at a router buffer at random instants and are served one at a time at mean rate $\mu$; the state is the number of packets in the system, an integer. There is no differential equation to write: the count stays constant, then jumps by one at a random time. The questions worth asking are probabilistic from the start: the mean delay, or the probability that the buffer overflows and a packet is lost.
 
 There is nothing to linearize. The state is a count, not a real vector, and the jump times are random, so two runs of the same experiment give different sample paths.
 
@@ -232,7 +218,7 @@ It passes both tests, so the integrator is LTI.
 
 The drum fails because it is distributed, stochastic systems because they are random; either way there is no finite deterministic ODE, and both stay outside the toolbox of these notes. The honest title of these notes would be *lumped deterministic LTI systems*.
 
-Together, linearity and time invariance give far more than either does alone. Any input can be split into delayed, scaled copies of one elementary test signal: linearity makes the responses add, and time invariance makes every copy respond identically. So one experiment is enough — measure the response to a single short kick, the *impulse response* — and the response to any other input follows by superposition. The whole input–output behaviour is fixed by that one measurement.
+Together, linearity and time invariance give far more than either does alone. Any input can be split into delayed, scaled copies of one elementary test signal: linearity makes the responses add, and time invariance makes every copy respond identically. So one experiment is enough: measure the response to a single short kick, the *impulse response*, and the response to any other input follows by superposition. The whole input–output behaviour is fixed by that one measurement.
 
 ### What if $a$ is $\mathbf{A}$?
 
@@ -269,7 +255,7 @@ $$
 x(t) = x_0\,e^{at} = x_0\,e^{-t/RC}
 $$
 
-The voltage decays with the time constant $\tau = RC$: down to $37\,\%$ after $\tau$, below $1\,\%$ after $5\tau$. With $a > 0$ it would instead grow without bound, to infinity.
+The voltage decays with the time constant $\tau = RC$: down to $37\,\%$ after $\tau$, below $1\,\%$ after $5\tau$. With $a > 0$ it would instead grow without bound.
 
 **Step 5 — check**\
 $\dot{x} = a\,x_0 e^{at} = a x$, and $x(0) = x_0$.
@@ -284,7 +270,7 @@ $$
 \dot{\vec{x}} = \mathbf{A}\vec{x}, \qquad \vec{x}(0) = \vec{x}_0.
 $$
 
-Steps 2 to 4 break at once: there is no dividing by a vector and no logarithm of one. The answer, as we shall see, survives,
+Steps 2 to 4 break at once: there is no dividing by a vector and no logarithm of one. The answer still has the same form,
 
 $$
 \vec{x}(t) = e^{\mathbf{A}t}\vec{x}_0,
@@ -297,6 +283,6 @@ provided $e^{\mathbf{A}t}$ can be given a meaning, and the check of Step 5 goes 
 - the transfer function $\frac{b}{s-a}$ becomes $\mathbf{C}(s\mathbf{I} - \mathbf{A})^{-1}\mathbf{B}$ (Transfer functions),
 - $a^k$ becomes $\mathbf{A}^k$ (Discrete).
 
-The only genuinely new questions (can the input reach every state, can the output see every state) are the ones a single state cannot ask.
+The only new questions (can the input reach every state, can the output see every state) are the ones a single state cannot ask.
 
-Arbitrarily many states, but finitely many: with infinitely many, as in the drum, $\mathbf{A}$ is no longer a matrix.
+The number of states can be large but must be finite: with infinitely many, as in the drum, $\mathbf{A}$ is no longer a matrix.

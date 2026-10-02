@@ -24,7 +24,7 @@ $$
 \vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}
 $$
 
-with $\mathbf{A}$ the dynamics, $\mathbf{B}$ the input coupling, $\mathbf{C}$ the output coupling, and $\mathbf{D}$ the direct feedthrough — often, but certainly not always, $\mathbf{D} = \mathbf{0}$. The outputs are generally not the states themselves. $\mathbf{A}$ maps the state vector to its derivatives (i.e. 1:1) so it's a square matrix — which will come extremely handy in just a moment.
+with $\mathbf{A}$ the dynamics, $\mathbf{B}$ the input coupling, $\mathbf{C}$ the output coupling, and $\mathbf{D}$ the direct feedthrough, often $\mathbf{D} = \mathbf{0}$. The outputs are generally not the states themselves. $\mathbf{A}$ maps the state vector to its derivative, so it is square, which we will need shortly.
 
 A single second-order ODE is enough to show where the four matrices come from.
 
@@ -38,13 +38,12 @@ $$
 \ddot{y} + 2\dot{y} + 3y = 4u
 $$
 
-and define the states $x_1 = y$, $x_2 = \dot{y}$. The system is then just
-
+and define the states $x_1 = y$, $x_2 = \dot{y}$. Then
 
 $$\dot{x}_1 = x_2$$
 $$\dot{x}_2 = \ddot{y} = -3x_1 - 2x_2 + 4u$$
 
-which is exactly the state-space shape we are after:
+or, in matrix form,
 
 $$
 \begin{bmatrix} \dot{x_1} \\ \dot{x_2} \end{bmatrix} = \begin{bmatrix} 0 & 1 \\ -3 & -2 \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} + \begin{bmatrix} 0 \\ 4 \end{bmatrix}u, \qquad
@@ -65,7 +64,7 @@ The state variables are not unique. Reordering variables changes nothing but the
 \begin{example}[frametitle={Example - state variables are not unique}]
 ```
 
-Two elements give a state, a third gives a choice. A current source $i_g$ and a capacitor $C$ sit in parallel, and that pair drives a series $L$–$R$ branch.
+A current source $i_g$ and a capacitor $C$ in parallel drive a series $L$–$R$ branch.
 
 ```{=latex}
 \input{tikz/state-nonunique-scaling.tex}
@@ -83,7 +82,7 @@ $$
 \dot{\vec{x}} = \begin{bmatrix} 0 & -\frac{1}{C} \\ \frac{1}{L} & -\frac{R}{L} \end{bmatrix}\vec{x} + \begin{bmatrix} \frac{1}{C} \\ 0 \end{bmatrix}i_g.
 $$
 
-Now keep the circuit and change only the description: $\tilde{\vec{x}} = \tvec{u_C, u_R}$ — the capacitor voltage and the resistor voltage $u_R = R i_L$. The two state vectors are related by the invertible linear map $\tilde{\vec{x}} = \mathbf{T}^{-1}\vec{x}$, $\mathbf{T}^{-1} = \operatorname{diag}(1, R)$, so each determines the other and neither is privileged. Differentiating $u_R = R i_L$ and reusing the two equations above,
+Now keep the circuit but choose different states: $\tilde{\vec{x}} = \tvec{u_C, u_R}$, the capacitor voltage and the resistor voltage $u_R = R i_L$. The two state vectors are related by the invertible linear map $\tilde{\vec{x}} = \mathbf{T}^{-1}\vec{x}$, $\mathbf{T}^{-1} = \operatorname{diag}(1, R)$, so each determines the other. Differentiating $u_R = R i_L$ and reusing the two equations above,
 
 $$
 \dot{u}_C = \frac{1}{C}i_g - \frac{1}{CR}u_R, \qquad \dot{u}_R = \frac{R}{L}\left(u_C - u_R\right),
@@ -93,7 +92,7 @@ $$
 \dot{\tilde{\vec{x}}} = \begin{bmatrix} 0 & -\frac{1}{CR} \\ \frac{R}{L} & -\frac{R}{L} \end{bmatrix}\tilde{\vec{x}} + \begin{bmatrix} \frac{1}{C} \\ 0 \end{bmatrix}i_g.
 $$
 
-Every entry changed, but the circuit did not: the two matrices are similar, $\tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}$ (see Similarity transformation in the Linear algebra chapter), so they have the same eigenvalues and the same dynamics.
+Every entry changed, but the circuit did not: the two matrices are _similar_, $\tilde{\mathbf{A}} = \mathbf{T}^{-1}\mathbf{A}\mathbf{T}$, so they have the same eigenvalues and the same dynamics.
 
 The second choice only makes the bookkeeping easier: both states are voltages, and if the resistor voltage is the output, it is simply a state, $y = \rvec{0, 1}\tilde{\vec{x}}$ instead of $y = \rvec{0, R}\vec{x}$.
 
@@ -107,10 +106,10 @@ $$
 \dot{\vec{x}} = \mathbf{A}\vec{x}, \qquad \vec{x}(t_0) = \vec{x}_0
 $$
 
-is a linear ODE with no input ($\vec{u} = \vec{0}$), which is what *homogeneous* means here. The scalar case is the one you already know. Now we just add little arrows to scalar solution and replace $a$ with matrix $\mathbf{A}$:
+is a linear ODE with no input ($\vec{u} = \vec{0}$), which is what *homogeneous* means here. The scalar case $\dot{x} = ax$ has the solution $x(t) = e^{a(t-t_0)}x_0$, and the vector case looks the same, with the matrix $\mathbf{A}$ in place of $a$:
 
 $$
-\vec{x}(t) = \vec{x}_0\, e^{\mathbf{A}(t-t_0)},
+\vec{x}(t) = e^{\mathbf{A}(t-t_0)}\,\vec{x}_0,
 $$
 
 provided we can make sense of the exponential of a matrix. The scalar exponential is the Taylor series
@@ -133,11 +132,11 @@ $$
 
 where both orders agree because a matrix commutes with itself. At $t = 0$ the series gives $\mathbf{I}$. So $e^{\mathbf{A}(t-t_0)}$ differentiates to $\mathbf{A}\,e^{\mathbf{A}(t-t_0)}$ and equals $\mathbf{I}$ at $t = t_0$: it satisfies both the ODE and the initial condition, which is all we needed.
 
-Because mathematicians don't like writing/typing $e^{\mathbf{A}t}$, they shorthand it to $\Phi(t)$ and call it the state transition matrix — it carries the state from one time to another, $\vec{x}(t) = \Phi(t-t_0)\,\vec{x}_0$.
+Because nobody likes typing $e^{\mathbf{A}t}$, it is shortened to $\Phi(t)$ and called the state transition matrix. It carries the state from one time to another, $\vec{x}(t) = \Phi(t-t_0)\,\vec{x}_0$.
 
 ### Properties of the state-transition matrix
 
-Four properties answer a plain question: what is $\Phi$? A family of matrices you can multiply, that has a do-nothing member, and whose members can all be undone — everything built out of the one matrix $\mathbf{A}$. That is the payoff: knowing $\mathbf{A}$ is knowing how the state moves at every later time.
+The four properties below say what kind of object $\Phi$ is: a family of matrices that compose, with $\Phi(0)$ doing nothing and every member invertible. All of it is determined by $\mathbf{A}$, so knowing $\mathbf{A}$ means knowing how the state evolves at every later time.
 
 #### The identity
 
@@ -145,7 +144,7 @@ $$
 \Phi(0) = \mathbf{I}
 $$
 
-The cheapest of the four, and obvious once said: at time zero nothing has happened yet, so the state is the same as the initial state. It's also very usefull as sanity check after every computation of $\Phi$.
+At time zero nothing has happened yet, so the state is still the initial state. This is also a useful sanity check after every computation of $\Phi$.
 
 #### The semigroup property
 
@@ -153,7 +152,7 @@ $$
 \Phi(t_1 + t_2) = \Phi(t_1)\Phi(t_2)
 $$
 
-Evolve for $t_1$, then evolve for another $t_2$, and the state lands exactly where a single run of $t_1 + t_2$ would have left it. How the state reached $\vec{x}(t_1)$ is irrelevant to what happens next: **the state is a complete summary of the past**.
+Evolving for $t_1$ and then for $t_2$ gives the same state as evolving for $t_1 + t_2$ at once. How the state reached $\vec{x}(t_1)$ is irrelevant to what happens next: **the state is a complete summary of the past**.
 
 #### Inverses
 
@@ -169,7 +168,7 @@ $$
 \dot{\Phi}(t) = \mathbf{A}\Phi(t)
 $$
 
-The derivative worked out above, with the order free: $\mathbf{A}\Phi(t) = \Phi(t)\mathbf{A}$. *Defining*, because this is $\Phi$ written as an equation.
+This is the derivative computed above, and the order does not matter: $\mathbf{A}\Phi(t) = \Phi(t)\mathbf{A}$. It is called *defining* because $\Phi$ is the only solution of this ODE with $\Phi(0) = \mathbf{I}$.
 
 ## Nonhomogeneous solution
 
@@ -218,7 +217,7 @@ $}
 \]
 ```
 
-Where the first part is the homogeneous solution (response to initial conditions) and the second part is the particular solution (response to the input signal). The second part is a convolution,
+The first term is the homogeneous solution (the response to the initial state), the second the particular solution (the response to the input). The second term is a convolution,
 
 $$
 \vec{x}(t) = e^{\mathbf{A}(t-t_0)} \vec{x}(t_0) + \big(\Phi * \mathbf{B}\vec{u}\big)(t),
@@ -226,7 +225,7 @@ $$
 (f * g)(t) = \int_{t_0}^{t} f(t - \tau)\, g(\tau)\, d\tau,
 $$
 
-and the shape of that integral is not an accident — the figure below is the whole mechanism in one picture.
+and the figure below shows why.
 
 Over a short interval $d\tau$ at time $\tau$ the input delivers a scaled, delayed impulse, $\vec{u}(\tau)\,d\tau$. A "kick" at time $\tau$ enters the state through $\mathbf{B}$ and then free-evolves for the remaining time $t - \tau$:
 
@@ -234,17 +233,17 @@ $$
 \text{kick at } \tau \;\longmapsto\; \Phi(t-\tau)\,\mathbf{B}\,\vec{u}(\tau)\, d\tau
 $$
 
-That kernel $\Phi(t-\tau)\mathbf{B}$ is the *impulse response*: the bare reaction to a unit kick, which is the homogeneous solution re-used with the clock shifted.
+The kernel $\Phi(t-\tau)\mathbf{B}$ is the *impulse response*: the response to a unit kick, which is the homogeneous solution shifted in time.
 
-Linearity is the *sine qua non*: it is what lets the contributions to add at all, and it is why the response to the whole input is the sum over all past $\tau$. Time invariance supplies the second half: every part is answered by the same function, merely shifted. Together they turn that sum over a continuum into the integral above, and make it a *convolution*: each contribution depends on the present time $t$ and the kick time $\tau$ only through their difference $t - \tau$, so the system cares only about how long ago the input arrived, not about what the clock read.
+Linearity lets the responses to all past kicks add up, so the response to the whole input is their sum over $\tau$. Time invariance makes every kick produce the same response, only shifted. Together they turn the sum into the integral above and make it a *convolution*: each contribution depends on $t$ and $\tau$ only through $t - \tau$, that is, on how long ago the kick arrived.
 
 ```{=latex}
 \input{tikz/convolution-kicks.tex}
 ```
 
-The input $u(\tau) = 2^{-\tau}$, sliced into three slices of width $\Delta\tau = 1$, so the slices carry the areas $u(\tau_i)\Delta\tau = 1,\ 0.5,\ 0.25$. Below, each slice draws its own curve $u(\tau_i)\Delta\tau\,\phi(t-\tau_i)$ — the same kick response $\phi(t) = e^{-t}$, scaled by the slice's area and shifted to the slice's time — and the bold curve is their sum: the response to the sliced input. Every kick makes that sum jump, because a kick arrives in no time at all; slice thinner and there are more, smaller kicks, the jumps shrink, and the sum settles onto the integral above.
+The figure cuts the input $u(\tau) = 2^{-\tau}$ into three slices of width $\Delta\tau = 1$, with areas $u(\tau_i)\Delta\tau = 1,\ 0.5,\ 0.25$. Each slice produces its own curve $u(\tau_i)\Delta\tau\,\phi(t-\tau_i)$: the kick response $\phi(t) = e^{-t}$, scaled by the slice's area and shifted to the slice's time. The bold curve is their sum, the response to the sliced input. It jumps at every kick, because a kick arrives instantaneously. With thinner slices there are more and smaller kicks, and the sum approaches the integral above.
 
-*Why the lower limit matters?* The integral starts at $t_0$ because that is where our knowledge of the input starts; anything earlier must already be accounted for in $\vec{x}(t_0)$. Starting it at $0$ when the experiment did not begin at $0$ silently charges the whole pre-history of the system to the initial state — the usual home of missing-term errors.
+*Why the lower limit matters.* The integral starts at $t_0$ because that is where our knowledge of the input starts; everything earlier must already be contained in $\vec{x}(t_0)$. Starting it at $0$ when the experiment began at another time assigns part of the system's history to the wrong place, a common source of missing terms.
 
 With $\vec{y} = \mathbf{C}\vec{x} + \mathbf{D}\vec{u}$ the state is seen through $\mathbf{C}$ and the direct path $\mathbf{D}\vec{u}$ is added on top, so a single input/output pair gives
 
@@ -254,9 +253,9 @@ y(t) = \underbrace{(\mathbf{C}\Phi * \mathbf{B}u)(t)}_{\text{through the state}}
 h(t) = \mathbf{C}\Phi(t)\mathbf{B} + \mathbf{D}\delta(t),
 $$
 
-which is the same $h(t)$ the Transfer functions chapter defines as $\mathcal{L}^{-1}\{G(s)\}$. A system with no memory at all has $h(t) = \mathbf{D}\delta(t)$ and the convolution collapses to $y = \mathbf{D}u$ — the static case, with no integral in sight.
+which is the same $h(t)$ the Transfer functions chapter defines as $\mathcal{L}^{-1}\{G(s)\}$. A system with no memory at all has $h(t) = \mathbf{D}\delta(t)$ and the convolution reduces to $y = \mathbf{D}u$, the static case.
 
-*From here on, the clock starts with the experiment.* The examples below all take $t_0 = 0$, with $\vec{x}(0)$ the state at that instant and the input applied from then on. For an LTI system this costs no generality — the general form above is this one with the origin moved, $t \mapsto t - t_0$ — but it is not free for a time-varying system, where $\Phi(t, t_0)$ cannot be written as a function of $t - t_0$ alone and the integral stops being a convolution.
+*From here on, the clock starts with the experiment.* The examples below all take $t_0 = 0$, with $\vec{x}(0)$ the state at that instant and the input applied from then on. For an LTI system this loses no generality, since the general form is the same with the time origin moved, $t \mapsto t - t_0$. For a time-varying system it does: $\Phi(t, t_0)$ is not a function of $t - t_0$ alone, and the integral is no longer a convolution.
 
 ```{=latex}
 \begin{example}[frametitle={Example - mass on a spring}]
@@ -275,13 +274,13 @@ $$
 + \begin{bmatrix} 0 \\ g \end{bmatrix}
 $$
 
-**Step 1 — $\Phi$ by the defining series.** At this point the only tool for a concrete $\Phi$ is Taylor series\footnote{The same $\Phi$ drops out faster through Laplace, $\mathcal{L}^{-1}\{(s\mathbf{I}-\mathbf{A})^{-1}\}$ — an identity we derive in the Laplace transform subsection below, where the hanging-mass example works exactly that route.} Compute the first powers:
+**Step 1 — $\Phi$ by the defining series.** At this point our only tool for computing $\Phi$ is the Taylor series. Compute the first powers:
 
 $$
 \mathbf{A}^2 = \mathbf{A}\mathbf{A} = \begin{bmatrix} -\frac{k}{m} & 0 \\ 0 & -\frac{k}{m} \end{bmatrix} = -\frac{k}{m}\mathbf{I}
 $$
 
-$\mathbf{A}^2$ came out a scalar matrix — a multiple of the identity. For reasons that will be apparent soon, it would be very convenient to introduce a new variable $\omega_0 = \sqrt{k/m}$. Grouping even and odd powers in the series:
+$\mathbf{A}^2$ is a multiple of the identity, so every even power is too, and every odd power is a multiple of $\mathbf{A}$. With $\omega_0 = \sqrt{k/m}$, so that $\mathbf{A}^2 = -\omega_0^2\mathbf{I}$, group the even and odd powers in the series:
 
 $$
 \Phi(t) = e^{\mathbf{A}t}
@@ -289,7 +288,7 @@ $$
  + \mathbf{A}\left(t - \omega_0^2\frac{t^3}{3!} + \omega_0^4\frac{t^5}{5!} - \cdots\right)
 $$
 
-The two brackets are now recognizable: they are the $\cos$ and $\sin$ series with argument $\omega_0 t$. The brackets close:
+The brackets are the series of $\cos\omega_0 t$ and $\frac{1}{\omega_0}\sin\omega_0 t$:
 
 $$
 \Phi(t) = e^{\mathbf{A}t} = \mathbf{I}\cos\omega_0 t + \mathbf{A}\,\frac{\sin\omega_0 t}{\omega_0}
@@ -302,16 +301,16 @@ $$
 \vec{x}(t) = \Phi(t)\vec{x}_0 + \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
 $$
 
-and the first term needs no integration — just a matrix multiply. With the drop condition $\vec{x}_0 = \tvec{0,v_0}$:
+and the first term needs no integration, only a matrix product. With the initial state $\vec{x}_0 = \tvec{0,v_0}$:
 
 $$
 \Phi(t)\vec{x}_0 = \begin{bmatrix} \cos\omega_0 t & \frac{1}{\omega_0}\sin\omega_0 t \\[2pt] -\omega_0\sin\omega_0 t & \cos\omega_0 t \end{bmatrix}\begin{bmatrix} 0 \\ v_0 \end{bmatrix}
 = \begin{bmatrix} \frac{v_0}{\omega_0}\sin\omega_0 t \\[2pt] v_0\cos\omega_0 t \end{bmatrix}
 $$
 
-That is the whole homogeneous response: the free ring of the initial kick, starting at $x = 0$ with speed $v_0$ and oscillating forever (no damping yet).
+This is the homogeneous response: starting at $x = 0$ with speed $v_0$, the mass oscillates forever, since there is no damping.
 
-**Step 3 — the forced part: gravity, via the $\tau$ trick.** The homogeneous piece is done; the input term remains. Gravity is a constant input, $\mathbf{B}\vec{u} = \tvec{0,g}$, so the forced integral is
+**Step 3 — the forced part: gravity.** Gravity is a constant input, $\mathbf{B}\vec{u} = \tvec{0,g}$, so the forced integral is
 
 $$
 \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
@@ -323,21 +322,21 @@ $$
 \int_0^t \Phi(t-\tau)\,d\tau = \int_0^t \Phi(u)\,du
 $$
 
-This is exactly the trick that only works because we start at $0$ — a nonzero lower limit $t_0$ would leave the shifted window $[t-t_0,\, t]$. With $\tau$ gone, what remains is an ordinary integral of $\Phi(u)\mathbf{B}$:
+What remains is an ordinary integral of $\Phi(u)\mathbf{B}$:
 
 $$
 \int_0^t \Phi(u)\mathbf{B}\,du = \int_0^t \begin{bmatrix} \frac{g}{\omega_0}\sin\omega_0 u \\[2pt] g\cos\omega_0 u \end{bmatrix}du
 = \begin{bmatrix} \frac{g}{\omega_0^2}(1-\cos\omega_0 t) \\[2pt] \frac{g}{\omega_0}\sin\omega_0 t \end{bmatrix}
 $$
 
-**Putting it together** — the full motion is the sum of the two pieces:
+**Putting it together.** The full motion is the sum of the two parts:
 
 $$
 \vec{x}(t) = \begin{bmatrix} \frac{v_0}{\omega_0}\sin\omega_0 t \\[2pt] v_0\cos\omega_0 t \end{bmatrix}
 + \begin{bmatrix} \frac{g}{\omega_0^2}(1-\cos\omega_0 t) \\[2pt] \frac{g}{\omega_0}\sin\omega_0 t \end{bmatrix}
 $$
 
-Sanity check at $t = 0$: $x(0) = 0$ (both position terms vanish) and $v(0) = v_0$ (only the homogeneous $\cos$ survives), just as dropped. The gravity piece makes the mass ring about the lowered point — its constant part $\frac{g}{\omega_0^2} = \frac{mg}{k}$ is the static stretch that balances the weight — while the $\frac{v_0}{\omega_0}\sin\omega_0 t$ term is the free oscillation of the initial kick superimposed on top.
+Sanity check at $t = 0$: $x(0) = 0$ (both position terms vanish) and $v(0) = v_0$ (only the homogeneous $\cos$ survives), as required. The gravity term makes the mass oscillate about a lowered point: its constant part $\frac{g}{\omega_0^2} = \frac{mg}{k}$ is the static stretch that balances the weight. The $\frac{v_0}{\omega_0}\sin\omega_0 t$ term is the free oscillation caused by the initial speed.
 
 ```{=latex}
 \end{example}
@@ -376,7 +375,7 @@ $$
 + \frac{t^3}{6} \begin{bmatrix} -8 & 0 \\ 7 & -1 \end{bmatrix} + \dots
 $$
 
-Adding these elementwise builds up one big matrix:
+Adding entry by entry:
 
 $$
 e^{\mathbf{A}t} = \begin{bmatrix}
@@ -385,7 +384,7 @@ t - \frac{3t^2}{2} + \frac{7t^3}{6} + \dots & 1 - t + \frac{t^2}{2} - \frac{t^3}
 \end{bmatrix}
 $$
 
-Taking a sharp look at each entry, we recognize familiar series $\sum x^k/k! = e^x$. Hence:
+Each entry is the series $\sum x^k/k! = e^x$ of an exponential, or a difference of two:
 
 $$
 \Phi(t) = e^{\mathbf{A}t} = \begin{bmatrix}
@@ -394,7 +393,7 @@ e^{-t} - e^{-2t} & e^{-t}
 \end{bmatrix}
 $$
 
-Sanity check: $\Phi(0) = \mathbf{I}$ and $\dot{\Phi}(0) = \begin{bmatrix} -2 & 0 \\ -1+2 & -1 \end{bmatrix} = \mathbf{A}$. The "recognizing" step can be tested one term further, too: $(\mathbf{A}^4)_{21} = \rvec{7, -1}\tvec{-2, 1} = -15$, and the $t^4$ coefficient of $e^{-t} - e^{-2t}$ is $\frac{1 - 16}{4!} = -\frac{15}{4!}$.
+Sanity check: $\Phi(0) = \mathbf{I}$ and $\dot{\Phi}(0) = \begin{bmatrix} -2 & 0 \\ -1+2 & -1 \end{bmatrix} = \mathbf{A}$.
 
 ```{=latex}
 \end{example}
@@ -402,7 +401,7 @@ Sanity check: $\Phi(0) = \mathbf{I}$ and $\dot{\Phi}(0) = \begin{bmatrix} -2 & 0
 
 ### $\Phi$ via the Laplace transform
 
-Transform the whole ODE instead of guessing exponentials. Apply $\mathcal{L}$ to both sides of
+Instead of recognizing series, transform the whole ODE. Apply $\mathcal{L}$ to both sides of
 
 $$
 \dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}
@@ -479,27 +478,27 @@ $$
 
 which matches the Taylor result.
 
-Now let's do something useful with $\Phi$: **the step response**.
+Next, use $\Phi$ to compute **the step response**.
 
-Take zero initial state $\vec{x}(0) = \vec{0}$, a step input $u(t) = 5$ (constant for $t \ge 0$), and $\mathbf{B} = \tvec{1, 0}$. The homogeneous term in the boxed solution above dies, leaving the forced convolution:
+Take zero initial state $\vec{x}(0) = \vec{0}$, a step input $u(t) = 5$ (constant for $t \ge 0$), and $\mathbf{B} = \tvec{1, 0}$. The homogeneous term in the boxed solution vanishes, leaving only the convolution:
 
 $$
 \vec{x}(t) = \int_0^t \underbrace{e^{\mathbf{A}(t-\tau)}}_{\Phi(t-\tau)}\,\mathbf{B}\,u(\tau)\,d\tau = e^{\mathbf{A}t}\int_0^t e^{-\mathbf{A}\tau}\,\mathbf{B}\,u(\tau)\,d\tau = 5\,e^{\mathbf{A}t}\int_0^t e^{-\mathbf{A}\tau}\,\mathbf{B}\,d\tau
 $$
 
-Splitting the exponential as $e^{\mathbf{A}(t-\tau)} = e^{\mathbf{A}t}e^{-\mathbf{A}\tau}$, the $\tau$-independent factor $e^{\mathbf{A}t}$ steps out of the integral, and the constant step $u = 5$ follows it out. Writing out the two matrix exponentials — $e^{\mathbf{A}t} = \Phi(t)$ outside, $e^{-\mathbf{A}\tau} = \Phi(-\tau)$ inside — the input vector $\mathbf{B}$ picks out the first column:
+After splitting $e^{\mathbf{A}(t-\tau)} = e^{\mathbf{A}t}e^{-\mathbf{A}\tau}$, the factor $e^{\mathbf{A}t}$ does not depend on $\tau$ and moves out of the integral, together with the constant $u = 5$. With $e^{\mathbf{A}t} = \Phi(t)$ outside and $e^{-\mathbf{A}\tau} = \Phi(-\tau)$ inside, $\mathbf{B}$ picks out the first column:
 
 $$
 \vec{x}(t) = 5 \underbrace{\begin{bmatrix} e^{-2t} & 0 \\ e^{-t} - e^{-2t} & e^{-t} \end{bmatrix}}_{\Phi(t)} \int_0^t \underbrace{\begin{bmatrix} e^{2\tau} & 0 \\ e^{\tau} - e^{2\tau} & e^{\tau} \end{bmatrix}}_{\Phi(-\tau)} \begin{bmatrix} 1 \\ 0 \end{bmatrix}d\tau
 $$
 
-Integrating entry by entry — $\int_0^t e^{a\tau}d\tau = \frac{e^{at}-1}{a}$ — the inner exponential dotted with $\mathbf{B}$ gives
+Integrating entry by entry, with $\int_0^t e^{a\tau}d\tau = \frac{e^{at}-1}{a}$:
 
 $$
 \int_0^t e^{-\mathbf{A}\tau}\,\mathbf{B}\,d\tau = \int_0^t \begin{bmatrix} e^{2\tau} \\[2pt] e^{\tau} - e^{2\tau} \end{bmatrix}d\tau = \begin{bmatrix} \frac{e^{2t}-1}{2} \\[2pt] (e^{t}-1) - \frac{e^{2t}-1}{2} \end{bmatrix}
 $$
 
-and multiplying the $5e^{\mathbf{A}t}$ back in front:
+and multiplying by $5e^{\mathbf{A}t}$:
 
 $$
 \vec{x}(t) = 5 \begin{bmatrix} e^{-2t} & 0 \\ e^{-t} - e^{-2t} & e^{-t} \end{bmatrix}\begin{bmatrix} \frac{e^{2t}-1}{2} \\[2pt] (e^{t}-1) - \frac{e^{2t}-1}{2} \end{bmatrix}
@@ -509,7 +508,7 @@ $$
 = \frac{5}{2}\begin{bmatrix} 1 - e^{-2t} \\[2pt] 1 - 2e^{-t} + e^{-2t} \end{bmatrix}
 $$
 
-Sanity check: $\vec{x}(0) = \vec{0}$, as started. And the final value can be had without any integral — at rest $\dot{\vec{x}} = \vec{0}$, so $\vec{x}(\infty) = -\mathbf{A}^{-1}\mathbf{B}\cdot 5 = -\frac{1}{2}\begin{bmatrix} -1 & 0 \\ -1 & -2 \end{bmatrix}\begin{bmatrix} 1 \\ 0 \end{bmatrix}\cdot 5 = \frac{5}{2}\tvec{1, 1}$, exactly where both entries above settle.
+Sanity check: $\vec{x}(0) = \vec{0}$, as started. The final value also follows without any integral: at rest $\dot{\vec{x}} = \vec{0}$, so $\vec{x}(\infty) = -\mathbf{A}^{-1}\mathbf{B}\cdot 5 = -\frac{1}{2}\begin{bmatrix} -1 & 0 \\ -1 & -2 \end{bmatrix}\begin{bmatrix} 1 \\ 0 \end{bmatrix}\cdot 5 = \frac{5}{2}\tvec{1, 1}$, where both entries above settle.
 
 ```{=latex}
 \end{example}
@@ -533,7 +532,7 @@ $$
 + \begin{bmatrix} 0 \\ g \end{bmatrix}
 $$
 
-The constant gravity term is the input, $\mathbf{B}\vec{u} = \tvec{0,g}$. This is the boxed solution above in action: build the kernel $\Phi(t) = e^{\mathbf{A}t}$, then run the convolution integral.
+The constant gravity term is the input, $\mathbf{B}\vec{u} = \tvec{0,g}$. We use the boxed solution: first compute $\Phi(t) = e^{\mathbf{A}t}$, then evaluate the convolution integral.
 
 **Step 1 — $\Phi$ via Laplace.** $\det(s\mathbf{I} - \mathbf{A}) = s^2 + \frac{b}{m}s + \frac{k}{m}$. Define the natural frequency and damping ratio,
 
@@ -542,20 +541,20 @@ $$
 \zeta = \frac{b}{2\sqrt{km}} = \frac{b}{2m\omega_0}
 $$
 
-so $\frac{b}{m} = 2\zeta\omega_0$ and $\frac{k}{m} = \omega_0^2$, and the determinant takes the classic second-order form, which completes into a sum of squares:
+so $\frac{b}{m} = 2\zeta\omega_0$ and $\frac{k}{m} = \omega_0^2$, and completing the square gives
 
 $$
 \det(s\mathbf{I} - \mathbf{A}) = s^2 + 2\zeta\omega_0 s + \omega_0^2
 = (s + \zeta\omega_0)^2 + \omega_0^2(1-\zeta^2)
 $$
 
-Take the **critically damped case $\zeta = 1$** (damper tuned so $b = 2\sqrt{km}$): then the damped frequency $\omega_d = \omega_0\sqrt{1-\zeta^2}$ vanishes, the two poles collide at $s = -\omega_0$, and the resolvent is
+Take the **critically damped case $\zeta = 1$** (damper tuned so $b = 2\sqrt{km}$): then the damped frequency $\omega_d = \omega_0\sqrt{1-\zeta^2}$ vanishes, the two poles coincide at $s = -\omega_0$, and the resolvent is
 
 $$
 (s\mathbf{I} - \mathbf{A})^{-1} = \frac{1}{(s + \omega_0)^2}\begin{bmatrix} s + 2\omega_0 & 1 \\[2pt] -\omega_0^2 & s \end{bmatrix}
 $$
 
-Inverting with the double-pole pairs $\frac{1}{(s+\omega_0)^2} \leftrightarrow t e^{-\omega_0 t}$ and $\frac{s}{(s+\omega_0)^2} \leftrightarrow (1 - \omega_0 t)e^{-\omega_0 t}$ leaves only exponentials:
+Inverting with the double-pole pairs $\frac{1}{(s+\omega_0)^2} \leftrightarrow t e^{-\omega_0 t}$ and $\frac{s}{(s+\omega_0)^2} \leftrightarrow (1 - \omega_0 t)e^{-\omega_0 t}$ gives
 
 $$
 \Phi(t) = e^{\mathbf{A}t} = e^{-\omega_0 t}\begin{bmatrix}
@@ -570,7 +569,7 @@ $$
 \vec{x}(t) = \Phi(t)\vec{x}_0 + \int_0^t \Phi(t-\tau)\mathbf{B}\,d\tau
 $$
 
-With the critical $\Phi$, the kernel dotted with the input is
+With the critically damped $\Phi$, the kernel times $\mathbf{B}$ is
 
 $$
 \Phi(t-\tau)\mathbf{B} = g\,e^{-\omega_0(t-\tau)}\begin{bmatrix} t-\tau \\[2pt] 1 - \omega_0(t-\tau) \end{bmatrix}
@@ -583,7 +582,7 @@ $$
 = g\,e^{-\omega_0 t}\int_0^t \begin{bmatrix} (t-\tau)e^{\omega_0\tau} \\[2pt] (1-\omega_0(t-\tau))e^{\omega_0\tau} \end{bmatrix} d\tau
 $$
 
-Evaluating entry by entry — this is the alternative to the $\tau$ trick of the spring example: no substitution, we integrate in $\tau$ directly and watch each $\tau$ vanish. The $t$ inside the integrand is a *constant* as far as the $\tau$-integration is concerned, and a $\tau$ disappears only when its antiderivative is evaluated at the limits. First entry — using $\int (t-\tau)e^{\omega_0\tau}\,d\tau = \left(\frac{1}{\omega_0^2}+\frac{t-\tau}{\omega_0}\right)e^{\omega_0\tau}$:
+Integrate entry by entry. Unlike in the spring example, we do not substitute but integrate in $\tau$ directly; inside the integral, $t$ is a constant. First entry, using $\int (t-\tau)e^{\omega_0\tau}\,d\tau = \left(\frac{1}{\omega_0^2}+\frac{t-\tau}{\omega_0}\right)e^{\omega_0\tau}$:
 
 $$
 \int_0^t (t-\tau)e^{\omega_0\tau}\,d\tau
@@ -591,7 +590,7 @@ $$
 = \frac{e^{\omega_0 t}-1}{\omega_0^2} - \frac{t}{\omega_0}
 $$
 
-Second entry — here the antiderivative is simply $(\tau-t)e^{\omega_0\tau}$, because its $\tau$-derivative is $(1-\omega_0(t-\tau))e^{\omega_0\tau}$:
+Second entry: the antiderivative is $(\tau-t)e^{\omega_0\tau}$, since its $\tau$-derivative is $(1-\omega_0(t-\tau))e^{\omega_0\tau}$:
 
 $$
 \int_0^t \big(1-\omega_0(t-\tau)\big)e^{\omega_0\tau}\,d\tau
@@ -612,7 +611,7 @@ $$
 \vec{x}(t) = \Phi(t)\vec{x}_0 + e^{-\omega_0 t}\begin{bmatrix} \frac{g}{\omega_0^2}\left(e^{\omega_0 t}-1\right) - \frac{g}{\omega_0}t \\[2pt] g\,t \end{bmatrix}
 $$
 
-Sanity check: at $t = 0$ the gravity term vanishes, leaving $\vec{x}(0) = \vec{x}_0$. As $t \to \infty$, $\Phi(t) \to \mathbf{0}$ and every $e^{-\omega_0 t}$ and $t e^{-\omega_0 t}$ dies, so $x \to \frac{g}{\omega_0^2} = \frac{mg}{k}$ and $v \to 0$: the mass comes to rest at the static stretch where the spring carries the weight.
+Sanity check: at $t = 0$ the gravity term vanishes, leaving $\vec{x}(0) = \vec{x}_0$. As $t \to \infty$, $\Phi(t) \to \mathbf{0}$ and every $e^{-\omega_0 t}$ and $t e^{-\omega_0 t}$ decays.
 
 ```{=latex}
 \end{example}
@@ -620,7 +619,7 @@ Sanity check: at $t = 0$ the gravity term vanishes, leaving $\vec{x}(0) = \vec{x
 
 ### $\Phi$ via diagonalization
 
-Powers of a diagonal matrix are trivial, because for a diagonal matrix
+Powers of a diagonal matrix are easy: each diagonal entry is raised to the power, and the off-diagonal entries stay zero,
 
 $$
 \boldsymbol{\Lambda}^k = \begin{bmatrix}
@@ -630,25 +629,25 @@ d_1^k & & \\
 \end{bmatrix}
 $$
 
-off-diagonal entries stay zero. Consequently $e^{\mathbf{A}t}$ Taylor-expands very nicely: the exponential of a diagonal matrix is the diagonal of scalar exponentials,
+So, by the Taylor series, the exponential of a diagonal matrix is the diagonal of scalar exponentials,
 
 $$
 e^{\mathbf{A}t} = \mathbf{I} + t\mathbf{A} + \frac{t^2}{2!}\mathbf{A}^2 + \frac{t^3}{3!}\mathbf{A}^3 + \dots = \begin{bmatrix} e^{d_1 t} & & \\ & \ddots & \\ & & e^{d_n t} \end{bmatrix} = \begin{bmatrix} \Phi_{11} & & \\ & \ddots & \\ & & \Phi_{nn} \end{bmatrix}
 $$
 
-*If $\mathbf{A}$ is already diagonal, you hit the jackpot.* When only the main diagonal is nonzero, nothing needs to be done: $\Phi(t)$ reads off by inspection,
+*If $\mathbf{A}$ is already diagonal*, $\Phi(t)$ can be read off directly:
 
 $$
 \Phi(t) = e^{\mathbf{A}t} = \operatorname{diag}\!\big(e^{d_1 t},\, e^{d_2 t},\, \dots,\, e^{d_n t}\big)
 $$
 
-Most $\mathbf{A}$'s are not diagonal, but with a little elbow grease we can still get there. The ingredients are the eigenvalues and eigenvectors of $\mathbf{A}$, with their algebraic and geometric multiplicities $m_{a,i}$ and $m_{g,i}$.
+Most matrices are not diagonal, but many can be made diagonal by a change of basis. The ingredients are the eigenvalues and eigenvectors of $\mathbf{A}$, with their algebraic and geometric multiplicities $m_{a,i}$ and $m_{g,i}$.
 
-*Triangular shortcut.* If $\mathbf{A}$ is upper or lower triangular, finding the eigenvalues needs no work: the determinant is already factored, and the eigenvalues are just the diagonal entries. Diagonal was the whole jackpot; triangular is the half-jackpot — eigenvalues free, but the full $\Phi$ still needs a method.
+*Triangular shortcut.* If $\mathbf{A}$ is upper or lower triangular, the eigenvalues are its diagonal entries, because the determinant is already factored. $\Phi$ itself still has to be computed by one of the methods in this section.
 
 #### Diagonalization
 
-Now to where we're really going: how to reorganize our matrix into a diagonal form. When $m_{g,i} = m_{a,i}$ for every eigenvalue, the $n$ independent eigenvectors stacked as the columns of $\mathbf{V}$ give the factorization (derived in the Linear algebra chapter)
+When $m_{g,i} = m_{a,i}$ for every eigenvalue, the $n$ independent eigenvectors stacked as the columns of $\mathbf{V}$ give the factorization (derived in the Linear algebra chapter)
 
 $$
 \mathbf{A} = \mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}, \qquad \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)
@@ -656,7 +655,7 @@ $$
 
 with each eigenvalue on the diagonal of $\boldsymbol{\Lambda}$ in the same position as its eigenvector in $\mathbf{V}$.
 
-This is the whole trick: $\mathbf{A}$ is just a diagonal matrix in a different basis. Powers pass through the same similarity — the inner $\mathbf{V}^{-1}\mathbf{V}$ pairs cancel, like a telescope:
+So $\mathbf{A}$ is a diagonal matrix in a different basis. Powers keep this form, because the inner $\mathbf{V}^{-1}\mathbf{V}$ pairs cancel:
 
 $$
 \mathbf{A}^2 = \mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}\,\mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}
@@ -668,7 +667,7 @@ $$
 \mathbf{A}^k = \mathbf{V}\boldsymbol{\Lambda}^k\mathbf{V}^{-1}
 $$
 
-so the Taylor series telescopes into
+so the Taylor series becomes
 
 $$
 e^{\mathbf{A}t} = \mathbf{I} + \mathbf{A}t + \frac{(\mathbf{A}t)^2}{2!} + \frac{(\mathbf{A}t)^3}{3!} + \dots
@@ -703,13 +702,13 @@ $}
 \]
 ```
 
-*$\boldsymbol{\Lambda}$ is fully diagonal; $\Phi$ generally is not.* Diagonalization, when it works, lands on a genuinely diagonal $\boldsymbol{\Lambda}$ — that's the whole deal. The triangular-looking $\Phi$'s below are an accident of the triangular example $\mathbf{A}$'s — triangular in, triangular out.
+Note that $\boldsymbol{\Lambda}$ is diagonal, but $\Phi$ generally is not. The examples below give a triangular $\Phi$ only because their $\mathbf{A}$ is triangular.
 
 ```{=latex}
 \begin{example}[frametitle={Example - modes of a coupled RC pair}]
 ```
 
-Diagonalization is worth this much machinery because a good choice of state splits a coupled system into independent pieces. Two identical RC sections — capacitance $C$ and leakage $R$ to ground each — joined by a coupling resistor $R_c$ show it.
+Diagonalization is worth the effort because a good choice of states splits a coupled system into independent parts. Take two identical RC sections, each with capacitance $C$ and leakage $R$ to ground, joined by a coupling resistor $R_c$.
 
 ```{=latex}
 \input{tikz/state-nonunique-modes.tex}
@@ -721,15 +720,15 @@ $$
 \dot{\vec{v}} = \begin{bmatrix} -(\alpha+\beta) & \beta \\ \beta & -(\alpha+\beta) \end{bmatrix}\vec{v}.
 $$
 
-The coupling ties the two equations together, and no rescaling of the states can break it: scaling multiplies one off-diagonal entry up and the other down by the same factor, leaving their product — and the coupling it represents — untouched. Only a change that *mixes* the two states can separate them. So add and subtract the two equations — that is, choose the *common* and *differential* combinations $w_1 = v_1 + v_2$ and $w_2 = v_1 - v_2$:
+The coupling ties the two equations together, and no rescaling of the states can break it: scaling multiplies one off-diagonal entry and divides the other by the same factor, leaving their product unchanged. Only a change that *mixes* the two states can separate them. Adding and subtracting the two equations does this, which means choosing the *common* and *differential* combinations $w_1 = v_1 + v_2$ and $w_2 = v_1 - v_2$:
 
 $$
 \dot{\vec{w}} = \begin{bmatrix} -\alpha & 0 \\ 0 & -(\alpha+2\beta) \end{bmatrix}\vec{w},
 $$
 
-two independent first-order systems. The physics explains why: in common mode $v_1 = v_2$, no current flows through $R_c$, and each capacitor discharges through its own $R$ with time constant $RC$; in differential mode $v_1 = -v_2$, the coupling resistor sees the full $2v_1$ and shortens the time constant to $\frac{1}{\alpha+2\beta}$ — exactly as if $\frac{R_c}{2}$ sat in parallel with $R$.
+two independent first-order systems. The physics agrees: in common mode, $v_1 = v_2$, no current flows through $R_c$, and each capacitor discharges through its own $R$ with time constant $RC$. In differential mode, $v_1 = -v_2$, the coupling resistor sees the full $2v_1$, which shortens the time constant to $\frac{1}{\alpha+2\beta}$, as if $\frac{R_c}{2}$ were in parallel with $R$.
 
-So the new states are not the old ones relabeled; they are coordinates along the eigenvectors of $\mathbf{A}$ — the *modes* of the system. Here they were read off by inspection; in general they are $\mathbf{V}^{-1}\vec{x}$, the same state expressed in the eigenvector basis.
+The new states are coordinates along the eigenvectors of $\mathbf{A}$, the *modes* of the system. Here they were found by inspection; in general they are $\mathbf{V}^{-1}\vec{x}$, the same state expressed in the eigenvector basis.
 
 ```{=latex}
 \end{example}
@@ -741,9 +740,9 @@ So the new states are not the old ones relabeled; they are coordinates along the
 
 $\mathbf{A} = \begin{bmatrix} -2 & 0 \\ 1 & -1 \end{bmatrix}$. 
 
-$\mathbf{A}$ is lower triangular, so the shortcut applies: the eigenvalues sit on the diagonal, $\lambda_1 = -2$, $\lambda_2 = -1$, and $\det(\mathbf{A} - \lambda\mathbf{I}) = (-2-\lambda)(-1-\lambda) = 0$ just confirms it. They are distinct, so $m_{g,i} = m_{a,i} = 1$ and $\mathbf{A}$ is diagonalizable.
+$\mathbf{A}$ is lower triangular, so its eigenvalues are the diagonal entries, $\lambda_1 = -2$ and $\lambda_2 = -1$; $\det(\mathbf{A} - \lambda\mathbf{I}) = (-2-\lambda)(-1-\lambda) = 0$ confirms this. They are distinct, so $m_{g,i} = m_{a,i} = 1$ and $\mathbf{A}$ is diagonalizable.
 
-We hunt for the eigenvectors from the condition
+The eigenvectors follow from the condition
 
 ```{=latex}
 \[
@@ -764,7 +763,7 @@ $$
 (\mathbf{A} + 2\mathbf{I}) = \begin{bmatrix} 0 & 0 \\ 1 & 1 \end{bmatrix}
 $$
 
-The first row vanished — $\lambda = -2$ zeroed the $(1,1)$ diagonal entry and the $(1,2)$ entry was already $0$ — so the rank is $1$ and one variable is free. The one surviving equation, $v_1 + v_2 = 0$, forces $v_2 = -v_1$:
+The first row is zero, so the rank is $1$ and one variable is free. The remaining equation, $v_1 + v_2 = 0$, gives $v_2 = -v_1$:
 
 $$
 \begin{bmatrix} 0 & 0 \\ 1 & 1 \end{bmatrix}\vec{v}_1 = \vec{0}
@@ -780,7 +779,7 @@ $$
 (\mathbf{A} + \mathbf{I}) = \begin{bmatrix} -1 & 0 \\ 1 & 0 \end{bmatrix}
 $$
 
-The bottom row is $-1\times$ the top row, so the rank is $1$ again: the surviving equation $v_1 = 0$ pins down $v_1$ and leaves $v_2$ free:
+The bottom row is $-1\times$ the top row, so the rank is $1$ again: the remaining equation $v_1 = 0$ fixes $v_1$ and leaves $v_2$ free:
 
 $$
 \begin{bmatrix} -1 & 0 \\ 1 & 0 \end{bmatrix}\vec{v}_2 = \vec{0}
@@ -820,7 +819,7 @@ which matches the Taylor and Laplace results.
 \begin{example}[frametitle={Example - obtaining $\Phi$ via diagonalization, 3×3}]
 ```
 
-Let's do a bigger one, and keep our eyes on the prize: we're after $\Phi(t) = e^{\mathbf{A}t}$, with
+A larger example: find $\Phi(t) = e^{\mathbf{A}t}$ for
 
 $$
 \mathbf{A} = \begin{bmatrix} 2 & 2 & 2 \\ 0 & 2 & 0 \\ 0 & 1 & 3 \end{bmatrix}
@@ -840,7 +839,7 @@ $$
 (\mathbf{A} - 2\mathbf{I}) = \begin{bmatrix} 0 & 2 & 2 \\ 0 & 0 & 0 \\ 0 & 1 & 1 \end{bmatrix}
 $$
 
-The first and last rows are proportional — the first is $2\times$ the last — and the middle row is all zeros. So every row is a multiple of $(0,1,1)$, the rank is $1$, and two parameters ($v_1$ and $v_3$) stay free:
+The first row is twice the last, and the middle row is zero. So every row is a multiple of $(0,1,1)$, the rank is $1$, and two parameters ($v_1$ and $v_3$) stay free:
 
 $$
 v_2 = -v_3,\ v_1 \text{ free}
@@ -897,21 +896,21 @@ Sanity check: $\Phi(0) = \mathbf{I}$, as it must.
 \end{example}
 ```
 
-The diagonalization method is perhaps the most elegant, but it stands or falls with the eigenvectors, and a defective matrix does not have enough of them. The next section repairs that.
+Diagonalization is elegant, but it needs a full set of eigenvectors, and a defective matrix does not have one. The next section handles that case.
 
 ### $\Phi$ via the Jordan form
 
 $$\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$$
 
-A defective matrix, such as $\mathbf{A}$ above, cannot be diagonalized by any choice of basis. Defective matrices are not exotic, either. Every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
+A defective matrix, such as $\mathbf{A}$ above, cannot be diagonalized by any choice of basis. Defective matrices are common: every repeated root of a scalar ODE produces one, from the double integrator $\ddot{x} = 0$ to the critically damped oscillator in the Laplace section.
 
-So we settle for the next best thing: the Jordan form $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J}$, a basis in which $\mathbf{A}$ is *as diagonal as possible*. It is not really a fifth method, but diagonalization finished. It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
+Instead we use the Jordan form $\mathbf{T}^{-1}\mathbf{A}\mathbf{T} = \mathbf{J}$, the basis in which $\mathbf{A}$ is *as diagonal as possible*. It is less a new method than the general version of diagonalization: it works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
 
 #### The exponential of a Jordan block
 
-The similarity passes through the Taylor series exactly as before, since only $\mathbf{T}\mathbf{T}^{-1} = \mathbf{I}$ was used, never the diagonal shape. So $e^{\mathbf{A}t} = \mathbf{T}e^{\mathbf{J}t}\mathbf{T}^{-1}$. A block-diagonal matrix raised to a power stays block-diagonal, so $e^{\mathbf{J}t}$ is simply the exponentials of the individual blocks placed on the diagonal. It remains to exponentiate one block.
+The similarity passes through the Taylor series as before, since the argument used only $\mathbf{T}\mathbf{T}^{-1} = \mathbf{I}$, never the diagonal shape. So $e^{\mathbf{A}t} = \mathbf{T}e^{\mathbf{J}t}\mathbf{T}^{-1}$. Powers of a block-diagonal matrix stay block-diagonal, so $e^{\mathbf{J}t}$ has the exponentials of the individual blocks on its diagonal. It remains to exponentiate one block.
 
-The Linear algebra chapter did exactly this in The exponential of a Jordan block: split $\mathbf{J}_k(\lambda) = \lambda\mathbf{I} + \mathbf{N}_k$, factor out $e^{\lambda t}$, and the series for $e^{\mathbf{N}_k t}$ stops after $k$ terms because $\mathbf{N}_k$ is nilpotent:
+The Linear algebra chapter did this in The exponential of a Jordan block: split $\mathbf{J}_k(\lambda) = \lambda\mathbf{I} + \mathbf{N}_k$, factor out $e^{\lambda t}$, and the series for $e^{\mathbf{N}_k t}$ stops after $k$ terms because $\mathbf{N}_k$ is nilpotent:
 
 ```{=latex}
 \[
@@ -973,7 +972,7 @@ $$
 \Phi(t) = e^{\mathbf{A}t} = \begin{bmatrix} e^{t} & 0 & 0 \\ 0 & e^{2t} & t e^{2t} \\ 0 & 0 & e^{2t} \end{bmatrix}
 $$
 
-*Where the $t$ comes from.* Write the $2\times2$ block out as equations: $\dot{x}_3 = 2x_3$ and $\dot{x}_2 = 2x_2 + x_3$. So $x_3 = e^{2t}x_3(0)$ drives $x_2$ like an input, and it does so at exactly $x_2$'s own rate. This is resonance, and resonance produces the factor $t$. Compare with the coupled RC pair: there a change of state decoupled the modes completely. Here no change of state can separate $x_2$ from $x_3$, and the superdiagonal $1$ is exactly that coupling.
+*Where the $t$ comes from.* Write the $2\times2$ block out as equations: $\dot{x}_3 = 2x_3$ and $\dot{x}_2 = 2x_2 + x_3$. So $x_3 = e^{2t}x_3(0)$ drives $x_2$ like an input, at $x_2$'s own rate. This is resonance, and resonance produces the factor $t$. In the coupled RC pair a change of state decoupled the modes completely. Here no change of state can separate $x_2$ from $x_3$, and the superdiagonal $1$ is that coupling.
 
 ```{=latex}
 \end{example}
@@ -1001,7 +1000,7 @@ $$
 \mathbf{J} = \begin{bmatrix} -\omega_0 & 1 \\ 0 & -\omega_0 \end{bmatrix}
 $$
 
-This is no accident. For a matrix built from a scalar ODE like this one (companion form), $\mathbf{A} - \lambda\mathbf{I}$ always has rank at least $n - 1$, so $m_g = 1$ for every eigenvalue. A repeated root of an ODE therefore *always* gives a single Jordan block. This is why the textbook recipe for repeated characteristic roots adds $t e^{\lambda t}$.
+For a matrix built from a scalar ODE like this one (companion form), $\mathbf{A} - \lambda\mathbf{I}$ always has rank at least $n - 1$, so $m_g = 1$ for every eigenvalue, and a repeated root of an ODE *always* gives a single Jordan block. That is why the textbook recipe for repeated characteristic roots adds $t e^{\lambda t}$.
 
 **Step 2 — the chain.** Pick $\vec{v}_2$ with $\mathbf{N}\vec{v}_2 \ne \vec{0}$, e.g. $\vec{v}_2 = \tvec{0, 1}$, and go down:
 
@@ -1009,7 +1008,7 @@ $$
 \vec{v}_1 = \mathbf{N}\vec{v}_2 = \begin{bmatrix} 1 \\ -\omega_0 \end{bmatrix}
 $$
 
-It is an eigenvector, as promised. It is also the one straight-line trajectory of the system: start with $v(0) = -\omega_0 x(0)$ and the mass creeps back as a pure $e^{-\omega_0 t}$. Every other start picks up a $t e^{-\omega_0 t}$ as well.
+It is an eigenvector, and also the only straight-line trajectory of the system: start with $v(0) = -\omega_0 x(0)$ and the mass returns as a pure $e^{-\omega_0 t}$. Every other start picks up a $t e^{-\omega_0 t}$ as well.
 
 **Step 3 — assemble $\Phi(t)$.**
 
@@ -1024,7 +1023,7 @@ $$
 = e^{-\omega_0 t}\begin{bmatrix} 1 + \omega_0 t & t \\[2pt] -\omega_0^2 t & 1 - \omega_0 t \end{bmatrix}
 $$
 
-This is the Laplace result, without a single partial fraction. With the single-eigenvalue shortcut it takes even less work: $\mathbf{N}^2 = \mathbf{0}$, so $e^{\mathbf{A}t} = e^{-\omega_0 t}(\mathbf{I} + \mathbf{N}t)$, which is the same matrix.
+This matches the Laplace result, without partial fractions. The single-eigenvalue shortcut is even quicker: $\mathbf{N}^2 = \mathbf{0}$, so $e^{\mathbf{A}t} = e^{-\omega_0 t}(\mathbf{I} + \mathbf{N}t)$, which is the same matrix.
 
 ```{=latex}
 \end{example}
@@ -1087,9 +1086,9 @@ The largest block is $2\times2$, so the highest power of $t$ is $t^1$, even thou
 \end{example}
 ```
 
-*The Jordan blocks tell you more than just $\Phi$.* In LTI analysis you rarely need $\mathbf{T}$ itself, but the block sizes answer questions that the eigenvalues alone leave open — haunt the notes for mentions of "Jordan form" to find them all.
+The Jordan blocks matter beyond $\Phi$. In LTI analysis you rarely need $\mathbf{T}$ itself, but the block sizes answer questions that the eigenvalues alone leave open; the later chapters point these out where they come up.
 
-By hand, the chain hunt is the laborious part. The Laplace method above and the Cayley–Hamilton method below both handle defective matrices with no eigenvectors at all.
+By hand, finding the chains is the laborious part. The Laplace method above and the Cayley–Hamilton method below both handle defective matrices with no eigenvectors at all.
 
 ### $\Phi$ via Cayley–Hamilton
 
@@ -1099,13 +1098,13 @@ $$
 e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A} + \cdots + \alpha_{n-1}(t)\mathbf{A}^{n-1}
 $$
 
-The only twist is that the coefficients now depend on $t$. The recipe is otherwise unchanged: match the scalar twin $e^{\lambda t} = \alpha_0(t) + \alpha_1(t)\lambda + \cdots + \alpha_{n-1}(t)\lambda^{n-1}$ at every eigenvalue,
+The difference is that the coefficients now depend on $t$. Otherwise the recipe is unchanged: match the scalar twin $e^{\lambda t} = \alpha_0(t) + \alpha_1(t)\lambda + \cdots + \alpha_{n-1}(t)\lambda^{n-1}$ at every eigenvalue,
 
 $$
 e^{\lambda_i t} = \alpha_0(t) + \alpha_1(t)\lambda_i + \cdots + \alpha_{n-1}(t)\lambda_i^{n-1}, \qquad i = 1, \dots, n
 $$
 
-and solve the resulting system for the $\alpha_j(t)$; $t$ lives only in the known right-hand sides. A repeated eigenvalue again needs derivatives with respect to $\lambda$ (not $t$). Those derivatives are no accident: $\frac{d^j}{d\lambda^j}e^{\lambda t} = t^j e^{\lambda t}$ produces exactly the terms a Jordan block needs. In Jordan coordinates every method for $f(\mathbf{A})$ (Taylor, Laplace, Cayley–Hamilton) reduces to applying $f$ to the individual blocks, which is why they all agree. Unlike diagonalization, this works even for defective matrices (see the defective-matrix example below).
+and solve the resulting system for the $\alpha_j(t)$; $t$ lives only in the known right-hand sides. A repeated eigenvalue again needs derivatives with respect to $\lambda$ (not $t$). They give $\frac{d^j}{d\lambda^j}e^{\lambda t} = t^j e^{\lambda t}$, the terms a Jordan block needs. In Jordan coordinates every method for $f(\mathbf{A})$ (Taylor, Laplace, Cayley–Hamilton) reduces to applying $f$ to the individual blocks, which is why they all agree. Unlike diagonalization, this works even for defective matrices (see the defective-matrix example below).
 
 ```{=latex}
 \begin{example}[frametitle={Example - obtaining $\Phi$ via Cayley–Hamilton}]
@@ -1124,7 +1123,7 @@ e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A}, \qquad
 e^{\lambda t} = \alpha_0(t) + \alpha_1(t)\lambda
 $$
 
-Evaluate at the eigenvalues — a $2\times2$ linear system in the unknowns $(\alpha_0, \alpha_1)$ (the $t$ lives only in the known right-hand sides):
+Evaluating at the eigenvalues gives a $2\times2$ linear system in $\alpha_0, \alpha_1$, with $t$ only on the right-hand side:
 
 $$
 \lambda_1 = -2: \quad e^{-2t} = \alpha_0 - 2\alpha_1
@@ -1146,7 +1145,7 @@ $$
 = \begin{bmatrix} e^{-2t} & 0 \\ e^{-t} - e^{-2t} & e^{-t} \end{bmatrix}
 $$
 
-which (you guessed it) matches all previous methods — as it must. $\Phi$ is pinned down by $\dot{\Phi} = \mathbf{A}\Phi$ and $\Phi(0) = \mathbf{I}$, so a given $\mathbf{A}$ has exactly one state transition matrix, and every method has to return it.
+which matches all previous methods, as it must: $\dot{\Phi} = \mathbf{A}\Phi$ with $\Phi(0) = \mathbf{I}$ has only one solution, so every method returns the same $\Phi$.
 
 ```{=latex}
 \end{example}
@@ -1154,15 +1153,15 @@ which (you guessed it) matches all previous methods — as it must. $\Phi$ is pi
 ```{=latex}
 \begin{example}[frametitle={Example - obtaining $\Phi$ for non-diagonalizable A via Cayley–Hamilton}]
 ```
-If we calculate eigenvalues for the following matrix:
+Take
 $$
 \mathbf{A} = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & -3 \\ 0 & 0 & 1 \end{bmatrix}
 $$
-we find that it's not diagonalizable:
+Its characteristic polynomial is
 $$
 \det(\mathbf{A} - \lambda\mathbf{I}) = \det\begin{bmatrix} 1-\lambda & 0 & 0 \\ 1 & 1-\lambda & -3 \\ 0 & 0 & 1-\lambda \end{bmatrix} = (1-\lambda)^3
 $$
-so the only eigenvalue is $\lambda = 1$ with algebraic multiplicity $m_a = 3$, and geometric multiplicity $m_g = n - \operatorname{rank}(\mathbf{A} - \mathbf{I}) = 3 - 1 = 2 < 3 = m_a$ — defective, so plain diagonalization is out. The Jordan section above already found its $\Phi$ through a chain of generalized eigenvectors. This time we skip the eigenvectors entirely. Algebraic multiplicity greater than one introduces another complication: we'll need to differentiate to get enough equations.
+so the only eigenvalue is $\lambda = 1$ with algebraic multiplicity $m_a = 3$, and geometric multiplicity $m_g = n - \operatorname{rank}(\mathbf{A} - \mathbf{I}) = 3 - 1 = 2 < 3 = m_a$. The matrix is defective, so diagonalization fails. The Jordan section above found its $\Phi$ through a chain of generalized eigenvectors; Cayley–Hamilton needs no eigenvectors at all. Because the eigenvalue is repeated, we will need derivatives to get enough equations.
 
 **Step 1: set up the ansatz.** With $n = 3$ the exponential reduces to a degree-2 polynomial in $\mathbf{A}$:
 
@@ -1171,7 +1170,7 @@ e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A} + \alpha_2(t)\ma
 e^{\lambda t} = \alpha_0(t) + \alpha_1(t)\lambda + \alpha_2(t)\lambda^2
 $$
 
-**Step 2: handle the repeated eigenvalue by differentiating.** Evaluating the scalar equation at $\lambda = 1$ gives only one equation for three unknowns. The missing two come from differentiating with respect to $\lambda$ — the $\alpha_j$ depend on $t$, not on $\lambda$, so their $\lambda$-derivatives vanish:
+**Step 2: handle the repeated eigenvalue by differentiating.** Evaluating the scalar equation at $\lambda = 1$ gives only one equation for three unknowns. The missing two come from differentiating with respect to $\lambda$ (the $\alpha_j$ depend on $t$, not on $\lambda$, so their $\lambda$-derivatives vanish):
 
 $$
 \frac{d}{d\lambda}:\quad t e^{\lambda t} = \alpha_1(t) + 2\alpha_2(t)\lambda
@@ -1197,7 +1196,7 @@ $$
 = \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & -6 \\ 0 & 0 & 1 \end{bmatrix}
 $$
 
-Substituting into $\Phi(t) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \alpha_2\mathbf{A}^2$ and adding elementwise: every diagonal entry is $\alpha_0 + \alpha_1 + \alpha_2 = e^t$, while the only nonzero off-diagonals are $(2,1) = \alpha_1 + 2\alpha_2 = t e^t$ and $(2,3) = -3\alpha_1 - 6\alpha_2 = -3t e^t$. Hence
+Substituting into $\Phi(t) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \alpha_2\mathbf{A}^2$ and adding entry by entry: every diagonal entry is $\alpha_0 + \alpha_1 + \alpha_2 = e^t$, while the only nonzero off-diagonals are $(2,1) = \alpha_1 + 2\alpha_2 = t e^t$ and $(2,3) = -3\alpha_1 - 6\alpha_2 = -3t e^t$. Hence
 
 $$
 \Phi(t) = e^{\mathbf{A}t} = \begin{bmatrix} e^t & 0 & 0 \\ t e^t & e^t & -3t e^t \\ 0 & 0 & e^t \end{bmatrix}
@@ -1211,14 +1210,14 @@ Sanity check: $\Phi(0) = \mathbf{I}$, and differentiating at $t = 0$ ($\frac{d}{
 
 ### Choosing between the four methods
 
-We have shown four ways to skin a cat, but at the end you still have the same dead cat. The Taylor series is the most general, flows nicely from rudimentary principles, but it is tedious. Diagonalization is elegant, and with its Jordan extension it shows how the system works: independent modes along the eigenvectors. Defective matrices make it laborious, though. Laplace transform is a nice trick, but requires some algebraic manipulation (in other words: much harder to implement in computers). Cayley–Hamilton is a clever method, but it is a black box: $\Phi$ comes out, insight into the structure doesn't.
+We have shown four ways to skin a cat, but at the end you still have the same dead cat. The Taylor series is the most general and follows from first principles, but it is tedious. Diagonalization is elegant, and with its Jordan extension it shows how the system works: independent modes along the eigenvectors. Defective matrices make it laborious, though. The Laplace transform is a neat trick, but it needs symbolic algebra, which makes it hard to implement on a computer. Cayley–Hamilton is clever, but it is a black box: it gives $\Phi$, but no insight into the structure.
 
-In practice the choice depends on $\mathbf{A}$ and on the problem. Cayley–Hamilton (CH) is the one that keeps coming back — it is the method behind controllability and observability later in these notes — and it wins when:
+In practice the choice depends on $\mathbf{A}$ and on the problem. Cayley–Hamilton (CH) comes back later as the basis of controllability and observability, and it is the best choice when:
 
-- The matrix is *defective* — plain diagonalization is out, and the Jordan chains are laborious. CH, with the derivative trick for the repeated eigenvalue, needs no eigenvectors at all.
-- The matrix has *repeated eigenvalues* but is still diagonalizable — CH avoids eigenvector hunting.
-- You want a closed form without computing $\mathbf{V}^{-1}$ — CH never inverts a matrix, only multiplies out powers of $\mathbf{A}$.
-- You're working with *symbolic parameters*, where eigenvectors get messy — they come out as rational expressions in the parameters, while CH's coefficients stay clean.
+- The matrix is *defective*: diagonalization fails, and the Jordan chains are laborious. CH, with derivatives for the repeated eigenvalue, needs no eigenvectors.
+- The matrix has *repeated eigenvalues* but is still diagonalizable: CH avoids computing eigenvectors.
+- You want a closed form without computing $\mathbf{V}^{-1}$: CH never inverts a matrix, it only multiplies powers of $\mathbf{A}$.
+- You work with *symbolic parameters*: eigenvectors become rational expressions in the parameters, while CH's coefficients stay simpler.
 
 In short: **Cayley–Hamilton to compute, diagonalization (and its Jordan extension) to understand.**^[In the spirit of Hamming's motto, "The purpose of computing is insight, not numbers" [@hamming1962numerical]. For many more ways to compute $e^{\mathbf{A}t}$, and why most of them are numerically dubious, see @moler2003nineteen.]
 
@@ -1226,21 +1225,21 @@ In short: **Cayley–Hamilton to compute, diagonalization (and its Jordan extens
 \begin{example}[frametitle={Example - diagonalization and Cayley–Hamilton on the same matrix}]
 ```
 
-A quick one to watch both routes land on the same $\Phi(t)$:
+Both methods applied to one matrix:
 
 $$
 \mathbf{A} = \begin{bmatrix} -3 & 4 \\ 0 & -2 \end{bmatrix}
 $$
 
-Upper-triangular, so the eigenvalues sit right on the diagonal: $\lambda_1 = -3$, $\lambda_2 = -2$ — distinct, hence diagonalizable.
+It is upper triangular, so the eigenvalues are the diagonal entries, $\lambda_1 = -3$ and $\lambda_2 = -2$. They are distinct, so $\mathbf{A}$ is diagonalizable.
 
 **Diagonalization.** Eigenvectors from $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$, one eigenvalue at a time.
 
-For $\lambda_1 = -3$: $(\mathbf{A} + 3\mathbf{I})$ the surviving equation is $4v_2 = 0$ (row two says $v_2 = 0$, the same constraint), forcing $v_2 = 0$ with $v_1$ free $\vec{v}_1 = \tvec{1,0}$
+For $\lambda_1 = -3$: $\mathbf{A} + 3\mathbf{I} = \begin{bmatrix} 0 & 4 \\ 0 & 1 \end{bmatrix}$, so $v_2 = 0$ and $v_1$ is free: $\vec{v}_1 = \tvec{1, 0}$.
 
-For $\lambda_2 = -2$: $(\mathbf{A} + 2\mathbf{I})$ leaves the single equation $-v_1 + 4v_2 = 0$, i.e. $v_1 = 4v_2$; picking $v_2 = 1$ gives $\vec{v}_2 = \tvec{4,1}$
+For $\lambda_2 = -2$: $\mathbf{A} + 2\mathbf{I} = \begin{bmatrix} -1 & 4 \\ 0 & 0 \end{bmatrix}$ leaves $-v_1 + 4v_2 = 0$, so $v_1 = 4v_2$; with $v_2 = 1$, $\vec{v}_2 = \tvec{4, 1}$.
 
-Then we assemble the vector matrix $\mathbf{V}$ and the diagonal eigenvalue matrix $\boldsymbol{\Lambda}$:
+With the eigenvectors as the columns of $\mathbf{V}$ and the eigenvalues on the diagonal of $\boldsymbol{\Lambda}$:
 
 $$
 \Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}
@@ -1264,7 +1263,7 @@ $$
 = \begin{bmatrix} e^{-3t} & 4(e^{-2t}-e^{-3t}) \\ 0 & e^{-2t} \end{bmatrix}
 $$
 
-Identical to the diagonalization result — two routes, same $\Phi(t)$, and indeed $\Phi(0) = \mathbf{I}$.
+This is the diagonalization result again, and $\Phi(0) = \mathbf{I}$.
 
 ```{=latex}
 \end{example}
@@ -1274,7 +1273,7 @@ Identical to the diagonalization result — two routes, same $\Phi(t)$, and inde
 \begin{example}[frametitle={Example - complex eigenvalues: $\Phi$ via Cayley–Hamilton and an impulse response}]
 ```
 
-A two-parter that leans on complex eigenvalues (so the state spirals) and an impulse input:
+An example with complex eigenvalues, so the state spirals, and an impulse input:
 
 $$
 \begin{bmatrix} \dot{x}_1 \\ \dot{x}_2 \end{bmatrix}
@@ -1282,7 +1281,7 @@ $$
 + \begin{bmatrix} 1 \\ 0 \end{bmatrix}u
 $$
 
-**(a) $\Phi$ via Cayley–Hamilton.** The characteristic polynomial,
+**(a) $\Phi$ via Cayley–Hamilton.** The characteristic polynomial is
 
 $$
 \det(\lambda\mathbf{I} - \mathbf{A})
@@ -1290,24 +1289,24 @@ $$
 = (\lambda+1)^2 + 1 = \lambda^2 + 2\lambda + 2
 $$
 
-the quadratic formula gives the conjugate pair $\lambda = -1 \pm i$. Cayley–Hamilton doesn't care: $\mathbf{A}^2 + 2\mathbf{A} + 2\mathbf{I} = \mathbf{0}$, so with $n = 2$
+with the conjugate roots $\lambda = -1 \pm i$. Cayley–Hamilton works the same for complex eigenvalues: $\mathbf{A}^2 + 2\mathbf{A} + 2\mathbf{I} = \mathbf{0}$, so with $n = 2$
 
 $$e^{\mathbf{A}t} = \alpha_0(t)\mathbf{I} + \alpha_1(t)\mathbf{A}$$
 $$e^{\lambda t} = \alpha_0 + \alpha_1\lambda$$
 
-Evaluate at $\lambda = -1 + i$ (the conjugate root merely conjugates the same equations). By Euler, $e^{(-1+i)t} = e^{-t}(\cos t + i\sin t)$, so splitting $\alpha_0 + \alpha_1(-1+i)$ into real and imaginary parts:
+Evaluate at $\lambda = -1 + i$ (the conjugate root gives the conjugate equation, nothing new). By Euler, $e^{(-1+i)t} = e^{-t}(\cos t + i\sin t)$, so splitting $\alpha_0 + \alpha_1(-1+i)$ into real and imaginary parts:
 
 $$e^{-t}\cos t = \alpha_0 - \alpha_1$$
 $$e^{-t}\sin t = \alpha_1$$
 
-hence $\alpha_1 = e^{-t}\sin t$ and $\alpha_0 = e^{-t}(\cos t + \sin t)$. Reassembling entrywise:
+hence $\alpha_1 = e^{-t}\sin t$ and $\alpha_0 = e^{-t}(\cos t + \sin t)$. Then
 
 $$
 \Phi(t) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}
 = e^{-t}\begin{bmatrix} \cos t & -\sin t \\ \sin t & \cos t \end{bmatrix}
 $$
 
-the state transition matrix is $e^{-t}$ times a rotation: it spins the state while pulling it toward the origin — a decaying spiral. Sanity check: $\Phi(0) = \mathbf{I}$.
+So $\Phi$ is $e^{-t}$ times a rotation: it rotates the state while shrinking it toward the origin, a decaying spiral. Sanity check: $\Phi(0) = \mathbf{I}$.
 
 **(b) Impulse response.** Take $\vec{x}(0) = \tvec{1,1}$ and $u(t) = \delta(t)$. The nonhomogeneous solution
 
@@ -1315,7 +1314,7 @@ $$
 \vec{x}(t) = \Phi(t)\vec{x}(0) + \int_0^t \Phi(t-\tau)\mathbf{B}\,u(\tau)\,d\tau
 $$
 
-collapses under the sifting property: the $\delta$ at $\tau = 0$ pulls $\Phi(t)\mathbf{B}$ out of the integral — physically, the impulse at $t = 0$ jumps the state by $\mathbf{B}$, so the motion is free from $\vec{x}(0) + \mathbf{B}$:
+simplifies by the sifting property: the $\delta$ at $\tau = 0$ turns the integral into $\Phi(t)\mathbf{B}$. Physically, the impulse at $t = 0$ makes the state jump by $\mathbf{B}$, and from $\vec{x}(0) + \mathbf{B}$ the system evolves freely:
 
 $$
 \vec{x}(t) = \Phi(t)\big(\vec{x}(0) + \mathbf{B}\big)
@@ -1327,7 +1326,7 @@ $$
 = e^{-t}\begin{bmatrix} 2\cos t - \sin t \\ 2\sin t + \cos t \end{bmatrix}
 $$
 
-Sanity check: at $t = 0^+$ this gives $\tvec{2,1} = \vec{x}(0) + \mathbf{B}$, the state right after the kick, and the $e^{-t}$ envelope pulls it back to $\vec{0}$ — the decaying spiral of part (a).
+Sanity check: at $t = 0^+$ this gives $\tvec{2,1} = \vec{x}(0) + \mathbf{B}$, the state right after the kick, which then spirals into the origin as in part (a).
 
 ```{=latex}
 \end{example}

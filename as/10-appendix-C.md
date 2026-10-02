@@ -56,7 +56,7 @@ Partially elastic crash of an object to the wall is modeled with a spring and a 
 ```{=latex}
 \input{tikz/kolokvij-2023-crash.tex}
 ```
-
+ 
 a. Model the crash with state equations in the form $\dot{\vec{x}} = \mathbf{A}\vec{x}$, where $\vec{x} = \tvec{x, v}$
 b. Write the response equation in the form of $y = \mathbf{C}\vec{x}$, where $y$ is the entire external force acting on the object $y(t) = F(t)$.
 c. With Laplace transformation find the solution of the system $\vec{x}(t)$ for parameters m=5kg, k=20N/m, b=25Ns/m and initial speed of v(0) = -10m/s
@@ -184,7 +184,7 @@ Inductor: $\; v_L = L\dot{i}_L, \quad v_L = V_1 - V_2$
 
 And we note that $V_1 = v_{g1}$.
 
-Instead of trying to rearrange the node equations from the start, start with the equations that already contain the derivatives — the constitutive relations of the two energy-storing elements, $i_C = C\dot{v}_C$ and $v_L = L\dot{i}_L$. They give the state derivatives directly; the node equations are only used to fill in whatever current or voltage they still need.
+Rather than rearranging the node equations, start from the equations that already contain the derivatives: the constitutive relations of the two energy-storing elements, $i_C = C\dot{v}_C$ and $v_L = L\dot{i}_L$. They give the state derivatives directly; the node equations are only used to fill in whatever current or voltage they still need.
 
 **Step 3 — Capacitor** What we need is: **$\dot{v}_C$** expressed as a function of the states and the inputs.
 
@@ -256,46 +256,26 @@ with $\mathbf{A} = \begin{bmatrix} -\frac{R_1}{L} & -\frac{1}{L} \\ \frac{1}{C} 
 
 ### Problem 4a (2021-01-26 / 1)
 
-aka what if you accidentally ground the wrong rail? The circuit is the same as in Problem 1, but the bottom rail is not grounded. Instead, the top rail is grounded. Find the state-space equations in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}\vec{u}$, where $\vec{x} = \tvec{i_L, v_C}$ and $\vec{u} = \tvec{i_g, v_g}$.
+What happens if you ground the wrong rail? In the circuit below the bottom rail is grounded, so the voltage source $v_g$ floats between two non-ground nodes. Find the state-space equations in the form $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}u$, where $\vec{x} = \tvec{i_L, v_C}$ and $u = v_g$.
 
 
-```text
-V1 --------- - vg + --------- V2 ------------------
-|                             |                   |
-|                             |                   |
-R1                            R2                  R3
-|                             |                   |
-|                             |                   V3
-|                             |                   |
-|                             |                   C
-|                             |                   |
-V4 ---- L --------------------+-------------------+------ GND
+```{=latex}
+\input{tikz/exam-2021-wrong-ground-a.tex}
 ```
 
 
 $$
 i_L + \frac{V_2}{R_2} + \frac{V_2 - v_C}{R_3} = 0
 \quad\Longrightarrow\quad
-V_2 = \frac{R_2,v_C - R_2R_3,i_L}{R_2 + R_3}
+V_2 = \frac{R_2\,v_C - R_2R_3\,i_L}{R_2 + R_3}
 $$
 
 ### Problem 4b (2021-01-26 / 1)
 
-TODO: is it really the same as 1?
+The same circuit, now with the top rail grounded at the minus terminal of $v_g$. Again find $\dot{\vec{x}} = \mathbf{A}\vec{x} + \mathbf{B}u$ with $\vec{x} = \tvec{i_L, v_C}$ and $u = v_g$.
 
-Correct the previous problem: the top rail is grounded.
-
-```text
-GND -------- - vg + --------- Vg ------------------
-|                             |                   |
-|                             |                   |
-R1                            R2                  R3
-|                             |                   |
-|                             |                   V2
-|                             |                   |
-|                             |                   C
-|                             |                   |
-V4 ---- L --------------------+-------------------+---- V3
+```{=latex}
+\input{tikz/exam-2021-wrong-ground-b.tex}
 ```
 
 **Step 2** Node and element equations.
@@ -310,7 +290,7 @@ Capacitor: $\; i_C = C\dot{v}_C, \quad v_C = V_2 - V_3$
 
 Inductor: $\; v_L = L\dot{i}_L, \quad v_L = V_4 - V_3$
 
-And we note that $V_g = v_g$ — grounding the top rail fixes $V_g$ by the source, so there is no node equation at $V_g$ to solve and the source current $i_{v_g}$ never appears (contrast with Problem 4a, where the floating source forced a supernode).
+And we note that $V_g = v_g$: with the top rail grounded, the source fixes $V_g$, so there is no node equation at $V_g$ to solve and the source current $i_{v_g}$ never appears (contrast with Problem 4a, where the floating source forced a supernode).
 
 $$
 i_C + \frac{V_2 - V_g}{R_3} - i_C - i_L + \frac{V_3 - V_g}{R_2} = 0
@@ -319,10 +299,10 @@ i_C + \frac{V_2 - V_g}{R_3} - i_C - i_L + \frac{V_3 - V_g}{R_2} = 0
 $$
 
 $$
-\dot{i}_L = \frac{1}{L}\Big[\frac{R_2}{R_2+R_3},v_C - \Big(R_1 + \frac{R_2R_3}{R_2+R_3}\Big)i_L - v_g\Big]
+\dot{i}_L = \frac{1}{L}\Big[\frac{R_2}{R_2+R_3}\,v_C - \Big(R_1 + \frac{R_2R_3}{R_2+R_3}\Big)i_L - v_g\Big]
 $$
 $$
-\dot{v}_C = -\frac{R_2,i_L + v_C}{C(R_2+R_3)}
+\dot{v}_C = -\frac{R_2\,i_L + v_C}{C(R_2+R_3)}
 $$
 
 ## Discrete
@@ -340,7 +320,7 @@ d. Is given model valid for all times $k > 0$?
 
 State $x_1[k]$ = operational tanks of unit $a$, $x_2[k]$ = operational tanks of unit $b$ at minute $k$.
 
-Each of the $x_1[k]$ tanks of unit $a$ destroys one tank of unit $b$ with probability $\alpha$, so unit $b$ loses on average $\alpha x_1[k]$ tanks per step. Each of the $x_2[k]$ tanks of unit $b$ destroys a tank of unit $a$ with probability $\beta$, but the shields of unit $a$ save it with probability $\gamma$ — it is destroyed only with probability $1 - \gamma$. Hence unit $a$ loses on average $\beta(1-\gamma)x_2[k]$ tanks per step:
+Each of the $x_1[k]$ tanks of unit $a$ destroys one tank of unit $b$ with probability $\alpha$, so unit $b$ loses on average $\alpha x_1[k]$ tanks per step. Each of the $x_2[k]$ tanks of unit $b$ destroys a tank of unit $a$ with probability $\beta$, but the shields of unit $a$ save it with probability $\gamma$, so it is destroyed only with probability $1 - \gamma$. Hence unit $a$ loses on average $\beta(1-\gamma)x_2[k]$ tanks per step:
 
 $$
 x_1[k+1] = x_1[k] - \beta(1-\gamma)\,x_2[k]

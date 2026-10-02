@@ -13,7 +13,8 @@ default: as
 
 as:
     pandoc AS.md 00-introduction.md 01-modeling.md 02-linear-algebra.md 03-state-space.md 04-properties.md \
-    05-transfer-functions.md 06-linearization.md 07-discrete.md 08-appendix-A.md 09-appendix-B.md -o AS.pdf --pdf-engine=xelatex -H preamble.tex \
+    05-transfer-functions.md 06-linearization.md 07-discrete.md 08-appendix-A.md 09-appendix-B.md \
+    10-appendix-C.md 11-appendix-D-review.md -o AS.pdf --pdf-engine=xelatex -H preamble.tex \
     -V geometry:margin=1in --toc --citeproc --bibliography=references.bib --csl={{csl}} \
     --metadata reference-section-title={{refs_title}}
 

@@ -1,0 +1,21 @@
+\begin{center}
+\begin{circuitikz}[scale=1.0, european resistors, american voltages, american currents]
+  % top rail: grounded node -- source -- Vg -- right branch
+  \draw (0,5) node[ground, rotate=180]{} to[V, l=$v_g$, invert] (4,5) node[circ,label=above:$V_g$]{} -- (8,5);
+
+  % left branch R1
+  \draw (0,5) to[R=$R_1$] (0,0) node[circ,label=below:$V_4$]{};
+
+  % middle branch R2
+  \draw (4,5) to[R=$R_2$] (4,0);
+
+  % right branch R3 + C
+  \draw (8,5) to[R=$R_3$] (8,2.5) node[circ,label=right:$V_2$]{};
+  \draw (8,2.5) to[C=$C$] (8,0);
+  \node at (7.45,1.75) {$+$};
+  \node at (7.2,1.2) {$v_C$};
+
+  % bottom rail with L
+  \draw (0,0) to[L=$L$, i>^=$i_L$] (4,0) -- (8,0) node[circ,label=below:$V_3$]{};
+\end{circuitikz}
+\end{center}

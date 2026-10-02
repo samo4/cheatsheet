@@ -16,7 +16,7 @@ $$
 \mathbf{A}\mathbf{B} = \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{bmatrix}\begin{bmatrix} 7 & 8 \\ 9 & 10 \\ 11 & 12 \end{bmatrix}
 $$
 
-Entry by entry (just one) :
+For example, the first entry:
 
 $$
 c_{11} = 1\cdot7 + 2\cdot9 + 3\cdot11 = 58
@@ -36,7 +36,7 @@ Note the order matters: $\mathbf{B}\mathbf{A}$ is $3\times3$, so it cannot equal
 
 ## Vectors, bases and norms
 
-*Linear independence.* a set of vectors is independent when $c_1\vec{v}_1 + \cdots + c_k\vec{v}_k = \vec{0}$ iff all $c_i = 0$, i.e. none is a combination of the others. As matrix columns: rank $k$. In $\mathbb{R}^n$ at most $n$ of them.
+*Linear independence.* A set of vectors is independent when $c_1\vec{v}_1 + \cdots + c_k\vec{v}_k = \vec{0}$ iff all $c_i = 0$, i.e. none is a combination of the others. Stacked as matrix columns, $k$ independent vectors give rank $k$; in $\mathbb{R}^n$ there can be at most $n$ of them.
 
 *Basis.* $n$ independent vectors, stacked as columns of $\mathbf{T}$, form a basis; every $\vec{x}$ has unique coordinates $\tilde{\vec{x}}$ in it:
 
@@ -52,7 +52,7 @@ Same vector, new description. ($\mathbf{T}^{-1}$ exists because the columns are 
 - scaling: $\lVert c\vec{x}\rVert = |c|\,\lVert\vec{x}\rVert$
 - triangle inequality: $\lVert\vec{x} + \vec{y}\rVert \le \lVert\vec{x}\rVert + \lVert\vec{y}\rVert$
 
-Every norm defines a distance (a metric), $d(\vec{x}, \vec{y}) = \lVert\vec{x} - \vec{y}\rVert$, and the three properties above are exactly what a distance needs.
+Every norm defines a distance (a metric), $d(\vec{x}, \vec{y}) = \lVert\vec{x} - \vec{y}\rVert$, and the three properties above are what a distance needs.
 
 ```{=latex}
 \begin{example}[frametitle={Example - three ways to measure a street walk}]
@@ -68,15 +68,15 @@ In a city with a square street grid, the destination is 3 blocks east and 4 bloc
 \end{example}
 ```
 
-*Dot product.* Multiply matching entries and add them up $\vec{x}^T\vec{y}$. The result is a single number, not a vector. Geometrically, $\vec{x}^T\vec{y} = \lVert\vec{x}\rVert_2\,\lVert\vec{y}\rVert_2\cos\theta$, with $\theta$ the angle between the two arrows, so it measures how much they point the same way.
+*Dot product.* Multiply matching entries and add them up: $\vec{x}^T\vec{y}$. The result is a single number, not a vector. Geometrically, $\vec{x}^T\vec{y} = \lVert\vec{x}\rVert_2\,\lVert\vec{y}\rVert_2\cos\theta$, with $\theta$ the angle between the two arrows, so it measures how much they point the same way.
 
-*Orthonormal.* Two vectors are orthogonal when their dot product is zero. A vector is *normal* (normalized) when it has unit length, $\vec{q}^T\vec{q} = 1$.\footnote{Order matters. Mulitplying a vector by its transposed self gives the inner product — a single number. If you swap it around you get a matrix. Incidently: dot product and inner product are not strictly the same thing.} Why it is worth having? Stack the basis as columns of $\mathbf{Q}$. Entry $(i,j)$ of $\mathbf{Q}^T\mathbf{Q}$ is exactly $\vec{q}_i^T\vec{q}_j$, so the conditions above say $\mathbf{Q}^T\mathbf{Q} = \mathbf{I}$ — the inverse comes free by transposing:
+*Orthonormal.* Two vectors are orthogonal when their dot product is zero. A vector is *normal* (normalized) when it has unit length, $\vec{q}^T\vec{q} = 1$.\footnote{Order matters. Multiplying a transposed vector by a vector, $\vec{q}^T\vec{q}$, gives the inner product, a single number. The other order, $\vec{q}\vec{q}^T$, gives a matrix. Strictly, dot product and inner product are not the same thing.} Why is this useful? Stack the basis as columns of $\mathbf{Q}$. Entry $(i,j)$ of $\mathbf{Q}^T\mathbf{Q}$ is $\vec{q}_i^T\vec{q}_j$, so the conditions above say $\mathbf{Q}^T\mathbf{Q} = \mathbf{I}$, and the inverse is the transpose:
 
 $$
 \mathbf{Q}^{-1} = \mathbf{Q}^T, \qquad \tilde{\vec{x}} = \mathbf{Q}^T\vec{x}, \qquad \tilde{x}_i = \vec{q}_i^T\vec{x}
 $$
 
-Each coordinate is simply the shadow of $\vec{x}$ on one basis vector. In a general basis $\mathbf{T}$ the coordinates are coupled and you have to solve $\mathbf{T}\tilde{\vec{x}} = \vec{x}$. Lengths and angles also survive the change. Such $\mathbf{Q}$ are rotations and reflections — they move the grid but never stretch it.
+Each coordinate is the projection of $\vec{x}$ on one basis vector. In a general basis $\mathbf{T}$ the coordinates are coupled and you have to solve $\mathbf{T}\tilde{\vec{x}} = \vec{x}$. Lengths and angles are also preserved. Such $\mathbf{Q}$ are rotations and reflections: they move the grid but never stretch it.
 
 ```{=latex}
 \begin{example}[frametitle={Example - coordinates in a rotated grid}]
@@ -158,13 +158,13 @@ Put simply, multiplying can never raise the rank, only keep it or lower it. An i
 
 $$ \mathcal{O} = \begin{bmatrix} C \\ CA \end{bmatrix} = \begin{bmatrix} -1 & -1 \\ 3 & 7 \end{bmatrix}  $$
 
-$\mathcal{O}$ is $2\times2$, so $n = 2$. Row-reduce — rank is unchanged by row operations, and the point is to force a zero under the first pivot, the column-by-column drill detailed under Gauss elimination below. This time the leading entry is $-1$, and the cheapest first move is to flip the row: $-R_1$ turns it into the favourite pivot $+1$ and spares every sign from here on — rank never minds a row being multiplied by $-1$. Then clear column 1 with $R_2 - 3R_1$:
+$\mathcal{O}$ is $2\times2$, so $n = 2$. Row-reduce (row operations do not change the rank) to get a zero under the first pivot, as described under Gauss elimination below. The leading entry is $-1$, so first flip the row: $-R_1$ gives the pivot $+1$ and avoids sign errors later. Then clear column 1 with $R_2 - 3R_1$:
 
 $$
 \mathcal{O} \sim \begin{bmatrix} 1 & 1 \\ 0 & 4 \end{bmatrix}
 $$
 
-($-R_1$: $[-1\ -1] \to [1\ 1]$; then $3 - 3\cdot1 = 0$, $7 - 3\cdot1 = 4$). Now independence is plain to see: with a $0$ in its first slot, row 2 could only be a multiple of row 1 if it were the *zero* multiple — any $\alpha\begin{bmatrix}1 & 1\end{bmatrix}$ starts with $\alpha$, which vanishes only for $\alpha = 0$ — and row 2 is not the zero row. Two pivots, one per row, so the rows are linearly independent and
+($-R_1$: $[-1\ -1] \to [1\ 1]$; then $3 - 3\cdot1 = 0$, $7 - 3\cdot1 = 4$). Now independence is easy to see: row 2 starts with $0$ and row 1 with $1$, so row 2 could only be a multiple of row 1 if it were the zero row, and it is not. Two pivots, one per row, so the rows are linearly independent and
 
 $$
 \operatorname{rank}\mathcal{O} = 2 = n,
@@ -172,7 +172,7 @@ $$
 
 i.e. $\mathcal{O}$ has *full rank*.
 
-Rectangular matrices work the same way, the rank is just capped by the smaller dimension, $\operatorname{rank}\mathbf{A} \le \min(m, n)$. A tall $3\times2$ has the same shape as an $\mathcal{O}$ with $n = 2$ states; here row 2 was planted as $2\times$ row 1:
+Rectangular matrices work the same way; the rank is limited by the smaller dimension, $\operatorname{rank}\mathbf{A} \le \min(m, n)$. A tall $3\times2$ has the same shape as an $\mathcal{O}$ with $n = 2$ states; here row 2 was planted as $2\times$ row 1:
 
 $$
 \mathbf{A} = \begin{bmatrix} 1 & 2 \\ 2 & 4 \\ 3 & 7 \end{bmatrix}
@@ -180,7 +180,7 @@ $$
 \begin{bmatrix} 1 & 2 \\ 0 & 0 \\ 0 & 1 \end{bmatrix}
 $$
 
-Row 2 collapses to zero, but row 3 still leaves a pivot in column 2, so $\operatorname{rank}\mathbf{A} = 2 = n$, which is *full column rank*. That is exactly what the observability test $\operatorname{rank}\mathcal{O} = n$ asks for. A redundant row costs nothing, as long as the other rows $\mathbf{C}\mathbf{A}^k$ still supply all $n$ directions.
+Row 2 collapses to zero, but row 3 still leaves a pivot in column 2, so $\operatorname{rank}\mathbf{A} = 2 = n$, which is *full column rank*. That is what the observability test $\operatorname{rank}\mathcal{O} = n$ asks for. A redundant row costs nothing, as long as the other rows $\mathbf{C}\mathbf{A}^k$ still supply all $n$ directions.
 
 ```{=latex}
 \end{example}
@@ -198,9 +198,9 @@ $$
 
 For $n\times n$, expand along a row or column; signs alternate $+,-,+,\dots$.
 
-*Square shortcut.* $full rank ⇔ \det\mathbf{A} \ne 0$ When the matrix is square, one number settles full rank: for $n\times n$ $\mathbf{A}$, $\operatorname{rank}\mathbf{A} = n$ exactly when $\det\mathbf{A} \ne 0$ — dependent rows or columns are precisely what make the determinant vanish, and their absence *is* full rank. This is the often the cheapest route to any rank tests of square matrices that you might encounter.
+*Square shortcut.* For a square $n\times n$ matrix, $\operatorname{rank}\mathbf{A} = n$ exactly when $\det\mathbf{A} \ne 0$, because dependent rows or columns are what make the determinant vanish. This is often the quickest rank test for a square matrix.
 
-Also useful later: $\det(\mathbf{A}\mathbf{B}) = \det\mathbf{A}\,\det\mathbf{B}$ and $\det(\mathbf{A}^{-1}) = 1/\det\mathbf{A}$. Swapping two rows or two columns multiplies the determinant by $-1$ — so reordering the columns of an eigenvector matrix only flips the sign.
+Also useful later: $\det(\mathbf{A}\mathbf{B}) = \det\mathbf{A}\,\det\mathbf{B}$ and $\det(\mathbf{A}^{-1}) = 1/\det\mathbf{A}$. Swapping two rows or two columns multiplies the determinant by $-1$, so reordering the columns of an eigenvector matrix only flips the sign.
 
 ### Inverse of a matrix
 
@@ -242,11 +242,11 @@ $$
 
 A few heuristics for choosing the moves:
 
-- *Work one column at a time, left to right.* The leading $1$ in row 1 is the pivot; kill everything below it with $R_i - a_{i1}R_1$ — the multiplier is always entry-over-pivot.
-- *Favor a pivot of $1$.* Swap a row with a $1$ up, or flip a $-1$ with $-R_i$, rather than dragging fractions along.
-- *Rows above the current pivot are finished* — leave them alone until the end, then eliminate upward until the left block is $\mathbf{I}$.
+- *Work one column at a time, left to right.* The leading $1$ in row 1 is the pivot; clear everything below it with $R_i - a_{i1}R_1$. The multiplier is always the entry divided by the pivot.
+- *Favor a pivot of $1$.* Swap a row with a $1$ up, or flip a $-1$ with $-R_i$, rather than carrying fractions along.
+- *Rows above the current pivot are finished.* Leave them alone until the end, then eliminate upward until the left block is $\mathbf{I}$.
 
-Row operations act on every column the same way, so nothing stops you carrying $\vec{b}$ *and* $\mathbf{I}$ along at once, $[\mathbf{A} \mid \vec{b} \mid \mathbf{I}]$ — one reduction, two answers:
+Row operations act on every column the same way, so you can carry $\vec{b}$ *and* $\mathbf{I}$ along at once, $[\mathbf{A} \mid \vec{b} \mid \mathbf{I}]$, and get both answers from one reduction:
 
 $$
 \left[\begin{array}{cc|c|cc} 1 & 1 & 1 & 1 & 0 \\ 2 & 1 & 3 & 0 & 1 \end{array}\right]
@@ -268,11 +268,11 @@ $$
 \mathbf{A}\mathbf{A}^{-1} = \begin{bmatrix} -1+2 & 1-1 \\ -2+2 & 2-1 \end{bmatrix} = \mathbf{I}.
 $$
 
-Once you have $\mathbf{A}^{-1}$, any other right-hand side is just a multiplication, $\vec{x} = \mathbf{A}^{-1}\vec{b}$, with no reduction to redo. Row operations, swaps included, never scramble the variables: a row is one *equation*, and $A, B$ stay glued to columns 1 and 2. Only swapping *columns* would relabel them.
+Once you have $\mathbf{A}^{-1}$, any other right-hand side takes a single multiplication, $\vec{x} = \mathbf{A}^{-1}\vec{b}$, with no reduction to redo. Row operations, swaps included, never scramble the variables: a row is one *equation*, and $A, B$ stay tied to columns 1 and 2. Only swapping *columns* would relabel them.
 
 Sanity check against the original, not the reduced system: $2 - 1 = 1$, $2(2) - 1 = 3$.
 
-Side note: strictly, Gauss elimination is not the same as the (eigen)diagonalization below. Row reduction only left-multiplies $\mathbf{A}$ by elementary matrices, so it does *not* preserve eigenvalues — diagonalization is a similarity $\mathbf{T}^{-1}\mathbf{A}\mathbf{T}$ and needs column operations too. What elimination does give you is the rank, and that is exactly what detects the singularity behind $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.
+Side note: strictly, Gauss elimination is not the same as the (eigen)diagonalization below. Row reduction only left-multiplies $\mathbf{A}$ by elementary matrices, so it does *not* preserve eigenvalues; diagonalization is a similarity $\mathbf{T}^{-1}\mathbf{A}\mathbf{T}$ and needs column operations too. What elimination does give you is the rank, which is what detects the singularity behind $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.
 
 ```{=latex}
 \end{example}
@@ -286,23 +286,23 @@ $$
 \mathbf{A}^{-1} = \frac{1}{\det\mathbf{A}}\operatorname{adj}\mathbf{A},
 $$
 
-where $\operatorname{adj}\mathbf{A}$ is the transpose of the matrix of cofactors. For a $2\times2$ matrix where $a,b$ is the first row and $c,d$ the second row, this collapses to the famous formula
+where $\operatorname{adj}\mathbf{A}$ is the transpose of the matrix of cofactors. For a $2\times2$ matrix where $a,b$ is the first row and $c,d$ the second row, this reduces to the familiar formula
 
 $$
-\mathbf{A}^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix},
+\mathbf{A}^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}.
 $$
 
 ## Eigenvalues and eigenvectors
 
 A common use for matrices is to describe linear transformations. A transformation $\vec{x}  \mapsto \mathbf{A}\vec{x}$ can stretch, shrink, rotate, or reflect vectors. Eigenvectors are the special directions that are only stretched or shrunk, not rotated.
 
-A nonzero vector $\vec{v}$ is an eigenvector of $\mathbf{A}$ if multiplying by $\mathbf{A}$ just scales it:
+A nonzero vector $\vec{v}$ is an eigenvector of $\mathbf{A}$ if multiplying by $\mathbf{A}$ only scales it:
 
 $$
 \mathbf{A}\vec{v} = \lambda\vec{v}
 $$
 
-The scalar $\lambda$ is the eigenvalue.\footnote{D.Hilbert gave us the nice german name "Eigenwert" for eigenvalue} Rearranging gives $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$, so the eigenvectors are the null space of $\mathbf{A} - \lambda\mathbf{I}$ (without $\vec{0}$), called the eigenspace. A nonzero one exists iff that null space is nontrivial, i.e. $\mathbf{A} - \lambda\mathbf{I}$ is singular (rank below $n$, not invertible). Hence the eigenvalues are the roots of the characteristic polynomial
+The scalar $\lambda$ is the eigenvalue.\footnote{The name is half German: David Hilbert called it the \emph{Eigenwert}, the ``own value'' of the matrix.} Rearranging gives $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$, so the eigenvectors are the null space of $\mathbf{A} - \lambda\mathbf{I}$ (without $\vec{0}$), called the eigenspace. A nonzero one exists iff that null space is nontrivial, i.e. $\mathbf{A} - \lambda\mathbf{I}$ is singular (rank below $n$, not invertible). Hence the eigenvalues are the roots of the characteristic polynomial
 
 $$
 \det(\mathbf{A} - \lambda\mathbf{I}) = 0
@@ -313,7 +313,7 @@ For an $n \times n$ matrix this is a polynomial of degree $n$, so by the fundame
 ```{=latex}
 \begin{example}[frametitle={Note - triangular matrices}]
 ```
-If $\mathbf{A}$ is triangular (lower or upper), the determinant is just the product of the diagonal entries, so the eigenvalues are exactly the diagonal entries $a_{11}, a_{22}, \dots, a_{nn}$. This is why triangular (and diagonal) matrices are so convenient — no characteristic polynomial to solve.
+If $\mathbf{A}$ is triangular (lower or upper), the determinant is the product of the diagonal entries, so the eigenvalues are the diagonal entries $a_{11}, a_{22}, \dots, a_{nn}$. This is why triangular (and diagonal) matrices are so convenient: there is no characteristic polynomial to solve.
 ```{=latex}
 \end{example}
 ```
@@ -332,7 +332,7 @@ Both are lines crossing at $\vec{0}$. A vector on $E_7$ is stretched 7 times alo
 \input{tikz/eigenspaces-lay.tex}
 ```
 
-Granted, it might be hard to visualize in higher dimensions, but the principle is the same: each eigenspace is a subspace where the matrix acts as simple scaling.
+This is hard to picture in higher dimensions, but the principle is the same: each eigenspace is a subspace where the matrix acts as simple scaling.
 
 ```{=latex}
 \begin{example}[frametitle={Example - eigenvalues and eigenvectors}]
@@ -344,7 +344,7 @@ $$
 \det(\mathbf{A} - \lambda\mathbf{I}) = \begin{vmatrix} 1-\lambda & 0 & -1 \\ 1 & 2-\lambda & 1 \\ 2 & 2 & 3-\lambda \end{vmatrix} = (1-\lambda)(\lambda-2)(\lambda-3)
 $$
 
-so $\lambda_1 = 1$, $\lambda_2 = 2$, $\lambda_3 = 3$ — all distinct, hence $\mathbf{A}$ is diagonalizable.
+so $\lambda_1 = 1$, $\lambda_2 = 2$, $\lambda_3 = 3$. They are distinct, so $\mathbf{A}$ is diagonalizable.
 
 For $\lambda = 1$, solve $(\mathbf{A} - \mathbf{I})\vec{v} = \vec{0}$:
 
@@ -390,7 +390,7 @@ When $m_g < m_a$ for some eigenvalue, the matrix is *defective*. Its eigenvector
 1. Solve $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$ for the eigenvalues.
 2. For each $\lambda_i$, solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$; the number of free parameters in the solution is $m_{g,i}$.
 
-*Watch out for linear dependence.* Since $\lambda_i$ *is* an eigenvalue, the matrix $(\mathbf{A} - \lambda_i\mathbf{I})$ is singular by construction — its rows are linearly dependent. So when you solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$, don't be alarmed that one row turns out to be a multiple of another, or that a row is all zeros: that's exactly what should happen. Only the independent equations carry information — their number is the rank, and the leftover free variables are precisely the geometric multiplicity $m_{g,i}$.
+*Watch out for linear dependence.* Since $\lambda_i$ *is* an eigenvalue, the matrix $(\mathbf{A} - \lambda_i\mathbf{I})$ is singular by construction: its rows are linearly dependent. So when you solve $(\mathbf{A} - \lambda_i\mathbf{I})\vec{v} = \vec{0}$, don't be alarmed that one row turns out to be a multiple of another, or that a row is all zeros; that is what should happen. Only the independent equations carry information. Their number is the rank, and the remaining free variables give the geometric multiplicity $m_{g,i}$.
 
 ```{=latex}
 \begin{example}[frametitle={Example - a defective matrix}]
@@ -398,7 +398,7 @@ When $m_g < m_a$ for some eigenvalue, the matrix is *defective*. Its eigenvector
 
 Find the eigenvalues and eigenvectors of $\mathbf{A} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 2 & 1 \\ 0 & 0 & 2 \end{bmatrix}$.
 
-The characteristic polynomial (upper-triangular, so the eigenvalues sit on the diagonal):
+The characteristic polynomial (upper triangular, so the eigenvalues are the diagonal entries):
 
 $$
 \det(\mathbf{A} - \lambda\mathbf{I}) = \begin{vmatrix} 1-\lambda & 0 & 0 \\ 0 & 2-\lambda & 1 \\ 0 & 0 & 2-\lambda \end{vmatrix} = (1-\lambda)(2-\lambda)^2 = 0
@@ -412,9 +412,9 @@ $$
 (\mathbf{A} - \mathbf{I}) = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix}
 $$
 
-The first row vanished entirely — the eigenvalue knocked out the $(1,1)$ diagonal entry and there's nothing else in that row, so it contributes no equation. The other two rows are independent (each has a pivot), so the rank is $2$ and exactly one variable is free: $m_{g,1} = 3 - 2 = 1 = m_{a,1}$.
+The first row is zero, so it gives no equation. The other two rows are independent (each has a pivot), so the rank is $2$ and one variable is free: $m_{g,1} = 3 - 2 = 1 = m_{a,1}$.
 
-The surviving equations are $v_2 + v_3 = 0$ and $v_3 = 0$, which force $v_3 = 0$ and $v_2 = 0$ while leaving $v_1$ free:
+The remaining equations are $v_2 + v_3 = 0$ and $v_3 = 0$, which force $v_3 = 0$ and $v_2 = 0$ while leaving $v_1$ free:
 
 $$
 v_2 + v_3 = 0,\ v_3 = 0
@@ -424,7 +424,7 @@ v_3 = 0,\ v_2 = 0,\ v_1 \text{ free}
 \vec{v}_1 = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}
 $$
 
-As always, any scalar multiple of $\vec{v}_1$ is also an eigenvector — the eigenspace is the whole line through $\vec{v}_1$.
+As always, any scalar multiple of $\vec{v}_1$ is also an eigenvector; the eigenspace is the whole line through $\vec{v}_1$.
 
 For $\lambda_2 = 2$, solve $(\mathbf{A} - 2\mathbf{I})\vec{v} = \vec{0}$:
 
@@ -446,7 +446,7 @@ Sanity check: $\mathbf{A}\vec{v}_1 = \tvec{1,0,0} = 1\cdot\vec{v}_1$ and $\mathb
 
 ## Similarity transformation
 
-A matrix describes a linear map in a particular basis. Take the map $\vec{y} = \mathbf{A}\vec{x}$ and describe both vectors in a new basis. To picture it, it is exactly the eigenspace figure above, with $\vec{x} = \vec{w}$ and $\vec{y} = \mathbf{A}\vec{w}$. With an invertible $\mathbf{T}$ whose columns are the new basis vectors written in the old coordinates, the old coordinates follow from the new ones as
+A matrix describes a linear map in a particular basis. Take the map $\vec{y} = \mathbf{A}\vec{x}$ and describe both vectors in a new basis. To picture it, use the eigenspace figure above, with $\vec{x} = \vec{w}$ and $\vec{y} = \mathbf{A}\vec{w}$. With an invertible $\mathbf{T}$ whose columns are the new basis vectors written in the old coordinates, the old coordinates follow from the new ones as
 
 $$
 \underbrace{\vec{x}}_{\text{old}} = \mathbf{T}\underbrace{\tilde{\vec{x}}}_{\text{new}}, \qquad \underbrace{\vec{y}}_{\text{old}} = \mathbf{T}\underbrace{\tilde{\vec{y}}}_{\text{new}}
@@ -495,7 +495,7 @@ $$
 \mathbf{T} = [\vec{t}_1\ \vec{t}_2] = \tfrac{1}{\sqrt{2}}\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}
 $$
 
-$\mathbf{T}$ is a rotation, so its inverse is free: $\mathbf{T}^{-1} = \mathbf{T}^\mathsf{T}$ (true for any orthonormal columns). Take the map
+$\mathbf{T}$ is a rotation, so its inverse is its transpose, $\mathbf{T}^{-1} = \mathbf{T}^\mathsf{T}$ (true for any orthonormal columns). Take the map
 
 $$
 \mathbf{A} = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}
@@ -510,7 +510,7 @@ $$
 = \begin{bmatrix} 3 & 0 \\ 0 & 1 \end{bmatrix}
 $$
 
-So there was never any turning: the map stretches by 3 along the diagonal $\vec{t}_1$ and leaves the anti-diagonal $\vec{t}_2$ alone. The rotated basis just happens to line up with what $\mathbf{A}$ does.
+So the map does not turn anything: it stretches by 3 along the diagonal $\vec{t}_1$ and leaves the anti-diagonal $\vec{t}_2$ alone. The rotated basis happens to line up with what $\mathbf{A}$ does.
 
 *Follow one vector through.* Take $\vec{x} = \vec{e}_1 = \tvec{1, 0}$.
 
@@ -518,13 +518,13 @@ So there was never any turning: the map stretches by 3 along the diagonal $\vec{
 - New coordinates: $\tilde{\vec{x}} = \mathbf{T}^\mathsf{T}\vec{x} = \tfrac{1}{\sqrt{2}}\tvec{1, -1}$, then $\tilde{\vec{y}} = \tilde{\mathbf{A}}\tilde{\vec{x}} = \tfrac{1}{\sqrt{2}}\tvec{3, -1}$.
 - Back to old: $\mathbf{T}\tilde{\vec{y}} = \tfrac{3}{2}\tvec{1, 1} - \tfrac{1}{2}\tvec{-1, 1} = \tvec{2, 1}$. Same arrow, as it must be.
 
-*What survived and what didn't.*
+*What changed and what didn't.*
 
 - Eigenvalues $3, 1$ in both. $\operatorname{tr} = 4$ and $\det = 3$ in both.
 - The eigenvectors are the same arrows but not the same numbers: $\vec{t}_1, \vec{t}_2$ in old coordinates, $\tvec{1, 0}, \tvec{0, 1}$ in new ones.
-- The entries of the matrix did not survive at all. The off-diagonal 1s were a property of the coordinates, not of the map.
+- The entries of the matrix changed completely. The off-diagonal 1s were a property of the coordinates, not of the map.
 
-This is diagonalization in miniature: the columns of $\mathbf{T}$ are exactly the eigenvectors of $\mathbf{A}$, which is why $\tilde{\mathbf{A}}$ came out diagonal.
+This is diagonalization in miniature: the columns of $\mathbf{T}$ are the eigenvectors of $\mathbf{A}$, which is why $\tilde{\mathbf{A}}$ came out diagonal.
 
 ```{=latex}
 \end{example}
@@ -560,7 +560,7 @@ $$
 \mathbf{A} \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix} = \begin{bmatrix} \lambda_1\vec{v}_1 & \lambda_2\vec{v}_2 & \cdots & \lambda_n\vec{v}_n \end{bmatrix}
 $$
 
-The scaled columns on the right are just the original ones times the diagonal eigenvalue matrix $\boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)$:
+The scaled columns on the right are the original columns times the diagonal eigenvalue matrix $\boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)$:
 
 $$
 = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 & \cdots & \vec{v}_n \end{bmatrix}\begin{bmatrix}
@@ -570,19 +570,19 @@ $$
 \end{bmatrix}
 $$
 
-So, writing $\mathbf{V}$ for the stacked matrix, this is exactly
+So, writing $\mathbf{V}$ for the stacked matrix, this is
 
 $$
 \mathbf{A}\mathbf{V} = \mathbf{V}\boldsymbol{\Lambda}
 $$
 
-Independence makes $\mathbf{V}$ invertible, so multiplying by $\mathbf{V}^{-1}$ from either side gives the factorization and its twin, a similarity with $\mathbf{T} = \mathbf{V}$:
+Independence makes $\mathbf{V}$ invertible, so multiplying by $\mathbf{V}^{-1}$ from either side gives the factorization, or equivalently a similarity with $\mathbf{T} = \mathbf{V}$:
 
 $$
 \mathbf{A} = \mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}, \qquad \mathbf{V}^{-1}\mathbf{A}\mathbf{V} = \boldsymbol{\Lambda}
 $$
 
-The order of the columns is your choice — each eigenvalue on the diagonal of $\boldsymbol{\Lambda}$ just has to follow its own eigenvector. Swapping two columns of $\mathbf{V}$ (and the matching eigenvalues) flips the sign of $\det\mathbf{V}$ but leaves $\mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}$, and hence every $f(\mathbf{A})$, identical. Only $\det\mathbf{V} \ne 0$ really matters.
+The order of the columns is your choice, as long as each eigenvalue sits in $\boldsymbol{\Lambda}$ at the same position as its eigenvector in $\mathbf{V}$. Swapping two columns of $\mathbf{V}$ (and the matching eigenvalues) flips the sign of $\det\mathbf{V}$ but leaves $\mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}$, and hence every $f(\mathbf{A})$, unchanged. What matters is $\det\mathbf{V} \ne 0$.
 
 Since functions pass through a similarity, and a function of a diagonal matrix acts entry by entry,
 
@@ -590,13 +590,13 @@ $$
 f(\mathbf{A}) = \mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}
 $$
 
-The 45° example was exactly this with $\mathbf{V} = \mathbf{T}$. For the first eigenvalue example above (distinct eigenvalues), $\mathbf{V} = [\vec{v}_1\ \vec{v}_2\ \vec{v}_3]$ gives $\operatorname{diag}(1, 2, 3)$. In state space the new states are the *modes*: each $\dot{\tilde{x}}_i = \lambda_i\tilde{x}_i + (\mathbf{V}^{-1}\mathbf{B}\vec{u})_i$ evolves on its own, and $\Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$. Worked examples, including a coupled RC pair split into its modes, are in the State space chapter under $\Phi$ via diagonalization.
+The 45° example was this with $\mathbf{V} = \mathbf{T}$. For the first eigenvalue example above (distinct eigenvalues), $\mathbf{V} = [\vec{v}_1\ \vec{v}_2\ \vec{v}_3]$ gives $\operatorname{diag}(1, 2, 3)$. In state space the new states are the *modes*: each $\dot{\tilde{x}}_i = \lambda_i\tilde{x}_i + (\mathbf{V}^{-1}\mathbf{B}\vec{u})_i$ evolves on its own, and $\Phi(t) = \mathbf{V}e^{\boldsymbol{\Lambda}t}\mathbf{V}^{-1}$. Worked examples, including a coupled RC pair split into its modes, are in the State space chapter under $\Phi$ via diagonalization.
 
 The catch is the word *independent*. A defective matrix, like the one in the eigenvalue section, has fewer than $n$ of them, and then *no* $\mathbf{T}$ at all makes it diagonal. Take $\mathbf{A} = \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix}$. If it were similar to a diagonal matrix, that matrix would carry the eigenvalues $2, 2$, so it would be $2\mathbf{I}$. But $\mathbf{T}^{-1}(2\mathbf{I})\mathbf{T} = 2\mathbf{I} \ne \mathbf{A}$ for every $\mathbf{T}$. The best one can do is the Jordan form (next section).
 
 ## Jordan canonical form
 
-When a matrix is defective, we settle for the next best thing: a basis in which $\mathbf{A}$ is *as diagonal as possible*. That is the Jordan form.\footnote{C. Jordan published it in 1870. Not to be confused with W. Jordan of Gauss–Jordan elimination, a geodesist.} It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
+When a matrix is defective, we use the closest alternative: a basis in which $\mathbf{A}$ is *as diagonal as possible*. That is the Jordan form.\footnote{C. Jordan published it in 1870. Not to be confused with W. Jordan of Gauss–Jordan elimination, a geodesist.} It works for every $\mathbf{A}$, and for a diagonalizable one it *is* diagonalization.
 
 In other words, not every matrix is similar to a diagonal matrix, but every matrix is similar to a Jordan matrix.
 
@@ -606,7 +606,7 @@ That makes it useful far beyond this chapter. $\mathbf{J}$ is block diagonal, so
 
 A defective matrix is short of eigenvectors. The equation $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ always has solutions, since $\mathbf{A} - \lambda\mathbf{I}$ is singular, but only $m_g$ independent ones, fewer than the $m_a$ we need to fill $\mathbf{T}$.
 
-The observation that rescues us: square the matrix. Every solution of $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ also solves $(\mathbf{A} - \lambda\mathbf{I})^2\vec{v} = \vec{0}$, but the squared equation can have *more* independent solutions. The cube can add more still.
+The way out is to take powers of the matrix. Every solution of $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ also solves $(\mathbf{A} - \lambda\mathbf{I})^2\vec{v} = \vec{0}$, but the squared equation can have *more* independent solutions. The cube can add more still.
 
 ```{=latex}
 \begin{example}[frametitle={Example - eigenvector and generalized eigenvector}]
@@ -626,7 +626,7 @@ $$
 $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$ says only $v_2 = 0$, so $\vec{v}_1 = \tvec{1, 0}$. The rank is $1$, so $m_g = 2 - 1 = 1$: one eigenvector short.
 
 **Step 3 — generalized eigenvector**\
-The previous equation will not give us any more, so we square it. $(\mathbf{A} - \lambda\mathbf{I})^2 = \mathbf{0}$, so $(\mathbf{A} - \lambda\mathbf{I})^2\vec{v} = \vec{0}$ holds for *every* $\vec{v}$. 
+The eigenvector equation gives no more solutions, so we square the matrix. $(\mathbf{A} - \lambda\mathbf{I})^2 = \mathbf{0}$, so $(\mathbf{A} - \lambda\mathbf{I})^2\vec{v} = \vec{0}$ holds for *every* $\vec{v}$. 
 Pick one that does not already solve $(\mathbf{A} - \lambda\mathbf{I})\vec{v} = \vec{0}$, i.e. any vector off the $x_1$ axis, e.g. $\vec{v}_2 = \tvec{1, 1}$.
 
 **Step 4 — chain**\
@@ -672,7 +672,7 @@ For $m_a \le 3$ the first two rules already fix the sizes; the rank rule is need
 
 ### Building T
 
-The generalized eigenvectors are exactly what $\mathbf{T}$ needs. Its columns are found the same way as in diagonalization: read $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$ column by column. Take a single $2\times2$ block with columns $\vec{v}_1, \vec{v}_2$:
+The generalized eigenvectors fill the missing columns of $\mathbf{T}$. The columns are found the same way as in diagonalization: read $\mathbf{A}\mathbf{T} = \mathbf{T}\mathbf{J}$ column by column. Take a single $2\times2$ block with columns $\vec{v}_1, \vec{v}_2$:
 
 $$
 \mathbf{A}\begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix} = \begin{bmatrix} \vec{v}_1 & \vec{v}_2 \end{bmatrix}\begin{bmatrix} \lambda & 1 \\ 0 & \lambda \end{bmatrix} = \begin{bmatrix} \lambda\vec{v}_1 & \vec{v}_1 + \lambda\vec{v}_2 \end{bmatrix}
@@ -689,7 +689,7 @@ $$
 \end{aligned}
 $$
 
-Only $\vec{v}_1$ is a true eigenvector. The others are generalized eigenvectors: $(\mathbf{A} - \lambda\mathbf{I})$ does not kill them, but a power of it does, $(\mathbf{A} - \lambda\mathbf{I})^j\vec{v}_j = \vec{0}$.
+Only $\vec{v}_1$ is a true eigenvector. The others are generalized eigenvectors: $(\mathbf{A} - \lambda\mathbf{I})$ does not map them to zero, but a power of it does, $(\mathbf{A} - \lambda\mathbf{I})^j\vec{v}_j = \vec{0}$.
 
 *Build the chain from the top.* Solving $(\mathbf{A} - \lambda\mathbf{I})\vec{v}_2 = \vec{v}_1$ bottom-up is awkward. The matrix is singular, and for a badly chosen eigenvector $\vec{v}_1$ the system has no solution at all. Going down avoids this:
 
@@ -760,15 +760,15 @@ Instead of inverting $\mathbf{T}$, check $\mathbf{A}\mathbf{T} = \mathbf{T}\math
 \end{example}
 ```
 
-The superdiagonal 1s are not bookkeeping. In $e^{\mathbf{A}t}$ a $k\times k$ block turns into terms up to $t^{k-1}e^{\lambda t}$, see The exponential of a Jordan block below.
+The superdiagonal 1s have a visible effect: in $e^{\mathbf{A}t}$ a $k\times k$ block turns into terms up to $t^{k-1}e^{\lambda t}$, see The exponential of a Jordan block below.
 
 More worked examples, from the block structure through the chains to $\mathbf{T}$, are in the State space chapter under $\Phi$ via the Jordan form.
 
-*A caveat.* The Jordan form is a tool for thinking, not for numerical computation. It is discontinuous: perturb a Jordan block by $\varepsilon$ and the repeated eigenvalue splits, the matrix becomes diagonalizable, and $\mathbf{J}$ jumps to a diagonal matrix. Rounding errors do exactly this, so numerical software avoids the Jordan form (MATLAB's `jordan` is symbolic-only). It uses the Schur form $\mathbf{Q}^{*}\mathbf{A}\mathbf{Q}$ instead, which is triangular with orthogonal (unitary) $\mathbf{Q}$.
+*A caveat.* The Jordan form is a tool for thinking, not for numerical computation. It is discontinuous: perturb a Jordan block by $\varepsilon$ and the repeated eigenvalue splits, the matrix becomes diagonalizable, and $\mathbf{J}$ jumps to a diagonal matrix. Rounding errors do this, so numerical software avoids the Jordan form (MATLAB's `jordan` is symbolic-only). It uses the Schur form $\mathbf{Q}^{*}\mathbf{A}\mathbf{Q}$ instead, which is triangular with orthogonal (unitary) $\mathbf{Q}$.
 
 ## Functions of a square matrix
 
-Starting with Cayley in 1858, people asked whether run-of-the-mill scalar functions such as $\sqrt{x}$, $e^x$, $\sin x$ and $\cos x$ have any meaning when applied to a matrix. As a matter of fact, they do for square matrices.
+Starting with Cayley in 1858, people asked whether ordinary scalar functions such as $\sqrt{x}$, $e^x$, $\sin x$ and $\cos x$ can be applied to a matrix. For square matrices, they can.
 
 A function of a square matrix is defined by its power series: if the scalar function's Taylor series $f(\lambda) = \sum_k c_k\lambda^k$ converges, then $f(\mathbf{A}) = \sum_k c_k\mathbf{A}^k$. That is what $e^{\mathbf{A}t}$, $\sin\mathbf{A}$ or $\mathbf{A}^k$ mean.
 
@@ -780,9 +780,9 @@ $$
 f\left(\begin{bmatrix} \mathbf{B}_1 & \mathbf{0} \\ \mathbf{0} & \mathbf{B}_2 \end{bmatrix}\right) = \begin{bmatrix} f(\mathbf{B}_1) & \mathbf{0} \\ \mathbf{0} & f(\mathbf{B}_2) \end{bmatrix}
 $$
 
-That's why $\mathbf{J}$ is so useful. Functions pass through a similarity (the inner $\mathbf{T}^{-1}\mathbf{T}$ pairs cancel, see Similarity transformation), so $f(\mathbf{A}) = \mathbf{T}f(\mathbf{J})\mathbf{T}^{-1}$ needs $f$ only of the small blocks.
+This is why $\mathbf{J}$ is so useful. Functions pass through a similarity (the inner $\mathbf{T}^{-1}\mathbf{T}$ pairs cancel, see Similarity transformation), so $f(\mathbf{A}) = \mathbf{T}f(\mathbf{J})\mathbf{T}^{-1}$ needs $f$ only of the small blocks.
 
-For a general $\mathbf{A}$ the infinite series is useless by hand, but the Cayley–Hamilton theorem\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, refuse to commute.} collapses it.
+For a general $\mathbf{A}$ the infinite series is impractical by hand, but the Cayley–Hamilton theorem\footnote{A. Cayley coined the name \emph{matrix}; W. R. Hamilton invented the quaternions, which, like matrices, do not commute.} reduces it to a finite sum.
 
 ### The Cayley–Hamilton theorem
 
@@ -798,13 +798,13 @@ $$
 g(\mathbf{A}) = \mathbf{A}^n + c_{n-1}\mathbf{A}^{n-1} + \cdots + c_0\mathbf{I} = \mathbf{0}
 $$
 
-So every power $\mathbf{A}^k$ with $k \ge n$ folds back into a combination of $\mathbf{I}, \mathbf{A}, \dots, \mathbf{A}^{n-1}$. This is the whole power of the theorem: dividing any polynomial $p(\lambda)$ by $g(\lambda)$ leaves a remainder $r(\lambda)$ of degree at most $n-1$, and since $g(\mathbf{A}) = \mathbf{0}$,
+So every power $\mathbf{A}^k$ with $k \ge n$ folds back into a combination of $\mathbf{I}, \mathbf{A}, \dots, \mathbf{A}^{n-1}$. This is what makes the theorem useful: dividing any polynomial $p(\lambda)$ by $g(\lambda)$ leaves a remainder $r(\lambda)$ of degree at most $n-1$, and since $g(\mathbf{A}) = \mathbf{0}$,
 
 $$
 p(\mathbf{A}) = r(\mathbf{A})
 $$
 
-For an analytic function\footnote{An analytic function has derivatives of all orders and can be represented by a convergent power series (e.g. $e^{\mathbf{A}t}$ or $\sin\mathbf{A}$)} the same holds after expanding it in a Taylor series and reducing term by term. The $q$-term dies when the matrix is substituted:
+For an analytic function\footnote{An analytic function has derivatives of all orders and can be represented by a convergent power series (e.g. $e^{\mathbf{A}t}$ or $\sin\mathbf{A}$).} the same holds after expanding it in a Taylor series and reducing term by term. The $q$ term vanishes when the matrix is substituted:
 
 $$
 f(\lambda) = q(\lambda)\,g(\lambda) + \alpha_0 + \alpha_1\lambda + \cdots + \alpha_{n-1}\lambda^{n-1}
@@ -812,24 +812,24 @@ f(\lambda) = q(\lambda)\,g(\lambda) + \alpha_0 + \alpha_1\lambda + \cdots + \alp
 f(\mathbf{A}) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \cdots + \alpha_{n-1}\mathbf{A}^{n-1}
 $$
 
-So any analytic matrix function collapses to a polynomial of degree at most $n-1$ in $\mathbf{A}$, and the only unknowns are the $n$ scalars $\alpha_j$. They come from the *scalar* twin on the left. At an eigenvalue, $g(\lambda_i) = 0$ by definition, so the $q(\lambda)g(\lambda)$ term drops out there too, and each eigenvalue yields one scalar equation:
+So any analytic matrix function reduces to a polynomial of degree at most $n-1$ in $\mathbf{A}$, and the only unknowns are the $n$ scalars $\alpha_j$. They come from the *scalar* equation on the left. At an eigenvalue, $g(\lambda_i) = 0$ by definition, so the $q(\lambda)g(\lambda)$ term drops out there too, and each eigenvalue yields one scalar equation:
 
 $$
 f(\lambda_i) = \alpha_0 + \alpha_1\lambda_i + \cdots + \alpha_{n-1}\lambda_i^{n-1}, \qquad i = 1, \dots, n
 $$
 
-Think of it as interpolation: $r(\lambda) = \alpha_0 + \alpha_1\lambda + \cdots$ is the unique degree-$(n-1)$ polynomial whose graph passes through $(\lambda_i,\, f(\lambda_i))$ at every eigenvalue. Matching there fixes all $n$ unknowns — no infinite series needed.
+Think of it as interpolation: $r(\lambda) = \alpha_0 + \alpha_1\lambda + \cdots$ is the unique degree-$(n-1)$ polynomial whose graph passes through $(\lambda_i,\, f(\lambda_i))$ at every eigenvalue. Matching at the eigenvalues fixes all $n$ unknowns, without any infinite series.
 
-Solving this system gives the $\alpha_j$. If an eigenvalue $\lambda_i$ has algebraic multiplicity $m_{a,i}$, evaluating at $\lambda_i$ yields only one equation; the missing $m_{a,i}-1$ come from differentiating $f(\lambda) = r(\lambda)$ with respect to $\lambda$, $m_{a,i}-1$ times, and evaluating at $\lambda_i$ again (a root of multiplicity $m_{a,i}$ also kills those derivatives of the $q(\lambda)g(\lambda)$ term). Each eigenvalue contributes exactly as many equations as its multiplicity.
+Solving this system gives the $\alpha_j$. If an eigenvalue $\lambda_i$ has algebraic multiplicity $m_{a,i}$, evaluating at $\lambda_i$ yields only one equation; the missing $m_{a,i}-1$ come from differentiating $f(\lambda) = r(\lambda)$ with respect to $\lambda$, $m_{a,i}-1$ times, and evaluating at $\lambda_i$ again (at a root of multiplicity $m_{a,i}$, those derivatives of the $q(\lambda)g(\lambda)$ term vanish as well). Each eigenvalue contributes as many equations as its multiplicity.
 
 The recipe, for any $f$:
 
 1. Find the eigenvalues of $\mathbf{A}$.
 2. Write the ansatz $f(\mathbf{A}) = \alpha_0\mathbf{I} + \alpha_1\mathbf{A} + \cdots + \alpha_{n-1}\mathbf{A}^{n-1}$.
-3. Match the scalar twin $f(\lambda_i) = \alpha_0 + \alpha_1\lambda_i + \cdots + \alpha_{n-1}\lambda_i^{n-1}$ at every eigenvalue. An eigenvalue with algebraic multiplicity $m_a$ gives only one equation, so also match the first $m_a - 1$ derivatives with respect to $\lambda$ there.
+3. Match the scalar equation $f(\lambda_i) = \alpha_0 + \alpha_1\lambda_i + \cdots + \alpha_{n-1}\lambda_i^{n-1}$ at every eigenvalue. An eigenvalue with algebraic multiplicity $m_a$ gives only one equation, so also match the first $m_a - 1$ derivatives with respect to $\lambda$ there.
 4. Solve for the $\alpha_j$ and substitute back into the ansatz.
 
-The main text uses this recipe with two particular functions: $f(\lambda) = e^{\lambda t}$ gives the state-transition matrix $\Phi(t) = e^{\mathbf{A}t}$ (State space chapter, $\Phi$ via Cayley–Hamilton), and $f(\lambda) = \lambda^k$ gives $\mathbf{A}^k$ (Discrete chapter, $\mathbf{A}^k$ via Cayley–Hamilton). When $\mathbf{A}$ is diagonalizable, the result equals $\mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}$ from the Diagonalization section. Cayley–Hamilton just gets there without the eigenvectors, and it also works for defective matrices.
+The main text uses this recipe with two particular functions: $f(\lambda) = e^{\lambda t}$ gives the state-transition matrix $\Phi(t) = e^{\mathbf{A}t}$ (State space chapter, $\Phi$ via Cayley–Hamilton), and $f(\lambda) = \lambda^k$ gives $\mathbf{A}^k$ (Discrete chapter, $\mathbf{A}^k$ via Cayley–Hamilton). When $\mathbf{A}$ is diagonalizable, the result equals $\mathbf{V}\operatorname{diag}\big(f(\lambda_1), \dots, f(\lambda_n)\big)\mathbf{V}^{-1}$ from the Diagonalization section. Cayley–Hamilton gets there without the eigenvectors, and it also works for defective matrices.
 
 ```{=latex}
 \begin{example}[frametitle={Example - use C-H to calculate $\sin\mathbf{A}$}]
@@ -841,21 +841,21 @@ $$
 
 *Step 1 —* find the eigenvalues
 
-We immediately clock that the matrix is triangular, so the eigenvalues are the diagonal entries: $\lambda_1 = -3$, $\lambda_2 = -2$.
+The matrix is triangular, so the eigenvalues are the diagonal entries: $\lambda_1 = -3$, $\lambda_2 = -2$.
 
-With $n = 2$, C-H makes every higher power fold back — here $g(\lambda) = (\lambda+3)(\lambda+2) = \lambda^2 + 5\lambda + 6$, so $\mathbf{A}^2 = -5\mathbf{A} - 6\mathbf{I}$ — leaving a polynomial of degree at most $1$ in $\mathbf{A}$:
+With $n = 2$, C-H reduces every higher power: here $g(\lambda) = (\lambda+3)(\lambda+2) = \lambda^2 + 5\lambda + 6$, so $\mathbf{A}^2 = -5\mathbf{A} - 6\mathbf{I}$. What remains is a polynomial of degree at most $1$ in $\mathbf{A}$:
 
 $$
 \sin\mathbf{A} = \alpha_0\mathbf{I} + \alpha_1\mathbf{A}
 $$
 
-*Step 2 —* the two unknowns need two equations. They come from the scalar twin $\sin\lambda = \alpha_0 + \alpha_1\lambda$ evaluated at the eigenvalues, where the $q(\lambda)g(\lambda)$ term dies — that is the whole reason C-H works — giving one equation per eigenvalue:
+*Step 2 —* the two unknowns need two equations. They come from the scalar equation $\sin\lambda = \alpha_0 + \alpha_1\lambda$ evaluated at the eigenvalues, where the $q(\lambda)g(\lambda)$ term vanishes. That gives one equation per eigenvalue:
 
 $$
 \sin(-3) = \alpha_0 - 3\alpha_1, \qquad \sin(-2) = \alpha_0 - 2\alpha_1
 $$
 
-*Step 3 —* solve for $\alpha_0$ and $\alpha_1$. Subtracting the two equations kills $\alpha_0$, and what is left is the difference quotient:
+*Step 3 —* solve for $\alpha_0$ and $\alpha_1$. Subtracting the two equations eliminates $\alpha_0$, and what is left is the difference quotient:
 
 $$
 \alpha_1 = \frac{\sin(-3) - \sin(-2)}{-3 - (-2)} = \sin(-2) - \sin(-3) = \sin 3 - \sin 2
@@ -876,7 +876,7 @@ $$
 = \begin{bmatrix} -\sin 3 & \sin 2 - \sin 3 \\ 0 & -\sin 2 \end{bmatrix}
 $$
 
-Sanity check: $\mathbf{A}$ is triangular, so the answer must be triangular with $f$ applied on the diagonal — and it is, $-\sin 3$ and $-\sin 2$.
+Sanity check: $\mathbf{A}$ is triangular, so the answer must be triangular with $f$ applied on the diagonal, and it is: $-\sin 3$ and $-\sin 2$.
 
 ```{=latex}
 \end{example}
@@ -884,7 +884,7 @@ Sanity check: $\mathbf{A}$ is triangular, so the answer must be triangular with 
 
 ### The exponential of a Jordan block
 
-This is where the chapter has been heading. The exponential passes through a similarity, $e^{\mathbf{A}t} = \mathbf{T}e^{\mathbf{J}t}\mathbf{T}^{-1}$, and $e^{\mathbf{J}t}$ is block diagonal, so all we need is the exponential of a single Jordan block. We take a $4\times4$ one. The pattern for other sizes will be obvious.
+The exponential passes through a similarity, $e^{\mathbf{A}t} = \mathbf{T}e^{\mathbf{J}t}\mathbf{T}^{-1}$, and $e^{\mathbf{J}t}$ is block diagonal, so all we need is the exponential of a single Jordan block. We take a $4\times4$ one; other sizes follow the same pattern.
 
 $$
 \mathbf{J}_4(\lambda) = \begin{bmatrix} \lambda & 1 & 0 & 0 \\ 0 & \lambda & 1 & 0 \\ 0 & 0 & \lambda & 1 \\ 0 & 0 & 0 & \lambda \end{bmatrix}
@@ -892,12 +892,12 @@ $$
 \mathbf{N} = \begin{bmatrix} 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 \end{bmatrix}
 $$
 
-The diagonal part $\lambda\mathbf{I}$ commutes with every matrix, so the exponential splits just like the scalar one:\footnote{For two matrices that do not commute, $e^{(\mathbf{X}+\mathbf{Y})t} \ne e^{\mathbf{X}t}e^{\mathbf{Y}t}$ in general.}
+The diagonal part $\lambda\mathbf{I}$ commutes with every matrix, so the exponential splits like the scalar one:\footnote{For two matrices that do not commute, $e^{(\mathbf{X}+\mathbf{Y})t} \ne e^{\mathbf{X}t}e^{\mathbf{Y}t}$ in general.}
 
 $$
 e^{\mathbf{J}_4(\lambda)t} = e^{\lambda t}\,e^{\mathbf{N}t}
 $$
-and the problem shrinks to $e^{\mathbf{N}t}$. That turns out to be easy, because $\mathbf{N}$ runs out of powers. Each multiplication by $\mathbf{N}$ pushes the $1$s one diagonal further up, until they fall off the corner:
+and the problem reduces to $e^{\mathbf{N}t}$. That is easy, because the powers of $\mathbf{N}$ become zero. Each multiplication by $\mathbf{N}$ pushes the $1$s one diagonal further up, until they fall off the corner:
 
 $$
 \mathbf{N}^2 = \begin{bmatrix} 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix}, \qquad
@@ -907,7 +907,7 @@ $$
 
 A matrix with a vanishing power like this is called *nilpotent*.
 
-So the series breaks off. In $e^{\mathbf{N}t} = \mathbf{I} + \mathbf{N}t + \frac{\mathbf{N}^2t^2}{2!} + \frac{\mathbf{N}^3t^3}{3!} + \dots$ every term from $\mathbf{N}^4$ on is zero, so four terms are all there is. Each one lands on its own diagonal:
+So the series is finite. In $e^{\mathbf{N}t} = \mathbf{I} + \mathbf{N}t + \frac{\mathbf{N}^2t^2}{2!} + \frac{\mathbf{N}^3t^3}{3!} + \dots$ every term from $\mathbf{N}^4$ on is zero, leaving four terms, each on its own diagonal:
 
 ```{=latex}
 \[
@@ -971,6 +971,6 @@ The first one reaches $t^2 e^{\lambda t}$, the second only $t e^{\lambda t}$. Th
 \end{example}
 ```
 
-*Other functions.* Nothing here was special to the exponential. For any $f$ from this section, $f(\mathbf{J}_4(\lambda))$ has the same shape, with $f(\lambda)$ on the diagonal and $f'(\lambda)$, $\frac{f''(\lambda)}{2!}$, $\frac{f'''(\lambda)}{3!}$ on the superdiagonals. For $f(\lambda) = e^{\lambda t}$, the derivatives with respect to $\lambda$ give exactly the $t e^{\lambda t}$, $t^2 e^{\lambda t}$ and $t^3 e^{\lambda t}$ of the box above. This is also where the derivative equations in the Cayley–Hamilton recipe come from: the polynomial $r(\lambda)$ reproduces $f(\mathbf{J})$ only if it matches these derivatives too.
+*Other functions.* Nothing here was special to the exponential. For any $f$ from this section, $f(\mathbf{J}_4(\lambda))$ has the same shape, with $f(\lambda)$ on the diagonal and $f'(\lambda)$, $\frac{f''(\lambda)}{2!}$, $\frac{f'''(\lambda)}{3!}$ on the superdiagonals. For $f(\lambda) = e^{\lambda t}$, the derivatives with respect to $\lambda$ give the $t e^{\lambda t}$, $t^2 e^{\lambda t}$ and $t^3 e^{\lambda t}$ of the box above. This is also where the derivative equations in the Cayley–Hamilton recipe come from: the polynomial $r(\lambda)$ reproduces $f(\mathbf{J})$ only if it matches these derivatives too.
 
 The State space chapter puts this to work in $\Phi$ via the Jordan form.

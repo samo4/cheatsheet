@@ -18,9 +18,9 @@ $$
 
 with $\vec{x}$ the state vector, $\vec{u}$ the input, $\vec{y}$ the output, and $\mathbf{A}$, $\mathbf{B}$, $\mathbf{C}$, $\mathbf{D}$ constant matrices. That form is the target of this chapter and the language of the rest of the notes: the State-space chapter develops it in general.
 
-These notes work with LTI, lumped, deterministic systems — the class carved out in the Introduction. Given the state and the input, such a model predicts the behaviour for all future time; outside that class the predictions fall back to local approximations (nonlinear and time-varying systems, via the Linearization chapter) or give out altogether (distributed and stochastic ones).
+These notes work with LTI, lumped, deterministic systems, the class defined in the Introduction. Given the state and the input, such a model predicts the behaviour for all future time; outside that class the predictions fall back to local approximations (nonlinear and time-varying systems, via the Linearization chapter) or fail altogether (distributed and stochastic ones).
 
-Building a model is not always a paper exercise — it often needs data. A car suspension model, for instance, needs the spring rate, damping, and mass — not all of these can be easily measured, but given a good model structure, the parameters can be fitted to measurements of the real system. This is *system identification*, the often-forgotten counterpart of modeling.
+Building a model is not always a paper exercise; it often needs data. A car suspension model, for instance, needs the spring rate, damping and mass. Not all of these are easy to measure, but given a good model structure, the parameters can be fitted to measurements of the real system. This is *system identification*, the often-forgotten counterpart of modeling.
 
 ## Higher-order ODEs as first-order systems
 
@@ -49,9 +49,9 @@ The number of states equals the order of the ODE.
 
 ## Modeling mechanical systems
 
-Modeling does not re-teach physics, it only *upgrades* what you know into the state-space format. Remember the three laws: inertia, $\sum F = ma$, and action–reaction.
+Modeling uses the physics you already know and puts it into state-space form. Remember the three laws: inertia, $\sum F = ma$, and action–reaction.
 
-Everything genuinely new about mechanical modeling is *directional bookkeeping*: assemble the forces with the correct signs and the equations write themselves.
+What is new in mechanical modeling is *directional bookkeeping*: once the forces are assembled with the correct signs, the equations follow directly.
 
 ### Translational systems
 
@@ -63,19 +63,19 @@ The three ideal elements are:
 
 Plus, to complete the list at the top, a *source* of energy: a force $F(t)$ or a prescribed motion $x(t)$.
 
-**Recipe.** A spring and a damper are two-terminal elements: each acts only on the difference between its two ends — the spring wants a constant separation, the damper a constant relative velocity. So the force an element exerts on the body you are isolating is always
+**Recipe.** A spring and a damper are two-terminal elements: each acts only on the difference between its two ends, the spring on the relative displacement and the damper on the relative velocity. So the force an element exerts on the body you are isolating is always
 
 $$F = k\,(x_{\text{other}} - x_{\text{mass}}), \qquad F = b\,(\dot{x}_{\text{other}} - \dot{x}_{\text{mass}}),$$
 
 and the parentheses already contain every sign:
 
-- the *mass's own coordinate* carries the minus — the element always pushes back on *this* body, whichever way you drew the axis;
-- the *other terminal* carries the plus — another moving mass *assists* the motion, while fixed ground contributes nothing ($x_{\text{other}} = 0$) and leaves plain $-kx$ or $-b\dot{x}$.
+- the *mass's own coordinate* carries the minus: the element always pushes back on *this* body, whichever way you drew the axis;
+- the *other terminal* carries the plus: another moving mass pulls this one along, while fixed ground contributes nothing ($x_{\text{other}} = 0$) and leaves plain $-kx$ or $-b\dot{x}$.
 
-Because no choice of axis direction can change which terminal is the mass's *own*, the recipe leaves no sign to choose — what remains is reading the picture correctly. So:
+No choice of axis direction changes which terminal is the mass's *own*, so the recipe leaves no sign to choose; you only have to read the picture correctly. So:
 
 1. Use the **same positive direction** for every coordinate and for $ma$.
-2. For each element touching the body, write $k(x_{\text{other}} - x_{\text{mass}})$ or $b(\dot{x}_{\text{other}} - \dot{x}_{\text{mass}})$ — never add a sign yourself.
+2. For each element touching the body, write $k(x_{\text{other}} - x_{\text{mass}})$ or $b(\dot{x}_{\text{other}} - \dot{x}_{\text{mass}})$. Never add a sign yourself.
 3. Sum with Newton and collect. Then sanity-check at rest: with $\ddot{x} = \dot{x} = 0$ the springs must hold the static load exactly.
 
 Measuring $x$ from the static equilibrium makes the constant weight disappear; measuring it from the unstretched position leaves the weight as a constant input. Both are correct; pick one and stick with it.
@@ -88,19 +88,19 @@ Measuring $x$ from the static equilibrium makes the constant weight disappear; m
 \input{tikz/modeling-wheel.tex}
 ```
 
-A car body of mass $m$ rests on its suspension — spring $k$ and damper $b$ in parallel — on the ground. Gravity pulls it down with the weight $mg$, our input. We want the body's vertical motion $x(t)$ and its state-space model.
+A car body of mass $m$ rests on its suspension, a spring $k$ and a damper $b$ in parallel, on the ground. Gravity pulls it down with the weight $mg$, our input. We want the body's vertical motion $x(t)$ and its state-space model.
 
 **Step 1 — states.** The natural states are position and velocity:
 
 $$x_1 = x \quad \text{(vertical position)}, \qquad x_2 = \dot{x} \quad \text{(vertical velocity)}.$$
 
-**Step 2 — forces with the correct signs.** Take positive $x$ upward. The suspension connects the body (at $x$) to the ground (at $0$), so the spring stretch and the damper velocity are just $x$ and $\dot{x}$.
+**Step 2 — forces with the correct signs.** Take positive $x$ upward. The suspension connects the body (at $x$) to the ground (at $0$), so the spring stretch and the damper velocity are $x$ and $\dot{x}$.
 
 - *Spring* opposes stretch. If the body moves up ($x > 0$) the spring is extended and pulls it *down*, hence $F_k = -kx$.
 - *Damper* opposes velocity. If the body moves up ($\dot{x} > 0$) the damper pushes it down, hence $F_b = -b\dot{x}$.
 - *Gravity* always pulls down, hence $F_g = -mg$.
 
-*Sanity check:* at rest ($\ddot{x} = \dot{x} = 0$) Newton gives $kx = -mg$, i.e. the spring is compressed and pushes up with exactly the weight. A flipped gravity sign would put the equilibrium above the ground; a flipped spring sign would make the body run away from any equilibrium.
+*Sanity check:* at rest ($\ddot{x} = \dot{x} = 0$) Newton gives $kx = -mg$, i.e. the spring is compressed and carries the weight. A flipped gravity sign would put the equilibrium above the ground; a flipped spring sign would make the body run away from any equilibrium.
 
 **Step 3 — Newton's 2$^\text{nd}$ law.**
 
@@ -110,7 +110,7 @@ rearranged into
 
 $$m\ddot{x} + b\dot{x} + kx = -mg.$$
 
-**Step 4 — reduce to first order.** Introduce $\dot{x}_1 = x_2$ as a new state and divide by $m$.
+**Step 4 — reduce to first order.** With $\dot{x}_1 = x_2$, dividing by $m$ gives
 
 $$\dot{x}_2 = -\frac{k}{m}x_1 - \frac{b}{m}x_2 - g.$$
 
@@ -120,13 +120,13 @@ $$
 \dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\vec{x} + \begin{bmatrix} 0 \\ -\frac{1}{m} \end{bmatrix} u.
 $$
 
-**Physical meaning of the states.** $x_1$ is the body's vertical position, $x_2$ its vertical velocity. The state matrix is the same companion form as in *Higher-order ODEs as first-order systems*: one state per derivative. The constant input does not change the dynamics — it only sets the equilibrium (the static deflection of Step 2); measure $x$ from that equilibrium and $mg$ drops out entirely.
+**Physical meaning of the states.** $x_1$ is the body's vertical position, $x_2$ its vertical velocity. The state matrix is the same companion form as in *Higher-order ODEs as first-order systems*: one state per derivative. The constant input does not change the dynamics; it only sets the equilibrium (the static deflection of Step 2). Measure $x$ from that equilibrium and $mg$ drops out.
 
-**Variant — the same system with no input.** Replace the weight by a crash: a car of mass $m$ entering a rigid barrier at speed $v_0$, cushioned by the same spring $k$ and damper $b$ in parallel. Take $x$ as the *compression* of the buffer, positive into the barrier. The motion now resists itself — the spring pushes back ($F_k = -kx$) and the damper pushes back harder the faster the car is still moving ($F_b = -b\dot{x}$):
+**Variant — the same system with no input.** Replace the weight by a crash: a car of mass $m$ entering a rigid barrier at speed $v_0$, cushioned by the same spring $k$ and damper $b$ in parallel. Take $x$ as the *compression* of the buffer, positive into the barrier. Both elements resist the motion: the spring pushes back ($F_k = -kx$), and the damper pushes back harder the faster the car still moves ($F_b = -b\dot{x}$):
 
 $$m\ddot{x} + b\dot{x} + kx = 0, \qquad \dot{\vec{x}} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{b}{m} \end{bmatrix}\vec{x}:$$
 
-the same state matrix, with the input removed. Here $x_1$ is how deep the car has penetrated and $x_2$ how fast it is still going, with the initial state $\vec{x}(0) = \tvec{0, v_0}$. The spring only stores the kinetic energy $\tfrac{1}{2}mv_0^2$; the damper turns it into heat — that is what makes the crash cushioned. The model holds only while the car touches the buffer: once $x$ returns to $0$ the car rebounds free, which our model cannot express.
+the same state matrix, with the input removed. Here $x_1$ is how deep the car has penetrated and $x_2$ how fast it is still going, with the initial state $\vec{x}(0) = \tvec{0, v_0}$. The spring only stores the kinetic energy $\tfrac{1}{2}mv_0^2$; the damper turns it into heat, which is what cushions the crash. The model holds only while the car touches the buffer: once $x$ returns to $0$ the car separates from it, which our model cannot express.
 
 ```{=latex}
 \end{example}
@@ -140,7 +140,7 @@ At rest, friction is a *reaction* force: it takes whatever value holds the body 
 
 $$|F_s| \le \mu_s N .$$
 
-So it is not a function of the state at all — it is fixed by the other forces, and the bound only decides *whether* the body moves. That switch between sticking and sliding is what makes friction nonlinear. In practice static friction is a breakaway test: compute the force needed to keep the body at rest; if it stays below $\mu_s N$ nothing moves, otherwise the body slides and kinetic friction takes over.
+So it is not a function of the state at all: it is fixed by the other forces, and the bound only decides *whether* the body moves. That switch between sticking and sliding is what makes friction nonlinear. In practice static friction is a breakaway test: compute the force needed to keep the body at rest; if it stays below $\mu_s N$ nothing moves, otherwise the body slides and kinetic friction takes over.
 
 #### Kinetic friction
 
@@ -148,7 +148,7 @@ Once the body slides, the force is constant in size and opposes the motion,
 
 $$F_k = -\mu_k N \operatorname{sign}(\dot{x}), \qquad \mu_k < \mu_s .$$
 
-The $\operatorname{sign}$ is nonlinear, so this is never a $b\dot{x}$ term. If the direction of travel is known, it is just a constant force entering through $\mathbf{B}$, like the weight $mg$. The drop from $\mu_s$ to $\mu_k$ causes stick–slip: squealing brakes, the violin bow.
+The $\operatorname{sign}$ is nonlinear, so this is never a $b\dot{x}$ term. If the direction of travel is known, it is a constant force entering through $\mathbf{B}$, like the weight $mg$. The drop from $\mu_s$ to $\mu_k$ causes stick–slip: squealing brakes, the violin bow.
 
 #### Rolling resistance
 
@@ -185,9 +185,9 @@ so angle and angular velocity play the role of position and velocity, and a rota
 \begin{example}[frametitle={Example - motor rotor}]
 ```
 
-A motor shaft carries a rotor of moment of inertia $J$. The bearings resist rotation with a viscous torque $b\omega$, and the motor drives the shaft with a torque $\tau_m(t)$ — the input. We want the rotor's motion.
+A motor shaft carries a rotor of moment of inertia $J$. The bearings resist rotation with a viscous torque $b\omega$, and the motor drives the shaft with a torque $\tau_m(t)$, the input. We want the rotor's motion.
 
-**Step 1 — states.** Exactly as translation used position and velocity:
+**Step 1 — states.** Angle and angular velocity, as position and velocity were for translation:
 
 $$x_1 = \theta \quad \text{(shaft angle)}, \qquad x_2 = \omega = \dot{\theta} \quad \text{(angular velocity)}.$$
 
@@ -201,7 +201,7 @@ $$x_1 = \theta \quad \text{(shaft angle)}, \qquad x_2 = \omega = \dot{\theta} \q
 
 $$J\dot{\omega} = \tau_m - b\omega \qquad\Longrightarrow\qquad J\ddot{\theta} + b\dot{\theta} = \tau_m .$$
 
-No spring appears — nothing stores torsional potential energy — so the equation is first order in $\omega$ and second order only because $\theta$ integrates it.
+No spring appears (nothing stores torsional potential energy), so the equation is first order in $\omega$ and second order only because $\theta$ integrates it.
 
 **Step 4 — matrix form.** With $\vec{x} = \tvec{\theta, \omega}$ and input $\tau_m$,
 
@@ -211,9 +211,9 @@ $$
 
 if the output of interest is the angle.
 
-**Sanity check.** With a constant torque the speed settles at $\omega_\infty = \tau_m/b$, while the angle grows without bound — a steady torque pins the *speed*, never the *position*, because the rotor has no torsional spring to define one. The eigenvalues say the same: $-b/J$, minus the reciprocal of the mechanical time constant $J/b$ (the rotor's version of an RC circuit), and $0$, the free integrator in $\dot{\theta} = \omega$.
+**Sanity check.** With a constant torque the speed settles at $\omega_\infty = \tau_m/b$, while the angle grows without bound: a steady torque fixes the *speed* but not the *position*, because the rotor has no torsional spring to define one. The eigenvalues say the same: $-b/J$, minus the reciprocal of the mechanical time constant $J/b$ (the rotor's version of an RC circuit), and $0$, the free integrator in $\dot{\theta} = \omega$.
 
-**What attaches to the shaft.** Modeling the motor's electrical side as well ($\tau_m = K_t i$) would add the armature current as a third state. A gearbox adds none: referred to one shaft, the two inertias collapse into a single $J = J_1 + n^2 J_2$.
+**What attaches to the shaft.** Modeling the motor's electrical side as well ($\tau_m = K_t i$) would add the armature current as a third state. A gearbox adds none: referred to one shaft, the two inertias combine into a single $J = J_1 + n^2 J_2$.
 
 ```{=latex}
 \end{example}
@@ -221,7 +221,7 @@ if the output of interest is the angle.
 
 ## Modeling of electrical circuits
 
-Let's skip how resistors, capacitors and inductors are modeled — you know that. Electrical modeling rests on Kirchhoff's laws, and since there are two of them — both able to generate independent equations — two methods were taught: node-voltage and mesh-current. In principle either one suffices; in practice you use whichever leaves fewer unknowns. Both examples below use node voltages.
+We skip how resistors, capacitors and inductors are modeled; you know that. Electrical modeling rests on Kirchhoff's two laws, and each gives a method: node voltages (from KCL) and mesh currents (from KVL). In principle either one suffices; in practice you use whichever leaves fewer unknowns. Both examples below use node voltages.
 
 ```{=latex}
 \begin{example}[frametitle={Example - state-space equations of a circuit}]
@@ -233,9 +233,9 @@ We want to write down the state-space equations of the circuit in matrix form, w
 \input{tikz/modeling-circuit.tex}
 ```
 
-Let's select one node as ground. Although any node can be ground, we try to choose it in a way that will make the resulting equation as easy as possible. The number of unknown node voltages is always one less than the number of nodes, whichever you pick; what the choice changes is how many terms each equation carries, so pick the node with the most element connections. Prefer to ground a terminal of a voltage source: then the other terminal is fixed by the source ($V_1 = v_g$), so we never write the KCL equation at that node and the source current $i_{v_g}$ never enters the equations as an unknown. If a voltage source instead floats between two non-grounded nodes, its current appears in both node equations with opposite signs — eliminate it by adding the two node equations (the *supernode*) and closing the pair with the source constraint $V_2 - V_1 = v_g$. In our case, we can select the bottom node as ground.
+First select a ground node. Any node will do, but a good choice keeps the equations short. The number of unknown node voltages is always one less than the number of nodes, whichever you pick; what the choice changes is how many terms each equation carries, so pick the node with the most element connections. Prefer to ground a terminal of a voltage source: then the other terminal is fixed by the source ($V_1 = v_g$), so we never write the KCL equation at that node and the source current $i_{v_g}$ never enters the equations as an unknown. If a voltage source instead floats between two non-grounded nodes, its current appears in both node equations with opposite signs; eliminate it by adding the two node equations (the *supernode*) and closing the pair with the source constraint $V_2 - V_1 = v_g$. In our case, we can select the bottom node as ground.
 
-Then we proceed to mark the remaining nodes.\footnote{Passive sign convention (PSC) defines an element's voltage positive at the terminal where the reference current enters; power is then positive when the element absorbs energy. For the voltage source we marked $i_g$ entering the + terminal, so under PSC a positive $v_g i_g$ means the source absorbs power, and a negative one that it delivers power to the rest of the circuit. For the capacitor we have defined the polarity and applied PSC to $i_C$ (arrow into +); for the inductor we have defined the current $i_L$. The output $v_L$ takes its polarity from PSC as well ($V_2$ positive with respect to $V_3$).}
+Then mark the remaining nodes.\footnote{Passive sign convention (PSC) defines an element's voltage positive at the terminal where the reference current enters; power is then positive when the element absorbs energy. For the voltage source we marked $i_g$ entering the + terminal, so under PSC a positive $v_g i_g$ means the source absorbs power, and a negative one that it delivers power to the rest of the circuit. For the capacitor we have defined the polarity and applied PSC to $i_C$ (arrow into +); for the inductor we have defined the current $i_L$. The output $v_L$ takes its polarity from PSC as well ($V_2$ positive with respect to $V_3$).}
 
 ```{=latex}
 \input{tikz/modeling-circuit-nodes.tex}
@@ -259,7 +259,7 @@ For capacitors we do the same, but take the voltage rather than the current as t
 
 $$-i_L + i_C + \frac{V_3}{R_2} = 0$$
 
-Next, we write down the equations for the energy-storing elements using their constitutive relations.\footnote{Lenz's law is not ignored; its effect was already built into the sign of the inductor's voltage when we adopted PSC. Faraday's law gives $v = L\,\dot{i}$ for the chosen polarity (voltage drop in the direction of the reference current). Had the voltage polarity been defined opposite to the current reference, the relation would read $v = -L\,\dot{i}$. No extra minus is added later — the orientation choices at the start encode it.} For the inductor:
+Next, we write down the equations for the energy-storing elements using their constitutive relations.\footnote{Lenz's law is not ignored; its effect was already built into the sign of the inductor's voltage when we adopted PSC. Faraday's law gives $v = L\,\dot{i}$ for the chosen polarity (voltage drop in the direction of the reference current). Had the voltage polarity been defined opposite to the current reference, the relation would read $v = -L\,\dot{i}$. No extra minus is added later; the orientation choices at the start already encode it.} For the inductor:
 
 $$ v_L = L \frac{di_L}{dt} = V_2 - V_3 $$
 
@@ -279,7 +279,7 @@ $$
 \begin{bmatrix} \frac{1}{L} \\ 0 \end{bmatrix} v_g.
 $$
 
-If the outputs are $v_{R_1}$ and $v_L$, both are algebraic combinations of the states and the input — with $V_2 = v_g - R_1 i_L$ and $V_3 = v_C$,
+If the outputs are $v_{R_1}$ and $v_L$, both are algebraic combinations of the states and the input. With $V_2 = v_g - R_1 i_L$ and $V_3 = v_C$,
 
 $$v_{R_1} = V_1 - V_2 = R_1 i_L, \qquad v_L = V_2 - V_3 = v_g - R_1 i_L - v_C,$$
 
@@ -331,13 +331,13 @@ Inductor: $\; v_L = L\dot{i}_L, \quad v_L = -V_3$
 
 And we note that $V_1 = v_g$ and $i_{g'} = i_L$ (the current through the source $v_g$ equals the inductor current). 
 
-Instead of trying to rearrange the node equations from the start, start with the equations that already contain the derivatives — the constitutive relations of the two energy-storing elements, $i_C = C\dot{v}_C$ and $v_L = L\dot{i}_L$. They give the state derivatives directly; the node equations are only used to fill in whatever current or voltage they still need.
+Rather than rearranging the node equations, start from the equations that already contain the derivatives: the constitutive relations of the two energy-storing elements, $i_C = C\dot{v}_C$ and $v_L = L\dot{i}_L$. They give the state derivatives directly; the node equations are only used to fill in whatever current or voltage they still need.
 
 **Step 3 — Capacitor.** What we need is **$\dot{v}_C$**, expressed as a function of the states and the inputs.
 
 To get it from $i_C = C\dot{v}_C$ we need the capacitor current $i_C$:
 
-$i_C$ appears in both the node-$V_2$ and node-$V_3$ equations — the capacitor sits between $V_2$ and $V_3$, so its current shows up in both. Either one works; the node-$V_3$ equation is the quicker pick because all its other terms are already known: $V_3 - V_2 = -v_C$ (a state), $i_g$ (an input) and $i_L$ (a state). (The node-$V_2$ equation also contains $\frac{V_2 - V_1}{R_1} = i_{g'}$, which we'd have to swap for $i_L$ first.) Solve it for $i_C$:
+$i_C$ appears in both the node-$V_2$ and node-$V_3$ equations, because the capacitor sits between these nodes. Either one works; the node-$V_3$ equation is quicker because all its other terms are already known: $V_3 - V_2 = -v_C$ (a state), $i_g$ (an input) and $i_L$ (a state). (The node-$V_2$ equation also contains $\frac{V_2 - V_1}{R_1} = i_{g'}$, which we'd have to swap for $i_L$ first.) Solve it for $i_C$:
 
 $$i_C = \frac{V_3 - V_2}{R_2} + i_g - i_L = -\frac{v_C}{R_2} + i_g - i_L$$
 
@@ -349,11 +349,11 @@ $$C\,\dot{v}_C = - \frac{v_C}{R_2} + i_g - i_L
 
 **Step 4 — Inductor.** What we need is **$\dot{i}_L$**.
 
-From $v_L = L\dot{i}_L$ we need $v_L$, and the inductor relation already tells us $v_L = -V_3$ — so we need the node voltage $V_3$.
+From $v_L = L\dot{i}_L$ we need $v_L$, and the inductor relation already tells us $v_L = -V_3$, so we need the node voltage $V_3$.
 
 How to get $V_3$? The capacitor relation $v_C = V_2 - V_3$ gives $V_3 = V_2 - v_C$, and $v_C$ is a state we already have. So it remains to find $V_2$:
 
-The node-$V_1$ equation is the best bet — it contains $V_2$ together with only known quantities: $V_1 = v_g$ (an input) and $i_{g'}$ (which we showed equals the state $i_L$). (The node-$V_2$ equation could work too, but it also drags in $i_C$ — and hence $\dot{v}_C$ — so it is messier.) With $i_{g'} = i_L$ and $V_1 = v_g$:
+The node-$V_1$ equation is the best choice: besides $V_2$ it contains only known quantities, $V_1 = v_g$ (an input) and $i_{g'}$ (which we showed equals the state $i_L$). (The node-$V_2$ equation would work too, but it also contains $i_C$, and hence $\dot{v}_C$, so it is messier.) With $i_{g'} = i_L$ and $V_1 = v_g$:
 
 $$\frac{V_2 - V_1}{R_1} = i_{g'} = i_L
 \quad\Longrightarrow\quad
@@ -371,7 +371,7 @@ $$L\,\dot{i}_L = -v_g - R_1 i_L + v_C
 
 **Step 5** Collect the equations into matrix form.
 
-The two scalar equations from Steps 3 and 4 are exactly the two rows of the state equation. Written out in full, the left-hand side is the derivative of the state vector, so both state derivatives appear explicitly:
+The two scalar equations from Steps 3 and 4 are the two rows of the state equation. Written out in full, the left-hand side is the derivative of the state vector, so both state derivatives appear explicitly:
 
 $$
 \frac{d}{dt}\begin{bmatrix} i_L \\ v_C \end{bmatrix} =
@@ -397,4 +397,4 @@ Sanity check: the diagonal of $\mathbf{A}$ is negative (each storage element dra
 
 In mechanical systems the independent storage elements are typically the masses (storing kinetic energy) and the springs (storing potential energy); the damper only dissipates.
 
-Comparing to electrical systems, the usual *force–voltage* analogy pairs inductor–mass, capacitor–spring, resistor–damper (the *force–current* analogy pairs them differently, mass–capacitor and spring–inductor; both are consistent). The pedant will ask how to reconcile the second derivative in $F = ma$ with the first derivative in $v = L\,\dot{i}$. There is nothing to reconcile: $F = m\dot{v}$ is already first order in the velocity, just as $v = L\,\dot{i}$ is in the current. As in *Higher-order ODEs as first-order systems*, it is the choice of state variables that does the work: position and velocity for mechanical systems, capacitor voltages and inductor currents for electrical ones. This way, the state-space representation always involves first-order derivatives of the chosen states.
+Compared with electrical systems, the usual *force–voltage* analogy pairs inductor–mass, capacitor–spring, resistor–damper (the *force–current* analogy pairs them differently, mass–capacitor and spring–inductor; both are consistent). The pedant will ask how to reconcile the second derivative in $F = ma$ with the first derivative in $v = L\,\dot{i}$. There is nothing to reconcile: $F = m\dot{v}$ is already first order in the velocity, just as $v = L\,\dot{i}$ is in the current. As in *Higher-order ODEs as first-order systems*, it is the choice of state variables that does the work: position and velocity for mechanical systems, capacitor voltages and inductor currents for electrical ones. This way, the state-space representation always involves first-order derivatives of the chosen states.
