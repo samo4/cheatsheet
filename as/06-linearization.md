@@ -75,12 +75,19 @@ $$
 
 where the matrices are the Jacobians evaluated at the equilibrium:
 
-$$
+```{=latex}
+\[
+\begingroup
+\setlength{\fboxsep}{1.2em}
+\fbox{$\displaystyle
 \mathbf{A} = \left.\frac{\partial \vec{f}}{\partial \vec{x}}\right|_e, \qquad
 \mathbf{B} = \left.\frac{\partial \vec{f}}{\partial \vec{u}}\right|_e, \qquad
 \mathbf{C} = \left.\frac{\partial \vec{g}}{\partial \vec{x}}\right|_e, \qquad
 \mathbf{D} = \left.\frac{\partial \vec{g}}{\partial \vec{u}}\right|_e
-$$
+$}
+\endgroup
+\]
+```
 
 The linearization captures the local behaviour: for small deviations the nonlinear and linear trajectories stay close (Hartman–Grobman), so the eigenvalues of $\mathbf{A}$ decide local stability (see Stability). It breaks down at bifurcations, where the linearization is marginally stable.
 
