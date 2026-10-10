@@ -131,8 +131,8 @@
     {\fontsize{22}{26}\selectfont\itshape $i^2=-1$\,; engineers call it $j$, for $i$ is betrothed.}},
   colbacktitle=ink, coltitle=white, toptitle=4pt, bottomtitle=4pt, lefttitle=10pt, righttitle=14pt]
 \mathbandsize\setdisplay
-\newcommand{\mathcol}[1]{\begin{minipage}[t]{0.322\linewidth}\vspace{0pt}#1\end{minipage}}
-\begin{minipage}[t]{0.70\linewidth}
+\newcommand{\mathcol}[1]{\begin{minipage}[t]{0.327\linewidth}\vspace{0pt}#1\end{minipage}}
+\begin{minipage}[t]{0.66\linewidth}
 \mathcol{%
   \begin{eqgroup}[Euler: the most important line in the degree]
   \[ e^{j\theta}=\cos\theta+j\sin\theta \]
@@ -142,25 +142,25 @@
   \end{eqgroup}
   \begin{eqgroup}[Decibels: logs turn products into sums]
   \[ G_{\mathrm{dB}}=10\log_{10}\frac{P_2}{P_1}=20\log_{10}\frac{V_2}{V_1} \]
-  \[ G_{\text{chain}}=G_1+G_2+\dots\ \ [\mathrm{dB}] \]
-  \end{eqgroup}}\hfill
-\mathcol{%
-  \begin{eqgroup}[Linear systems and their modes]
-  \[ A\mathbf x=\mathbf b \qquad A\mathbf v=\lambda\mathbf v \qquad \det(A-\lambda I)=0 \]
-  \end{eqgroup}
-  \begin{eqgroup}[Transforms turn calculus into algebra]
-  \[ X(\omega)=\int x(t)\,e^{-j\omega t}\,dt \]
-  \[ \mathcal L\{\dot y\}=sY(s)-y(0) \]
-  \[ X(z)=\sum_n x[n]\,z^{-n} \qquad z=e^{sT_s} \]
   \end{eqgroup}
   \begin{eqgroup}[Parseval and Dirac]
   \[ \int|x(t)|^2dt=\int|X(f)|^2df \]
   \[ \int x(\tau)\,\delta(t-\tau)\,d\tau=x(t) \]
   \end{eqgroup}}\hfill
 \mathcol{%
+  \begin{eqgroup}[Linear systems and their modes]
+  \[ A\mathbf x=\mathbf b \qquad A\mathbf v=\lambda\mathbf v \]
+  \[ \det(A-\lambda I)=0 \]
+  \end{eqgroup}
+  \begin{eqgroup}[Transforms turn calculus into algebra]
+  \[ X(\omega)=\int x(t)\,e^{-j\omega t}\,dt \]
+  \[ \mathcal L\{\dot y\}=sY(s)-y(0) \]
+  \[ X(z)=\sum_n x[n]\,z^{-n} \qquad z=e^{sT_s} \]
+  \end{eqgroup}
   \begin{eqgroup}[Orthogonality: every coefficient is a projection]
   \[ c_k=\frac{\langle x,\varphi_k\rangle}{\langle\varphi_k,\varphi_k\rangle} \]
-  \end{eqgroup}
+  \end{eqgroup}}\hfill
+\mathcol{%
   \begin{eqgroup}[Divergence and Stokes]
   \[ \oint_S\mathbf F\cdot d\mathbf A=\int_V\nabla\cdot\mathbf F\,dV \]
   \[ \oint_C\mathbf F\cdot d\mathbf l=\int_S(\nabla\times\mathbf F)\cdot d\mathbf A \]
@@ -171,28 +171,38 @@
   \[ \bar x\ \sim\ \mathcal N\!\big(\mu,\ \sigma^2/n\big) \quad\text{(CLT)} \]
   \end{eqgroup}}
 \end{minipage}\hfill
-\begin{minipage}[t]{0.285\linewidth}\vspace{0pt}\centering
-  \begin{eqgroup}[Second order]
-  \[ \ddot y+2\zeta\omega_n\dot y+\omega_n^2y=\omega_n^2u \]
-  \[ \omega_n=\frac{1}{\sqrt{LC}} \qquad \zeta=\frac R2\sqrt{\frac CL} \]
+\begin{minipage}[t]{0.325\linewidth}\vspace{0pt}\centering
+  \begin{eqgroup}[Second order: time and frequency]
+  \[ \ddot y+2\zeta\omega_0\dot y+\omega_0^2y=\omega_0^2u \]
   \end{eqgroup}\vspace{1mm}
   \begin{tikzpicture}
-  \begin{axis}[posterplot, width=150mm, height=63mm, xmin=0, xmax=12.5, ymin=0, ymax=2.05,
-     xlabel={$\omega_n t$}, ylabel={step response}, ylabel style={at={(axis description cs:0.02,1.02)}, anchor=south west},
-     xtick=\empty, ytick={1}, samples=160, domain=0:12,
-     legend style={draw=none, fill=white, fill opacity=0.85, text opacity=1, font=\small, at={(1.0,1.0)}, anchor=north east, /tikz/every even column/.append style={column sep=3mm}}, legend columns=2, legend cell align=left]
+  \begin{axis}[posterplot, name=step, scale only axis, width=118mm, height=29mm, xmin=0, xmax=10.5, ymin=0, ymax=1.6,
+     xlabel={$\omega_0 t$}, ylabel={step}, every axis y label/.style={at={(axis description cs:0,1)}, anchor=south west, xshift=2mm},
+     xtick=\empty, ytick={1}, samples=140, domain=0:10,
+     legend style={draw=none, fill=none, font=\small, at={(1.03,-0.15)}, anchor=west, row sep=-1pt}, legend cell align=left]
     \addplot[accent, smooth] {1-exp(-0.2*x)*(cos(deg(0.9798*x))+0.2041*sin(deg(0.9798*x)))};
-    \addlegendentry{$\zeta=0.2$\ \ ringing}
+    \addlegendentry{$\zeta=0.2$}
     \addplot[accentlt, smooth] {1-exp(-0.7*x)*(cos(deg(0.7141*x))+0.9802*sin(deg(0.7141*x)))};
-    \addlegendentry{$\zeta=0.7$\ \ the sweet spot}
+    \addlegendentry{$\zeta=0.7$}
     \addplot[good, smooth] {1-(1+x)*exp(-x)};
-    \addlegendentry{$\zeta=1$\ \ critical}
+    \addlegendentry{$\zeta=1$}
     \addplot[trap, smooth] {1+(-3.732*exp(-0.268*x)+0.268*exp(-3.732*x))/3.464};
-    \addlegendentry{$\zeta=2$\ \ sluggish}
-    \draw[muted, dashed, thin] (axis cs:0,1) -- (axis cs:12.5,1);
+    \addlegendentry{$\zeta=2$}
+    \draw[muted, dashed, thin] (axis cs:0,1) -- (axis cs:10.5,1);
   \end{axis}
-  \end{tikzpicture}\\[1mm]
-  {\small\color{muted}RLC, servo, suspension, PLL: one equation.}
+  \begin{semilogxaxis}[posterplot, name=bode, at={(step.south west)}, anchor=north west, yshift=-9mm, scale only axis, axis lines=left, width=118mm, height=27mm, xmin=0.1, xmax=10, ymin=-40, ymax=10,
+     xlabel={$\omega/\omega_0$}, ylabel={$|H|$ [dB]},
+     every axis y label/.style={at={(axis description cs:0,0)}, anchor=south west, xshift=3mm, yshift=1mm},
+     every axis x label/.style={at={(axis description cs:1,0)}, anchor=north east},
+     xtick={1}, xticklabels={$1$}, ytick=\empty, samples=120, domain=0.1:10]
+    \addplot[accent, smooth] {-10*log10((1-x^2)^2+(0.4*x)^2)};
+    \addplot[accentlt, smooth] {-10*log10((1-x^2)^2+(1.4*x)^2)};
+    \addplot[good, smooth] {-10*log10((1-x^2)^2+(2*x)^2)};
+    \addplot[trap, smooth] {-10*log10((1-x^2)^2+(4*x)^2)};
+  \end{semilogxaxis}
+  \node[rotate=-90, anchor=south, text=muted, font=\small, align=center]
+    at ($(step.above north east)!0.5!(bode.below south east)+(30mm,0)$) {RLC, servo, suspension, PLL:\\ one equation.};
+  \end{tikzpicture}
 \end{minipage}
 
 \vspace{6pt}
@@ -248,7 +258,7 @@
   $\displaystyle A=\begin{bmatrix} 0 & -\dfrac1C\\[8pt] \dfrac1L & -\dfrac RL \end{bmatrix}$}\\[2mm]
   {\small\color{muted}$\det Y(s)=0$ and $\operatorname{eig}(A)$: the same poles.}}
 \tcblower
-\trap{Leave no node floating: a node with no path to ground maketh the matrix singular, and SPICE shall find no answer.}
+\trap{\textbf{Leave no node floating.} Ask, and SPICE shall answer; but a node with no path to ground maketh the matrix singular.}
 \end{commandment}
 \end{minipage}\hfill%
 \begin{minipage}[t]{0.488\linewidth}
@@ -274,7 +284,7 @@
       \end{tikzpicture}\\[1mm]
   {\small\color{muted}A QAM constellation is just points on this plane.}}
 \tcblower
-\trap{A phasor hath neither beginning nor end: one frequency, linear, for ever. For the moment of switching, go thou unto Laplace.}
+\trap{\textbf{A phasor hath neither beginning nor end:} one frequency, linear, for ever. For the moment of switching, go thou unto Laplace.}
 \end{commandment}
 \end{minipage}
 
@@ -316,7 +326,7 @@
   \end{axis}
   \end{tikzpicture}\par}
 \tcblower
-\trap{Sharp filters cost delay. Multiplying in time convolves in frequency.}
+\trap{\textbf{Sharp filters cost delay.} Narrow is the passband, and long the ringing thereof.}
 \end{commandment}
 \end{minipage}\hfill%
 \begin{minipage}[t]{0.488\linewidth}
@@ -395,23 +405,24 @@
   \end{tikzpicture}\\[2mm]
   {\small\color{muted}Eigenvalues of $A$ are the poles of $H(s)$: same system, two views.}}
 \tcblower
-\trap{A linearised model is only true near its operating point.}
+\trap{\textbf{Every linear model is local.} Stray far from thy operating point, and saturation shall find thee out.}
 \end{commandment}
 \end{minipage}\hfill%
 \begin{minipage}[t]{0.488\linewidth}
 \begin{commandment}[equal height group=row3]{VI}{Maxwell}{Thou shalt have no other equations.}{Circuits (the lumped limit), transmission lines beyond $\lambda/10$, antennas, motors, transformers, EMC.}
-\body[0.55]{%
-  \begin{eqgroup}[The four]
-  \[ \begin{aligned}
-     \nabla\cdot\mathbf D&=\rho && \text{\small\color{muted}Gauss}\\
-     \nabla\cdot\mathbf B&=0 && \text{\small\color{muted}no monopoles}\\
-     \nabla\times\mathbf E&=-\frac{\partial\mathbf B}{\partial t} && \text{\small\color{muted}Faraday}\\
-     \nabla\times\mathbf H&=\mathbf J+\frac{\partial\mathbf D}{\partial t} && \text{\small\color{muted}Ampère--Maxwell}
-  \end{aligned} \]
+\body[0.615]{%
+  \begin{eqgroup}[The four, and what thou calculatest with them]
+  \newcommand{\mxname}[1]{\makebox[40mm][c]{\small\color{muted}#1}}%
+  \[ \begin{alignedat}{3}
+     \nabla\cdot\mathbf D&=\rho & \mxname{Gauss} && C&=\varepsilon A/d\\
+     \nabla\cdot\mathbf B&=0 & \mxname{no monopoles} && \textstyle\sum\Phi&=0\\
+     \nabla\times\mathbf E&=-\frac{\partial\mathbf B}{\partial t} & \mxname{Faraday} && v&=N\frac{d\Phi}{dt}\\
+     \nabla\times\mathbf H&=\mathbf J+\frac{\partial\mathbf D}{\partial t} & \mxname{Ampère} && \textstyle\sum Hl&=NI
+  \end{alignedat} \]
   \end{eqgroup}}%
 {%
   {\fontsize{24}{28}\selectfont\bfseries\itshape\color{accent}\boldmath Let there be $\displaystyle c=\frac{1}{\sqrt{\mu_0\varepsilon_0}}$.}\\[2mm]
-  \begin{tikzpicture}[x=10mm, y=8mm, line width=1.6pt]
+  \begin{tikzpicture}[x=8.6mm, y=8mm, line width=1.6pt]
     \draw[-{Latex[length=3mm]}, muted, thin] (0,0) -- (10,0) node[right]{$\mathbf k$};
     \draw[accent, domain=0:9.42, samples=120, smooth] plot (\x, {2*sin(deg(\x*1))});
     \draw[trap, domain=0:9.42, samples=120, smooth] plot ({\x+0.9*sin(deg(\x))}, {-0.7*sin(deg(\x))});
@@ -422,7 +433,7 @@
   \end{tikzpicture}\\[1mm]
   {\small\color{muted}Faraday and Ampère feed each other, at $c$.}}
 \tcblower
-\trap{Lumped circuits assume instant propagation; at high frequency the wires become components.}
+\trap{\textbf{Every wire is a component.} The trace the builder ignored is become a transmission line: 15\,cm per ns on a PCB.}
 \end{commandment}
 \end{minipage}
 
@@ -449,7 +460,7 @@
     \draw[thin] (1.4,0) arc (0:29.5:1.4) node[midway, right]{$\varphi$};
   \end{tikzpicture}}
 \tcblower
-\trap{With harmonics, $\cos\varphi$ is no longer the power factor.}
+\trap{\textbf{Render unto the cable its $|S|$:} $Q$ does no work, yet it heats the copper. With harmonics, $\cos\varphi$ is not the power factor.}
 \end{commandment}
 \end{minipage}\hfill%
 \begin{minipage}[t]{0.488\linewidth}
@@ -478,7 +489,7 @@
   \end{axis}
   \end{tikzpicture}}
 \tcblower
-\trap{Averaging beats random error only. Systematic error never shrinks.}
+\trap{\textbf{Averaging cures only random error.} The systematic error ye have always with you.}
 \end{commandment}
 \end{minipage}
 
@@ -520,7 +531,7 @@
   \end{tikzpicture}\\[1mm]
   {\small\color{muted}On log paper the exponential is a straight line: $\times10$ per 60\,mV, set by $V_T$.}}
 \tcblower
-\trap{$V_{BE}$ drops about 2\,mV per \textdegree C: thermal runaway.}
+\trap{\textbf{Beware thermal runaway.} Heat begat current, and current begat heat ($V_{BE}$ falls 2\,mV/\textdegree C): emitter resistors break the line.}
 \end{commandment}
 \end{minipage}\hfill%
 \begin{minipage}[t]{0.488\linewidth}
@@ -568,7 +579,7 @@
 {\eqsize $T_{clk}\ \ge\ t_{clk\to Q}+t_{logic}+t_{setup}$ \qquad $\mathrm{MTBF}=\dfrac{e^{\,t_r/\tau}}{T_0\,f_{clk}\,f_{data}}$}\par\vspace{6pt}
 \raggedright
 \tcblower
-\trap{Signals crossing between clocks go metastable: synchronise every crossing.}
+\trap{\textbf{Synchronise every crossing.} No flip-flop can serve two clocks: pass foreign signals through two flip-flops in a row.}
 \end{commandment}
 \end{minipage}
 
