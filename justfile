@@ -75,3 +75,6 @@ supply-verify:
     python python/sem_lens_supply_budget.py --verify
 
 # --filter pandoc-crossref -V colorlinks=true -V linkcolor=blue -V citecolor=blue
+
+ten:
+    cd ten-ee-commandments && just
