@@ -409,14 +409,17 @@
 \end{commandment}
 \end{minipage}\hfill%
 \begin{minipage}[t]{0.488\linewidth}
-\begin{commandment}[equal height group=row3]{VI}{Maxwell}{Thou shalt have no other equations.}{Circuits (the lumped limit), transmission lines beyond $\lambda/10$, antennas, motors, transformers, EMC.}
+\begin{commandment}[equal height group=row3,
+  finish={\tikzset{vac/.style={fill=white, draw=accent, line width=1.4pt, rounded corners=2.5mm, inner xsep=9pt, inner ysep=5pt, font=\small, text=ink}}%
+    \node[vac, rotate=90] at (frame.west) {$\varepsilon_0\approx8.854\times10^{-12}\,\mathrm{A\,s/(V\,m)}$};
+    \node[vac, rotate=-90] at (frame.east) {$\mu_0\approx4\pi\times10^{-7}\,\mathrm{V\,s/(A\,m)}$};}]{VI}{Maxwell}{Thou shalt have no other equations.}{Circuits (the lumped limit), transmission lines beyond $\lambda/10$, antennas, motors, transformers, EMC.}
 \body[0.615]{%
   \begin{eqgroup}[The four, and what thou calculatest with them]
   \newcommand{\mxname}[1]{\makebox[40mm][c]{\small\color{muted}#1}}%
   \[ \begin{alignedat}{3}
      \nabla\cdot\mathbf D&=\rho & \mxname{Gauss} && C&=\varepsilon A/d\\
      \nabla\cdot\mathbf B&=0 & \mxname{no monopoles} && \textstyle\sum\Phi&=0\\
-     \nabla\times\mathbf E&=-\frac{\partial\mathbf B}{\partial t} & \mxname{Faraday} && v&=N\frac{d\Phi}{dt}\\
+     \nabla\times\mathbf E&=-\frac{\partial\mathbf B}{\partial t} & \mxname{Faraday} && v(t)&=-N\frac{d\Phi(t)}{dt}\\
      \nabla\times\mathbf H&=\mathbf J+\frac{\partial\mathbf D}{\partial t} & \mxname{Ampère} && \textstyle\sum Hl&=NI
   \end{alignedat} \]
   \end{eqgroup}}%
@@ -576,7 +579,7 @@
 \begin{minipage}[c]{0.07\linewidth}\centering
 \rotatebox[origin=c]{-90}{\begin{tabular}{@{}c@{}}{\itshape\color{muted}``Every idiot can count to one.''}\\[1pt]{\small\color{muted}--- attrib.\ Bob Widlar}\end{tabular}}
 \end{minipage}\\[1mm]
-{\eqsize $T_{clk}\ \ge\ t_{clk\to Q}+t_{logic}+t_{setup}$ \qquad $\mathrm{MTBF}=\dfrac{e^{\,t_r/\tau}}{T_0\,f_{clk}\,f_{data}}$}\par\vspace{6pt}
+{\eqsize $T_{clk}\ \ge\ t_{clk\to Q}+t_{logic}+t_{setup}$ \qquad $\mathrm{MTBF}_{\mathrm{CDC}}=\dfrac{e^{\,t_r/\tau}}{T_0\,f_{clk}\,f_{data}}$}\par\vspace{6pt}
 \raggedright
 \tcblower
 \trap{\textbf{Synchronise every crossing.} No flip-flop can serve two clocks: pass foreign signals through two flip-flops in a row.}
