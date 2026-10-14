@@ -195,7 +195,3 @@ TSWLatexianTemp*
 
 # Compiled PDFs
 *.pdf
-
-# ten-ee-commandments build output
-ten-ee-commandments/build/
-ten-ee-commandments/preview.png

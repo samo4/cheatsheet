@@ -34,11 +34,6 @@
       "notMatch": "as[\\\\/]AS\\.md$",
       "command": "cd \"$(git rev-parse --show-toplevel)/as\" && just ch \"${fileBasename}\"",
       "runIn": "terminal"
-    },
-    {
-      "match": "ten-ee-commandments[\\\\/][^\\\\/]*\\.tex$",
-      "command": "cd \"$(git rev-parse --show-toplevel)/ten-ee-commandments\" && just poster \"${fileBasenameNoExtension}\"",
-      "runIn": "terminal"
     }
   ]
 }
